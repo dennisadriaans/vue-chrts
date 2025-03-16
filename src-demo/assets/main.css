@@ -1,0 +1,37 @@
+
+@import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-background: oklch(100 0 0);
+  --color-border: oklch(92% 0 0);
+  --color-card: oklch(100% 0 0);
+  --color-primary: oklch(79.14% 0.2091 151.66);
+}
+
+@utility heading-2 {
+  @apply text-xl dark:text-white my-2 font-bold;
+}
+
+
+.dark {
+  color: white;
+  --color-background: oklch(.205 0 0);
+  --color-card: oklch(.225 0 0);
+  --color-border: oklch(.269 0 0);
+
+  --tooltip-label-color: rgba(255, 255, 255, 0.5);
+  --tooltip-value-color: rgba(255, 255, 255, 1);
+
+  --vis-axis-grid-color: rgba(255, 255, 255, 0.1) !important;
+  --vis-tooltip-background-color: #121212 !important;
+  --vis-tooltip-border-color: none !important;
+  --vis-tooltip-text-color: rgba(255, 255, 255, 0.5) !important;
+  --vis-axis-tick-label-color: rgba(255, 255, 255, 0.5) !important;
+  --vis-legend-label-color: rgba(255, 255, 255, 0.75) !important;
+
+  --vis-axis-label-color: rgba(255, 255, 255, 0.5) !important;
+  --vis-legend-label-color: rgba(255, 255, 255, 0.5) !important;
+  
+}
