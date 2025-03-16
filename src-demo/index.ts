@@ -16,16 +16,6 @@ const router = createRouter({
           component: () => import('./Homepage.vue') 
         },
         {
-          path: '/admin',
-          name: 'AdminTemplate',
-          component: () => import('./AdminTemplate.vue') 
-        },
-        {
-          path: '/dashboard',
-          name: 'DashboardTemplate',
-          component: () => import('./DashboardTemplate.vue') 
-        },
-        {
           path: '/area-charts',
           name: 'AreaCharts',
           component: () => import('./AreaChartPage.vue') 
@@ -39,12 +29,7 @@ const router = createRouter({
           path: '/bar-charts',
           name: 'BarCharts',
           component: () => import('./BarChartPage.vue') 
-        },
-        // {
-        //   path: '/overview',
-        //   name: 'Overview',
-        //   component: () => import('./components/Overview.vue') // Replace with your OverviewPage component path
-        // }
+        }
       ],
     history: createWebHistory(),
   });
