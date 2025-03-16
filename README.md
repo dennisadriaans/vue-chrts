@@ -2,6 +2,8 @@
 
 A Vue 3 charts package inspired by [Tremor](https://tremor.so/), built on top of [Unovis](https://unovis.dev). Vue-Chrts provides beautiful, responsive charts for your Vue applications with minimal setup.
 
+[Check the docs and examples](https://nuxtcharts.com/docs)
+
 ## Features
 
 - 📊 Multiple chart types: Line, Bar, Area, Stacked Area, Donut
@@ -22,6 +24,7 @@ yarn add vue-chrts
 # pnpm
 pnpm add vue-chrts
 ```
+[Check the docs and examples](https://nuxtcharts.com/docs)
 
 ## Usage Example
 
@@ -62,6 +65,7 @@ const xFormatter = (i) => data[i].month;
   />
 </template>
 ```
+[Check the docs and examples](https://nuxtcharts.com/docs)
 
 ## Available Charts
 
