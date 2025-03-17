@@ -9,7 +9,8 @@ import { BarChart as BaseBar } from "./../src/components";
 import { AreaChart as BaseArea } from "./../src/components";
 import { DonutChart as BaseDonut } from "./../src/components";
 
-import DashboardTemplate from "./DashboardTemplate.vue";
+// FIXME: DashboardTemplate import not resolving
+// import DashboardTemplate from "./DashboardTemplate.vue";
 
 import Button from "./elements/Button.vue";
 import Card from "./elements/Card.vue";
@@ -317,9 +318,9 @@ const columns = [
         beautiful-looking products with ease.
       </p>
 
-      <div class="mt-8 py-6 px-12 ring-4 rounded-xl ring-border">
+<!--      <div class="mt-8 py-6 px-12 ring-4 rounded-xl ring-border">
         <DashboardTemplate></DashboardTemplate>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
