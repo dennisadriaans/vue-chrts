@@ -30,7 +30,6 @@ const tooltip = {
 <template>
   <div class="flex items-center justify-center">
     <VisSingleContainer
-      :class="isHalf ? 'mt-24' : ''"
       :data="data"
       :height="height"
       :margin="{}"
