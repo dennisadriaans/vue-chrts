@@ -1,6 +1,12 @@
 <script setup lang="ts" generic="T">
 import { computed, createApp } from "vue";
-import  { type BulletLegendItemInterface, type NumericAccessor, CurveType, Position  } from "@unovis/ts";
+import { getDistributedIndices } from './../../utils'
+import {
+  type BulletLegendItemInterface,
+  type NumericAccessor,
+  CurveType,
+  Position,
+} from "@unovis/ts";
 import {
   VisArea,
   VisAxis,
@@ -20,7 +26,7 @@ type AreaChartProps<T> = {
   xLabel?: string;
   yLabel?: string;
   categories: Record<string, BulletLegendItemInterface>;
-  xFormatter: (i: number, idx: number) => string;
+  xFormatter: (i: T) => string;
   yFormatter?: (i: number, idx?: number) => string | number;
   curveType?: CurveType;
   xNumTicks?: number;
@@ -83,16 +89,28 @@ const svgDefs = colors
 `
   )
   .join("");
+
+const PaginationPositionTop = computed(
+  () => props.paginationPosition === PaginationPosition.Top
+);
+
+const tickIndices = computed(() =>  getDistributedIndices(props.data.length, props.xNumTicks))
+
+const filteredDataByIndices = computed(() => {
+  if (!props.data?.length || !tickIndices || tickIndices.value.length === 0) {
+    return [];
+  }
+  return tickIndices.value.map((index) => props.data[index]);
+})
+
 </script>
 
 <template>
   <div
     class="flex flex-col space-y-4"
-    :class="{
-      'flex-col-reverse': props.paginationPoisition === 'top',
-    }"
+    :class="{ 'flex-col-reverse': PaginationPositionTop }"
   >
-    <VisXYContainer :data="data" :height="height" :svg-defs="svgDefs">
+    <VisXYContainer :data="filteredDataByIndices" :height="height" :svg-defs="svgDefs">
       <VisTooltip
         v-if="!hideTooltip"
         :horizontal-placement="Position.Right"
@@ -116,8 +134,8 @@ const svgDefs = colors
 
       <VisAxis
         type="x"
-        :tick-format="xFormatter"
-        :num-ticks="xNumTicks"
+        :num-ticks="filteredDataByIndices.length"
+        :tick-format="(i: number) => xFormatter(filteredDataByIndices[i])"
         :label="xLabel"
         :grid-line="gridLineX"
         :domain-line="domainLineX"
@@ -125,7 +143,7 @@ const svgDefs = colors
       />
       <VisAxis
         type="y"
-        :num-ticks="yNumTicks ?? data.length"
+        :num-ticks="yNumTicks"
         :tick-format="yFormatter"
         :label="yLabel"
         :grid-line="gridLineY"
@@ -138,7 +156,11 @@ const svgDefs = colors
         :template="generateTooltip"
       />
     </VisXYContainer>
-    <div v-if="!hideLegend" class="flex items center justify-end">
+    <div
+      v-if="!hideLegend"
+      class="flex items center justify-end"
+      :class="{ 'pb-4': PaginationPositionTop }"
+    >
       <VisBulletLegend :items="Object.values(categories)" />
     </div>
   </div>

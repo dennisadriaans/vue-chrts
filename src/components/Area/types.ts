@@ -80,5 +80,5 @@ export type AreaChartProps<T> = {
      * Optional position for pagination controls, if applicable.
      * See `PaginationPosition` for available options.
      */
-    paginationPoisition?: PaginationPosition;
+    paginationPosition?: PaginationPosition;
   };
