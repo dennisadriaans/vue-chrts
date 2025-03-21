@@ -37,7 +37,7 @@ type AreaChartProps<T> = {
   domainLineX?: boolean;
   gridLineY?: boolean;
   domainLineY?: boolean;
-  paginationPoisition?: PaginationPosition;
+  paginationPosition?: PaginationPosition;
 };
 
 const props = withDefaults(defineProps<AreaChartProps<T>>(), {
@@ -50,10 +50,10 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
 const colors = Object.values(props.categories).map((c) => c.color);
 
 const generateTooltip = computed(() => (d: T) => {
-  if (typeof window === 'undefined' || typeof document === 'undefined') {
-    return '';
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    return "";
   }
-  
+
   try {
     const app = createApp(Tooltip, {
       data: d,
@@ -68,7 +68,7 @@ const generateTooltip = computed(() => (d: T) => {
 
     return html;
   } catch (error) {
-    return '';
+    return "";
   }
 });
 
