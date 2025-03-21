@@ -2,6 +2,8 @@
 import { AreaChart as BaseArea } from "./../src/components/Area";
 import { AreaStackedChart } from "./../src/components";
 
+import { PaginationPosition } from "./../src/types";
+
 import Card from "./elements/Card.vue";
 
 import { CurveType } from "@unovis/ts";
@@ -10,6 +12,7 @@ import {
   AreaChartData2,
   AreaChartData3,
   AreaChartData4,
+  categories1,
   categories2,
   categories3,
   categories4,
@@ -39,9 +42,17 @@ import {
           :data="AreaChartData1"
           :height="200"
           y-label="Number of visits"
-          :categories="categories3"
-          :x-formatter="(i: number): string => `${AreaChartData1[i].date}`"
+          :categories="categories1"
+          :x-num-ticks="2"
+          :x-formatter="(item): string => {
+            if(!item) {
+              return '';
+            }
+            const date = new Date(item.date)
+              return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getUTCFullYear();
+            }"
           :curve-type="CurveType.MonotoneX"
+          :pagination-position="PaginationPosition.Top"
         />
       </Card>
 
@@ -57,7 +68,7 @@ import {
           :categories="categories2"
           :y-num-ticks="4"
           :x-num-ticks="7"
-          :x-formatter="(i: number): string => `${AreaChartData2[i].hour}`"
+          :x-formatter="(i): string => `${i?.hour}`"
           :curve-type="CurveType.Basis"
         />
       </Card>
@@ -81,7 +92,7 @@ import {
           :categories="categories5"
           :y-num-ticks="4"
           :x-num-ticks="7"
-          :x-formatter="(i: number): string => `${AreaChartData2[i].hour}`"
+          :x-formatter="(i): string => `${i?.month}`"
           :curve-type="CurveType.Natural"
         />
       </Card>
@@ -98,7 +109,7 @@ import {
           :categories="categories5"
           :y-num-ticks="4"
           :x-num-ticks="7"
-          :x-formatter="(i: number): string => `${AreaChartData2[i].hour}`"
+          :x-formatter="(i): string => `${i?.month}`"
           :curve-type="CurveType.Step"
         />
       </Card>
@@ -115,9 +126,7 @@ import {
           :categories="categories5"
           :y-num-ticks="4"
           :x-num-ticks="7"
-          :x-formatter="(i: number): string => {
-              return `${AreaChartData2[i].hour}`;
-            }"
+          :x-formatter="(i): string => `${i?.month}`"
         />
       </Card>
     </div>
