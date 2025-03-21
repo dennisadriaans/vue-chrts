@@ -9,8 +9,6 @@ import { BarChart as BaseBar } from "./../src/components";
 import { AreaChart as BaseArea } from "./../src/components";
 import { DonutChart as BaseDonut } from "./../src/components";
 
-import DashboardTemplate from "./DashboardTemplate.vue";
-
 import Button from "./elements/Button.vue";
 import Card from "./elements/Card.vue";
 import Table from "./elements/Table.vue";
