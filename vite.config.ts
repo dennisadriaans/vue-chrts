@@ -6,8 +6,6 @@ import tailwindcss from "@tailwindcss/vite";
 import type { ModuleFormat, OutputOptions } from 'rollup'
 
 const outputDefault = (format: ModuleFormat, extension: string): OutputOptions => ({
-  // Provide global variables to use in the UMD build
-  // for externalized deps
   globals: {
     vue: 'Vue'
   },
@@ -19,14 +17,14 @@ const outputDefault = (format: ModuleFormat, extension: string): OutputOptions =
   },
   exports: 'named',
 })
+
 export default defineConfig(({ command, mode }): UserConfig => {
   if (command === 'build' && mode !== 'gallery') {
     return {
       plugins: [
         vue(),
         dts({
-          insertTypesEntry: true,
-          include: ['src/**/*.ts', 'src/**/*.vue'],
+          cleanVueFileName: true,
         }),
       ],
       build: {
