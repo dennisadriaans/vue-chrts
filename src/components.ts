@@ -1,4 +1,4 @@
-export * from './components/Area'
+export { default as AreaChart } from './components/Area/index.vue'
 export * from './components/AreaStacked'
 export * from './components/Line'
 export * from './components/Bar'

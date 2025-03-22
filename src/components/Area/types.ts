@@ -1,7 +1,7 @@
 import { PaginationPosition } from "../../types";
 import type { BulletLegendItemInterface, CurveType } from "@unovis/ts";
 
-export type AreaChartProps<T> = {
+export interface AreaChartProps<T> {
     /**
      * The data to be displayed in the area chart.
      * Each element of the array represents a data point.
@@ -27,11 +27,10 @@ export type AreaChartProps<T> = {
     categories: Record<string, BulletLegendItemInterface>;
     /**
      * A function that formats the x-axis tick labels.
-     * @param i The value to be formatted.
-     * @param idx The index of the data point.
+     * @param item The x-axis value to be formatted.
      * @returns The formatted x-axis label.
      */
-    xFormatter: (i: number, idx: number) => string;
+    xFormatter: (item: T) => string | number;
     /**
      * An optional function that formats the y-axis tick labels.
      * @param i The value to be formatted.

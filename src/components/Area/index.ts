@@ -1,2 +1,2 @@
-export { default as AreaChart } from './AreaChart.vue';
-// export * from './types'
+export { default as AreaChart } from './index.vue';
+export * from './types'

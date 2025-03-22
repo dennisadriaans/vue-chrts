@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { AreaChart as BaseArea } from "./../src/components/Area";
+import{ AreaChart } from "./../src/components/Area";
 import { AreaStackedChart } from "./../src/components";
 
 import { PaginationPosition } from "./../src/types";
@@ -18,7 +18,6 @@ import {
   categories4,
   categories5,
 } from "./data/AreaChartData";
-import { item } from "@unovis/ts/components/bullet-legend/style";
 </script>
 
 <template>
@@ -39,7 +38,7 @@ import { item } from "@unovis/ts/components/bullet-legend/style";
           <h2 class="heading-2">Area Chart multiple lines</h2>
           <!-- <p class="text-gray-500">Website visitors per device</p> -->
         </template>
-        <BaseArea
+        <AreaChart
           :data="AreaChartData1"
           :height="200"
           y-label="Number of visits"
@@ -61,7 +60,7 @@ import { item } from "@unovis/ts/components/bullet-legend/style";
         <template #header>
           <h2 class="text-xl my-2 font-bold">Area Chart with single line</h2>
         </template>
-        <BaseArea
+        <AreaChart
           :data="AreaChartData2"
           :height="200"
           x-label="Time"
@@ -85,7 +84,7 @@ import { item } from "@unovis/ts/components/bullet-legend/style";
         <template #header>
           <h2 class="text-xl my-2 font-bold">Area Chart Natrual</h2>
         </template>
-        <BaseArea
+        <AreaChart
           :data="AreaChartData4"
           :height="200"
           x-label="Month"
@@ -102,7 +101,7 @@ import { item } from "@unovis/ts/components/bullet-legend/style";
         <template #header>
           <h2 class="text-xl my-2 font-bold">Area Chart Step</h2>
         </template>
-        <BaseArea
+        <AreaChart
           :data="AreaChartData4"
           :height="200"
           x-label="Month"
@@ -119,7 +118,7 @@ import { item } from "@unovis/ts/components/bullet-legend/style";
         <template #header>
           <h2 class="text-xl my-2 font-bold">Area Chart Default</h2>
         </template>
-        <BaseArea
+        <AreaChart
           :data="AreaChartData4"
           :height="200"
           x-label="Month"
