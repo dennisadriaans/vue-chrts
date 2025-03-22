@@ -1,6 +1,6 @@
 {
   "name": "vue-chrts",
-  "version": "0.1.0-beta.1",
+  "version": "0.1.0-beta.2-internal",
   "license": "MIT",
   "files": [
     "dist"
@@ -29,10 +29,12 @@
     "preview": "vite preview",
     "deploy": "pnpm build && npm publish"
   },
+  "peerDependencies": {
+    "vue": "^3.5.13"
+  },
   "dependencies": {
-    "vue": "^3.5.13",
-    "@unovis/ts": "^1.5.1",
-    "@unovis/vue": "^1.5.1"
+    "@unovis/ts": "1.5.1",
+    "@unovis/ts": "1.5.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.4",
