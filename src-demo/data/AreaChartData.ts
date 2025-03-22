@@ -2,7 +2,7 @@ import type { BulletLegendItemInterface } from '@unovis/ts'
 
 /* Demo data for homepage */
 export const categories1: Record<string, BulletLegendItemInterface> = {
-  desktop: { name: 'Desktop', color: '#38bdf8' },
+  desktop: { name: 'Desktop', color: '#4ade80' },
   mobile: { name: 'Mobile', color: '#00dc82' }
 }
 
@@ -36,12 +36,12 @@ export const AreaChartData1: AreaChartItem1[] = [
   { date: '2024-04-03', desktop: 167, mobile: 120 },
   { date: '2024-04-04', desktop: 260, mobile: 240 },
   { date: '2024-04-05', desktop: 373, mobile: 290 },
-  // { date: '2024-04-06', desktop: 340, mobile: 310 },
-  // { date: '2024-04-07', desktop: 245, mobile: 180 },
-  // { date: '2024-04-08', desktop: 409, mobile: 320 },
-  // { date: '2024-04-09', desktop: 110, mobile: 59 },
-  // { date: '2024-04-10', desktop: 261, mobile: 190 },
-  // { date: '2024-04-11', desktop: 350, mobile: 327 },
+  { date: '2024-04-06', desktop: 340, mobile: 310 },
+  { date: '2024-04-07', desktop: 245, mobile: 180 },
+  { date: '2024-04-08', desktop: 409, mobile: 320 },
+  { date: '2024-04-09', desktop: 110, mobile: 59 },
+  { date: '2024-04-10', desktop: 261, mobile: 190 },
+  { date: '2024-04-11', desktop: 350, mobile: 327 },
   // { date: '2024-04-12', desktop: 292, mobile: 210 },
   // { date: '2024-04-13', desktop: 380, mobile: 342 },
   // { date: '2024-04-14', desktop: 220, mobile: 137 },

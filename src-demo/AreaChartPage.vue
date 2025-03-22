@@ -18,6 +18,7 @@ import {
   categories4,
   categories5,
 } from "./data/AreaChartData";
+import { item } from "@unovis/ts/components/bullet-legend/style";
 </script>
 
 <template>
@@ -33,7 +34,7 @@ import {
     </div>
 
     <div class="grid grid-cols-3 gap-4 max-w-7xl mx-auto py-4">
-      <Card>
+      <Card class="col-span-3">
         <template #header>
           <h2 class="heading-2">Area Chart multiple lines</h2>
           <!-- <p class="text-gray-500">Website visitors per device</p> -->
@@ -43,14 +44,14 @@ import {
           :height="200"
           y-label="Number of visits"
           :categories="categories1"
-          :x-num-ticks="2"
+          :x-num-ticks="14"
           :x-formatter="(item): string => {
             if(!item) {
               return '';
             }
-            const date = new Date(item.date)
-              return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getUTCFullYear();
-            }"
+              return item.date;
+          }"
+          :y-num-ticks="3"
           :curve-type="CurveType.MonotoneX"
           :pagination-position="PaginationPosition.Top"
         />
@@ -77,7 +78,7 @@ import {
         <template #header>
           <h2 class="text-xl my-2 font-bold">Area Chart Stacked</h2>
         </template>
-        <AreaStackedChart :data="AreaChartData3" :categories="categories4" />
+        <AreaStackedChart :height="200" :data="AreaChartData3" :categories="categories4" />
       </Card>
 
       <Card>
