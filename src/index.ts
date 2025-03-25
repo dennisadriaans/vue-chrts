@@ -1,8 +1,43 @@
-export * from "./components";
 
-export enum PaginationPosition {
-    Top = "top",
-    Bottom = "bottom",
-  }
+import { createApp } from 'vue'
+import { createRouter, createWebHistory } from "vue-router";
 
-export { CurveType, type BulletLegendItemInterface, Position, Orientation } from '@unovis/ts'
+import './assets/main.css'
+
+import App from './App.vue'
+
+const app = createApp(App)
+
+const router = createRouter({
+    routes: [
+        {
+          path: '/',
+          name: 'Home',
+          component: () => import('./Homepage.vue') 
+        },
+        {
+          path: '/area-charts',
+          name: 'AreaCharts',
+          component: () => import('./AreaChartPage.vue') 
+        },
+        {
+          path: '/line-charts',
+          name: 'LineCharts',
+          component: () => import('./LineChartPage.vue') 
+        },
+        {
+          path: '/bar-charts',
+          name: 'BarCharts',
+          component: () => import('./BarChartPage.vue') 
+        }
+      ],
+    history: createWebHistory(),
+  });
+
+app.use(router);
+
+app.mount('#app')
+
+export default {
+
+}
