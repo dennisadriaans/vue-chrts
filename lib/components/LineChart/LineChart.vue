@@ -14,7 +14,6 @@ import {
 import Tooltip from "./../Tooltip.vue";
 import { LegendPosition } from "../../types";
 import { LineChartProps } from "./types";
-import { getDistributedIndices } from "../../utils";
 
 const props = withDefaults(defineProps<LineChartProps<T>>(), {
   xNumTicks: (props) =>
@@ -51,17 +50,6 @@ const generateTooltip = computed(() => (d: T) => {
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
 );
-
-const tickIndices = computed(() =>
-  getDistributedIndices(props.data.length, props.xNumTicks)
-);
-
-const filteredDataByIndices = computed(() => {
-  if (!props.data?.length || !tickIndices || tickIndices.value.length === 0) {
-    return [];
-  }
-  return tickIndices.value.map((index) => props.data[index]);
-});
 </script>
 
 <template>
@@ -69,7 +57,7 @@ const filteredDataByIndices = computed(() => {
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': LegendPositionTop }"
   >
-    <VisXYContainer :data="filteredDataByIndices" :height="height">
+    <VisXYContainer :data="data" :height="height">
       <VisTooltip
         :horizontal-placement="Position.Right"
         :vertical-placement="Position.Top"
@@ -84,13 +72,14 @@ const filteredDataByIndices = computed(() => {
       </template>
       <VisAxis
         type="x"
-        :num-ticks="filteredDataByIndices.length"
-        :tick-format="(i: number, idx: number) => xFormatter(filteredDataByIndices[i], idx)"
+        :tick-format="xFormatter"
         :label="xLabel"
         :label-margin="8"
         :domain-line="xDomainLine"
         :grid-line="xGridLine"
         :tick-line="xTickLine"
+        :num-ticks="xNumTicks"
+        :tick-values="xExplicitTicks"
       />
       <VisAxis
         type="y"

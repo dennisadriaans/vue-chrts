@@ -106,9 +106,8 @@ const RevenueCategoriesMultple = {
           :height="250"
           :categories="RevenueCategoriesMultple"
           :y-axis="['desktop']"
-          :xNumTicks="6"
           :radius="4"
-          :x-formatter="(item): string => `${item?.month }`"
+          :x-formatter="(i: number): string => `${RevenueData[i]?.month }`"
           :y-formatter="(i: number) => i"
           :legend-position="LegendPosition.Top"
         />
@@ -146,9 +145,8 @@ const RevenueCategoriesMultple = {
           :y-axis="['desktop', 'mobile']"
           :group-padding="0"
           :bar-padding="0.2"
-          :xNumTicks="6"
           :radius="4"
-          :x-formatter="(item): string => `${item?.month }`"
+          :x-formatter="(i: number): string => `${RevenueData[i]?.month }`"
           :y-formatter="(i: number) => i"
           :legend-position="LegendPosition.Top"
         />
@@ -169,7 +167,7 @@ const RevenueCategoriesMultple = {
           :bar-padding="0.2"
           :xNumTicks="6"
           :radius="4"
-          :x-formatter="(item): string => `${item?.month }`"
+          :x-formatter="(i: number): string => `${RevenueData[i]?.month }`"
           :y-formatter="(i: number) => i"
           :legend-position="LegendPosition.Top"
         />
@@ -187,11 +185,11 @@ const RevenueCategoriesMultple = {
           :y-axis="['visitors']"
           :x-num-ticks="6"
           :radius="4"
-          :x-formatter="(item): string => {
-            if(!item?.date) {
+          :x-formatter="(i: number): string => {
+            if(!VisitorsData[i]?.date) {
               return '';
             }
-            const date = new Date(item.date)
+            const date = new Date(VisitorsData[i].date)
               return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
             }"
           :y-formatter="(i: number) => i"
@@ -215,7 +213,7 @@ const RevenueCategoriesMultple = {
           :xNumTicks="6"
           :radius="4"
           :orientation="Orientation.Horizontal"
-          :x-formatter="(i) => i.toString()"
+          :x-formatter="(i) => i"
           :y-formatter="(i: number): string => `${RevenueData[i].month }`"
           :legend-position="LegendPosition.Top"
         />
@@ -228,10 +226,9 @@ const RevenueCategoriesMultple = {
         :height="358"
         :categories="RevenueCategories"
         :y-axis="['value']"
-        :x-num-ticks="RevenueDataLong.length"
         :hide-legend="true"
         :y-formatter="(i: number) => i"
-        :x-formatter="(i, idx): string => idx % 6 === 0 || idx === RevenueDataLong.length -1 ?  i.date: ''"
+        :x-formatter="(i) => RevenueDataLong[i].date"
       />
     </div>
   </div>

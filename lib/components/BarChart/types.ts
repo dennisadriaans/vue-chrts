@@ -34,7 +34,7 @@ export interface BarChartProps<T> {
    * @param idx The index of the data point.
    * @returns The formatted x-axis label.
    */
-  xFormatter: (item: T, idx: number) => string | number;
+  xFormatter: (i: number, idx: number) => string | number;
   /**
    * An optional function that formats the y-axis tick labels.
    * @param i The value to be formatted.
@@ -50,6 +50,10 @@ export interface BarChartProps<T> {
    * The desired number of ticks on the x-axis.
    */
   xNumTicks?: number;
+  /**
+   * Force specific ticks on the x-axis.
+   */
+  xExplicitTicks?: number;
   /**
    * An array of property keys from the data object type 'T' to be used for the y-axis values.
    */
