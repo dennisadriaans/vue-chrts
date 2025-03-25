@@ -2,9 +2,9 @@
 
 A Vue 3 charts package inspired by [Tremor](https://tremor.so/), built on top of [Unovis](https://unovis.dev). Vue-Chrts provides beautiful, responsive charts for your Vue applications with minimal setup.
 
-[Check the docs and examples](https://nuxtcharts.com/docs)
-
 ![alt text](https://nuxtcharts.com/og-image.png)
+
+[Check the docs and examples](https://nuxtcharts.com/docs)
 
 ## Features
 
