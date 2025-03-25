@@ -28,10 +28,10 @@ export interface AreaChartProps<T> {
   /**
    * A function that formats the x-axis tick labels.
    * @param i The x-axis key of the item to be formatted.
-   * @param idx The index of the data point.
+   * @param idx The index of the data point (optional).
    * @returns The formatted x-axis label.
    */
-  xFormatter: (i: number, idx: number) => string | number;
+  xFormatter: (i: number, idx?: number) => string | number;
   /**
    * An optional function that formats the y-axis tick labels.
    * @param i The y-axis key of the item to be formatted.
