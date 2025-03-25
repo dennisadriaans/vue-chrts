@@ -137,8 +137,10 @@ const columns = [
             :data="InvestmentData"
             :height="322"
             :categories="categories"
+            :x-num-ticks="InvestmentData.length"
             :y-num-ticks="8"
-            :x-formatter="(i: number): string => `${InvestmentData[i].date}`"
+            :x-tick-line="false"
+            :x-formatter="(item: any, idx: number): string =>  idx % 12 === 0 || idx === InvestmentData.length - 1 ?  `${item?.date}` : ''"
             :curve-type="CurveType.MonotoneX"
           />
         </Card>
@@ -293,11 +295,9 @@ const columns = [
               :categories="RevenueCategories"
               :y-axis="['value']"
               :hide-legend="true"
+              :x-num-ticks="RevenueData.length"
               :y-formatter="(i: number) => i"
-              :x-formatter="(i: number): string => {
-              return `${RevenueData[i].date }`;
-            }"
-              :x-num-ticks="12"
+              :x-formatter="(item: any, idx: number): string =>  idx % 12 === 0 || idx === RevenueData.length - 1 ?  `${item?.date}` : ''"
             />
           </Card>
         </div>

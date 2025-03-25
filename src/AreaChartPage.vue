@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import { CurveType } from "@unovis/ts";
-import { AreaChart, AreaStackedChart, LegendPosition }from 'vue-ts-lib'
-
 import Card from "./elements/Card.vue";
+
+import { CurveType, LegendPosition } from './../lib/types'
 
 import {
   AreaChartData1,
