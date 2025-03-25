@@ -1,10 +1,6 @@
 <script setup lang="ts" generic="T">
 import { computed, createApp } from "vue";
-import {
-  type NumericAccessor,
-  CurveType,
-  Position,
-} from "@unovis/ts";
+import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
 import {
   VisArea,
   VisAxis,
@@ -73,15 +69,6 @@ const svgDefs = colors
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
 );
-
-const tickIndices = computed(() =>  getDistributedIndices(props.data.length, props.xNumTicks))
-
-const filteredDataByIndices = computed(() => {
-  if (!props.data?.length || !tickIndices || tickIndices.value.length === 0) {
-    return [];
-  }
-  return tickIndices.value.map((index) => props.data[index]);
-})
 </script>
 
 <template>
@@ -89,7 +76,7 @@ const filteredDataByIndices = computed(() => {
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': LegendPositionTop }"
   >
-    <VisXYContainer :data="filteredDataByIndices" :height="height" :svg-defs="svgDefs">
+    <VisXYContainer :data="data" :height="height" :svg-defs="svgDefs">
       <VisTooltip
         v-if="!hideTooltip"
         :horizontal-placement="Position.Right"
@@ -112,11 +99,11 @@ const filteredDataByIndices = computed(() => {
       </template>
 
       <VisAxis
-        type="x"
-        :num-ticks="filteredDataByIndices.length"
-        :tick-format="(i: number, idx: number) => xFormatter(filteredDataByIndices[i], idx)"
+        :tick-format="xFormatter"
         :label="xLabel"
         :grid-line="xGridLine"
+        :num-ticks="xNumTicks"
+        :tick-values="xExplicitTicks"
         :domain-line="xDomainLine"
         :tick-line="!!xGridLine"
       />

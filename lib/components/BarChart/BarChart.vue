@@ -19,7 +19,6 @@ import {
 import Tooltip from "./../Tooltip.vue";
 import { LegendPosition } from "../../types";
 import { BarChartProps } from "./types";
-import { getDistributedIndices } from "../../utils";
 
 const props = withDefaults(defineProps<BarChartProps<T>>(), {
   orientation: Orientation.Vertical,
@@ -42,17 +41,6 @@ const color = (_: T, i: number) => Object.values(props.categories)[i].color;
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
 );
-
-const tickIndices = computed(() =>
-  getDistributedIndices(props.data.length, props.xNumTicks)
-);
-
-const filteredDataByIndices = computed(() => {
-  if (!props.data?.length || !tickIndices || tickIndices.value.length === 0) {
-    return [];
-  }
-  return tickIndices.value.map((index) => props.data[index]);
-});
 
 const generateTooltip = computed(() => (d: T) => {
   if (typeof window === "undefined" || typeof document === "undefined") {
@@ -93,7 +81,7 @@ const generateTooltip = computed(() => (d: T) => {
 
       <VisGroupedBar
         v-if="!stacked"
-        :data="filteredDataByIndices"
+        :data="data"
         :x="(_: T, i: number) => i"
         :y="yAxis"
         :color="color"
@@ -104,7 +92,7 @@ const generateTooltip = computed(() => (d: T) => {
       />
       <VisStackedBar
         v-else
-        :data="filteredDataByIndices"
+        :data="data"
         :x="(_: T, i: number) => i"
         :y="yAxis"
         :color="color"
@@ -115,12 +103,13 @@ const generateTooltip = computed(() => (d: T) => {
       />
       <VisAxis
         type="x"
-        :num-ticks="filteredDataByIndices.length"
-        :tick-format="props.orientation === Orientation.Horizontal ? xFormatter : (i: number, idx: number) => xFormatter(filteredDataByIndices[i], idx)"
+        :tick-format="xFormatter"
         :label="xLabel"
         :grid-line="xGridLine"
         :domain-line="xDomainLine"
         :tick-line="xTickLine"
+        :num-ticks="xNumTicks"
+        :tick-values="xExplicitTicks"
       />
       <VisAxis
         type="y"

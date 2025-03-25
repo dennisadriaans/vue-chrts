@@ -60,6 +60,10 @@ export interface LineChartProps<T> {
    */
   xNumTicks?: number;
   /**
+   * Force specific ticks on the x-axis.
+   */
+  xExplicitTicks?: number;
+  /**
    * If `true`, hides the chart legend.
    */
   hideLegend?: boolean;
