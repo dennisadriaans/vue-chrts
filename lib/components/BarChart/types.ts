@@ -30,14 +30,14 @@ export interface BarChartProps<T> {
   categories: Record<string, BulletLegendItemInterface>;
   /**
    * A function that formats the x-axis tick labels.
-   * @param item The x-axis value to be formatted.
+   * @param i The x-axis key of the item to be formatted.
    * @param idx The index of the data point.
    * @returns The formatted x-axis label.
    */
   xFormatter: (i: number, idx: number) => string | number;
   /**
    * An optional function that formats the y-axis tick labels.
-   * @param i The value to be formatted.
+   * @param i The y-axis key of the item to be formatted.
    * @param idx The index of the data point (optional).
    * @returns The formatted y-axis label or value.
    */

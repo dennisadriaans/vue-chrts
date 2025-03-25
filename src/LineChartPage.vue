@@ -6,17 +6,17 @@ import Card from "./elements/Card.vue";
 type LineChartItem = {
   month: string;
   desktop: number;
-  mobile: number
-}
+  mobile: number;
+};
 
-const chartData : LineChartItem[] = [
+const chartData: LineChartItem[] = [
   { month: "January", desktop: 186, mobile: 186 },
   { month: "February", desktop: 305, mobile: 305 },
   { month: "March", desktop: 237, mobile: 237 },
   { month: "April", desktop: 260, mobile: 209 },
   { month: "May", desktop: 209, mobile: 209 },
   { month: "June", desktop: 250, mobile: 214 },
-]
+];
 
 import { CurveType } from "@unovis/ts";
 import {
@@ -39,7 +39,8 @@ import {
       <div class="mb-8 space-y-4">
         <h1 class="text-4xl font-bold">Line Chart</h1>
         <p class="text-lg font-medium text-gray-500">
-          Charts to effectively display trends and changes in data over time by connecting data points with lines.
+          Charts to effectively display trends and changes in data over time by
+          connecting data points with lines.
         </p>
       </div>
     </div>
@@ -54,9 +55,8 @@ import {
           :data="chartData"
           :height="200"
           y-label="Number of visits"
-          :x-num-ticks="2"
           :categories="categories3"
-          :x-formatter="(item: LineChartItem): string|number => `${item?.month}`"
+          :x-formatter="(i: number): string|number => `${chartData[i].month}`"
           :curve-type="CurveType.MonotoneX"
           :legend-position="LegendPosition.Top"
         />
@@ -71,10 +71,10 @@ import {
           :height="200"
           x-label="Time"
           y-label="Temperature"
-          :categories="categories2"
+          :x-num-ticks="4"
           :y-num-ticks="4"
-          :x-num-ticks="7"
-          :x-formatter="(item: AreaChartItem2): string|number => `${item?.hour}`"
+          :categories="categories2"
+          :x-formatter="(i: number): string|number => `${AreaChartData2[i].hour}`"
           :curve-type="CurveType.Basis"
         />
       </Card>
@@ -87,10 +87,9 @@ import {
           :data="chartData"
           :height="200"
           y-label="Number of visits"
-          :x-num-ticks="2"
           :categories="categories3"
-          :x-formatter="(item: LineChartItem): string|number => `${item?.month}`"
-            :curve-type="CurveType.Step"
+          :x-formatter="(i: number): string|number => `${chartData[i].month}`"
+          :curve-type="CurveType.Step"
         />
       </Card>
 
@@ -104,9 +103,8 @@ import {
           x-label="Month"
           y-label="Score"
           :categories="categories5"
-          :y-num-ticks="4"
           :x-num-ticks="7"
-          :x-formatter="(item: AreaChartItem4): string|number => `${item?.month}`"
+          :x-formatter="(i: number): string|number => `${chartData[i].month}`"
           :curve-type="CurveType.Natural"
         />
       </Card>
@@ -122,8 +120,7 @@ import {
           y-label="Score"
           :categories="categories5"
           :y-num-ticks="4"
-          :x-num-ticks="4"
-          :x-formatter="(item: AreaChartItem4): string|number => `${item?.month}`"
+          :x-formatter="(i: number): string|number => `${chartData[i].month}`"
           :curve-type="CurveType.Step"
         />
       </Card>
@@ -138,7 +135,7 @@ import {
           x-label="Month"
           y-label="Score"
           :categories="categories5"
-          :x-formatter="(item: LineChartItem): string|number => `${item?.month}`"
+          :x-formatter="(i: number): string|number => `${chartData[i].month}`"
         />
       </Card>
     </div>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Card from "./elements/Card.vue";
 
-import { AreaChart, AreaStackedChart } from './../lib'
+import { AreaChart, AreaStackedChart } from "./../lib";
 import { CurveType, LegendPosition } from "./../lib/types";
 
 import {
@@ -40,13 +40,8 @@ import {
           :height="200"
           y-label="Number of visits"
           :categories="categories1"
-          :x-num-ticks="14"
-          :x-formatter="(item: AreaChartItem1): string => {
-            if(!item) {
-              return '';
-            }
-              return item.date;
-          }"
+          :x-num-ticks="3"
+          :x-formatter="(i: number) => AreaChartData1[i].date"
           :y-num-ticks="3"
           :curve-type="CurveType.MonotoneX"
           :legend-position="LegendPosition.Top"
@@ -65,7 +60,7 @@ import {
           :categories="categories2"
           :y-num-ticks="4"
           :x-num-ticks="7"
-          :x-formatter="(i): string => `${i?.hour}`"
+          :x-formatter="(i: number) => AreaChartData2[i].hour"
           :curve-type="CurveType.Basis"
         />
       </Card>
@@ -93,7 +88,7 @@ import {
           :categories="categories5"
           :y-num-ticks="4"
           :x-num-ticks="7"
-          :x-formatter="(i): string => `${i?.month}`"
+          :x-formatter="(i: number) => AreaChartData4[i].month"
           :curve-type="CurveType.Natural"
         />
       </Card>
@@ -110,7 +105,7 @@ import {
           :categories="categories5"
           :y-num-ticks="4"
           :x-num-ticks="7"
-          :x-formatter="(i): string => `${i?.month}`"
+          :x-formatter="(i: number) => AreaChartData4[i].month"
           :curve-type="CurveType.Step"
         />
       </Card>
@@ -127,7 +122,7 @@ import {
           :categories="categories5"
           :y-num-ticks="4"
           :x-num-ticks="7"
-          :x-formatter="(i): string => `${i?.month}`"
+          :x-formatter="(i: number) => AreaChartData4[i].month"
         />
       </Card>
     </div>

@@ -14,7 +14,6 @@ import {
 import Tooltip from "./../Tooltip.vue";
 import { LegendPosition } from "../../types";
 import { AreaChartProps } from "./types";
-import { getDistributedIndices } from "../../utils";
 
 const props = withDefaults(defineProps<AreaChartProps<T>>(), {
   xNumTicks: (props) =>
@@ -99,13 +98,14 @@ const LegendPositionTop = computed(
       </template>
 
       <VisAxis
+        type="x"
         :tick-format="xFormatter"
         :label="xLabel"
+        :label-margin="8"
+        :domain-line="xDomainLine"
         :grid-line="xGridLine"
         :num-ticks="xNumTicks"
         :tick-values="xExplicitTicks"
-        :domain-line="xDomainLine"
-        :tick-line="!!xGridLine"
         :min-max-ticks-only="minMaxTicksOnly"
       />
       <VisAxis
