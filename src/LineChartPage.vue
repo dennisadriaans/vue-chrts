@@ -54,6 +54,7 @@ import {
         <LineChart
           :data="chartData"
           :height="200"
+          :y-grid-line="true"
           y-label="Number of visits"
           :categories="categories3"
           :x-formatter="(i: number): string|number => `${chartData[i].month}`"
