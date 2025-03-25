@@ -80,6 +80,7 @@ const LegendPositionTop = computed(
         :tick-line="xTickLine"
         :num-ticks="xNumTicks"
         :tick-values="xExplicitTicks"
+        :min-max-ticks-only="minMaxTicksOnly"
       />
       <VisAxis
         type="y"

@@ -47,6 +47,10 @@ export interface BarChartProps<T> {
    */
   yNumTicks?: number;
   /**
+   * Force only first and last ticks on the x-axis.
+   */
+  minMaxTicksOnly?: number;
+  /**
    * The desired number of ticks on the x-axis.
    */
   xNumTicks?: number;

@@ -53,6 +53,10 @@ export interface AreaChartProps<T> {
    */
   xExplicitTicks?: number;
   /**
+   * Force only first and last ticks on the x-axis.
+   */
+  minMaxTicksOnly?: number;
+  /**
    * The desired number of ticks on the y-axis.
    */
   yNumTicks?: number;

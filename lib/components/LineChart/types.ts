@@ -48,14 +48,6 @@ export interface LineChartProps<T> {
    */
   curveType?: CurveType;
   /**
-   * If `true`, hides the chart tooltip.
-   */
-  hideTooltip?: boolean;
-  /**
-   * The desired number of ticks on the y-axis.
-   */
-  yNumTicks?: number;
-  /**
    * The desired number of ticks on the x-axis.
    */
   xNumTicks?: number;
@@ -63,6 +55,18 @@ export interface LineChartProps<T> {
    * Force specific ticks on the x-axis.
    */
   xExplicitTicks?: number;
+  /**
+   * Force only first and last ticks on the x-axis.
+   */
+  minMaxTicksOnly?: number;
+  /**
+   * The desired number of ticks on the y-axis.
+   */
+  yNumTicks?: number;
+  /**
+   * If `true`, hides the chart tooltip.
+   */
+  hideTooltip?: boolean;
   /**
    * If `true`, hides the chart legend.
    */
