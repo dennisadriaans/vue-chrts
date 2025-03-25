@@ -90,6 +90,7 @@ const filteredDataByIndices = computed(() => {
         :label-margin="8"
         :domain-line="xDomainLine"
         :grid-line="xGridLine"
+        :tick-line="xTickLine"
       />
       <VisAxis
         type="y"
@@ -98,6 +99,7 @@ const filteredDataByIndices = computed(() => {
         :num-ticks="yNumTicks"
         :domain-line="yDomainLine"
         :grid-line="yGridLine"
+        :tick-line="yTickLine"
       />
       <VisCrosshair
         v-if="!hideTooltip"
