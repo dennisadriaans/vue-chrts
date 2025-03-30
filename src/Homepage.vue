@@ -137,11 +137,11 @@ const columns = [
             :data="InvestmentData"
             :height="322"
             :categories="categories"
-            :x-num-ticks="InvestmentData.length"
             :y-num-ticks="8"
             :x-tick-line="false"
-            :x-formatter="(item: any, idx: number): string =>  idx % 12 === 0 || idx === InvestmentData.length - 1 ?  `${item?.date}` : ''"
+            :x-formatter="(i: number): string => `${InvestmentData[i]?.date}`"
             :curve-type="CurveType.MonotoneX"
+            :legend-position="LegendPosition.Top"
           />
         </Card>
       </div>

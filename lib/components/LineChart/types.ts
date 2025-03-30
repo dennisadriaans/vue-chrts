@@ -41,7 +41,7 @@ export interface LineChartProps<T> {
    * @param idx The index of the data point.
    * @returns The formatted y-axis label.
    */
-  yFormatter?: (i: number, idx: number) => string;
+  yFormatter?: (i: number, idx?: number) => string;
   /**
    * The type of curve to use for the line chart.
    * See `CurveType` for available options.

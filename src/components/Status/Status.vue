@@ -1,8 +1,13 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref } from "vue";
 
-const domain = ref("example.com");
-const uptime = ref("99.9% uptime");
+interface StatusProps {
+  domain: string;
+  uptime: string;
+  outages: Array<{ hour: number; status: "online" | "offline" }>;
+}
+
+const props = defineProps<StatusProps>();
 
 const outages = ref([
   { hour: 0, status: "online" },
@@ -60,7 +65,9 @@ const outages = ref([
 </script>
 
 <template>
-  <div class="ring ring-border divide-y divide-(--ui-border) rounded-xl shadow-sm">
+  <div
+    class="ring ring-border divide-y divide-(--ui-border) rounded-xl shadow-sm"
+  >
     <div class="flex items-center justify-between p-4">
       <div class="flex items-center gap-2">
         <svg
