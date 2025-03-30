@@ -30,6 +30,10 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
 });
 
+if (!props.yAxis || props.yAxis.length === 0) {
+  throw new Error("yAxis is required");
+}
+
 const yAxis: ComputedRef<((d: T) => T[keyof T])[]> = computed(() => {
   return props.yAxis.map((key) => (d: T) => {
     return d[key];
