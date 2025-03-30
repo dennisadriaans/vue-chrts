@@ -58,7 +58,7 @@ export interface LineChartProps<T> {
   /**
    * Force only first and last ticks on the x-axis.
    */
-  minMaxTicksOnly?: number;
+  minMaxTicksOnly?: boolean;
   /**
    * The desired number of ticks on the y-axis.
    */

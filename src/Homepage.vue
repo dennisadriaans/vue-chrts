@@ -131,7 +131,7 @@ const columns = [
         <Card>
           <template #header>
             <h2 class="heading-2">Multi line chart</h2>
-            <p class="text-gray-500">Website visitors per device</p>
+            <p class="text-neutral-500">Website visitors per device</p>
           </template>
           <BaseLine
             :data="InvestmentData"
@@ -295,9 +295,9 @@ const columns = [
               :categories="RevenueCategories"
               :y-axis="['value']"
               :hide-legend="true"
-              :x-num-ticks="RevenueData.length"
+              :minMaxTicksOnly="true"
               :y-formatter="(i: number) => i"
-              :x-formatter="(item: any, idx: number): string =>  idx % 12 === 0 || idx === RevenueData.length - 1 ?  `${item?.date}` : ''"
+              :x-formatter="(i: number): string => RevenueData[i]?.date"
             />
           </Card>
         </div>

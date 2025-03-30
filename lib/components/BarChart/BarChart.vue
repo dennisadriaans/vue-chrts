@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="T">
 import { computed, ComputedRef, createApp } from "vue";
 import {
-  BulletLegendItemInterface,
   GroupedBar,
   Orientation,
   StackedBar,
@@ -121,7 +120,7 @@ const generateTooltip = computed(() => (d: T) => {
         :label="yLabel"
         :grid-line="orientation !== Orientation.Horizontal && yGridLine"
         :domain-line="!!yDomainLine"
-        :tick-format="yFormatter"
+        :tick-format="() => ''"
         :num-ticks="yNumTicks"
         :tick-line="yTickLine"
       />
