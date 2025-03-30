@@ -105,6 +105,7 @@ const LegendPositionTop = computed(
         :domain-line="xDomainLine"
         :grid-line="xGridLine"
         :num-ticks="xNumTicks"
+        :tick-line="xTickLine"
         :tick-values="xExplicitTicks"
         :min-max-ticks-only="minMaxTicksOnly"
       />

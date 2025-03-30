@@ -85,6 +85,10 @@ export interface AreaChartProps<T> {
    */
   yDomainLine?: boolean;
   /**
+   * If `true`, displays tick lines on the x-axis.
+   */
+  xTickLine?: boolean;
+  /**
    * Optional position for the legend, if applicable.
    * See `LegendPosition` for available options.
    */
