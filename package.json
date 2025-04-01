@@ -1,6 +1,6 @@
 {
   "name": "vue-chrts",
-  "version": "0.1.0-beta.5",
+  "version": "0.1.0",
   "type": "module",
   "files": [
     "dist"
