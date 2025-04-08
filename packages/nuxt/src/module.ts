@@ -54,12 +54,5 @@ export default defineNuxtModule<ModuleOptions>({
       type: true,
       imports: ['AreaChartItem', 'BulletLegendItemInterface'],
     })
-
-    nuxt.hook('prepare:types', ({ references }) => {
-      references.push({
-        path: createResolver(import.meta.url).resolve('./types/vue-chrts.d.ts')
-      })
-    })
-
   }
 })
