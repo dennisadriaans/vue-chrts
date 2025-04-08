@@ -1,4 +1,5 @@
-import { defineNuxtModule, createResolver, addComponent, addImports } from '@nuxt/kit'
+import { defineNuxtModule, createResolver, addImportsSources, addImports } from '@nuxt/kit'
+import { resolveComponents, resolveImports } from "./core"
 
 export interface ModuleOptions {
   /**
@@ -26,6 +27,7 @@ export interface ModuleOptions {
   include?: string[]
 }
 
+
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: '@vue-chrts/nuxt',
@@ -41,11 +43,23 @@ export default defineNuxtModule<ModuleOptions>({
     include: []
   },
   async setup(options, nuxt) {
-    const { resolve } = createResolver(import.meta.url)
 
-    addComponent({
-      name: 'TestComponent',
-      filePath: resolve('runtime/components/TestComponent.vue'),
+    const runtimePath = createResolver(import.meta.url).resolve('./runtime/vue-chrts')
+
+    resolveImports(options, runtimePath)
+    resolveComponents(options, runtimePath)
+
+    addImportsSources({
+      from: 'vue-chrts',
+      type: true,
+      imports: ['AreaChartItem', 'BulletLegendItemInterface'],
     })
+
+    nuxt.hook('prepare:types', ({ references }) => {
+      references.push({
+        path: createResolver(import.meta.url).resolve('./types/vue-chrts.d.ts')
+      })
+    })
+
   }
 })
