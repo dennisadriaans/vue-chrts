@@ -48,11 +48,5 @@ export default defineNuxtModule<ModuleOptions>({
 
     resolveImports(options, runtimePath)
     resolveComponents(options, runtimePath)
-
-    addImportsSources({
-      from: 'vue-chrts',
-      type: true,
-      imports: ['AreaChartItem', 'BulletLegendItemInterface'],
-    })
   }
 })

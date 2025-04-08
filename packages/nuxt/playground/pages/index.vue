@@ -3,6 +3,10 @@ const categories: Record<string, BulletLegendItemInterface> = {
   desktop: { name: "Desktop", color: "#00dc82" },
 };
 
+interface AreaChartItem {
+  month: string;
+  desktop: number;
+}
 const AreaChartData: AreaChartItem[] = [
   { month: "January", desktop: 186 },
   { month: "February", desktop: 305 },

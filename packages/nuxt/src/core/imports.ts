@@ -2,9 +2,10 @@ import { addImportsSources } from "@nuxt/kit";
 
 export const resolveImports = (config: any, filePath: string) => {
     const { imports } = config
-    const allImports = imports ? imports : []
+    const allImports = imports ? imports : ['BulletLegendItemInterface']
     addImportsSources({
         from: filePath,
-        imports: ['']
+        type: true,
+        imports: [...allImports]
     })
 }
