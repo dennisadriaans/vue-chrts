@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="T">
 import { computed, createApp, ref, onUnmounted } from "vue";
+import { convertCategories, getColorValue, getOklchFromCssVariable, oklch2web } from '../../colors'
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
 import {
   VisArea,
@@ -14,8 +15,6 @@ import {
 import Tooltip from "./../Tooltip.vue";
 import { LegendPosition } from "../../types";
 import { AreaChartProps } from "./types";
-import { oklch2web } from "oklch-colors";
-import { convertCategories, getColorValue, getOklchFromCssVariable } from "../../colors";
 
 // Constants for default values
 const DEFAULT_TICK_COUNT = 24;
@@ -49,7 +48,8 @@ const parsedColors = Object.values(props.categories).map((category) => {
     color: oklch2web(
       primaryOklchValues.l,
       primaryOklchValues.c,
-      primaryOklchValues.h
+      primaryOklchValues.h,
+      primaryOklchValues.a
     ),
   };
 });

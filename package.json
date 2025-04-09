@@ -1,6 +1,6 @@
 {
   "name": "vue-chrts",
-  "version": "0.1.0",
+  "version": "0.1.1-test.1",
   "type": "module",
   "files": [
     "dist"
@@ -38,10 +38,5 @@
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.2.4"
   },
-  "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2",
-  "dependencies": {
-    "install": "^0.13.0",
-    "npm": "^11.3.0",
-    "oklch-colors": "^0.0.1"
-  }
+  "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2"
 }
