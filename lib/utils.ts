@@ -30,3 +30,4 @@ export function getDistributedIndices(length: number, numTicks: number) {
     // No need to filter duplicates as our formula ensures unique indices
     return indices;
   }
+

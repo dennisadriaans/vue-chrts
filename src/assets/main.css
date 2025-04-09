@@ -8,6 +8,8 @@
   --color-border: oklch(92% 0 0);
   --color-card: oklch(100% 0 0);
   --color-primary: oklch(79.14% 0.2091 151.66);
+  --chart-primary: oklch(0.63 0.1363 157.86);
+  --chart-secondary: oklch(0.76 0.1782 153.61);
 }
 
 @utility heading-2 {

@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="T">
+import { oklch, parse, formatHex } from "culori";
 import { computed, createApp, ref, onUnmounted } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
 import {
@@ -32,53 +33,42 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
       : props.data.length - 1,
 });
 
-const colors = Object.values(props.categories).map((c) => c.color);
 
-// Create a single app instance for tooltips
-const tooltipApp = ref<ReturnType<typeof createApp> | null>(null);
-const tooltipContainer = ref<HTMLDivElement | null>(null);
+function getOklchFromCssVariable(cssVariableName: string) {
+  if (typeof window === "undefined") return null;
+  
+  const root = getComputedStyle(document.documentElement);
+  const cssValue = root.getPropertyValue(cssVariableName).trim();
+  
+  if (!cssValue) return null;
+  
+  const parsedColor = parse(cssValue);
+  if (!parsedColor) return null;
+  
+  return oklch(parsedColor);
+}
 
-const generateTooltip = computed(() => (d: T) => {
-  if (typeof window === "undefined" || typeof document === "undefined") {
-    return "";
-  }
+function getColorValue(colorStr: string) {
+  if (colorStr?.includes('#')) return colorStr;
+  
+  const oklchColor = getOklchFromCssVariable(colorStr);
+  if (!oklchColor) return DEFAULT_COLOR;
+  
+  return formatHex(oklchColor);
+}
 
-  try {
-    if (!tooltipContainer.value) {
-      tooltipContainer.value = document.createElement("div");
-    }
+const colors = Object.values(props.categories).map(c => getColorValue(c.color));
 
-    if (!tooltipApp.value) {
-      tooltipApp.value = createApp(Tooltip, {
-        data: d,
-        categories: props.categories,
-      });
-      tooltipApp.value.mount(tooltipContainer.value);
-    } else {
-      // Update the existing app's props
-      const instance = tooltipApp.value._instance;
-      if (instance?.proxy) {
-        (instance.proxy as any).$props.data = d;
-        (instance.proxy as any).$props.categories = props.categories;
-      }
-    }
-
-    return tooltipContainer.value.innerHTML;
-  } catch (error) {
-    console.error("Error generating tooltip:", error);
-    return "";
-  }
-});
-
-// Cleanup on component unmount
-onUnmounted(() => {
-  if (tooltipApp.value) {
-    tooltipApp.value.unmount();
-    tooltipApp.value = null;
-  }
-  if (tooltipContainer.value) {
-    tooltipContainer.value = null;
-  }
+const parsedColors = Object.values(props.categories).map(category => {
+  if (category.color?.includes('#')) return category;
+  
+  const primaryOklch = getOklchFromCssVariable(category.color);
+  if (!primaryOklch) return { ...category, color: DEFAULT_COLOR };
+  
+  return {
+    ...category,
+    color: formatHex(primaryOklch)
+  };
 });
 
 function accessors(id: string): { y: NumericAccessor<T>; color: string } {
@@ -88,22 +78,57 @@ function accessors(id: string): { y: NumericAccessor<T>; color: string } {
   };
 }
 
-const svgDefs = computed(() =>
-  colors
-    .map(
-      (color, index) => `
+const tooltipApp = ref<ReturnType<typeof createApp> | null>(null);
+const tooltipContainer = ref<HTMLDivElement | null>(null);
+
+const generateTooltip = computed(() => (d: T) => {
+  if (typeof window === "undefined") return "";
+  
+  if (!tooltipContainer.value) {
+    tooltipContainer.value = document.createElement("div");
+  }
+  
+  try {
+    if (!tooltipApp.value) {
+      tooltipApp.value = createApp(Tooltip, {
+        data: d,
+        categories: props.categories,
+      });
+      tooltipApp.value.mount(tooltipContainer.value);
+      return tooltipContainer.value.innerHTML;
+    }
+    
+    const instance = tooltipApp.value._instance;
+    if (!instance?.proxy) return tooltipContainer.value.innerHTML;
+    
+    (instance.proxy as any).$props.data = d;
+    (instance.proxy as any).$props.categories = props.categories;
+    
+    return tooltipContainer.value.innerHTML;
+  } catch (error) {
+    console.error("Error generating tooltip:", error);
+    return "";
+  }
+});
+
+onUnmounted(() => {
+  if (tooltipApp.value) {
+    tooltipApp.value.unmount();
+    tooltipApp.value = null;
+  }
+  tooltipContainer.value = null;
+});
+
+const svgDefs = colors
+  .map((color, index) => `
   <linearGradient id="gradient${index}-${color}" gradientTransform="rotate(90)">
     <stop offset="0%" stop-color="${color}" stop-opacity="1" />
     <stop offset="100%" stop-color="${color}" stop-opacity="0" />
   </linearGradient>
-`
-    )
-    .join("")
-);
+`)
+  .join("");
 
-const LegendPositionTop = computed(
-  () => props.legendPosition === LegendPosition.Top
-);
+const LegendPositionTop = computed(() => props.legendPosition === LegendPosition.Top);
 </script>
 
 <template>
@@ -165,7 +190,7 @@ const LegendPositionTop = computed(
       class="flex items-center justify-end"
       :class="{ 'pb-4': LegendPositionTop }"
     >
-      <VisBulletLegend :items="Object.values(categories)" />
+      <VisBulletLegend :items="parsedColors" />
     </div>
   </div>
 </template>

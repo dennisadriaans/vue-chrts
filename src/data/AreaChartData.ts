@@ -1,9 +1,9 @@
 import type { BulletLegendItemInterface } from '@unovis/ts'
 
-/* Demo data for homepage */
+
 export const categories1: Record<string, BulletLegendItemInterface> = {
-  desktop: { name: 'Desktop', color: '#4ade80' },
-  mobile: { name: 'Mobile', color: '#00dc82' }
+  desktop: { name: 'Desktop', color: '--chart-primary' },
+  mobile: { name: 'Mobile', color: '--chart-secondary' }
 }
 
 export const categories2: Record<string, BulletLegendItemInterface> = {
