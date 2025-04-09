@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="T">
 import { computed, createApp, ref, onUnmounted } from "vue";
-import { convertCategories, getColorValue, getOklchFromCssVariable, oklch2web } from '../../colors'
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
 import {
   VisArea,
@@ -33,25 +32,45 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
       : props.data.length - 1,
 });
 
-const colors = Object.values(props.categories).map((c: any) =>
-  getColorValue(c.color, oklch2web)
-);
+const colors = Object.values(props.categories).map((c) => c.color);
 
-const parsedColors = Object.values(props.categories).map((category) => {
-  if (category.color?.includes("#")) return category;
+// Create a single app instance for tooltips
+const tooltipApp = ref<ReturnType<typeof createApp> | null>(null);
+const tooltipContainer = ref<HTMLDivElement | null>(null);
 
-  const primaryOklchValues = getOklchFromCssVariable(category.color!);
-  if (!primaryOklchValues) return { ...category, color: DEFAULT_COLOR };
+const generateTooltip = computed(() => (d: T) => {
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    return "";
+  }
 
-  return {
-    ...category,
-    color: oklch2web(
-      primaryOklchValues.l,
-      primaryOklchValues.c,
-      primaryOklchValues.h,
-      primaryOklchValues.a
-    ),
-  };
+  try {
+    if (!tooltipContainer.value) {
+      tooltipContainer.value = document.createElement("div");
+    }
+
+    if (!tooltipApp.value) {
+      tooltipApp.value = createApp(Tooltip, {
+        data: d,
+        categories: props.categories,
+      });
+      tooltipApp.value.mount(tooltipContainer.value);
+    }
+    return tooltipContainer.value.innerHTML;
+  } catch (error) {
+    console.error("Error generating tooltip:", error);
+    return "";
+  }
+});
+
+// Cleanup on component unmount
+onUnmounted(() => {
+  if (tooltipApp.value) {
+    tooltipApp.value.unmount();
+    tooltipApp.value = null;
+  }
+  if (tooltipContainer.value) {
+    tooltipContainer.value = null;
+  }
 });
 
 function accessors(id: string): { y: NumericAccessor<T>; color: string } {
@@ -61,56 +80,20 @@ function accessors(id: string): { y: NumericAccessor<T>; color: string } {
   };
 }
 
-const tooltipApp = ref<ReturnType<typeof createApp> | null>(null);
-const tooltipContainer = ref<HTMLDivElement | null>(null);
-
-const generateTooltip = computed(() => (d: T) => {
-  if (typeof window === "undefined") return "";
-
-  if (!tooltipContainer.value) {
-    tooltipContainer.value = document.createElement("div");
-  }
-
-  const convertedCategories = convertCategories(props.categories, oklch2web);
-
-  try {
-    if (!tooltipApp.value) {
-      tooltipApp.value = createApp(Tooltip, {
-        data: d,
-        categories: convertedCategories,
-      });
-      tooltipApp.value.mount(tooltipContainer.value);
-      return tooltipContainer.value.innerHTML;
-    }
-
-    const instance = tooltipApp.value._instance;
-    if (!instance?.proxy) return tooltipContainer.value.innerHTML;
-
-    return tooltipContainer.value.innerHTML;
-  } catch (error) {
-    console.error("Error generating tooltip:", error);
-    return "";
-  }
-});
-
-onUnmounted(() => {
-  if (tooltipApp.value) {
-    tooltipApp.value.unmount();
-    tooltipApp.value = null;
-  }
-  tooltipContainer.value = null;
-});
-
-const svgDefs = colors
-  .map(
-    (color, index) => `
+const svgDefs = computed(() =>
+  colors
+    .map(
+      (color, index) => {
+        return `
   <linearGradient id="gradient${index}-${color}" gradientTransform="rotate(90)">
-    <stop offset="0%" stop-color="${color}" stop-opacity="1" />
-    <stop offset="100%" stop-color="${color}" stop-opacity="0" />
+  <stop offset="0%" style="stop-color:var(--chart-primary);stop-opacity:1" />
+    <stop offset="100%" style="stop-color:var(--chart-secondary);stop-opacity:0" />
   </linearGradient>
 `
-  )
-  .join("");
+      }
+    )
+    .join("")
+);
 
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
@@ -176,7 +159,7 @@ const LegendPositionTop = computed(
       class="flex items-center justify-end"
       :class="{ 'pb-4': LegendPositionTop }"
     >
-      <VisBulletLegend :items="parsedColors" />
+      <VisBulletLegend :items="Object.values(categories)" />
     </div>
   </div>
 </template>
