@@ -24,6 +24,7 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.15",
     "@tanstack/vue-table": "^8.21.2",
+    "@types/culori": "^2.1.1",
     "@types/node": "^22.13.11",
     "@unovis/ts": "^1.5.1",
     "@unovis/vue": "^1.5.1",
@@ -39,8 +40,8 @@
   },
   "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2",
   "dependencies": {
-    "culori": "^4.0.1",
     "install": "^0.13.0",
-    "npm": "^11.3.0"
+    "npm": "^11.3.0",
+    "oklch-colors": "^0.0.1"
   }
 }

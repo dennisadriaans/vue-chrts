@@ -1,5 +1,4 @@
 <script setup lang="ts" generic="T">
-import { oklch, parse, formatHex } from "culori";
 import { computed, createApp, ref, onUnmounted } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
 import {
@@ -15,6 +14,8 @@ import {
 import Tooltip from "./../Tooltip.vue";
 import { LegendPosition } from "../../types";
 import { AreaChartProps } from "./types";
+import { oklch2web } from "oklch-colors";
+import { convertCategories, getColorValue, getOklchFromCssVariable } from "../../colors";
 
 // Constants for default values
 const DEFAULT_TICK_COUNT = 24;
@@ -33,41 +34,23 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
       : props.data.length - 1,
 });
 
+const colors = Object.values(props.categories).map((c: any) =>
+  getColorValue(c.color, oklch2web)
+);
 
-function getOklchFromCssVariable(cssVariableName: string) {
-  if (typeof window === "undefined") return null;
-  
-  const root = getComputedStyle(document.documentElement);
-  const cssValue = root.getPropertyValue(cssVariableName).trim();
-  
-  if (!cssValue) return null;
-  
-  const parsedColor = parse(cssValue);
-  if (!parsedColor) return null;
-  
-  return oklch(parsedColor);
-}
+const parsedColors = Object.values(props.categories).map((category) => {
+  if (category.color?.includes("#")) return category;
 
-function getColorValue(colorStr: string) {
-  if (colorStr?.includes('#')) return colorStr;
-  
-  const oklchColor = getOklchFromCssVariable(colorStr);
-  if (!oklchColor) return DEFAULT_COLOR;
-  
-  return formatHex(oklchColor);
-}
+  const primaryOklchValues = getOklchFromCssVariable(category.color!);
+  if (!primaryOklchValues) return { ...category, color: DEFAULT_COLOR };
 
-const colors = Object.values(props.categories).map(c => getColorValue(c.color));
-
-const parsedColors = Object.values(props.categories).map(category => {
-  if (category.color?.includes('#')) return category;
-  
-  const primaryOklch = getOklchFromCssVariable(category.color);
-  if (!primaryOklch) return { ...category, color: DEFAULT_COLOR };
-  
   return {
     ...category,
-    color: formatHex(primaryOklch)
+    color: oklch2web(
+      primaryOklchValues.l,
+      primaryOklchValues.c,
+      primaryOklchValues.h
+    ),
   };
 });
 
@@ -83,27 +66,26 @@ const tooltipContainer = ref<HTMLDivElement | null>(null);
 
 const generateTooltip = computed(() => (d: T) => {
   if (typeof window === "undefined") return "";
-  
+
   if (!tooltipContainer.value) {
     tooltipContainer.value = document.createElement("div");
   }
-  
+
+  const convertedCategories = convertCategories(props.categories, oklch2web);
+
   try {
     if (!tooltipApp.value) {
       tooltipApp.value = createApp(Tooltip, {
         data: d,
-        categories: props.categories,
+        categories: convertedCategories,
       });
       tooltipApp.value.mount(tooltipContainer.value);
       return tooltipContainer.value.innerHTML;
     }
-    
+
     const instance = tooltipApp.value._instance;
     if (!instance?.proxy) return tooltipContainer.value.innerHTML;
-    
-    (instance.proxy as any).$props.data = d;
-    (instance.proxy as any).$props.categories = props.categories;
-    
+
     return tooltipContainer.value.innerHTML;
   } catch (error) {
     console.error("Error generating tooltip:", error);
@@ -120,15 +102,19 @@ onUnmounted(() => {
 });
 
 const svgDefs = colors
-  .map((color, index) => `
+  .map(
+    (color, index) => `
   <linearGradient id="gradient${index}-${color}" gradientTransform="rotate(90)">
     <stop offset="0%" stop-color="${color}" stop-opacity="1" />
     <stop offset="100%" stop-color="${color}" stop-opacity="0" />
   </linearGradient>
-`)
+`
+  )
   .join("");
 
-const LegendPositionTop = computed(() => props.legendPosition === LegendPosition.Top);
+const LegendPositionTop = computed(
+  () => props.legendPosition === LegendPosition.Top
+);
 </script>
 
 <template>
