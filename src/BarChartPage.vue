@@ -207,7 +207,7 @@ const RevenueCategoriesMultple = {
           :xNumTicks="6"
           :radius="4"
           :orientation="Orientation.Horizontal"
-          :x-formatter="(i) => i"
+          :x-formatter="(i) => JSON.stringify(i)"
           :y-formatter="(i: number): string => `${RevenueData[i].month }`"
           :legend-position="LegendPosition.Top"
         />

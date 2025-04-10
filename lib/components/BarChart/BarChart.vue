@@ -46,11 +46,15 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
     return "";
   }
 
+  const keys = Object.keys(props.categories);
+  const dataKeys = Object.keys(d);
+  const key = dataKeys.find((key) => !keys.includes(key));
+
   try {
     const app = createApp(Tooltip, {
       data: d,
       categories: props.categories,
-      xValue: props.xFormatter(Math.floor(idx)),
+      xValue: d[key],
     });
 
     const container = document.createElement("div");
@@ -71,6 +75,7 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': LegendPositionTop }"
   >
+    {{ orientation === Orientation.Horizontal }}
     <VisXYContainer :height="height">
       <VisTooltip
         :triggers="{
