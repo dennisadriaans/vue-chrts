@@ -1,10 +1,6 @@
 <script setup lang="ts" generic="T">
 import { computed, ComputedRef, createApp } from "vue";
-import {
-  GroupedBar,
-  Orientation,
-  StackedBar,
-} from "@unovis/ts";
+import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
 
 import {
   VisAxis,
@@ -45,15 +41,20 @@ const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
 );
 
-const generateTooltip = computed(() => (d: T) => {
+const generateTooltip = computed(() => (d: T, idx: number) => {
   if (typeof window === "undefined" || typeof document === "undefined") {
     return "";
   }
+
+  const keys = Object.keys(props.categories);
+  const dataKeys = Object.keys(d);
+  const key = dataKeys.find((key) => !keys.includes(key));
 
   try {
     const app = createApp(Tooltip, {
       data: d,
       categories: props.categories,
+      xValue: d[key],
     });
 
     const container = document.createElement("div");
@@ -84,7 +85,9 @@ const generateTooltip = computed(() => (d: T) => {
 
       <VisGroupedBar
         v-if="!stacked"
-        :data="data"
+        :data="
+          orientation === Orientation.Horizontal ? [...data].reverse() : data
+        "
         :x="(_: T, i: number) => i"
         :y="yAxis"
         :color="color"
@@ -95,7 +98,9 @@ const generateTooltip = computed(() => (d: T) => {
       />
       <VisStackedBar
         v-else
-        :data="data"
+        :data="
+          orientation === Orientation.Horizontal ? [...data].reverse() : data
+        "
         :x="(_: T, i: number) => i"
         :y="yAxis"
         :color="color"

@@ -19,7 +19,7 @@ export type AreaStackedChartProps<T> = {
 
 const props = defineProps<AreaStackedChartProps<T>>();
 
-const generateTooltip = computed(() => (d: T) => {
+const generateTooltip = computed(() => (d: T, idx: number) => {
   if (typeof window === "undefined" || typeof document === "undefined") {
     return "";
   }

@@ -11,6 +11,6 @@
       "declaration": true,
       "outDir": "dist"
     },
-    "include": ["lib/**/*.ts", "lib/**/*.vue"],
+    "include": ["lib/**/*.ts", "lib/**/*.vue", "lib/colors.js"],
     "exclude": ["node_modules", "dist"]
   }

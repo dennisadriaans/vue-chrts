@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<LineChartProps<T>>(), {
 
 const color = (key: number) => Object.values(props.categories)[key].color;
 
-const generateTooltip = computed(() => (d: T) => {
+const generateTooltip = computed(() => (d: T, idx: number) => {
   if (typeof window === "undefined" || typeof document === "undefined") {
     return "";
   }
@@ -33,6 +33,7 @@ const generateTooltip = computed(() => (d: T) => {
     const app = createApp(Tooltip, {
       data: d,
       categories: props.categories,
+      xValue: props.xFormatter(Math.floor(idx)),
     });
 
     const container = document.createElement("div");
