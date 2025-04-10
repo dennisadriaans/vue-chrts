@@ -1,10 +1,6 @@
 <script setup lang="ts" generic="T">
 import { computed, ComputedRef, createApp } from "vue";
-import {
-  GroupedBar,
-  Orientation,
-  StackedBar,
-} from "@unovis/ts";
+import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
 
 import {
   VisAxis,
@@ -45,7 +41,7 @@ const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
 );
 
-const generateTooltip = computed(() => (d: T) => {
+const generateTooltip = computed(() => (d: T, idx: number) => {
   if (typeof window === "undefined" || typeof document === "undefined") {
     return "";
   }
@@ -54,6 +50,7 @@ const generateTooltip = computed(() => (d: T) => {
     const app = createApp(Tooltip, {
       data: d,
       categories: props.categories,
+      xValue: props.xFormatter(Math.floor(idx)),
     });
 
     const container = document.createElement("div");

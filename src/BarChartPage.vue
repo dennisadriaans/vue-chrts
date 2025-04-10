@@ -7,12 +7,6 @@ import { VisitorsData, VisitorsCartegories } from "./data/VisitorsData";
 
 import { LegendPosition, Orientation } from "./../lib";
 
-type RevenueDataItem = {
-  month: string;
-  desktop: number;
-  mobile: number;
-};
-
 const RevenueData = [
   { month: "January", desktop: 186, mobile: 80 },
   { month: "February", desktop: 305, mobile: 200 },
@@ -78,8 +72,8 @@ const RevenueCategories = {
 };
 
 const RevenueCategoriesMultple = {
-  desktop: { name: "Desktop", color: "#00dc82" },
-  mobile: { name: "Mobile", color: "#156F36" },
+  desktop: { name: "Desktop" },
+  mobile: { name: "Mobile" },
 };
 </script>
 

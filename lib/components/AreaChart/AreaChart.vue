@@ -80,7 +80,7 @@ function accessors(id: string): { y: NumericAccessor<T>; color: string } {
   };
 }
 
-function generateCSSVarsSvg(index, color) {
+function generateCSSVarsSvg(index: number, color: string) {
   return `
   <linearGradient id="gradient${index}-${color}" gradientTransform="rotate(90)">
   <stop offset="0%" style="stop-color:var(--vis-color0);stop-opacity:1" />
@@ -89,7 +89,7 @@ function generateCSSVarsSvg(index, color) {
 `;
 }
 
-function generateSvg(index, color) {
+function generateSvg(index: number, color: string) {
   return `
   <linearGradient id="gradient${index}-${color}" gradientTransform="rotate(90)">
     <stop offset="0%" stop-color="${color}" stop-opacity="1" />
@@ -103,7 +103,7 @@ const svgDefs = computed(() =>
     .map((color, index) =>
       color?.includes("#")
         ? generateSvg(index, color)
-        : generateCSSVarsSvg(index, color)
+        : generateCSSVarsSvg(index, color ?? DEFAULT_COLOR)
     )
     .join("")
 );
