@@ -5,23 +5,23 @@ import BarChart from "./components/BarChart/BarChart.vue";
 import DonutChart from "./components/DonutChart/DonutChart.vue";
 
 import {
-  LegendPosition,
-  CurveType,
-  Orientation,
-  type BulletLegendItemInterface,
+    LegendPosition,
+    CurveType,
+    Orientation,
+    type BulletLegendItemInterface,
 } from "./types";
 
 export {
-  AreaChart,
-  AreaStackedChart,
-  LineChart,
-  BarChart,
-  DonutChart,
-  Orientation,
-  CurveType,
-  LegendPosition
+    AreaChart,
+    AreaStackedChart,
+    LineChart,
+    BarChart,
+    DonutChart,
+    Orientation,
+    CurveType,
+    LegendPosition
 };
 
 export type {
-   BulletLegendItemInterface,
+    BulletLegendItemInterface,
 }

@@ -1,10 +1,6 @@
 <script setup lang="ts" generic="T">
 import { computed, ComputedRef, createApp } from "vue";
-import {
-  GroupedBar,
-  Orientation,
-  StackedBar,
-} from "@unovis/ts";
+import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
 
 import {
   VisAxis,
@@ -15,7 +11,7 @@ import {
   VisXYContainer,
 } from "@unovis/vue";
 
-import Tooltip from "./../Tooltip.vue";
+import Tooltip from "../Tooltip.vue";
 import { LegendPosition } from "../../types";
 import { BarChartProps } from "./types";
 

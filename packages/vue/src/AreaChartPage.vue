@@ -9,7 +9,6 @@ import {
   AreaChartData2,
   AreaChartData3,
   AreaChartData4,
-  AreaChartItem1,
   categories1,
   categories2,
   categories4,

@@ -7,7 +7,7 @@ import {
   VisCrosshair,
 } from "@unovis/vue";
 import { BulletLegendItemInterface, CurveType } from "@unovis/ts";
-import Tooltip from "./../Tooltip.vue";
+import Tooltip from "../Tooltip.vue";
 import { computed, createApp } from "vue";
 
 export type AreaStackedChartProps<T> = {

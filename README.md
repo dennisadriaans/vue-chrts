@@ -1,85 +1,102 @@
-# Vue-Chrts
+# Vue Charts Monorepo
 
-A Vue 3 charts package inspired by [Tremor](https://tremor.so/), built on top of [Unovis](https://unovis.dev). Vue-Chrts provides beautiful, responsive charts for your Vue applications with minimal setup.
+A monorepo for Vue chart components and their corresponding Nuxt module.
 
-![alt text](https://nuxtcharts.com/og-image.png)
+## Packages
 
-[Check the docs and examples](https://nuxtcharts.com/docs)
+- [`vue-chrts`](./packages/vue) - Vue 3 chart components library
+- [`@vue-chrts/nuxt`](./packages/nuxt) - Nuxt 3 module for Vue Charts
 
-## Features
+## Development
 
-- 📊 Multiple chart types: Line, Bar, Area, Stacked Area, Donut
-- 🎨 Customizable appearance
-- 📱 Responsive design
-- 💡 Simple, intuitive API
-- 🚀 Built with Vue 3 and TypeScript
-
-## Installation
+This project uses pnpm as the package manager.
 
 ```bash
-# npm
-npm install vue-chrts
+# Install dependencies
+pnpm install
 
-# yarn
-yarn add vue-chrts
+# Build all packages
+pnpm build
 
-# pnpm
-pnpm add vue-chrts
+# Development mode for Vue package
+pnpm dev:vue
+
+# Development mode for Nuxt module
+pnpm dev:nuxt
 ```
-[Check the docs and examples](https://nuxtcharts.com/docs)
 
-## Usage Example
+## Usage
+
+### Vue Package
+
+```bash
+npm install vue-chrts
+```
 
 ```vue
-<script setup>
-import { LineChart } from 'vue-chrts';
-
-const data = [
-  { month: 'Jan', sales: 100, profit: 50 },
-  { month: 'Feb', sales: 120, profit: 55 },
-  { month: 'Mar', sales: 180, profit: 80 },
-  { month: 'Apr', sales: 110, profit: 40 },
-  { month: 'May', sales: 90, profit: 30 },
-];
-
-const categories = {
-  sales: {
-    name: 'Sales',
-    color: '#3b82f6'
-  },
-  profit: {
-    name: 'Profit', 
-    color: '#10b981'
-  }
-};
-
-const xFormatter = (i) => data[i].month;
-</script>
-
 <template>
-  <LineChart
-    :data="data"
-    :categories="categories"
+  <LineChart 
+    :data="data" 
     :height="300"
-    :xFormatter="xFormatter"
-    xLabel="Month"
-    yLabel="Amount"
+    :accessor="accessor"
   />
 </template>
+
+<script setup>
+import { LineChart } from 'vue-chrts'
+
+const data = [
+  { date: '2023-01', value: 100 },
+  { date: '2023-02', value: 200 },
+  { date: '2023-03', value: 150 }
+]
+
+const accessor = (d) => d.value
+</script>
 ```
-[Check the docs and examples](https://nuxtcharts.com/docs)
 
-## Available Charts
+### Nuxt Module
 
-- `LineChart`
-- `BarChart`
-- `AreaChart`
-- `AreaStackedChart`
-- `DonutChart`
+```bash
+npm install @vue-chrts/nuxt
+```
 
-## Credits
+Add to your `nuxt.config.ts`:
 
-This library is inspired by [Tremor](https://tremor.so/) and built on top of [Unovis](https://unovis.dev).
+```ts
+export default defineNuxtConfig({
+  modules: ['@vue-chrts/nuxt'],
+  
+  // Optional configuration
+  vueChrts: {
+    prefix: 'Chrt', // default
+    global: true,    // default
+    include: []      // default, include all components
+  }
+})
+```
+
+Then use in your Nuxt components:
+
+```vue
+<template>
+  <ChrtLineChart 
+    :data="data" 
+    :height="300"
+    :accessor="accessor"
+  />
+</template>
+
+<script setup>
+const data = [
+  { date: '2023-01', value: 100 },
+  { date: '2023-02', value: 200 },
+  { date: '2023-03', value: 150 }
+]
+
+const accessor = (d) => d.value
+</script>
+```
 
 ## License
 

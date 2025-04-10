@@ -11,7 +11,7 @@ import {
   VisTooltip,
 } from "@unovis/vue";
 
-import Tooltip from "./../Tooltip.vue";
+import Tooltip from "../Tooltip.vue";
 import { LegendPosition } from "../../types";
 import { LineChartProps } from "./types";
 
