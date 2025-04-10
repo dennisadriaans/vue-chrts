@@ -3,7 +3,13 @@ import { addComponent } from "@nuxt/kit";
 export const resolveComponents = (config: any, filePath: string) => {
 
     const { components, prefix } = config;
-    const allComponents = ['AreaChart']
+    const allComponents = [
+        'AreaChart',
+        'AreaStackedChart',
+        'LineChart',
+        'BarChart',
+        'DonutChart'
+    ]
 
     allComponents.forEach(component => {
         console.log(component, 'component')

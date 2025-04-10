@@ -1,34 +1,33 @@
 <script lang="ts" setup>
+interface AreaChartItem {
+  date: string;
+  desktop: number;
+  mobile: number;
+}
+
 const categories: Record<string, BulletLegendItemInterface> = {
-  desktop: { name: "Desktop", color: "#00dc82" },
+  desktop: { name: "Desktop", color: "#156F36" },
+  mobile: { name: "Mobile", color: "#4ade80" },
 };
 
-interface AreaChartItem {
-  month: string;
-  desktop: number;
-}
 const AreaChartData: AreaChartItem[] = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
+  { date: "2024-04-01", desktop: 222, mobile: 150 },
+  { date: "2024-04-02", desktop: 180, mobile: 97 },
+  { date: "2024-04-03", desktop: 167, mobile: 120 },
+  { date: "2024-04-04", desktop: 260, mobile: 240 },
+  { date: "2024-04-05", desktop: 240, mobile: 290 },
 ];
 
-const xFormatter = (i: number): string | number => `${AreaChartData[i]?.month}`;
+const xFormatter = (i: number): string | number => `${AreaChartData[i]?.date}`;
 </script>
+
 <template>
-  <ClientOnly>
-    <AreaChart
-      :data="AreaChartData"
-      :height="275"
-      :x-label="'test'"
-      :categories="categories"
-      :y-num-ticks="4"
-      :x-num-ticks="7"
-      :y-grid-line="true"
-      :x-formatter="xFormatter"
-    />
-  </ClientOnly>
+  <AreaChart
+    :data="AreaChartData"
+    :height="275"
+    :categories="categories"
+    :grid-line-y="true"
+    :x-formatter="xFormatter"
+    :curve-type="CurveType.MonotoneX"
+  />
 </template>

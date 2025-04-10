@@ -30,8 +30,8 @@ export interface ModuleOptions {
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: '@vue-chrts/nuxt',
-    configKey: 'vueChrts',
+    name: 'nuxt-charts',
+    configKey: 'nuxtCharts',
     compatibility: {
       nuxt: '^3.0.0'
     }
@@ -44,7 +44,9 @@ export default defineNuxtModule<ModuleOptions>({
   },
   async setup(options, nuxt) {
 
-    const runtimePath = createResolver(import.meta.url).resolve('./runtime/vue-chrts')
+    const { resolve } = createResolver(import.meta.url)
+
+    const runtimePath = resolve('./runtime/vue-chrts')
 
     resolveImports(options, runtimePath)
     resolveComponents(options, runtimePath)

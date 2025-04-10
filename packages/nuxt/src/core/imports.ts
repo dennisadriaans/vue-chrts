@@ -1,11 +1,16 @@
 import { addImportsSources } from "@nuxt/kit";
 
 export const resolveImports = (config: any, filePath: string) => {
-    const { imports } = config
-    const allImports = imports ? imports : ['BulletLegendItemInterface']
+    const allTypes = ['BulletLegendItemInterface']
     addImportsSources({
         from: filePath,
         type: true,
+        imports: [...allTypes]
+    })
+
+    const allImports = ['CurveType', 'LegendPosition', 'Orientation']
+    addImportsSources({
+        from: filePath,
         imports: [...allImports]
     })
 }
