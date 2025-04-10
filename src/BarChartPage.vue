@@ -68,7 +68,7 @@ const RevenueDataLong = [
 ].reverse();
 
 const RevenueCategories = {
-  value: { name: "value", color: "#00dc82" },
+  value: { name: "value" },
 };
 
 const RevenueCategoriesMultple = {
