@@ -93,7 +93,6 @@ const RevenueCategoriesMultple = {
       <Card>
         <template #header>
           <h2 class="heading-2">Bar Chart Vertical</h2>
-          <!-- <p class="text-gray-500">Website visitors per device</p> -->
         </template>
         <BarChart
           :data="RevenueData"
@@ -179,13 +178,7 @@ const RevenueCategoriesMultple = {
           :y-axis="['visitors']"
           :x-num-ticks="6"
           :radius="4"
-          :x-formatter="(i: number): string => {
-            if(!VisitorsData[i]?.date) {
-              return '';
-            }
-            const date = new Date(VisitorsData[i].date)
-              return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
-            }"
+          :x-formatter="(i: number): string => `${RevenueData[i]?.month }`"
           :y-formatter="(i: number) => i"
           :legend-position="LegendPosition.Top"
         />

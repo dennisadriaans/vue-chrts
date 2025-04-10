@@ -75,7 +75,6 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': LegendPositionTop }"
   >
-    {{ orientation === Orientation.Horizontal }}
     <VisXYContainer :height="height">
       <VisTooltip
         :triggers="{
@@ -86,7 +85,9 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
 
       <VisGroupedBar
         v-if="!stacked"
-        :data="data"
+        :data="
+          orientation === Orientation.Horizontal ? [...data].reverse() : data
+        "
         :x="(_: T, i: number) => i"
         :y="yAxis"
         :color="color"
@@ -97,7 +98,9 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
       />
       <VisStackedBar
         v-else
-        :data="data"
+        :data="
+          orientation === Orientation.Horizontal ? [...data].reverse() : data
+        "
         :x="(_: T, i: number) => i"
         :y="yAxis"
         :color="color"
