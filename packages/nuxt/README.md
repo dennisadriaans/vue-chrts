@@ -32,22 +32,7 @@ Add the module to your Nuxt config:
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ["nuxt-charts"],
-
-  // Optional configuration
-  vueChrts: {
-    // Add prefix to component names (default: 'Chrt')
-    prefix: "Chrt",
-
-    // Make components globally available (default: true)
-    global: true,
-
-    // Only include specific components (default: all components)
-    include: ["AreaChart", "LineChart"],
-
-    // Enable auto-imports (default: true)
-    autoImports: true,
-  },
+  modules: ["nuxt-charts"]
 });
 ```
 
