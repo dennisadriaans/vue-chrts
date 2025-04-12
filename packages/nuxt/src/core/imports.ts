@@ -1,6 +1,7 @@
 import { addImportsSources } from "@nuxt/kit";
+import type { ModuleOptions } from "../module";
 
-export const resolveImports = (config: any, filePath: string) => {
+export const resolveImports = (_: ModuleOptions, filePath: string) => {
     const allTypes = ['BulletLegendItemInterface']
     addImportsSources({
         from: filePath,

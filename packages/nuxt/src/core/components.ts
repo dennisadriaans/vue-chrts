@@ -1,8 +1,9 @@
 import { addComponent } from "@nuxt/kit";
+import type { ModuleOptions } from "../module";
 
-export const resolveComponents = (config: any, filePath: string) => {
+export const resolveComponents = (config: ModuleOptions, filePath: string) => {
 
-    const { components, prefix } = config;
+    const { prefix } = config;
     const allComponents = [
         'AreaChart',
         'AreaStackedChart',
@@ -12,7 +13,6 @@ export const resolveComponents = (config: any, filePath: string) => {
     ]
 
     allComponents.forEach(component => {
-        console.log(component, 'component')
         if (typeof component === 'string') {
             addComponent({
                 export: component,

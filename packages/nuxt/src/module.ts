@@ -1,10 +1,10 @@
-import { defineNuxtModule, createResolver, addImportsSources, addImports } from '@nuxt/kit'
+import { defineNuxtModule, createResolver } from '@nuxt/kit'
 import { resolveComponents, resolveImports } from "./core"
 
 export interface ModuleOptions {
   /**
    * Prefix for component names
-   * @default 'Chrt'
+   * @default ''
    */
   prefix?: string
 
@@ -42,7 +42,7 @@ export default defineNuxtModule<ModuleOptions>({
     autoImports: true,
     include: []
   },
-  async setup(options, nuxt) {
+  async setup(options) {
 
     const { resolve } = createResolver(import.meta.url)
 

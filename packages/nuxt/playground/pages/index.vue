@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+defineOptions({
+  name: "HomePage",
+});
+
 interface AreaChartItem {
   date: string;
   desktop: number;
