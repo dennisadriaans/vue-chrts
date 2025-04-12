@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T">
+<script setup lang="ts" generic="T extends {}">
 import { computed, ComputedRef, createApp } from "vue";
 import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
 
@@ -54,7 +54,7 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
     const app = createApp(Tooltip, {
       data: d,
       categories: props.categories,
-      xValue: d[key],
+      xValue: d[key as keyof typeof d],
     });
 
     const container = document.createElement("div");

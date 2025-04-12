@@ -34,7 +34,7 @@ export default defineConfig({
       fileName: 'index.js',
     },
     rollupOptions: {
-      external: ['vue', '@unovis/vue', 'vue-router', 'tailwindcss'],
+      external: ['vue', '@unovis/vue', '@unovis/ts', 'vue-router', 'tailwindcss'],
       output: [outputDefault('es', 'js')],
     },
   },
