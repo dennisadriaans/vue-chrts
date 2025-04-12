@@ -1,6 +1,6 @@
 <script lang="ts" setup generic="T">
-import { BulletLegendItemInterface } from "@unovis/ts";
 import { computed } from "vue";
+import { BulletLegendItemInterface } from "../types";
 
 const props = defineProps<{
   data: T;
@@ -18,14 +18,26 @@ const visibleEntries = computed(() => {
 
 <template>
   <div>
-    <div v-for="[key, value] in visibleEntries" :key="key" style="display: flex; align-items: center; margin-bottom: 4px;">
+    <div
+      v-for="[key, value] in visibleEntries"
+      :key="key"
+      style="display: flex; align-items: center; margin-bottom: 4px"
+    >
       <span
-        style="width: 8px; height: 8px; border-radius: 4px; margin-right: 8px;"
+        style="width: 8px; height: 8px; border-radius: 4px; margin-right: 8px"
         :style="{ backgroundColor: categories[key].color }"
       ></span>
       <div>
-        <span style="font-weight: 600; margin-right: 8px;" :style="{ color: 'var(--tooltip-label-color)' }">{{ key }}:</span>
-        <span style="font-weight: 400;" :style="{ color: 'var(--tooltip-value-color)' }">{{ value }}</span>
+        <span
+          style="font-weight: 600; margin-right: 8px"
+          :style="{ color: 'var(--tooltip-label-color)' }"
+          >{{ key }}:</span
+        >
+        <span
+          style="font-weight: 400"
+          :style="{ color: 'var(--tooltip-value-color)' }"
+          >{{ value }}</span
+        >
       </div>
     </div>
   </div>
