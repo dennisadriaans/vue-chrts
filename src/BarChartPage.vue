@@ -7,12 +7,6 @@ import { VisitorsData, VisitorsCartegories } from "./data/VisitorsData";
 
 import { LegendPosition, Orientation } from "./../lib";
 
-type RevenueDataItem = {
-  month: string;
-  desktop: number;
-  mobile: number;
-};
-
 const RevenueData = [
   { month: "January", desktop: 186, mobile: 80 },
   { month: "February", desktop: 305, mobile: 200 },
@@ -74,12 +68,12 @@ const RevenueDataLong = [
 ].reverse();
 
 const RevenueCategories = {
-  value: { name: "value", color: "#00dc82" },
+  value: { name: "value" },
 };
 
 const RevenueCategoriesMultple = {
-  desktop: { name: "Desktop", color: "#00dc82" },
-  mobile: { name: "Mobile", color: "#156F36" },
+  desktop: { name: "Desktop" },
+  mobile: { name: "Mobile" },
 };
 </script>
 
@@ -99,7 +93,6 @@ const RevenueCategoriesMultple = {
       <Card>
         <template #header>
           <h2 class="heading-2">Bar Chart Vertical</h2>
-          <!-- <p class="text-gray-500">Website visitors per device</p> -->
         </template>
         <BarChart
           :data="RevenueData"
@@ -185,13 +178,7 @@ const RevenueCategoriesMultple = {
           :y-axis="['visitors']"
           :x-num-ticks="6"
           :radius="4"
-          :x-formatter="(i: number): string => {
-            if(!VisitorsData[i]?.date) {
-              return '';
-            }
-            const date = new Date(VisitorsData[i].date)
-              return date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear();
-            }"
+          :x-formatter="(i: number): string => `${RevenueData[i]?.month }`"
           :y-formatter="(i: number) => i"
           :legend-position="LegendPosition.Top"
         />
@@ -213,7 +200,7 @@ const RevenueCategoriesMultple = {
           :xNumTicks="6"
           :radius="4"
           :orientation="Orientation.Horizontal"
-          :x-formatter="(i) => i"
+          :x-formatter="(i) => JSON.stringify(i)"
           :y-formatter="(i: number): string => `${RevenueData[i].month }`"
           :legend-position="LegendPosition.Top"
         />

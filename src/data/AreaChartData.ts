@@ -2,8 +2,8 @@ import type { BulletLegendItemInterface } from '@unovis/ts'
 
 /* Demo data for homepage */
 export const categories1: Record<string, BulletLegendItemInterface> = {
-  desktop: { name: 'Desktop', color: '#4ade80' },
-  mobile: { name: 'Mobile', color: '#00dc82' }
+  desktop: { name: 'Desktop', color: '#156F36' },
+  mobile: { name: 'Mobile', color: '#4ade80' }
 }
 
 export const categories2: Record<string, BulletLegendItemInterface> = {
@@ -284,11 +284,11 @@ export const AreaChartData3 = [
   }
 ]
 
-export type AreaChartItem4 ={ 
+export type AreaChartItem4 = {
   month: string;
-  desktop: number 
+  desktop: number
 }
-export const AreaChartData4 : AreaChartItem4[] = [
+export const AreaChartData4: AreaChartItem4[] = [
   { month: "January", desktop: 186 },
   { month: "February", desktop: 305 },
   { month: "March", desktop: 237 },

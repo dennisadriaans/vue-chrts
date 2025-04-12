@@ -38,34 +38,26 @@ const colors = Object.values(props.categories).map((c) => c.color);
 const tooltipApp = ref<ReturnType<typeof createApp> | null>(null);
 const tooltipContainer = ref<HTMLDivElement | null>(null);
 
-const generateTooltip = computed(() => (d: T) => {
+const generateTooltip = computed(() => (d: T, idx: number) => {
   if (typeof window === "undefined" || typeof document === "undefined") {
     return "";
   }
 
   try {
-    if (!tooltipContainer.value) {
-      tooltipContainer.value = document.createElement("div");
-    }
+    const app = createApp(Tooltip, {
+      data: d,
+      categories: props.categories,
+      xValue: props.xFormatter(Math.floor(idx)),
+    });
 
-    if (!tooltipApp.value) {
-      tooltipApp.value = createApp(Tooltip, {
-        data: d,
-        categories: props.categories,
-      });
-      tooltipApp.value.mount(tooltipContainer.value);
-    } else {
-      // Update the existing app's props
-      const instance = tooltipApp.value._instance;
-      if (instance?.proxy) {
-        (instance.proxy as any).$props.data = d;
-        (instance.proxy as any).$props.categories = props.categories;
-      }
-    }
+    const container = document.createElement("div");
+    app.mount(container);
 
-    return tooltipContainer.value.innerHTML;
+    const html = container.innerHTML;
+    app.unmount();
+
+    return html;
   } catch (error) {
-    console.error("Error generating tooltip:", error);
     return "";
   }
 });
@@ -88,15 +80,30 @@ function accessors(id: string): { y: NumericAccessor<T>; color: string } {
   };
 }
 
-const svgDefs = computed(() =>
-  colors
-    .map(
-      (color, index) => `
+function generateCSSVarsSvg(index: number, color: string) {
+  return `
+  <linearGradient id="gradient${index}-${color}" gradientTransform="rotate(90)">
+  <stop offset="0%" style="stop-color:var(--vis-color0);stop-opacity:1" />
+    <stop offset="100%" style="stop-color:var(--vis-color0);stop-opacity:0" />
+  </linearGradient>
+`;
+}
+
+function generateSvg(index: number, color: string) {
+  return `
   <linearGradient id="gradient${index}-${color}" gradientTransform="rotate(90)">
     <stop offset="0%" stop-color="${color}" stop-opacity="1" />
     <stop offset="100%" stop-color="${color}" stop-opacity="0" />
   </linearGradient>
-`
+`;
+}
+
+const svgDefs = computed(() =>
+  colors
+    .map((color, index) =>
+      color?.includes("#")
+        ? generateSvg(index, color)
+        : generateCSSVarsSvg(index, color ?? DEFAULT_COLOR)
     )
     .join("")
 );
