@@ -1,6 +1,6 @@
 <script lang="ts" setup generic="T">
-import { BulletLegendItemInterface } from "@unovis/ts";
 import { computed } from "vue";
+import { BulletLegendItemInterface } from "../types";
 
 const props = defineProps<{
   data: T;

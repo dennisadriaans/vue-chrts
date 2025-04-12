@@ -11,7 +11,7 @@ import {
   VisXYContainer,
 } from "@unovis/vue";
 
-import Tooltip from "./../Tooltip.vue";
+import Tooltip from "../Tooltip.vue";
 import { LegendPosition } from "../../types";
 import { BarChartProps } from "./types";
 
