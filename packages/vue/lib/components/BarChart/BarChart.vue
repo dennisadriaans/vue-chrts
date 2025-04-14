@@ -125,7 +125,7 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
         :label="yLabel"
         :grid-line="orientation !== Orientation.Horizontal && yGridLine"
         :domain-line="!!yDomainLine"
-        :tick-format="() => ''"
+        :tick-format="yFormatter"
         :num-ticks="yNumTicks"
         :tick-line="yTickLine"
       />
