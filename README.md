@@ -1,5 +1,5 @@
-# Vue-chrts (nuxt-charts)
-This is a monorepo for vue-chrts & [nuxt-charts](nuxt-charts)
+# Vue-chrts
+This is a monorepo for [vue-chrts](ab=readme-ov-file#installation-nuxt) & [nuxt-charts](ab=readme-ov-file#installation-nuxt)
 
 A Vue 3 charts package inspired by [Tremor](https://tremor.so/), built on top of [Unovis](https://unovis.dev). Vue-Chrts provides beautiful, responsive charts for your Vue applications with minimal setup.
 
