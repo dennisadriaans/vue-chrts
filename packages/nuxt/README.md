@@ -3,14 +3,16 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 
-> Nuxt module for vue-chrts
+> Nuxt module for vue-s
 
 ## Features
 
 - 📊 Use beautiful chart components in your Nuxt applications
 - 🔄 Auto-imports for all chart components
-- 🎛️ Configure which components to include
-- 🪶 Tree-shakable - only import what you use
+- 📊 Multiple types: Line, Bar, Area, Donut
+- 🎨 Easily customizable
+- 💡 Simple, intuitive API
+- 🚀 Built with Vue 3 and TypeScript
 
 ## Installation
 
@@ -41,35 +43,50 @@ Then use the components in your Nuxt application:
 ```vue
 <template>
   <div class="chart-wrapper">
-    <ChrtLineChart
-      :data="data"
-      :height="300"
-      :accessor="accessor"
-      :x-axis-title="xAxisTitle"
-    />
+  <LineChart
+    :data="data"
+    :categories="categories"
+    :height="300"
+    :xFormatter="xFormatter"
+    xLabel="Month"
+    yLabel="Amount"
+  />
   </div>
 </template>
 
 <script setup>
-// The types are auto-imported
-const data = ref([
-  { date: "2023-01", value: 100 },
-  { date: "2023-02", value: 200 },
-  { date: "2023-03", value: 150 },
-]);
+import { LineChart } from 'vue-chrts';
 
-const accessor = (d) => d.value;
-const xAxisTitle = "Month";
+const data = [
+  { month: 'Jan', sales: 100, profit: 50 },
+  { month: 'Feb', sales: 120, profit: 55 },
+  { month: 'Mar', sales: 180, profit: 80 },
+  { month: 'Apr', sales: 110, profit: 40 },
+  { month: 'May', sales: 90, profit: 30 },
+];
+
+const categories = {
+  sales: {
+    name: 'Sales',
+    color: '#3b82f6'
+  },
+  profit: {
+    name: 'Profit', 
+    color: '#10b981'
+  }
+};
+
+const xFormatter = (i) => data[i].month;
 </script>
 ```
 
 ## Available Components
 
-- `ChrtAreaChart` - Area chart
-- `ChrtAreaStackedChart` - Stacked area chart
-- `ChrtLineChart` - Line chart
-- `ChrtBarChart` - Bar chart
-- `ChrtDonutChart` - Donut chart
+- `AreaChart` - Area chart
+- `AreaStackedChart` - Stacked area chart
+- `LineChart` - Line chart
+- `BarChart` - Bar chart
+- `DonutChart` - Donut chart
 
 ## Auto-imported Types
 

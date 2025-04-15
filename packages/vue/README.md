@@ -9,12 +9,33 @@ A Vue 3 charts package inspired by [Tremor](https://tremor.so/), built on top of
 ## Features
 
 - 📊 Multiple chart types: Line, Bar, Area, Stacked Area, Donut
-- 🎨 Customizable appearance
+- 🎨 Customizable
 - 📱 Responsive design
 - 💡 Simple, intuitive API
 - 🚀 Built with Vue 3 and TypeScript
 
-## Installation
+
+[Check the docs and examples](https://nuxtcharts.com/docs)
+
+## Installation Nuxt
+
+```bash
+# npm
+npm install nuxt-charts
+
+# yarn
+yarn add nuxt-charts
+
+# pnpm
+pnpm add nuxt-charts
+
+# Add module to your nuxt.config.ts
+export default defineNuxtConfig({
+  modules: ["nuxt-charts"]
+});
+```
+
+## Installation Vue.js
 
 ```bash
 # npm
@@ -25,7 +46,12 @@ yarn add vue-chrts
 
 # pnpm
 pnpm add vue-chrts
+
+# import component
+import { LineChart } from 'vue-chrts';
+
 ```
+
 [Check the docs and examples](https://nuxtcharts.com/docs)
 
 ## Usage Example
