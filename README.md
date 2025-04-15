@@ -1,6 +1,7 @@
-# nuxt-charts
+# Vue-chrts (nuxt-charts)
+This is a monorepo for vue-chrts & [nuxt-charts](nuxt-charts)
 
-A Vue 3 charts package inspired by [Tremor](https://tremor.so/), built on top of [Unovis](https://unovis.dev). nuxt-charts provides beautiful, responsive charts for your Vue applications with minimal setup.
+A Vue 3 charts package inspired by [Tremor](https://tremor.so/), built on top of [Unovis](https://unovis.dev). Vue-Chrts provides beautiful, responsive charts for your Vue applications with minimal setup.
 
 ![alt text](https://nuxtcharts.com/og-image.png)
 
@@ -13,6 +14,9 @@ A Vue 3 charts package inspired by [Tremor](https://tremor.so/), built on top of
 - 📱 Responsive design
 - 💡 Simple, intuitive API
 - 🚀 Built with Vue 3 and TypeScript
+
+
+[Check the docs and examples](https://nuxtcharts.com/docs)
 
 ## Installation Nuxt
 
@@ -31,12 +35,32 @@ export default defineNuxtConfig({
   modules: ["nuxt-charts"]
 });
 ```
+
+## Installation Vue.js
+
+```bash
+# npm
+npm install vue-chrts
+
+# yarn
+yarn add vue-chrts
+
+# pnpm
+pnpm add vue-chrts
+
+# import component
+import { LineChart } from 'vue-chrts';
+
+```
+
 [Check the docs and examples](https://nuxtcharts.com/docs)
 
 ## Usage Example
 
 ```vue
 <script setup>
+import { LineChart } from 'vue-chrts';
+
 const data = [
   { month: 'Jan', sales: 100, profit: 50 },
   { month: 'Feb', sales: 120, profit: 55 },
