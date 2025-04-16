@@ -17,8 +17,8 @@ importers:
         specifier: ^1.5.1
         version: 1.5.1(@unovis/ts@1.5.1)(vue@3.5.13(typescript@5.7.3))
       vue-chrts:
-        specifier: 0.1.2
-        version: 0.1.2(vue@3.5.13(typescript@5.7.3))
+        specifier: 0.1.3
+        version: 0.1.3(vue@3.5.13(typescript@5.7.3))
     devDependencies:
       '@nuxt/eslint':
         specifier: 1.3.0
@@ -5117,8 +5117,8 @@ packages:
   vue-bundle-renderer@2.1.1:
     resolution: {integrity: sha512-+qALLI5cQncuetYOXp4yScwYvqh8c6SMXee3B+M7oTZxOgtESP0l4j/fXdEJoZ+EdMxkGWIj+aSEyjXkOdmd7g==}
 
-  vue-chrts@0.1.2:
-    resolution: {integrity: sha512-G/iTInvVj1fYqbOQSb8PPXzsq7rvXwZcV3ttDg126K6zKcbj5FZ9XYcnHNBi/95Yo8w+v7GfFVAY1Ip93LPSKQ==}
+  vue-chrts@0.1.3:
+    resolution: {integrity: sha512-wqq47a15Dxr906FUhQXGlxV7RKsZlMsOEWF25vh/2OmvtB8hRu1TwEOkBUBRrpSDS92EFPLDv19VL0QEU98ETw==}
     peerDependencies:
       vue: ^3.5.13
 
@@ -10831,7 +10831,7 @@ snapshots:
     dependencies:
       ufo: 1.6.1
 
-  vue-chrts@0.1.2(vue@3.5.13(typescript@5.7.3)):
+  vue-chrts@0.1.3(vue@3.5.13(typescript@5.7.3)):
     dependencies:
       vue: 3.5.13(typescript@5.7.3)
 
