@@ -159,7 +159,7 @@ const LegendPositionTop = computed(
         :label="yLabel"
         :grid-line="yGridLine"
         :domain-line="yDomainLine"
-        :tick-line="!!yGridLine"
+        :tick-line="yTickLine"
       />
       <VisCrosshair
         v-if="!hideTooltip"

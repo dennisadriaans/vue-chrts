@@ -67,11 +67,11 @@ export interface BarChartProps<T> {
    */
   groupPadding?: number;
   /**
-   * The padding between bars within the same group in pixels.
+   * Fractional padding between the bars in the range of [0,1). Default: 0
    */
   barPadding?: number;
   /**
-   * The corner radius of the bars in pixels.
+   * Rounded corners for top bars. Boolean or number (to set the radius in pixels). Default: 2
    */
   radius?: number;
   /**

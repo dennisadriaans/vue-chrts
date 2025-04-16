@@ -69,17 +69,14 @@ export interface AreaChartProps<T> {
    */
   hideTooltip?: boolean;
   /**
-   * If `true`, displays grid lines along the x-axis.
+   * Optional position for the legend, if applicable.
+   * See `LegendPosition` for available options.
    */
-  xGridLine?: boolean;
+  legendPosition?: LegendPosition;
   /**
    * If `true`, displays a domain line (axis line) along the x-axis.
    */
   xDomainLine?: boolean;
-  /**
-   * If `true`, displays grid lines along the y-axis.
-   */
-  yGridLine?: boolean;
   /**
    * If `true`, displays a domain line (axis line) along the y-axis.
    */
@@ -89,8 +86,15 @@ export interface AreaChartProps<T> {
    */
   xTickLine?: boolean;
   /**
-   * Optional position for the legend, if applicable.
-   * See `LegendPosition` for available options.
+   * If `true`, displays tick lines on the y-axis.
    */
-  legendPosition?: LegendPosition;
+  yTickLine?: boolean;
+  /**
+   * If `true`, displays grid lines along the x-axis.
+   */
+  xGridLine?: boolean;
+  /**
+   * If `true`, displays grid lines along the y-axis.
+   */
+  yGridLine?: boolean;
 }
