@@ -3,7 +3,7 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 
-Nuxt module for [vue-chrts](https://nuxtcharts.com)
+Nuxt module for [vue-chrts](https://github.com/dennisadriaans/vue-chrts/tree/main/packages/vue)
 
 ## Features
 
