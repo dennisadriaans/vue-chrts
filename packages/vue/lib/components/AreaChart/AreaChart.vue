@@ -111,6 +111,8 @@ const svgDefs = computed(() =>
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
 );
+
+console.log('release change test')
 </script>
 
 <template>
