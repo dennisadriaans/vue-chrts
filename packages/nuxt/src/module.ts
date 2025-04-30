@@ -46,7 +46,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.vite.optimizeDeps = nuxt.options.vite.optimizeDeps || {}
     nuxt.options.vite.optimizeDeps.include = nuxt.options.vite.optimizeDeps.include || []
 
-    nuxt.options.vite.optimizeDeps.include = ['vue-chrts', ...nuxt.options.vite.optimizeDeps.include]
+    nuxt.options.vite.optimizeDeps.include = ['vue-chrts', '@unovis/ts', ...nuxt.options.vite.optimizeDeps.include]
     nuxt.options.build.transpile = ['vue-chrts', ...nuxt.options.build.transpile]
 
     const { resolve } = createResolver(import.meta.url)
