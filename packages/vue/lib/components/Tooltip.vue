@@ -30,23 +30,23 @@ const visibleEntries = computed(() => {
       {{ xValue }}
     </div>
     <div
-      v-for="([key, value], idx) in visibleEntries"
+      v-for="([key, value]) in visibleEntries"
       :key="key"
       style="display: flex; align-items: center; margin-bottom: 4px"
     >
       <span
         style="width: 8px; height: 8px; border-radius: 4px; margin-right: 8px"
         :style="{
-          backgroundColor: categories[key].color
+          backgroundColor: categories[key]?.color
             ? categories[key].color
-            : `var(--vis-color${idx})`,
+            : `var(--vis-color0)`,
         }"
       ></span>
       <div>
         <span
           style="font-weight: 600; margin-right: 8px"
           :style="{ color: 'var(--tooltip-label-color)' }"
-          >{{ key }}:</span
+          >{{ categories[key].name }}:</span
         >
         <span
           style="font-weight: 400"
