@@ -12,9 +12,11 @@
 }
 
 :root {
-  --vis-color0: oklch(0.55 0.1363 154.36) !important;
-  --vis-color1: oklch(0.63 0.1363 157.86) !important;
-  --vis-test: oklch(0.63 0.2577 29.23) !important;
+  --vis-color0: green !important;
+  --vis-color1: blue !important;
+  --vis-color2: red !important;
+  --vis-color3: yellow !important;
+  --vis-color4: purple !important;
 }
 
 @utility heading-2 {
