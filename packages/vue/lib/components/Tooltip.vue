@@ -30,7 +30,7 @@ const visibleEntries = computed(() => {
       {{ xValue }}
     </div>
     <div
-      v-for="([key, value]) in visibleEntries"
+      v-for="([key, value], index) in visibleEntries"
       :key="key"
       style="display: flex; align-items: center; margin-bottom: 4px"
     >
@@ -39,7 +39,7 @@ const visibleEntries = computed(() => {
         :style="{
           backgroundColor: categories[key]?.color
             ? categories[key].color
-            : `var(--vis-color0)`,
+            : `var(--vis-color${index})`,
         }"
       ></span>
       <div>

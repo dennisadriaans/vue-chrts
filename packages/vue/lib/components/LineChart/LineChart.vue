@@ -22,7 +22,9 @@ const props = withDefaults(defineProps<LineChartProps<T>>(), {
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
 });
 
-const color = (key: number) => Object.values(props.categories)[key].color;
+const defaultColors = Object.values(props.categories).map((i, index) => `var(--vis-color${index})`)
+const color = (key: number) => Object.values(props.categories)[key].color ?? defaultColors[key];
+
 
 const generateTooltip = computed(() => (d: T, idx: number) => {
   if (typeof window === "undefined" || typeof document === "undefined") {
