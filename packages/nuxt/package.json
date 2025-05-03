@@ -29,7 +29,7 @@
   "dependencies": {
     "@nuxt/kit": "^3.11.1",
     "@unovis/vue": "^1.5.1",
-    "vue-chrts": "0.1.4"
+    "vue-chrts": "^0.1.4"
   },
   "devDependencies": {
     "@nuxt/eslint": "1.3.0",
