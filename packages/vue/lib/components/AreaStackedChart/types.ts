@@ -29,6 +29,16 @@ export interface AreaStackedChartProps<T> {
    */
   yLabel?: string;
   /**
+   * Optional padding applied to the chart.
+   * Allows specifying individual padding values for the top, right, bottom, and left sides.
+   */
+  padding?: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
+  /**
    * If `true`, hides the chart legend.
    */
   hideLegend?: boolean;
@@ -56,4 +66,4 @@ export interface AreaStackedChartProps<T> {
    * If `true`, displays tick lines on the y-axis.
    */
   yTickLine?: boolean;
-};
+}

@@ -118,7 +118,12 @@ const LegendPositionTop = computed(
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': LegendPositionTop }"
   >
-    <VisXYContainer :data="data" :height="height" :svg-defs="svgDefs">
+    <VisXYContainer
+      :data="data"
+      :height="height"
+      :padding="padding"
+      :svg-defs="svgDefs"
+    >
       <VisTooltip
         v-if="!hideTooltip"
         :horizontal-placement="Position.Right"

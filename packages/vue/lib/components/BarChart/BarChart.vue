@@ -75,7 +75,7 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': LegendPositionTop }"
   >
-    <VisXYContainer :height="height">
+    <VisXYContainer :padding="padding" :height="height">
       <VisTooltip
         :triggers="{
           [GroupedBar.selectors.bar]: generateTooltip,
