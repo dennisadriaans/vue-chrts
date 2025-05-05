@@ -71,6 +71,11 @@ const RevenueCategories = {
   value: { name: "value" },
 };
 
+const RevenueCategoriesMobile = {
+  mobile: { name: "Mobile" },
+};
+
+
 const RevenueCategoriesMultple = {
   desktop: { name: "Desktop" },
   mobile: { name: "Mobile" },
@@ -144,16 +149,16 @@ const xFormatter = (i: number): string | number => `${TrafficData[i]?.date}`;
           <!-- <p class="text-gray-500">Website visitors per device</p> -->
         </template>
         <BarChart
-          :data="RevenueData"
+          :data="[...RevenueData].reverse()"
           :height="250"
-          :categories="RevenueCategoriesMultple"
+          :categories="RevenueCategoriesMobile"
           :y-axis="['desktop']"
           :xNumTicks="6"
           :radius="4"
           :bar-padding="0"
           :orientation="Orientation.Horizontal"
           :x-formatter="(i) => JSON.stringify(i)"
-          :y-formatter="(i: number): string => `${RevenueData[i].month }`"
+          :y-formatter="(i: number): string => `${[...RevenueData].reverse()[i].month }`"
           :legend-position="LegendPosition.Top"
         />
       </Card>
@@ -222,7 +227,7 @@ const xFormatter = (i: number): string | number => `${TrafficData[i]?.date}`;
           <!-- <p class="text-gray-500">Website visitors per device</p> -->
         </template>
         <BarChart
-          :data="RevenueData"
+          :data="[...RevenueData].reverse()"
           :stacked="true"
           :height="250"
           :categories="RevenueCategoriesMultple"
@@ -233,7 +238,7 @@ const xFormatter = (i: number): string | number => `${TrafficData[i]?.date}`;
           :radius="4"
           :orientation="Orientation.Horizontal"
           :x-formatter="(i) => JSON.stringify(i)"
-          :y-formatter="(i: number): string => `${RevenueData[i].month }`"
+          :y-formatter="(i: number): string => `${[...RevenueData].reverse()[i].month }`"
           :legend-position="LegendPosition.Top"
         />
       </Card>

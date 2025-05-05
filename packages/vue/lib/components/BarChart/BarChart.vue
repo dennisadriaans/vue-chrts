@@ -85,9 +85,7 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
 
       <VisGroupedBar
         v-if="!stacked"
-        :data="
-          orientation === Orientation.Horizontal ? [...data].reverse() : data
-        "
+        :data="data"
         :x="(_: T, i: number) => i"
         :y="yAxis"
         :color="color"
@@ -98,9 +96,7 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
       />
       <VisStackedBar
         v-else
-        :data="
-          orientation === Orientation.Horizontal ? [...data].reverse() : data
-        "
+      :data="data"
         :x="(_: T, i: number) => i"
         :y="yAxis"
         :color="color"
