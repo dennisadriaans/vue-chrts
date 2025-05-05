@@ -19,6 +19,14 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
   orientation: Orientation.Vertical,
   LegendPosition: LegendPosition.Bottom,
   yGridLine: true,
+  padding: () => {
+    return {
+      top: 5,
+      right: 5,
+      bottom: 5,
+      left: 5,
+    };
+  },
   xNumTicks: (props) =>
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   yNumTicks: (props) =>
