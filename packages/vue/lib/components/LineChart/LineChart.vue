@@ -16,6 +16,14 @@ import { LegendPosition } from "../../types";
 import { LineChartProps } from "./types";
 
 const props = withDefaults(defineProps<LineChartProps<T>>(), {
+  padding: () => {
+    return {
+      top: 5,
+      right: 5,
+      bottom: 5,
+      left: 5,
+    };
+  },
   xNumTicks: (props) =>
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   yNumTicks: (props) =>

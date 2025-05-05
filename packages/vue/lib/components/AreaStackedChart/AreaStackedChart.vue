@@ -9,13 +9,7 @@ import {
 import { BulletLegendItemInterface, CurveType } from "@unovis/ts";
 import Tooltip from "../Tooltip.vue";
 import { computed, createApp } from "vue";
-
-export type AreaStackedChartProps<T> = {
-  data: T[];
-  height: number;
-  categories: Record<string, BulletLegendItemInterface>;
-  hideTooltip?: boolean;
-};
+import { AreaStackedChartProps } from "./types";
 
 const props = defineProps<AreaStackedChartProps<T>>();
 
@@ -50,7 +44,7 @@ const y = [(d: any) => d.firstTime, (d: any) => d.returning];
 
 <template>
   <div class="flex flex-col space-y-4">
-    <VisXYContainer :data="data" :height="height">
+    <VisXYContainer :data="data" :padding="padding" :height="height">
       <VisArea
         :x="x"
         :y="y"

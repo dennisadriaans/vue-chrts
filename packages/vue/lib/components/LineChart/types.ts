@@ -23,6 +23,16 @@ export interface LineChartProps<T> {
    * Optional label for the y-axis.
    */
   yLabel?: string;
+    /**
+   * Optional padding applied to the chart.
+   * Allows specifying individual padding values for the top, right, bottom, and left sides.
+   */
+    padding?: {
+      top: number;
+      right: number;
+      bottom: number;
+      left: number;
+    };
   /**
    * A record mapping category keys to `BulletLegendItemInterface` objects.
    * This defines the visual representation and labels for each category in the chart's legend.

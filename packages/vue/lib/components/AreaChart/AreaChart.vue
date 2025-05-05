@@ -22,6 +22,14 @@ const DEFAULT_OPACITY = 0.5;
 const DEFAULT_COLOR = "#3b82f6";
 
 const props = withDefaults(defineProps<AreaChartProps<T>>(), {
+  padding: () => {
+    return {
+      top: 5,
+      right: 5,
+      bottom: 5,
+      left: 5,
+    };
+  },
   xNumTicks: (props) =>
     props.data.length > DEFAULT_TICK_COUNT
       ? DEFAULT_TICK_COUNT / DEFAULT_TICK_DIVISOR
@@ -118,7 +126,12 @@ const LegendPositionTop = computed(
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': LegendPositionTop }"
   >
-    <VisXYContainer :data="data" :height="height" :svg-defs="svgDefs">
+    <VisXYContainer
+      :data="data"
+      :height="height"
+      :padding="padding"
+      :svg-defs="svgDefs"
+    >
       <VisTooltip
         v-if="!hideTooltip"
         :horizontal-placement="Position.Right"
