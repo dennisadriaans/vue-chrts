@@ -29,7 +29,12 @@ const router = createRouter({
           path: '/bar-charts',
           name: 'BarCharts',
           component: () => import('./BarChartPage.vue') 
-        }
+        },
+        {
+          path: '/line-charts-multi',
+          name: 'LineChartsMulti',
+          component: () => import('./LineChartMulti.vue') 
+        },
       ],
     history: createWebHistory(),
   });

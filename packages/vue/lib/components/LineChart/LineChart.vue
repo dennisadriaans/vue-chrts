@@ -30,9 +30,11 @@ const props = withDefaults(defineProps<LineChartProps<T>>(), {
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
 });
 
-const defaultColors = Object.values(props.categories).map((i, index) => `var(--vis-color${index})`)
-const color = (key: number) => Object.values(props.categories)[key].color ?? defaultColors[key];
-
+const defaultColors = Object.values(props.categories).map(
+  (i, index) => `var(--vis-color${index})`
+);
+const color = (key: number) =>
+  Object.values(props.categories)[key].color ?? defaultColors[key];
 
 const generateTooltip = computed(() => (d: T, idx: number) => {
   if (typeof window === "undefined" || typeof document === "undefined") {
@@ -68,7 +70,13 @@ const LegendPositionTop = computed(
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': LegendPositionTop }"
   >
-    <VisXYContainer :data="data" :padding="padding" :height="height">
+    <VisXYContainer
+      :data="data"
+      :scale-by-domain="true"
+      :yDomain="[10, 100000]"
+      :padding="padding"
+      :height="height"
+    >
       <VisTooltip
         :horizontal-placement="Position.Right"
         :vertical-placement="Position.Top"
