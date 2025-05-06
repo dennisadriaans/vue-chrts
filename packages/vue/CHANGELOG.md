@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file. See [commit
 
 ### Features
 
-* make container padding property available ([1b91c89](https://github.com/dennisadriaans/vue-chrts/commit/1b91c89296b38312677279fdc3325a1fcd642f85))
+* make container padding property available
 
 ## [0.1.7](https://github.com/dennisadriaans/vue-chrts/compare/v0.1.5...v0.1.7) (2025-05-05)
 
