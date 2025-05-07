@@ -29,6 +29,11 @@ const router = createRouter({
           path: '/bar-charts',
           name: 'BarCharts',
           component: () => import('./BarChartPage.vue') 
+        },
+        {
+          path: '/timeline',
+          name: 'Timeline',
+          component: () => import('./Timeline.vue') 
         }
       ],
     history: createWebHistory(),
