@@ -30,3 +30,12 @@ export function getDistributedIndices(length: number, numTicks: number) {
   // No need to filter duplicates as our formula ensures unique indices
   return indices;
 }
+
+
+export function getFirstPropertyValue(obj) {
+  if (obj && Object.keys(obj).length > 0) {
+    const firstKey = Object.keys(obj)[0];
+    return obj[firstKey];
+  }
+  return undefined; 
+}

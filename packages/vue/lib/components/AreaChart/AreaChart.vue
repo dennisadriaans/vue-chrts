@@ -14,6 +14,7 @@ import {
 import Tooltip from "../Tooltip.vue";
 import { LegendPosition } from "../../types";
 import { AreaChartProps } from "./types";
+import { getFirstPropertyValue } from "../../utils";
 
 // Constants for default values
 const DEFAULT_TICK_COUNT = 24;
@@ -42,11 +43,7 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
 
 const colors = Object.values(props.categories).map((c) => c.color);
 
-// Create a single app instance for tooltips
-const tooltipApp = ref<ReturnType<typeof createApp> | null>(null);
-const tooltipContainer = ref<HTMLDivElement | null>(null);
-
-const generateTooltip = computed(() => (d: T, idx: number) => {
+const generateTooltip = computed(() => (d: T ) => {
   if (typeof window === "undefined" || typeof document === "undefined") {
     return "";
   }
@@ -55,7 +52,8 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
     const app = createApp(Tooltip, {
       data: d,
       categories: props.categories,
-      xValue: props.xFormatter(Math.floor(idx)),
+      toolTipTitle: getFirstPropertyValue(d),
+      yFormatter: props.yFormatter
     });
 
     const container = document.createElement("div");
@@ -70,16 +68,6 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
   }
 });
 
-// Cleanup on component unmount
-onUnmounted(() => {
-  if (tooltipApp.value) {
-    tooltipApp.value.unmount();
-    tooltipApp.value = null;
-  }
-  if (tooltipContainer.value) {
-    tooltipContainer.value = null;
-  }
-});
 
 function accessors(id: string): { y: NumericAccessor<T>; color: string } {
   return {

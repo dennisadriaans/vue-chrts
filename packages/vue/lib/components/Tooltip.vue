@@ -5,7 +5,8 @@ import { BulletLegendItemInterface } from "../types";
 const props = defineProps<{
   data: T;
   categories: Record<string, BulletLegendItemInterface>;
-  xValue: string | number;
+  toolTipTitle: string | number;
+  yFormatter?: (value: T) => any;
 }>();
 
 const keyBlockList = ["_index", "_stacked", "_ending"];
@@ -27,7 +28,7 @@ const visibleEntries = computed(() => {
         borderColor: 'rgba(255, 255, 255, 0.05)',
       }"
     >
-      {{ xValue }}
+      {{ toolTipTitle }}
     </div>
     <div
       v-for="([key, value], index) in visibleEntries"
@@ -51,7 +52,7 @@ const visibleEntries = computed(() => {
         <span
           style="font-weight: 400"
           :style="{ color: 'var(--tooltip-value-color)' }"
-          >{{ value }}</span
+          >{{ yFormatter ? yFormatter(value) : value  }}</span
         >
       </div>
     </div>
