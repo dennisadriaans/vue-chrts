@@ -15,7 +15,7 @@ All notable changes to this project will be documented in this file. See [commit
 ### Bug Fixes
 
 * apply tooltip changes to line charts ([b02b5c0](https://github.com/dennisadriaans/vue-chrts/commit/b02b5c03400d8d3a3561751d2d8aaa90b544cbcb))
-* getFirstProp value type defintion ([cb41fe3](https://github.com/dennisadriaans/vue-chrts/commit/cb41fe3fa3eaccaac640a720a64d17f53a8c4d8f))
+* getFirstProp value type definition ([cb41fe3](https://github.com/dennisadriaans/vue-chrts/commit/cb41fe3fa3eaccaac640a720a64d17f53a8c4d8f))
 * move data reversal logic outside bar chart component ([091ecbd](https://github.com/dennisadriaans/vue-chrts/commit/091ecbd157caf50730954e1a177aa2471ee642b7))
 * rework tooltip title and use yFormatter to format tooltip ([a3b39fc](https://github.com/dennisadriaans/vue-chrts/commit/a3b39fc7eda2759bd99c2d7220f16cb39d6b69e5))
 * vue-chrts version | remove unovis/ts from optimizeDeps ([be600c4](https://github.com/dennisadriaans/vue-chrts/commit/be600c45a7896589abb5d6ec7c1c0e416c7b84a7))
