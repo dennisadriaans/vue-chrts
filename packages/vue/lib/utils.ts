@@ -32,10 +32,10 @@ export function getDistributedIndices(length: number, numTicks: number) {
 }
 
 
-export function getFirstPropertyValue(obj) {
+export function getFirstPropertyValue(obj: unknown) {
   if (obj && Object.keys(obj).length > 0) {
     const firstKey = Object.keys(obj)[0];
-    return obj[firstKey];
+    return obj[firstKey as keyof typeof obj];
   }
   return undefined; 
 }
