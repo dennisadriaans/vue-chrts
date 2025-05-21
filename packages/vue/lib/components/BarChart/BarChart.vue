@@ -62,7 +62,7 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
     const app = createApp(Tooltip, {
       data: d,
       categories: props.categories,
-      xValue: d[key as keyof typeof d],
+      toolTipTitle: d[key as keyof typeof d],
     });
 
     const container = document.createElement("div");

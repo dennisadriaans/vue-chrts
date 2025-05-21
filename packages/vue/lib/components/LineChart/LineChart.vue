@@ -14,6 +14,7 @@ import {
 import Tooltip from "../Tooltip.vue";
 import { LegendPosition } from "../../types";
 import { LineChartProps } from "./types";
+import { getFirstPropertyValue } from "../../utils";
 
 const props = withDefaults(defineProps<LineChartProps<T>>(), {
   padding: () => {
@@ -43,7 +44,8 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
     const app = createApp(Tooltip, {
       data: d,
       categories: props.categories,
-      xValue: props.xFormatter(Math.floor(idx)),
+      toolTipTitle: getFirstPropertyValue(d),
+      yFormatter: props.yFormatter
     });
 
     const container = document.createElement("div");
