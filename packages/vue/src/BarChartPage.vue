@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { BarChart } from "./../lib";
+import { BarChart, BulletLegendItemInterface } from "./../lib";
 
 import Card from "./elements/Card.vue";
 
 import { VisitorsData, VisitorsCartegories } from "./data/VisitorsData";
 
-import { LegendPosition, Orientation } from "./../lib";
+import { LegendPosition, Orientation, CurveType } from "./../lib";
+import { ref } from "vue";
 
 const RevenueData = [
   { month: "January", desktop: 186, mobile: 80 },
@@ -15,6 +16,26 @@ const RevenueData = [
   { month: "May", desktop: 209, mobile: 130 },
   { month: "June", desktop: 214, mobile: 140 },
 ];
+
+
+const chartData = ref([
+  { month: 1, amount: 2500 },
+  { month: 2, amount: 1500 },
+  { month: 3, amount: 3000 },
+  { month: 4, amount: 4000 },
+  { month: 5, amount: 4500 },
+  { month: 6, amount: 2800 },
+  { month: 7, amount: 3500 },
+  { month: 8, amount: 3800 },
+  { month: 9, amount: 2000 },
+  { month: 10, amount: 4200 },
+  { month: 11, amount: 2200 },
+  { month: 12, amount: 1800 },
+])
+
+const categories: Record<string, BulletLegendItemInterface> = {
+  amount: { name: 'Monthly Spending', color: '#22c55e' },
+}
 
 const RevenueDataLong = [
   { date: "16/12/25", value: 60000 },
@@ -111,7 +132,31 @@ const TrafficCategories: Record<string, BulletLegendItemInterface> = {
   unique_users: { name: "Unique users", color: "#403e3e" },
 };
 
+function formatDate(timestamp?: number | string) {
+  if (!timestamp) return "";
+  const options = {
+    month: "short",
+    day: "numeric",
+  };
+
+  const date = new Date(timestamp);
+  const formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
+
+  return `${formattedDate}`;
+}
+
 const xFormatter = (i: number): string | number => `${TrafficData[i]?.date}`;
+const xFormatterDate = (i: number): string | number => formatDate(new Date(`2025-${chartData.value[i]?.month}-01`).getTime());
+
+
+const formatCurrency = (i, index: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(chartData.value[index]?.amount)
+}
 </script>
 
 <template>
@@ -157,7 +202,6 @@ const xFormatter = (i: number): string | number => `${TrafficData[i]?.date}`;
           :radius="4"
           :bar-padding="0"
           :orientation="Orientation.Horizontal"
-          :x-formatter="(i) => JSON.stringify(i)"
           :y-formatter="(i: number): string => `${[...RevenueData].reverse()[i].month }`"
           :legend-position="LegendPosition.Top"
         />
@@ -251,8 +295,8 @@ const xFormatter = (i: number): string | number => `${TrafficData[i]?.date}`;
         :categories="RevenueCategories"
         :y-axis="['value']"
         :hide-legend="true"
-        :y-formatter="(i: number) => i"
-        :x-formatter="(i) => RevenueDataLong[i].date"
+        :y-formatter="(i: number) => '123'"
+        :x-formatter="(i) => '123'"
       />
     </div>
 
@@ -269,6 +313,21 @@ const xFormatter = (i: number): string | number => `${TrafficData[i]?.date}`;
           :grid-line-y="true"
           :legend-position="LegendPosition.Bottom"
         />
+    </div>
+
+
+    <div class="max-w-7xl mx-auto">
+    <BarChart
+        :data="chartData"
+        :height="180"
+        :categories="categories"
+        :y-axis="['amount']"
+        :y-num-ticks="2"
+        :curve-type="CurveType.Basis"
+        :legend-position="LegendPosition.Top"
+        :x-formatter="xFormatterDate"
+        :y-formatter="formatCurrency"
+      />
     </div>
   </div>
 </template>
