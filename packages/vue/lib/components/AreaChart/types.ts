@@ -36,19 +36,19 @@ export interface AreaChartProps<T> {
    */
   categories: Record<string, BulletLegendItemInterface>;
   /**
-   * A function that formats the x-axis tick labels.
-   * @param i The x-axis key of the item to be formatted.
-   * @param idx The index of the data point (optional).
-   * @returns The formatted x-axis label.
-   */
-  xFormatter: (i: number, idx?: number) => string | number;
+ * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
+ * @param {number} i - The index of the tick in the `ticks` array.
+ * @param {(number[]|Date[])} ticks - An array of all tick values for the x-axis.
+ * @returns {string} The formatted string representation of the tick.
+ */
+  xFormatter?:((tick: number, i: number, ticks: number[]) => string) | ((tick: Date, i: number, ticks: Date[]) => string)
   /**
-   * An optional function that formats the y-axis tick labels.
-   * @param i The y-axis key of the item to be formatted.
-   * @param idx The index of the data point (optional).
-   * @returns The formatted y-axis label or value.
-   */
-  yFormatter?: (i: number, idx?: number) => string | number;
+ * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the y-axis.
+ * @param {number} i - The index of the tick in the `ticks` array.
+ * @param {(number[]|Date[])} ticks - An array of all tick values for the y-axis.
+ * @returns {string} The formatted string representation of the tick.
+ */
+  yFormatter?:((tick: number, i: number, ticks: number[]) => string) | ((tick: Date, i: number, ticks: Date[]) => string)
   /**
    * The type of curve to use for the area chart lines.
    * See `CurveType` for available options.
