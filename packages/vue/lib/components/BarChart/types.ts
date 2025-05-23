@@ -46,12 +46,11 @@ export interface BarChartProps<T> {
    */
   xFormatter: (i: number, idx?: number) => string | number;
   /**
-   * An optional function that formats the y-axis tick labels.
-   * @param i The y-axis key of the item to be formatted.
-   * @param idx The index of the data point (optional).
-   * @returns The formatted y-axis label or value.
+   * A function that formats the y-axis tick labels.
+   * @param {number | Date} tick The value of the tick mark on the y-axis.
+   * @returns {string} The formatted string to be displayed as the y-axis tick label.
    */
-  yFormatter?: (i: number, idx?: number) => string | number;
+  yFormatter?: (tick: number | Date) => string;
   /**
    * The desired number of ticks on the y-axis.
    */

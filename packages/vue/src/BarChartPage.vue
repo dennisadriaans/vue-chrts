@@ -149,13 +149,13 @@ const xFormatter = (i: number): string | number => `${TrafficData[i]?.date}`;
 const xFormatterDate = (i: number): string | number => formatDate(new Date(`2025-${chartData.value[i]?.month}-01`).getTime());
 
 
-const formatCurrency = (i, index: number) => {
+const formatCurrency = (tick: number | Date) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(chartData.value[index]?.amount)
+  }).format(Number(tick))
 }
 </script>
 
