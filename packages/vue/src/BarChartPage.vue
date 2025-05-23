@@ -174,7 +174,7 @@ const formatCurrency = (tick: number | Date) => {
     <div class="grid grid-cols-3 gap-4 max-w-7xl mx-auto py-4">
       <Card>
         <template #header>
-          <h2 class="heading-2">Bar Chart Vertical 123123123</h2>
+          <h2 class="heading-2">Bar Chart Vertical</h2>
         </template>
         <BarChart
           :data="RevenueData"
