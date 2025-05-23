@@ -50,6 +50,11 @@ const LegendPositionTop = computed(
 );
 
 const generateTooltip = computed(() => (d: T, idx: number) => {
+  // If custom tooltip function is provided, use it
+  if (props.customTooltip) {
+    return props.customTooltip(d, idx);
+  }
+  
   if (typeof window === "undefined" || typeof document === "undefined") {
     return "";
   }

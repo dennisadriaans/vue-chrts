@@ -110,4 +110,11 @@ export interface LineChartProps<T> {
    * If `true`, displays tick lines on the y-axis.
    */
   yTickLine?: boolean;
+  /**
+   * Optional custom function to generate tooltip HTML
+   * @param d The data point
+   * @param idx The index of the data point
+   * @returns HTML string for the tooltip
+   */
+  customTooltip?: (d: T, idx: number) => string;
 }

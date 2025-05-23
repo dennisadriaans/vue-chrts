@@ -327,6 +327,9 @@ const formatCurrency = (i, index: number) => {
         :legend-position="LegendPosition.Top"
         :x-formatter="xFormatterDate"
         :y-formatter="formatCurrency"
+        :customTooltip="(dataPoint, index) => {
+          return '<div>Custom tooltip HTML</div>';
+        }"
       />
     </div>
   </div>

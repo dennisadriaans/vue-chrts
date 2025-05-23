@@ -107,4 +107,10 @@ export interface AreaChartProps<T> {
    * If `true`, displays grid lines along the y-axis.
    */
   yGridLine?: boolean;
+  /**
+   * Optional custom function to generate tooltip HTML
+   * @param d The data point
+   * @returns HTML string for the tooltip
+   */
+  customTooltip?: (d: T) => string;
 }

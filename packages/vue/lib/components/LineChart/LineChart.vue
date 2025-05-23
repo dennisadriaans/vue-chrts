@@ -36,6 +36,11 @@ const color = (key: number) => Object.values(props.categories)[key].color ?? def
 
 
 const generateTooltip = computed(() => (d: T, idx: number) => {
+  // If custom tooltip function is provided, use it
+  if (props.customTooltip) {
+    return props.customTooltip(d, idx);
+  }
+  
   if (typeof window === "undefined" || typeof document === "undefined") {
     return "";
   }

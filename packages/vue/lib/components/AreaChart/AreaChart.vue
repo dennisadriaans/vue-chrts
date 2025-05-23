@@ -44,6 +44,11 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
 const colors = Object.values(props.categories).map((c) => c.color);
 
 const generateTooltip = computed(() => (d: T ) => {
+  // If custom tooltip function is provided, use it
+  if (props.customTooltip) {
+    return props.customTooltip(d);
+  }
+  
   if (typeof window === "undefined" || typeof document === "undefined") {
     return "";
   }
