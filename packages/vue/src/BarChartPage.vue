@@ -174,7 +174,7 @@ const formatCurrency = (tick: number | Date) => {
     <div class="grid grid-cols-3 gap-4 max-w-7xl mx-auto py-4">
       <Card>
         <template #header>
-          <h2 class="heading-2">Bar Chart Vertical</h2>
+          <h2 class="heading-2">Bar Chart Vertical 123123123</h2>
         </template>
         <BarChart
           :data="RevenueData"
@@ -182,8 +182,8 @@ const formatCurrency = (tick: number | Date) => {
           :categories="RevenueCategoriesMultple"
           :y-axis="['desktop']"
           :radius="4"
-          :x-formatter="(i: number): string => `${RevenueData[i]?.month }`"
-          :y-formatter="(i: number) => i"
+          :x-formatter="(tick: number, i: number ): string => `${tick}-${i}`"
+          :y-formatter="(i: number) => `${i}`"
           :legend-position="LegendPosition.Top"
         />
       </Card>
@@ -241,7 +241,7 @@ const formatCurrency = (tick: number | Date) => {
           :bar-padding="0.2"
           :xNumTicks="6"
           :radius="4"
-          :x-formatter="(i: number): string => `${RevenueData[i]?.month }`"
+          :x-formatter="(i: number): string => console.log(i)"
           :y-formatter="(i: number) => i"
           :legend-position="LegendPosition.Top"
         />
