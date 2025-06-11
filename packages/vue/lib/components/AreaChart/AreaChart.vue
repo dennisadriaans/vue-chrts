@@ -142,6 +142,7 @@ const LegendPositionTop = computed(
       </template>
 
       <VisAxis
+        v-if="!hideXAxis"
         type="x"
         :tick-format="xFormatter"
         :label="xLabel"
@@ -154,6 +155,7 @@ const LegendPositionTop = computed(
         :min-max-ticks-only="minMaxTicksOnly"
       />
       <VisAxis
+        v-if="!hideYAxis"
         type="y"
         :num-ticks="yNumTicks"
         :tick-format="yFormatter"
