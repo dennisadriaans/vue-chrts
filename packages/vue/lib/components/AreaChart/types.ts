@@ -107,4 +107,12 @@ export interface AreaChartProps<T> {
    * If `true`, displays grid lines along the y-axis.
    */
   yGridLine?: boolean;
+  /**
+   * If `true`, hide the x-axis.
+   */
+  hideXAxis?: boolean;
+  /**
+   * If `true`, hide the y-axis.
+   */
+  hideYAxis?: boolean;
 }
