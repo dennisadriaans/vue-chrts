@@ -115,6 +115,7 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
         :orientation="orientation ?? Orientation.Vertical"
       />
       <VisAxis
+        v-if="!hideXAxis"
         type="x"
         :tick-format="xFormatter"
         :label="xLabel"
@@ -123,9 +124,10 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
         :tick-line="xTickLine"
         :num-ticks="xNumTicks"
         :tick-values="xExplicitTicks"
-        :min-max-ticks-only="minMaxTicksOnly"
+        :minMaxTicksOnly="minMaxTicksOnly"
       />
       <VisAxis
+        v-if="!hideYAxis"
         type="y"
         :label="yLabel"
         :grid-line="orientation !== Orientation.Horizontal && yGridLine"

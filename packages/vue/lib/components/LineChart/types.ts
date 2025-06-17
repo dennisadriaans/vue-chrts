@@ -110,4 +110,12 @@ export interface LineChartProps<T> {
    * If `true`, displays tick lines on the y-axis.
    */
   yTickLine?: boolean;
+  /**
+   * If `true`, hide the x-axis.
+   */
+  hideXAxis?: boolean;
+  /**
+   * If `true`, hide the y-axis.
+   */
+  hideYAxis?: boolean;
 }

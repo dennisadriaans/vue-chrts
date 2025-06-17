@@ -84,6 +84,7 @@ const LegendPositionTop = computed(
         />
       </template>
       <VisAxis
+        v-if="!hideXAxis"
         type="x"
         :tick-format="xFormatter"
         :label="xLabel"
@@ -93,9 +94,10 @@ const LegendPositionTop = computed(
         :tick-line="xTickLine"
         :num-ticks="xNumTicks"
         :tick-values="xExplicitTicks"
-        :min-max-ticks-only="minMaxTicksOnly"
+        :minMaxTicksOnly="minMaxTicksOnly"
       />
       <VisAxis
+        v-if="!hideYAxis"
         type="y"
         :tick-format="yFormatter"
         :label="yLabel"
