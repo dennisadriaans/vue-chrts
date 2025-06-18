@@ -123,9 +123,6 @@ const columns = [
         <RouterLink to="/overview">
           <Button icon="i-heroicons:swatch" size="lg"> Overview </Button>
         </RouterLink>
-        <RouterLink to="/bubble-charts">
-          <Button icon="i-heroicons:chart-bubble" size="lg"> Bubble Charts </Button>
-        </RouterLink>
       </div>
     </header>
 

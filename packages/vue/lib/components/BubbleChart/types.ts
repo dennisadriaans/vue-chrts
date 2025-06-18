@@ -1,12 +1,12 @@
-// Define TypeScript types for BubbleChart component
+// Define TypeScript types for BubbleChart component (recreated from memory)
 
 /**
  * Represents a single data point for a bubble in the chart.
  */
 export interface BubbleDataItem {
   id: string; // Unique identifier for the bubble
-  xValue: number | string | Date; // Value for the x-axis
-  yValue: number | string | Date; // Value for the y-axis
+  xValue: number | string | Date; // Value for the x-axis (if applicable for layout)
+  yValue: number | string | Date; // Value for the y-axis (if applicable for layout)
   sizeValue: number; // Determines the size of the bubble
   label?: string; // Optional label displayed on or near the bubble
   color?: string; // Optional specific color for this bubble
@@ -14,17 +14,17 @@ export interface BubbleDataItem {
 }
 
 /**
- * Configuration for chart axes.
+ * Configuration for chart axes (rudimentary).
  */
 export interface AxisOptions {
   show?: boolean; // Whether to display the axis
   label?: string; // Label for the axis
-  tickFormat?: (value: any) => string; // Function to format tick labels
-  gridlines?: boolean; // Whether to show gridlines for this axis
+  // tickFormat?: (value: any) => string; // Simplified, not fully implemented in recreated chart
+  gridlines?: boolean; // Whether to show gridlines
 }
 
 /**
- * Configuration for chart labels.
+ * Configuration for chart labels on bubbles.
  */
 export interface LabelOptions {
   show?: boolean; // Whether to display labels on bubbles
@@ -35,7 +35,6 @@ export interface LabelOptions {
 
 /**
  * Configuration for bubble colors.
- * Can be a single color, an array of colors, or an object mapping categories/values to colors.
  */
 export type ColorOptions = string | string[] | Record<string, string>;
 
@@ -45,7 +44,7 @@ export type ColorOptions = string | string[] | Record<string, string>;
 export interface SizeOptions {
   minRadius?: number; // Minimum radius for a bubble
   maxRadius?: number; // Maximum radius for a bubble
-  scale?: 'linear' | 'sqrt' | 'log'; // Scale to determine radius from sizeValue
+  // scale?: 'linear' | 'sqrt' | 'log'; // Simplified, default to sqrt logic in component
 }
 
 /**
@@ -70,11 +69,7 @@ export interface BubbleChartProps {
   /** Options for bubble labels. */
   labelOptions?: LabelOptions;
 
-  /** Color configuration for bubbles.
-   * - string: a single color for all bubbles.
-   * - string[]: a list of colors to cycle through.
-   * - Record<string, string>: a map from data item category/id to color.
-   */
+  /** Color configuration for bubbles. */
   colorOptions?: ColorOptions;
 
   /** Options for controlling bubble sizes. */

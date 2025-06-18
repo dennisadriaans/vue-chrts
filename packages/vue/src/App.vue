@@ -12,18 +12,7 @@ const displayCopyright = computed(() => {
 
 <template>
   <div>
-    <nav class="bg-gray-100 dark:bg-gray-800 p-4 shadow-md">
-      <div class="max-w-7xl mx-auto flex items-center justify-start space-x-4">
-        <RouterLink to="/" class="text-gray-700 dark:text-gray-200 hover:text-blue-500">Home</RouterLink>
-        <RouterLink to="/area-charts" class="text-gray-700 dark:text-gray-200 hover:text-blue-500">Area Charts</RouterLink>
-        <RouterLink to="/line-charts" class="text-gray-700 dark:text-gray-200 hover:text-blue-500">Line Charts</RouterLink>
-        <RouterLink to="/bar-charts" class="text-gray-700 dark:text-gray-200 hover:text-blue-500">Bar Charts</RouterLink>
-        <RouterLink to="/bubble-charts" class="text-gray-700 dark:text-gray-200 hover:text-blue-500">Bubble Charts</RouterLink>
-      </div>
-    </nav>
-    <main class="p-4"> <!-- Added padding to main content area -->
-      <RouterView />
-    </main>
+    <RouterView />
     <div class="border-t border-border mt-8">
       <div class="max-w-7xl mx-auto py-8 flex items-center justify-between">
         <div v-html="displayCopyright"></div>
