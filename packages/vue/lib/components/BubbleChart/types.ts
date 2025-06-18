@@ -19,8 +19,9 @@ export interface BubbleDataItem {
 export interface AxisOptions {
   show?: boolean; // Whether to display the axis
   label?: string; // Label for the axis
-  // tickFormat?: (value: any) => string; // Simplified, not fully implemented in recreated chart
+  tickFormat?: (value: any) => string; // Function to format tick labels
   gridlines?: boolean; // Whether to show gridlines
+  numTicks?: number; // Suggested number of ticks
 }
 
 /**
