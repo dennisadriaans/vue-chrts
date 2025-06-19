@@ -1,3 +1,5 @@
+import { LegendPosition } from '../../types';
+
 // Define TypeScript types for BubbleChart component (recreated from memory)
 
 /**
@@ -84,4 +86,24 @@ export interface BubbleChartProps<T> {
 
   /** Custom CSS class for the chart container. */
   customClass?: string;
+
+  // --- Added for BarChart compatibility ---
+  hideXAxis?: boolean;
+  hideYAxis?: boolean;
+  xLabel?: string;
+  yLabel?: string;
+  xGridLine?: boolean;
+  yGridLine?: boolean;
+  xDomainLine?: boolean;
+  yDomainLine?: boolean;
+  xTickLine?: boolean;
+  yTickLine?: boolean;
+  xFormatter?: (v: any) => string;
+  yFormatter?: (v: any) => string;
+  xNumTicks?: number;
+  yNumTicks?: number;
+  xExplicitTicks?: number[];
+  minMaxTicksOnly?: boolean;
+  hideLegend?: boolean;
+  legendPosition?: LegendPosition;
 }

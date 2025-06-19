@@ -2,9 +2,26 @@
 import { Position, Scale, Scatter } from '@unovis/ts'
 import { VisXYContainer, VisScatter, VisAxis, VisTooltip, VisBulletLegend } from '@unovis/vue'
 import { BubbleChartProps } from './types';
+import { LegendPosition } from '../../types';
 
-const props = defineProps<BubbleChartProps<T>>()
-
+const props = withDefaults(defineProps<BubbleChartProps<T>>(), {
+  hideXAxis: false,
+  hideYAxis: false,
+  xLabel: '',
+  yLabel: '',
+  xGridLine: false,
+  yGridLine: true,
+  xDomainLine: true,
+  yDomainLine: true,
+  xTickLine: true,
+  yTickLine: true,
+  xNumTicks: undefined,
+  yNumTicks: undefined,
+  xExplicitTicks: undefined,
+  minMaxTicksOnly: false,
+  hideLegend: false,
+  legendPosition: LegendPosition.Bottom,
+})
 
 const palette = [
   '#04c0c7',
@@ -42,12 +59,38 @@ const triggers = {
 
 <template>
   <h2>American College Graduates, 2010-2012</h2>
-  <VisBulletLegend :items="legendItems" />
+  <div
+    v-if="!props.hideLegend"
+    class="flex items-center justify-end"
+    :class="{ 'pb-4': props.legendPosition === LegendPosition.Top }"
+  >
+    <VisBulletLegend :items="legendItems" />
+  </div>
   <VisXYContainer :data="props.data" :height="600" :scaleByDomain="true">
     <VisScatter :x="x" :y="y" :color="color" :size="size" :label="label" :labelPosition="Position.Bottom"
       :sizeRange="[10, 50]" cursor="pointer" />
-    <VisAxis type='x' label='Median Salary ($)' :tickFormat="formatNumber" />
-    <VisAxis excludeFromDomainCalculation type='y' label='Employment Rate' :tickPadding="0" />
+    <VisAxis
+      v-if="!props.hideXAxis"
+      type='x'
+      :label="props.xLabel"
+      :tickFormat="props.xFormatter"
+      :gridLine="props.xGridLine"
+      :domainLine="!!props.xDomainLine"
+      :tickLine="props.xTickLine"
+      :numTicks="props.xNumTicks"
+      :tickValues="props.xExplicitTicks"
+      :minMaxTicksOnly="props.minMaxTicksOnly"
+    />
+    <VisAxis
+      v-if="!props.hideYAxis"
+      type='y'
+      :label="props.yLabel"
+      :tickFormat="props.yFormatter"
+      :gridLine="props.yGridLine"
+      :domainLine="!!props.yDomainLine"
+      :tickLine="props.yTickLine"
+      :numTicks="props.yNumTicks"
+    />
     <VisTooltip :triggers="triggers" />
   </VisXYContainer>
 </template>
