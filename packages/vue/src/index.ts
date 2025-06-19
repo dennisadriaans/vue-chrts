@@ -29,6 +29,11 @@ const router = createRouter({
           path: '/bar-charts',
           name: 'BarCharts',
           component: () => import('./BarChartPage.vue') 
+        },
+        {
+          path: '/bubble-charts',
+          name: 'BubbleCharts',
+          component: () => import('./BubbleChartPage.vue') 
         }
       ],
     history: createWebHistory(),
