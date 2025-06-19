@@ -2,6 +2,7 @@ import { AreaChartProps } from "./components/AreaChart/types";
 import { BarChartProps } from "./components/BarChart/types";
 import { LineChartProps } from "./components/LineChart/types";
 import { DonutChartProps } from "./components/DonutChart/types";
+import { BubbleChartProps } from "./components/BubbleChart/types";
 
 enum LegendPosition {
   Top = "top",
@@ -53,4 +54,5 @@ export {
   type LineChartProps,
   type DonutChartProps,
   type BulletLegendItemInterface,
+  type BubbleChartProps
 };

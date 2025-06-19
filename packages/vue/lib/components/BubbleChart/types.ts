@@ -51,9 +51,9 @@ export interface SizeOptions {
 /**
  * Props for the BubbleChart component.
  */
-export interface BubbleChartProps {
+export interface BubbleChartProps<T> {
   /** Array of data items to plot as bubbles. */
-  data: BubbleDataItem[];
+  data: T[];
 
   /** Width of the chart SVG. */
   width?: number;
