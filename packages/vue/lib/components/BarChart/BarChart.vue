@@ -137,24 +137,6 @@ const bar2 = [
         }"
       />
       <template v-if="stackAndGrouped">
-        <VisGroupedBar
-          :data="chartData"
-          :x="(_: T, i: number) => i"
-          :y="[
-            (d: any) =>
-              d.desktopDone + d.mobileDone + d.androidDone + d.iosDone,
-            (d: any) =>
-              d.desktopPending +
-              d.mobilePending +
-              d.androidPending +
-              d.iosPending,
-          ]"
-          :color="(_d, i) => ['rgba(0,0,0,0)', 'rgba(0,0,0,0)'][i]"
-          :rounded-corners="radius ?? 0"
-          :group-padding="groupPadding ?? 0"
-          :bar-padding="barPadding ?? 0.2"
-          :orientation="orientation ?? Orientation.Vertical"
-        />
         <VisStackedBar
           :data="chartData"
           :x="(_: T, i: number) => i - 0.2"
