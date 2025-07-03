@@ -78,25 +78,20 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
   }
 });
 
-/* Example data instead of using props.data */
-/* TODO: change example data in SocialDealExamples.vue to match structure below */
-/* Write logic to check if stacked AND grouped properties are set to true */
-/* If so add two VisGroupedBar like below to get a "stacked" grouped bar chart */
+const keys = computed(() => {
+  if (props.stackAndGrouped) {
+    return Object.keys(props.data[0]).filter((key) => key !== "month");
+  }
+  return [];
+});
 
-  const keys = Object.keys(props.data[0]).filter((key) => key !== "month");
-
-const flattenData = (data) => {
-  // Use the map method to iterate over each entry and return a new array
-  // with the transformed objects.
-
-  /* First get the keys of the provided data */
-
+const flattenData = (data: T[]) => {
   const states = ["Done", "Pending"];
 
-  return data.map((entry) => {
+  return data.map((entry: any) => {
     return {
       month: entry.month,
-      ...keys
+      ...keys.value
         .flatMap((key) =>
           states.map((state) => ({
             [`${key}${state}`]: entry[key][state.toLowerCase()],
@@ -107,15 +102,25 @@ const flattenData = (data) => {
   });
 };
 
-const data = flattenData(props.data);
+const chartData = computed(() => {
+  if (props.stackAndGrouped) {
+    return flattenData(props.data);
+  }
+  return props.data;
+});
 
-const bar1 = [(d) => d.desktopDone, (d) => d.mobileDone, (d) => d.androidDone, (d) => d.iosDone];
+const bar1 = [
+  (d: any) => d.desktopDone,
+  (d: any) => d.mobileDone,
+  (d: any) => d.androidDone,
+  (d: any) => d.iosDone,
+];
 
 const bar2 = [
-  (d) => d.desktopPending,
-  (d) => d.mobilePending,
-  (d) => d.androidPending,
-  (d) => d.iosPending,
+  (d: any) => d.desktopPending,
+  (d: any) => d.mobilePending,
+  (d: any) => d.androidPending,
+  (d: any) => d.iosPending,
 ];
 </script>
 
@@ -131,42 +136,58 @@ const bar2 = [
           [StackedBar.selectors.bar]: generateTooltip,
         }"
       />
-
+      <template v-if="stackAndGrouped">
+        <VisGroupedBar
+          :data="chartData"
+          :x="(_: T, i: number) => i"
+          :y="[
+            (d: any) =>
+              d.desktopDone + d.mobileDone + d.androidDone + d.iosDone,
+            (d: any) =>
+              d.desktopPending +
+              d.mobilePending +
+              d.androidPending +
+              d.iosPending,
+          ]"
+          :color="(_d, i) => ['rgba(0,0,0,0)', 'rgba(0,0,0,0)'][i]"
+          :rounded-corners="radius ?? 0"
+          :group-padding="groupPadding ?? 0"
+          :bar-padding="barPadding ?? 0.2"
+          :orientation="orientation ?? Orientation.Vertical"
+        />
+        <VisStackedBar
+          :data="chartData"
+          :x="(_: T, i: number) => i - 0.2"
+          :y="bar1"
+          :color="(_d, i) => ['#2B7FFF', '#EFB100', '#00C16A', '#AD46FF'][i]"
+          :rounded-corners="radius ?? 0"
+          :group-padding="groupPadding ?? 0"
+          :bar-padding="barPadding ?? 0.2"
+          :orientation="orientation ?? Orientation.Vertical"
+        />
+        <VisStackedBar
+          :data="chartData"
+          :x="(_: T, i: number) => i + 0.2"
+          :y="bar2"
+          :color="(_d, i) => ['#8EC5FF', '#FFDF20', '#7FE0A8', '#D69FFF'][i]"
+          :rounded-corners="radius ?? 0"
+          :group-padding="groupPadding ?? 0"
+          :bar-padding="barPadding ?? 0.2"
+          :orientation="orientation ?? Orientation.Vertical"
+        />
+      </template>
       <VisGroupedBar
+        v-else-if="!stacked"
         :data="data"
         :x="(_: T, i: number) => i"
-        :y="[
-          (d) => d.desktopDone + d.mobileDone + d.androidDone + d.iosDone,
-          (d) => d.desktopPending + d.mobilePending + d.androidPending + d.iosPending
-        ]"
-        :color="(_d, i) => ['rgba(0,0,0,0)', 'rgba(0,0,0,0)'][i]"
+        :y="yAxis"
+        :color="color"
         :rounded-corners="radius ?? 0"
         :group-padding="groupPadding ?? 0"
         :bar-padding="barPadding ?? 0.2"
         :orientation="orientation ?? Orientation.Vertical"
       />
       <VisStackedBar
-        :data="data"
-        :x="(_: T, i: number) => i - 0.2"
-        :y="bar1"
-        :color="(_d, i) => ['#2B7FFF', '#EFB100', '#00C16A', '#AD46FF'][i]"
-        :rounded-corners="radius ?? 0"
-        :group-padding="groupPadding ?? 0"
-        :bar-padding="barPadding ?? 0.2"
-        :orientation="orientation ?? Orientation.Vertical"
-      />
-      <VisStackedBar
-        :data="data"
-        :x="(_: T, i: number) => i + 0.2"
-        :y="bar2"
-        :color="(_d, i) => ['#8EC5FF', '#FFDF20', '#7FE0A8', '#D69FFF'][i]"
-        :rounded-corners="radius ?? 0"
-        :group-padding="groupPadding ?? 0"
-        :bar-padding="barPadding ?? 0.2"
-        :orientation="orientation ?? Orientation.Vertical"
-      />
-
-      <!-- <VisStackedBar
         v-else
         :data="data"
         :x="(_: T, i: number) => i"
@@ -176,7 +197,7 @@ const bar2 = [
         :group-padding="groupPadding ?? 0"
         :bar-padding="barPadding ?? 0.2"
         :orientation="orientation ?? Orientation.Vertical"
-      /> -->
+      />
       <VisAxis
         v-if="!hideXAxis"
         type="x"
