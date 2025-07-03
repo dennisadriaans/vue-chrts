@@ -63,7 +63,7 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
       data: d,
       categories: props.categories,
       toolTipTitle: d[key as keyof typeof d],
-      yFormatter: props.yFormatter
+      yFormatter: props.yFormatter,
     });
 
     const container = document.createElement("div");
@@ -77,6 +77,32 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
     return "";
   }
 });
+
+/* Example data instead of using props.data */
+/* TODO: change example data in SocialDealExamples.vue to match structure below */
+/* Write logic to check if stacked AND grouped properties are set to true */
+/* If so add two VisGroupedBar like below to get a "stacked" grouped bar chart */
+
+const flattenData = (data) => {
+  // Use the map method to iterate over each entry and return a new array
+  // with the transformed objects.
+  return data.map((entry) => ({
+    month: entry.month, // Copy the 'month' directly.
+    desktopDone: entry.desktop.done, // Access nested 'desktop.done'.
+    desktopPending: entry.desktop.pending, // Access nested 'desktop.pending'.
+    mobileDone: entry.mobile.done, // Access nested 'mobile.done'.
+    mobilePending: entry.mobile.pending, // Access nested 'mobile.pending'.
+  }));
+};
+
+const data = flattenData(props.data);
+
+const bar1 = [(d) => d.desktopDone, (d) => d.mobileDone];
+
+const bar2 = [
+  (d) => d.desktopDone + d.desktopPending,
+  (d) => d.mobileDone + d.mobilePending,
+];
 </script>
 
 <template>
@@ -93,7 +119,28 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
       />
 
       <VisGroupedBar
-        v-if="!stacked"
+        :data="data"
+        :x="(_: T, i: number) => i"
+        :y="bar2"
+        :color="(_d, i) => ['#EFB100', '#FFDF20'][i]"
+        :rounded-corners="radius ?? 0"
+        :group-padding="groupPadding ?? 0"
+        :bar-padding="barPadding ?? 0.2"
+        :orientation="orientation ?? Orientation.Vertical"
+      />
+      <VisGroupedBar
+        :data="data"
+        :x="(_: T, i: number) => i"
+        :y="bar1"
+        :color="(_d, i) => ['#2B7FFF', '#8EC5FF'][i]"
+        :rounded-corners="radius ?? 0"
+        :group-padding="groupPadding ?? 0"
+        :bar-padding="barPadding ?? 0.2"
+        :orientation="orientation ?? Orientation.Vertical"
+      />
+
+      <!-- <VisStackedBar
+        v-else
         :data="data"
         :x="(_: T, i: number) => i"
         :y="yAxis"
@@ -102,18 +149,7 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
         :group-padding="groupPadding ?? 0"
         :bar-padding="barPadding ?? 0.2"
         :orientation="orientation ?? Orientation.Vertical"
-      />
-      <VisStackedBar
-        v-else
-      :data="data"
-        :x="(_: T, i: number) => i"
-        :y="yAxis"
-        :color="color"
-        :rounded-corners="radius ?? 0"
-        :group-padding="groupPadding ?? 0"
-        :bar-padding="barPadding ?? 0.2"
-        :orientation="orientation ?? Orientation.Vertical"
-      />
+      /> -->
       <VisAxis
         v-if="!hideXAxis"
         type="x"
