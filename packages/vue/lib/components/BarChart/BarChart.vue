@@ -109,11 +109,13 @@ const flattenData = (data) => {
 
 const data = flattenData(props.data);
 
-const bar1 = [(d) => d.desktopDone, (d) => d.mobileDone];
+const bar1 = [(d) => d.desktopDone, (d) => d.mobileDone, (d) => d.androidDone, (d) => d.iosDone];
 
 const bar2 = [
-  (d) => d.desktopDone + d.desktopPending,
-  (d) => d.mobileDone + d.mobilePending,
+  (d) => d.desktopPending,
+  (d) => d.mobilePending,
+  (d) => d.androidPending,
+  (d) => d.iosPending,
 ];
 </script>
 
@@ -133,18 +135,31 @@ const bar2 = [
       <VisGroupedBar
         :data="data"
         :x="(_: T, i: number) => i"
-        :y="bar2"
-        :color="(_d, i) => ['#EFB100', '#FFDF20'][i]"
+        :y="[
+          (d) => d.desktopDone + d.mobileDone + d.androidDone + d.iosDone,
+          (d) => d.desktopPending + d.mobilePending + d.androidPending + d.iosPending
+        ]"
+        :color="(_d, i) => ['rgba(0,0,0,0)', 'rgba(0,0,0,0)'][i]"
         :rounded-corners="radius ?? 0"
         :group-padding="groupPadding ?? 0"
         :bar-padding="barPadding ?? 0.2"
         :orientation="orientation ?? Orientation.Vertical"
       />
-      <VisGroupedBar
+      <VisStackedBar
         :data="data"
-        :x="(_: T, i: number) => i"
+        :x="(_: T, i: number) => i - 0.2"
         :y="bar1"
-        :color="(_d, i) => ['#2B7FFF', '#8EC5FF'][i]"
+        :color="(_d, i) => ['#2B7FFF', '#EFB100', '#00C16A', '#AD46FF'][i]"
+        :rounded-corners="radius ?? 0"
+        :group-padding="groupPadding ?? 0"
+        :bar-padding="barPadding ?? 0.2"
+        :orientation="orientation ?? Orientation.Vertical"
+      />
+      <VisStackedBar
+        :data="data"
+        :x="(_: T, i: number) => i + 0.2"
+        :y="bar2"
+        :color="(_d, i) => ['#8EC5FF', '#FFDF20', '#7FE0A8', '#D69FFF'][i]"
         :rounded-corners="radius ?? 0"
         :group-padding="groupPadding ?? 0"
         :bar-padding="barPadding ?? 0.2"

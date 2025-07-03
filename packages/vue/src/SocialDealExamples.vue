@@ -6,30 +6,70 @@ import { dynamicFlattenData, generateDataSeries } from "./utils";
 
 type RevenueDataItem = {
   month: string;
-  desktop: number;
-  mobile: number;
+  desktop: { done: number; pending: number };
+  mobile: { done: number; pending: number };
+  android: { done: number; pending: number };
+  ios: { done: number; pending: number };
 };
 
 const RevenueData: RevenueDataItem[] = [
   {
     month: "January",
     desktop: {
-      done: 75,
+      done: 25,
       pending: 25,
     },
     mobile: {
-      done: 16,
-      pending: 20,
+      done: 25,
+      pending: 50,
     },
     android: {
-      done: 31,
-      pending: 41,
+      done: 25,
+      pending: 50,
     },
     ios: {
-      done: 125,
-      pending: 512,
+      done: 0,
+      pending: 25,
     },
-  }
+  },
+  {
+    month: "February",
+    desktop: {
+      done: 25,
+      pending: 25,
+    },
+    mobile: {
+      done: 25,
+      pending: 25,
+    },
+    android: {
+      done: 25,
+      pending: 25,
+    },
+    ios: {
+      done: 25,
+      pending: 25,
+    },
+  },
+  {
+    month: "Maart",
+    desktop: {
+      done: 25,
+      pending: 25,
+    },
+    mobile: {
+      done: 25,
+      pending: 25,
+    },
+    android: {
+      done: 25,
+      pending: 25,
+    },
+    ios: {
+      done: 25,
+      pending: 25,
+    },
+  },
 ];
 
 const RevenueCategoriesMultple = {
@@ -39,7 +79,7 @@ const RevenueCategoriesMultple = {
   ios: { name: "iOS", color: "#AD46FF" },
 };
 const xFormatter = (i: number): string => `${RevenueData[i]?.month}`;
-const yFormatter = (i: number) => i;
+const yFormatter = (i: number) => i.toString();
 </script>
 <template>
   <div class="mx-auto max-w-xl sm:py-8">
@@ -47,10 +87,9 @@ const yFormatter = (i: number) => i;
       :data="RevenueData"
       :height="400"
       :categories="RevenueCategoriesMultple"
-      :y-axis="['desktop', 'mobile']"
-      :group-padding="0.3"
-      :bar-padding="0.3"
-      :xNumTicks="6"
+      :y-axis="['desktop', 'mobile', 'android', 'ios']"
+      :group-padding="0.5"
+      :bar-padding="0.5"
       :radius="4"
       :x-formatter="xFormatter"
       :y-formatter="yFormatter"
