@@ -18,120 +18,25 @@ const RevenueData: RevenueDataItem[] = [
       pending: 25,
     },
     mobile: {
-      done: 80,
+      done: 16,
       pending: 20,
     },
     android: {
-      done: 80,
-      pending: 20,
+      done: 31,
+      pending: 41,
     },
     ios: {
-      done: 80,
-      pending: 20,
+      done: 125,
+      pending: 512,
     },
-  },
-  {
-    month: "February",
-    desktop: {
-      done: 305,
-      pending: 200,
-    },
-    mobile: {
-      done: 200,
-      pending: 100,
-    },
-    android: {
-      done: 80,
-      pending: 20,
-    },
-    ios: {
-      done: 80,
-      pending: 20,
-    },
-  },
-  {
-    month: "March",
-    desktop: {
-      done: 237,
-      pending: 120,
-    },
-    mobile: {
-      done: 120,
-      pending: 80,
-    },
-    android: {
-      done: 80,
-      pending: 20,
-    },
-    ios: {
-      done: 80,
-      pending: 20,
-    },
-  },
-  {
-    month: "April",
-    desktop: {
-      done: 73,
-      pending: 190,
-    },
-    mobile: {
-      done: 190,
-      pending: 50,
-    },
-    android: {
-      done: 80,
-      pending: 20,
-    },
-    ios: {
-      done: 80,
-      pending: 20,
-    },
-  },
-  {
-    month: "May",
-    desktop: {
-      done: 209,
-      pending: 130,
-    },
-    mobile: {
-      done: 130,
-      pending: 70,
-    },
-    android: {
-      done: 80,
-      pending: 20,
-    },
-    ios: {
-      done: 80,
-      pending: 20,
-    },
-  },
-  {
-    month: "June",
-    desktop: {
-      done: 214,
-      pending: 211,
-    },
-    mobile: {
-      done: 140,
-      pending: 60,
-    },
-    android: {
-      done: 80,
-      pending: 20,
-    },
-    ios: {
-      done: 80,
-      pending: 20,
-    },
-  },
+  }
 ];
 
 const RevenueCategoriesMultple = {
-  desktop: { name: "Desktop", color: "#3b82f6" },
-  mobile: { name: "Mobile", color: "#22c55e" },
-  android: { name: "Android", color: "#4caf50" },
-  ios: { name: "iOS", color: "#f44336" },
+  desktop: { name: "Desktop", color: "#2B7FFF" },
+  mobile: { name: "Mobile", color: "#EFB100" },
+  android: { name: "Android", color: "#00C16A" },
+  ios: { name: "iOS", color: "#AD46FF" },
 };
 const xFormatter = (i: number): string => `${RevenueData[i]?.month}`;
 const yFormatter = (i: number) => i;

@@ -83,16 +83,28 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
 /* Write logic to check if stacked AND grouped properties are set to true */
 /* If so add two VisGroupedBar like below to get a "stacked" grouped bar chart */
 
+  const keys = Object.keys(props.data[0]).filter((key) => key !== "month");
+
 const flattenData = (data) => {
   // Use the map method to iterate over each entry and return a new array
   // with the transformed objects.
-  return data.map((entry) => ({
-    month: entry.month, // Copy the 'month' directly.
-    desktopDone: entry.desktop.done, // Access nested 'desktop.done'.
-    desktopPending: entry.desktop.pending, // Access nested 'desktop.pending'.
-    mobileDone: entry.mobile.done, // Access nested 'mobile.done'.
-    mobilePending: entry.mobile.pending, // Access nested 'mobile.pending'.
-  }));
+
+  /* First get the keys of the provided data */
+
+  const states = ["Done", "Pending"];
+
+  return data.map((entry) => {
+    return {
+      month: entry.month,
+      ...keys
+        .flatMap((key) =>
+          states.map((state) => ({
+            [`${key}${state}`]: entry[key][state.toLowerCase()],
+          }))
+        )
+        .reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+  });
 };
 
 const data = flattenData(props.data);
