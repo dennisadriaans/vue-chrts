@@ -48,7 +48,7 @@ export interface AreaChartProps<T> {
  * @param {(number[]|Date[])} ticks - An array of all tick values for the y-axis.
  * @returns {string} The formatted string representation of the tick.
  */
-  yFormatter?:((tick: number, i: number, ticks: number[]) => string) | ((tick: Date, i: number, ticks: Date[]) => string)
+  yFormatter?:((tick: number, i: number, ticks: number[]) => string) | ((tick: Date|number, i: number, ticks: Date[]) => string)
   /**
    * The type of curve to use for the area chart lines.
    * See `CurveType` for available options.

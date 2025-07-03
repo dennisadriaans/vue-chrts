@@ -44,7 +44,7 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
     const app = createApp(Tooltip, {
       data: d,
       categories: props.categories,
-      toolTipTitle: getFirstPropertyValue(d),
+      toolTipTitle: 'deprecated',
       yFormatter: props.yFormatter
     });
 

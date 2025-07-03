@@ -6,7 +6,7 @@ const props = defineProps<{
   data: T;
   categories: Record<string, BulletLegendItemInterface>;
   toolTipTitle: string | number;
-  yFormatter?: (value: T) => any;
+  yFormatter?:((tick: number, i: number, ticks: number[]) => string) | ((tick: Date|number, i: number, ticks: Date[]) => string)
 }>();
 
 const keyBlockList = ["_index", "_stacked", "_ending"];
