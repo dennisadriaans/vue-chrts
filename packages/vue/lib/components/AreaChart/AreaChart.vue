@@ -165,14 +165,14 @@ function onCrosshairUpdate(d: T): string {
     </div>
 
     <div ref="slotWrapper" class="hidden">
-      <slot v-if="slots.custom" name="custom" :values="hoverValues"></slot>
+      <slot v-if="slots.custom" name="custom" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
         <Tooltip
           :data="hoverValues"
           :categories="categories"
           :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
           :yFormatter="props.yFormatter"
-        ></Tooltip>
+        />
       </slot>
     </div>
   </div>
