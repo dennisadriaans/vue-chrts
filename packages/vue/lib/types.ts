@@ -54,3 +54,6 @@ export {
   type DonutChartProps,
   type BulletLegendItemInterface,
 };
+
+
+export type axisFormatter<T> = ((tick: number, i?: number, ticks?: number[]) => string) | ((tick: Date, i?: number, ticks?: Date[]) => string)

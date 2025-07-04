@@ -1,4 +1,4 @@
-import { LegendPosition } from "../../types";
+import { axisFormatter, LegendPosition } from "../../types";
 import type { BulletLegendItemInterface, CurveType } from "@unovis/ts";
 
 export interface AreaChartProps<T> {
@@ -36,19 +36,19 @@ export interface AreaChartProps<T> {
    */
   categories: Record<string, BulletLegendItemInterface>;
   /**
- * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
- * @param {number} i - The index of the tick in the `ticks` array.
- * @param {(number[]|Date[])} ticks - An array of all tick values for the x-axis.
- * @returns {string} The formatted string representation of the tick.
- */
-  xFormatter?:((tick: number, i: number, ticks: number[]) => string) | ((tick: Date, i: number, ticks: Date[]) => string)
+   * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
+   * @param {number} i - The index of the tick in the `ticks` array.
+   * @param {(number[]|Date[])} ticks - An array of all tick values for the x-axis.
+   * @returns {string} The formatted string representation of the tick.
+   */
+  xFormatter?: axisFormatter<T>;
   /**
- * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the y-axis.
- * @param {number} i - The index of the tick in the `ticks` array.
- * @param {(number[]|Date[])} ticks - An array of all tick values for the y-axis.
- * @returns {string} The formatted string representation of the tick.
- */
-  yFormatter?:((tick: number, i: number, ticks: number[]) => string) | ((tick: Date|number, i: number, ticks: Date[]) => string)
+   * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the y-axis.
+   * @param {number} i - The index of the tick in the `ticks` array.
+   * @param {(number[]|Date[])} ticks - An array of all tick values for the y-axis.
+   * @returns {string} The formatted string representation of the tick.
+   */
+  yFormatter?: axisFormatter<T>;
   /**
    * The type of curve to use for the area chart lines.
    * See `CurveType` for available options.

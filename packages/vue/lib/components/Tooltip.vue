@@ -1,12 +1,12 @@
 <script lang="ts" setup generic="T">
 import { computed } from "vue";
-import { BulletLegendItemInterface } from "../types";
+import { axisFormatter, BulletLegendItemInterface } from "../types";
 
 const props = defineProps<{
   data: T;
   categories: Record<string, BulletLegendItemInterface>;
   toolTipTitle: string | number;
-  yFormatter?:((tick: number, i: number, ticks: number[]) => string) | ((tick: Date|number, i: number, ticks: Date[]) => string)
+  yFormatter?: axisFormatter<T>;
 }>();
 
 const keyBlockList = ["_index", "_stacked", "_ending"];

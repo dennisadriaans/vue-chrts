@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends {}">
-import { computed, ComputedRef, createApp } from "vue";
+import { computed, ComputedRef, createApp, ref, useSlots, useTemplateRef } from "vue";
 import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
+import { getFirstPropertyValue } from "../../utils";
 
 import {
   VisAxis,
@@ -33,6 +34,10 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
 });
 
+const slots = useSlots();
+const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
+const hoverValues = ref<T>();
+
 if (!props.yAxis || props.yAxis.length === 0) {
   throw new Error("yAxis is required");
 }
@@ -49,34 +54,20 @@ const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
 );
 
-const generateTooltip = computed(() => (d: T, idx: number) => {
-  if (typeof window === "undefined" || typeof document === "undefined") {
+function onCrosshairUpdate(d: T): string {
+  hoverValues.value = d;
+  return generateTooltipContent(d);
+}
+
+function generateTooltipContent(d: T): string {
+  if (typeof window === "undefined") {
     return "";
   }
-
-  const keys = Object.keys(props.categories);
-  const dataKeys = Object.keys(d);
-  const key = dataKeys.find((key) => !keys.includes(key));
-
-  try {
-    const app = createApp(Tooltip, {
-      data: d,
-      categories: props.categories,
-      toolTipTitle: d[key as keyof typeof d],
-      yFormatter: props.yFormatter
-    });
-
-    const container = document.createElement("div");
-    app.mount(container);
-
-    const html = container.innerHTML;
-    app.unmount();
-
-    return html;
-  } catch (error) {
-    return "";
+  if (slotWrapperRef.value) {
+    return slotWrapperRef.value.innerHTML;
   }
-});
+  return "";
+}
 </script>
 
 <template>
@@ -87,8 +78,8 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
     <VisXYContainer :padding="padding" :height="height">
       <VisTooltip
         :triggers="{
-          [GroupedBar.selectors.bar]: generateTooltip,
-          [StackedBar.selectors.bar]: generateTooltip,
+          [GroupedBar.selectors.bar]: onCrosshairUpdate,
+          [StackedBar.selectors.bar]: onCrosshairUpdate,
         }"
       />
 
@@ -105,7 +96,7 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
       />
       <VisStackedBar
         v-else
-      :data="data"
+        :data="data"
         :x="(_: T, i: number) => i"
         :y="yAxis"
         :color="color"
@@ -143,6 +134,18 @@ const generateTooltip = computed(() => (d: T, idx: number) => {
       :class="{ 'pb-4': LegendPositionTop }"
     >
       <VisBulletLegend :items="Object.values(categories)" />
+    </div>
+
+    <div ref="slotWrapper" class="hidden">
+      <slot v-if="slots.custom" name="custom" :values="hoverValues" />
+      <slot v-else-if="hoverValues" name="fallback">
+        <Tooltip
+          :data="hoverValues"
+          :categories="categories"
+          :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
+          :yFormatter="props.orientation === Orientation.Horizontal ? props.xFormatter : props.yFormatter"
+        />
+      </slot>
     </div>
   </div>
 </template>
