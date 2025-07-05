@@ -165,7 +165,7 @@ function onCrosshairUpdate(d: T): string {
     </div>
 
     <div ref="slotWrapper" class="hidden">
-      <slot v-if="slots.custom" name="custom" :values="hoverValues" />
+      <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
         <Tooltip
           :data="hoverValues"

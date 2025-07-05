@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends {}">
-import { computed, ComputedRef, createApp, ref, useSlots, useTemplateRef } from "vue";
+import { computed, ComputedRef, ref, useSlots, useTemplateRef } from "vue";
 import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
 import { getFirstPropertyValue } from "../../utils";
 
@@ -137,7 +137,7 @@ function generateTooltipContent(d: T): string {
     </div>
 
     <div ref="slotWrapper" class="hidden">
-      <slot v-if="slots.custom" name="custom" :values="hoverValues" />
+      <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
         <Tooltip
           :data="hoverValues"
