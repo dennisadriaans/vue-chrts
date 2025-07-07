@@ -202,7 +202,7 @@ const formatCurrency = (tick: number | Date) => {
           :radius="4"
           :bar-padding="0"
           :orientation="Orientation.Horizontal"
-          :y-formatter="(i: number): string => `${[...RevenueData].reverse()[i].month }`"
+          :y-formatter="(i: number): string => `${[...RevenueData].reverse()[i]?.month }`"
           :legend-position="LegendPosition.Top"
         />
       </Card>
@@ -281,8 +281,8 @@ const formatCurrency = (tick: number | Date) => {
           :xNumTicks="6"
           :radius="4"
           :orientation="Orientation.Horizontal"
-          :x-formatter="(i) => JSON.stringify(i)"
-          :y-formatter="(i: number): string => `${[...RevenueData].reverse()[i].month }`"
+          :x-formatter="(i: number): string => `${i}`"
+          :y-formatter="(i: number): string => `${[...RevenueData].reverse()[i]?.month }`"
           :legend-position="LegendPosition.Top"
         />
       </Card>

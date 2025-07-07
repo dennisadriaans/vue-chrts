@@ -1,4 +1,4 @@
-import { BulletLegendItemInterface, Orientation, LegendPosition } from "../../types";
+import { BulletLegendItemInterface, Orientation, LegendPosition, axisFormatter } from "../../types";
 
 export interface BarChartProps<T> {
   /**
@@ -44,14 +44,14 @@ export interface BarChartProps<T> {
  * @param {(number[]|Date[])} ticks - An array of all tick values for the x-axis.
  * @returns {string} The formatted string representation of the tick.
  */
-  xFormatter?:((tick: number, i: number, ticks: number[]) => string) | ((tick: Date, i: number, ticks: Date[]) => string)
+  xFormatter?:  axisFormatter<T>
   /**
  * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the y-axis.
  * @param {number} i - The index of the tick in the `ticks` array.
  * @param {(number[]|Date[])} ticks - An array of all tick values for the y-axis.
  * @returns {string} The formatted string representation of the tick.
  */
-  yFormatter?:((tick: number, i: number, ticks: number[]) => string) | ((tick: Date, i: number, ticks: Date[]) => string)
+  yFormatter?: axisFormatter<T>
   /**
    * The desired number of ticks on the y-axis.
    */
