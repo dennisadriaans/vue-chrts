@@ -42,11 +42,6 @@ const defaultColors = Object.values(props.categories).map(
 const color = (key: number) =>
   Object.values(props.categories)[key].color ?? defaultColors[key];
 
-function onCrosshairUpdate(d: T): string {
-  hoverValues.value = d;
-  return generateTooltipContent(d);
-}
-
 function generateTooltipContent(d: T): string {
   if (typeof window === "undefined") {
     return "";
@@ -56,6 +51,12 @@ function generateTooltipContent(d: T): string {
   }
   return "";
 }
+
+function onCrosshairUpdate(d: T): string {
+  hoverValues.value = d;
+  return generateTooltipContent(d);
+}
+
 
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
@@ -124,7 +125,7 @@ const LegendPositionTop = computed(
           :data="hoverValues"
           :categories="categories"
           :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
-          :yFormatter="props.xFormatter"
+          :yFormatter="props.yFormatter"
         />
       </slot>
     </div>
