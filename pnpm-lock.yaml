@@ -13,12 +13,20 @@ importers:
       '@nuxt/kit':
         specifier: ^3.17.2
         version: 3.17.4(magicast@0.3.5)
+      '@unovis/ts':
+        specifier: ^1.5.1
+        version: 1.5.1
       '@unovis/vue':
         specifier: ^1.5.1
         version: 1.5.1(@unovis/ts@1.5.1)(vue@3.5.14)
       vue-chrts:
+<<<<<<< Updated upstream
         specifier: ^0.1.11
         version: link:../vue
+=======
+        specifier: 0.1.12-custom-tooltips.1
+        version: 0.1.12-custom-tooltips.1(vue@3.5.14)
+>>>>>>> Stashed changes
     devDependencies:
       '@nuxt/eslint':
         specifier: 1.3.0
@@ -12415,6 +12423,17 @@ packages:
       ufo: 1.6.1
     dev: true
 
+<<<<<<< Updated upstream
+=======
+  /vue-chrts@0.1.12-custom-tooltips.1(vue@3.5.14):
+    resolution: {integrity: sha512-7pGVdmhhjA/CI5wIVvqD8LWB18xQXtN+HDUmqKNpPujXA1GqTqtQLfhApnZzRiri29DHizUK62+nEQ8j+uOghw==}
+    peerDependencies:
+      vue: ^3.5.13
+    dependencies:
+      vue: 3.5.14(typescript@5.8.3)
+    dev: false
+
+>>>>>>> Stashed changes
   /vue-devtools-stub@0.1.0:
     resolution: {integrity: sha512-RutnB7X8c5hjq39NceArgXg28WZtZpGc3+J16ljMiYnFhKvd8hITxSWQSQ5bvldxMDU6gG5mkxl1MTQLXckVSQ==}
     dev: true
