@@ -73,10 +73,14 @@ const RevenueData: RevenueDataItem[] = [
 ];
 
 const RevenueCategoriesMultple = {
-  desktop: { name: "Desktop", color: "#2B7FFF" },
-  mobile: { name: "Mobile", color: "#EFB100" },
-  android: { name: "Android", color: "#00C16A" },
-  ios: { name: "iOS", color: "#AD46FF" },
+  desktopDone: { name: "Desktop Done", color: "#2B7FFF" },
+  mobileDone: { name: "Mobile Done", color: "#EFB100" },
+  androidDone: { name: "Android Done", color: "#00C16A" },
+  iosDone: { name: "iOS Done", color: "#AD46FF" },
+  desktopPending: { name: "Desktop Pending", color: "#8EC5FF" },
+  mobilePending: { name: "Mobile Pending", color: "#FFDF20" },
+  androidPending: { name: "Android Pending", color: "#7FE0A8" },
+  iosPending: { name: "iOS Pending", color: "#D69FFF" },
 };
 const xFormatter = (i: number): string => `${RevenueData[i]?.month}`;
 const yFormatter = (i: number) => i.toString();
@@ -97,6 +101,10 @@ const yFormatter = (i: number) => i.toString();
       :stack-and-grouped="true"
       :hide-legend="false"
       :y-grid-line="true"
-    />
+    >
+    <template #tooltip="values">
+      {{ values }}
+    </template>
+  </BarChart>
   </div>
 </template>

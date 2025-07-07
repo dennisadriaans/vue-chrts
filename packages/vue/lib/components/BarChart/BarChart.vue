@@ -48,7 +48,15 @@ const yAxis: ComputedRef<((d: T) => T[keyof T])[]> = computed(() => {
   });
 });
 
-const color = (_: T, i: number) => Object.values(props.categories)[i].color;
+const color = (_: T, i: number) => Object.values(props.categories)[i]?.color;
+
+// For stackAndGrouped, we need to map the correct color for each bar accessor
+const stackedGroupedColors1 = computed(() => Object.values(props.categories).slice(0, 4).map((c) => c.color));
+const stackedGroupedColors2 = computed(() => Object.values(props.categories).slice(4, 8).map((c) => c.color));
+
+// Helper to type the color function for VisStackedBar
+const stackedColor1 = (_d: unknown, i: number) => stackedGroupedColors1.value[i] ?? '#ccc';
+const stackedColor2 = (_d: unknown, i: number) => stackedGroupedColors2.value[i] ?? '#eee';
 
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
@@ -68,30 +76,6 @@ function generateTooltipContent(d: T): string {
   }
   return "";
 }
-
-  const keys = Object.keys(props.categories);
-  const dataKeys = Object.keys(d);
-  const key = dataKeys.find((key) => !keys.includes(key));
-
-  try {
-    const app = createApp(Tooltip, {
-      data: d,
-      categories: props.categories,
-      toolTipTitle: d[key as keyof typeof d],
-      yFormatter: props.yFormatter,
-    });
-
-    const container = document.createElement("div");
-    app.mount(container);
-
-    const html = container.innerHTML;
-    app.unmount();
-
-    return html;
-  } catch (error) {
-    return "";
-  }
-});
 
 const keys = computed(() => {
   if (props.stackAndGrouped) {
@@ -156,7 +140,7 @@ const bar2 = [
           :data="chartData"
           :x="(_: T, i: number) => i - 0.2"
           :y="bar1"
-          :color="(_d, i) => ['#2B7FFF', '#EFB100', '#00C16A', '#AD46FF'][i]"
+          :color="stackedColor1"
           :rounded-corners="radius ?? 0"
           :group-padding="groupPadding ?? 0"
           :bar-padding="barPadding ?? 0.2"
@@ -166,7 +150,7 @@ const bar2 = [
           :data="chartData"
           :x="(_: T, i: number) => i + 0.2"
           :y="bar2"
-          :color="(_d, i) => ['#8EC5FF', '#FFDF20', '#7FE0A8', '#D69FFF'][i]"
+          :color="stackedColor2"
           :rounded-corners="radius ?? 0"
           :group-padding="groupPadding ?? 0"
           :bar-padding="barPadding ?? 0.2"
@@ -223,7 +207,7 @@ const bar2 = [
       class="flex items center justify-end"
       :class="{ 'pb-4': LegendPositionTop }"
     >
-      <VisBulletLegend :items="Object.values(categories)" />
+      <VisBulletLegend :items="Object.values(props.categories)" />
     </div>
 
     <div ref="slotWrapper" class="hidden">
@@ -231,7 +215,7 @@ const bar2 = [
       <slot v-else-if="hoverValues" name="fallback">
         <Tooltip
           :data="hoverValues"
-          :categories="categories"
+          :categories="props.categories"
           :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
           :yFormatter="props.orientation === Orientation.Horizontal ? props.xFormatter : props.yFormatter"
         />
