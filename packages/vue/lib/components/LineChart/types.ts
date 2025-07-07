@@ -1,4 +1,5 @@
 import {
+  axisFormatter,
   BulletLegendItemInterface,
   CurveType,
   LegendPosition,
@@ -23,35 +24,35 @@ export interface LineChartProps<T> {
    * Optional label for the y-axis.
    */
   yLabel?: string;
-    /**
+  /**
    * Optional padding applied to the chart.
    * Allows specifying individual padding values for the top, right, bottom, and left sides.
    */
-    padding?: {
-      top: number;
-      right: number;
-      bottom: number;
-      left: number;
-    };
+  padding?: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
   /**
    * A record mapping category keys to `BulletLegendItemInterface` objects.
    * This defines the visual representation and labels for each category in the chart's legend.
    */
   categories: Record<string, BulletLegendItemInterface>;
   /**
- * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
- * @param {number} i - The index of the tick in the `ticks` array.
- * @param {(number[]|Date[])} ticks - An array of all tick values for the x-axis.
- * @returns {string} The formatted string representation of the tick.
- */
-  xFormatter?:((tick: number, i: number, ticks: number[]) => string) | ((tick: Date, i: number, ticks: Date[]) => string)
+   * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
+   * @param {number} i - The index of the tick in the `ticks` array.
+   * @param {(number[]|Date[])} ticks - An array of all tick values for the x-axis.
+   * @returns {string} The formatted string representation of the tick.
+   */
+  xFormatter?: axisFormatter<T>;
   /**
- * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the y-axis.
- * @param {number} i - The index of the tick in the `ticks` array.
- * @param {(number[]|Date[])} ticks - An array of all tick values for the y-axis.
- * @returns {string} The formatted string representation of the tick.
- */
-  yFormatter?:((tick: number, i: number, ticks: number[]) => string) | ((tick: Date, i: number, ticks: Date[]) => string)
+   * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the y-axis.
+   * @param {number} i - The index of the tick in the `ticks` array.
+   * @param {(number[]|Date[])} ticks - An array of all tick values for the y-axis.
+   * @returns {string} The formatted string representation of the tick.
+   */
+  yFormatter?: axisFormatter<T>;
   /**
    * The type of curve to use for the line chart.
    * See `CurveType` for available options.

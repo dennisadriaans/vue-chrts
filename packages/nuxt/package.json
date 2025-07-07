@@ -29,7 +29,11 @@
   "dependencies": {
     "@nuxt/kit": "^3.17.2",
     "@unovis/vue": "^1.5.1",
+<<<<<<< HEAD
 <<<<<<< Updated upstream
+=======
+    "@unovis/ts": "^1.5.1",
+>>>>>>> main
     "vue-chrts": "^0.1.11"
 =======
     "@unovis/ts": "^1.5.1",
