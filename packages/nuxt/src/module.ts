@@ -1,59 +1,65 @@
-import { defineNuxtModule, createResolver } from '@nuxt/kit'
-import { resolveComponents, resolveImports } from "./core"
+import { defineNuxtModule, createResolver } from "@nuxt/kit";
+import { resolveComponents, resolveImports } from "./core";
 
 export interface ModuleOptions {
   /**
    * Prefix for component names
    * @default ''
    */
-  prefix?: string
+  prefix?: string;
 
   /**
    * Register global components
    * @default true
    */
-  global?: boolean
+  global?: boolean;
 
   /**
    * Use auto-imports (recommended)
    * @default true
    */
-  autoImports?: boolean
+  autoImports?: boolean;
 
   /**
    * Components to include (empty array means all components)
    * @default []
    */
-  include?: string[]
+  include?: string[];
 }
-
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'nuxt-charts',
-    configKey: 'nuxtCharts',
+    name: "nuxt-charts",
+    configKey: "nuxtCharts",
     compatibility: {
-      nuxt: ">=3"
-    }
+      nuxt: ">=3",
+    },
   },
   defaults: {
-    prefix: '',
+    prefix: "",
     global: true,
     autoImports: true,
-    include: []
+    include: [],
   },
   async setup(options, nuxt) {
-    nuxt.options.vite.optimizeDeps = nuxt.options.vite.optimizeDeps || {}
-    nuxt.options.vite.optimizeDeps.include = nuxt.options.vite.optimizeDeps.include || []
+    nuxt.options.vite.optimizeDeps = nuxt.options.vite.optimizeDeps || {};
+    nuxt.options.vite.optimizeDeps.include =
+      nuxt.options.vite.optimizeDeps.include || [];
 
-    nuxt.options.vite.optimizeDeps.include = ['@unovis/ts', ...nuxt.options.vite.optimizeDeps.include]
-    nuxt.options.build.transpile = ['@unovis/ts', ...nuxt.options.build.transpile]
+    nuxt.options.vite.optimizeDeps.include = [
+      "@unovis/ts",
+      ...nuxt.options.vite.optimizeDeps.include,
+    ];
+    nuxt.options.build.transpile = [
+      "@unovis/ts",
+      ...nuxt.options.build.transpile,
+    ];
 
-    const { resolve } = createResolver(import.meta.url)
+    const { resolve } = createResolver(import.meta.url);
 
-    const runtimePath = resolve('./runtime/vue-chrts')
+    const runtimePath = resolve("./runtime/vue-chrts");
 
-    resolveImports(options, runtimePath)
-    resolveComponents(options, runtimePath)
-  }
-})
+    resolveImports(options, runtimePath);
+    resolveComponents(options, runtimePath);
+  },
+});
