@@ -1,6 +1,6 @@
 {
   "name": "nuxt-charts",
-  "version": "0.1.12-test.15",
+  "version": "0.2.0-beta",
   "description": "Nuxt module for vue-chrts",
   "license": "MIT",
   "type": "module",
