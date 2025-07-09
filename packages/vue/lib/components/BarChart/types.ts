@@ -12,6 +12,10 @@ export interface BarChartProps<T> {
    */
   stacked?: boolean;
   /**
+   * If `true`, creates a combination of stacked and grouped bar charts.
+   */
+  stackAndGrouped?: boolean;
+  /**
    * The height of the chart in pixels.
    */
   height: number;

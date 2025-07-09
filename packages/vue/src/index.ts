@@ -29,6 +29,11 @@ const router = createRouter({
           path: '/bar-charts',
           name: 'BarCharts',
           component: () => import('./BarChartPage.vue') 
+        },
+        {
+          path: '/social-deal-examples',
+          name: 'SocialDealExamples',
+          component: () => import('./SocialDealExamples.vue') 
         }
       ],
     history: createWebHistory(),
