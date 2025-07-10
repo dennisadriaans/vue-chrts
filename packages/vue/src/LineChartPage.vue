@@ -59,7 +59,7 @@ import {
             :x-formatter="(tick: number): string => `${chartData[tick].month}`"
             :curve-type="CurveType.MonotoneX"
             :legend-position="LegendPosition.Top"
-            :line-pattern="true"
+            :pattern-color="'#f00'"
           />
         </div>
           

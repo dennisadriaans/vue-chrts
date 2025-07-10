@@ -38,7 +38,7 @@ const props = withDefaults(defineProps<LineChartProps<T>>(), {
   lineWidth: 2,
 });
 
-if(props.linePattern) {
+if(props.patternColor) {
   document.body.classList.add('theme-patterns');
 }
 
@@ -70,8 +70,6 @@ function onCrosshairUpdate(d: T): string {
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
 );
-
-const patternColor = '#f00'
 </script>
 
 <template>
@@ -82,7 +80,7 @@ const patternColor = '#f00'
     <svg width="0" height="0" style="position: absolute;">
       <defs>
         <marker id="my-strong-red-marker" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
-          <path d="M0,3 L6,3" :stroke="patternColor" stroke-width="3"/>
+          <path d="M0,3 L6,3" :stroke="props.patternColor" stroke-width="3"/>
         </marker>
       </defs>
     </svg>
@@ -95,7 +93,7 @@ const patternColor = '#f00'
         <VisLine
           :x="(_: any, i: number) => i"
           :y="(d: T) => d[i as keyof typeof d]"
-          :color="!props.linePattern ? color(Number(iKey)) : undefined"
+          :color="!props.patternColor ? color(Number(iKey)) : undefined"
           :curve-type="curveType ?? CurveType.MonotoneX"
           :line-width="lineWidth"
           :line-dash-array="lineDashArray"
