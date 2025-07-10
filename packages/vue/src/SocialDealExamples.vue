@@ -2,7 +2,6 @@
 import { LegendPosition } from "./../lib/types";
 
 import { BarChart } from "../lib";
-import { dynamicFlattenData, generateDataSeries } from "./utils";
 
 type RevenueDataItem = {
   month: string;

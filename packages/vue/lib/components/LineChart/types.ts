@@ -69,6 +69,10 @@ export interface LineChartProps<T> {
   /**
    * The desired number of ticks on the x-axis.
    */
+  /**
+   * TODO: SET DOCS
+   */
+  linePattern?: boolean;
   xNumTicks?: number;
   /**
    * Force specific ticks on the x-axis.

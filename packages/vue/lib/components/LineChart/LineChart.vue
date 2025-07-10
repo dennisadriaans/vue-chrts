@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-import { computed, ref, useSlots, useTemplateRef } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, useSlots, useTemplateRef } from "vue";
 import { CurveType, Position } from "@unovis/ts";
 import { getFirstPropertyValue } from "../../utils";
 
@@ -17,6 +17,11 @@ import {
 import { LegendPosition } from "../../types";
 import { LineChartProps } from "./types";
 
+
+onBeforeUnmount(() => {
+  document.body.classList.remove('theme-patterns');
+});
+
 const props = withDefaults(defineProps<LineChartProps<T>>(), {
   padding: () => {
     return {
@@ -32,6 +37,10 @@ const props = withDefaults(defineProps<LineChartProps<T>>(), {
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   lineWidth: 2,
 });
+
+if(props.linePattern) {
+  document.body.classList.add('theme-patterns');
+}
 
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
@@ -61,6 +70,8 @@ function onCrosshairUpdate(d: T): string {
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
 );
+
+const patternColor = '#f00'
 </script>
 
 <template>
@@ -68,6 +79,13 @@ const LegendPositionTop = computed(
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': LegendPositionTop }"
   >
+    <svg width="0" height="0" style="position: absolute;">
+      <defs>
+        <marker id="my-strong-red-marker" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,3 L6,3" :stroke="patternColor" stroke-width="3"/>
+        </marker>
+      </defs>
+    </svg>
     <VisXYContainer :data="data" :padding="padding" :height="height">
       <VisTooltip
         :horizontal-placement="Position.Right"
@@ -77,10 +95,10 @@ const LegendPositionTop = computed(
         <VisLine
           :x="(_: any, i: number) => i"
           :y="(d: T) => d[i as keyof typeof d]"
-          :color="color(iKey)"
+          :color="!props.linePattern ? color(Number(iKey)) : undefined"
           :curve-type="curveType ?? CurveType.MonotoneX"
           :line-width="lineWidth"
-          :lineDashArray="lineDashArray"
+          :line-dash-array="lineDashArray"
         />
       </template>
       <VisAxis
@@ -117,7 +135,10 @@ const LegendPositionTop = computed(
       class="flex items center justify-end"
       :class="{ 'pb-4': LegendPositionTop }"
     >
-      <VisBulletLegend :items="Object.values(categories)" />
+      <VisBulletLegend
+        :bullet-shape="'line'"
+        :items="Object.values(categories)"
+      />
     </div>
 
     <div ref="slotWrapper" class="hidden">
@@ -133,3 +154,10 @@ const LegendPositionTop = computed(
     </div>
   </div>
 </template>
+
+<style>
+
+:root {
+  --vis-pattern-marker0: url(#my-strong-red-marker);
+}
+</style>

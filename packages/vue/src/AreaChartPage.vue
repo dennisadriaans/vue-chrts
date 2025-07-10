@@ -59,6 +59,7 @@ import {
           :categories="categories2"
           :y-num-ticks="4"
           :x-num-ticks="7"
+          :line-width="20"
           :x-formatter="(i: number) => AreaChartData2[i].hour"
           :curve-type="CurveType.Basis"
         />
@@ -78,6 +79,7 @@ import {
           :y-num-ticks="4"
           :x-num-ticks="7"
           :x-formatter="(i: number) => AreaChartData4[i].month"
+          :line-dash-array="[5, 5]"
           :curve-type="CurveType.Natural"
         />
       </Card>

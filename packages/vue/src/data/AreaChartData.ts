@@ -12,7 +12,7 @@ export const categories2: Record<string, BulletLegendItemInterface> = {
 
 export const categories3: Record<string, BulletLegendItemInterface> = {
   desktop: { name: 'Desktop', color: '#156F36' },
-  mobile: { name: 'Mobile', color: '#4ade80' }
+  mobile: { name: 'Mobile', color: '#f00' }
 }
 
 export const categories4: Record<string, BulletLegendItemInterface> = {

@@ -3,6 +3,7 @@ import { LineChart, LegendPosition } from "../lib";
 
 import Card from "./elements/Card.vue";
 
+
 type LineChartItem = {
   month: string;
   desktop: number;
@@ -46,16 +47,22 @@ import {
           <h2 class="heading-2 capitalize">Line Chart multiple lines</h2>
           <!-- <p class="text-gray-500">Website visitors per device</p> -->
         </template>
-        <LineChart
-          :data="chartData"
-          :height="200"
-          :y-grid-line="true"
-          y-label="Number of visits"
-          :categories="categories3"
-          :x-formatter="(tick: number): string => `${chartData[tick].month}`"
-          :curve-type="CurveType.MonotoneX"
-          :legend-position="LegendPosition.Top"
-        />
+
+
+          <div class=" theme-patterns">
+          <LineChart
+            :data="chartData"
+            :height="200"
+            :y-grid-line="true"
+            y-label="Number of visits"
+            :categories="categories3"
+            :x-formatter="(tick: number): string => `${chartData[tick].month}`"
+            :curve-type="CurveType.MonotoneX"
+            :legend-position="LegendPosition.Top"
+            :line-pattern="true"
+          />
+        </div>
+          
       </Card>
 
       <Card>
@@ -70,6 +77,7 @@ import {
           :x-num-ticks="4"
           :y-num-ticks="4"
           :categories="categories2"
+          :line-dash-array="[5, 5]"
           :x-formatter="(tick: number): string => `${AreaChartData2[tick].hour}`"
           :curve-type="CurveType.Basis"
         />
