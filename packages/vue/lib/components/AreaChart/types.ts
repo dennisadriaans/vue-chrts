@@ -55,6 +55,14 @@ export interface AreaChartProps<T> {
    */
   curveType?: CurveType;
   /**
+   * The width of the line in pixels. Default is 2px.
+   */
+  lineWidth?: number;
+  /**
+   * Line dash array, see SVG's stroke-dasharray. Default: `undefined`
+   */
+  lineDashArray?: number[];
+  /**
    * The desired number of ticks on the x-axis.
    */
   xNumTicks?: number;

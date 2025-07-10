@@ -32,6 +32,7 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
     props.data.length > DEFAULT_TICK_COUNT
       ? DEFAULT_TICK_COUNT / DEFAULT_TICK_DIVISOR
       : props.data.length - 1,
+  lineWidth: 2,
 });
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
@@ -121,6 +122,8 @@ function onCrosshairUpdate(d: T): string {
           :y="(d: T) => d[categoryId as keyof T]"
           :color="colors[index]"
           :curve-type="curveType ?? CurveType.MonotoneX"
+          :line-width="lineWidth"
+          :lineDashArray="lineDashArray"
         />
       </template>
 
