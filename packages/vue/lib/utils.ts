@@ -31,11 +31,62 @@ export function getDistributedIndices(length: number, numTicks: number) {
   return indices;
 }
 
-
 export function getFirstPropertyValue(obj: unknown) {
   if (obj && Object.keys(obj).length > 0) {
     const firstKey = Object.keys(obj)[0];
     return obj[firstKey as keyof typeof obj];
   }
-  return undefined; 
+  return undefined;
+}
+
+export const markerShape = (
+  type: string,
+  size: number,
+  strokeWidth: number,
+  color: string
+) => {
+  switch (type) {
+    case "circle":
+      return `<circle cx="${size / 2}" cy="${size / 2}" r="${
+        (size - strokeWidth) / 2
+      }" stroke-width="${strokeWidth}" stroke="${color}" fill="none" />`;
+    case "square":
+      return `<rect x="${strokeWidth / 2}" y="${strokeWidth / 2}" width="${
+        size - strokeWidth
+      }" height="${
+        size - strokeWidth
+      }" stroke-width="${strokeWidth}" stroke="${color}" fill="none" />`;
+    case "triangle":
+      return `<polygon points="${size / 2},${strokeWidth / 2} ${
+        size - strokeWidth / 2
+      },${size - strokeWidth / 2} ${strokeWidth / 2},${
+        size - strokeWidth / 2
+      }" stroke-width="${strokeWidth}" stroke="${color}" fill="none" />`;
+    case "diamond":
+      return `<polygon points="${size / 2},${strokeWidth / 2} ${
+        size - strokeWidth / 2
+      },${size / 2} ${size / 2},${size - strokeWidth / 2} ${strokeWidth / 2},${
+        size / 2
+      }" stroke-width="${strokeWidth}" stroke="${color}" fill="none" />`;
+    default:
+      return "";
+  }
+};
+
+export function createMarkers(markerConfig) {
+  return Object.entries(markerConfig)
+    .map(([key, cfg]) => {
+      const type = cfg.type || "circle";
+      const size = cfg.size || 10;
+      const strokeWidth = cfg.strokeWidth || 2;
+      const color = cfg.color || "#000";
+      return `<marker id="circle-marker-${key}" viewBox="0 0 ${size} ${size}" refX="${
+        size / 2
+      }" refY="${size / 2}" markerWidth="${size / 2}" markerHeight="${
+        size / 2
+      }">
+        ${markerShape(type, size, strokeWidth, color)}
+      </marker>`;
+    })
+    .join("\n");
 }
