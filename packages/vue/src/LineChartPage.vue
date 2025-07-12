@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { LineChart, LegendPosition } from "../lib";
+import { LineChart, LegendPosition, BulletLegendItemInterface } from "../lib";
 
 import Card from "./elements/Card.vue";
 
@@ -18,29 +18,46 @@ const chartData: LineChartItem[] = [
   { month: "June", desktop: 250, mobile: 214 },
 ];
 
+
+const markerConfiguration: Record<string, MarkerConfig> = {
+  desktop: {
+    type: 'circle',
+    size: 10,
+    strokeWidth: 2,
+    color: '#f00'
+  },
+  mobile: {
+    type: 'diamond',
+    size: 10,
+    strokeWidth: 3,
+    color: 'orange'
+  }
+};
+
+const categories3: Record<string, BulletLegendItemInterface> = {
+  desktop: { name: 'Desktop', color: '#f00' },
+  mobile: { name: 'Mobile', color: '#4ade80' }
+}
+
+
 import { CurveType } from "@unovis/ts";
-import {
-  AreaChartData2,
-  AreaChartData4,
-  categories2,
-  categories3,
-  categories5,
-} from "./data/AreaChartData";
+
+import { MarkerConfig } from "../lib/components/LineChart/types";
 </script>
 
 <template>
   <div class="space-y-8 pb-24 pt-8">
     <div class="max-w-7xl mx-auto space-y-4">
-      <div class="mb-8 space-y-4">
-        <h1 class="text-4xl font-bold">Line Chart</h1>
-        <p class="text-lg font-medium text-gray-500">
+      <div class="mb-8">
+        <h1 class="text-4xl font-bold">Line Chart (demo)</h1>
+        <p class="text-lg  text-neutral-500">
           Charts to effectively display trends and changes in data over time by
           connecting data points with lines.
         </p>
       </div>
     </div>
 
-    <div class="grid grid-cols-3 gap-4 max-w-7xl mx-auto py-4">
+    <div class="grid grid-cols-1 gap-4 max-w-7xl mx-auto py-4">
       <Card>
         <template #header>
           <h2 class="heading-2 capitalize">Line Chart multiple lines</h2>
@@ -50,15 +67,16 @@ import {
           :data="chartData"
           :height="200"
           :y-grid-line="true"
+          :y-num-ticks="4"
           y-label="Number of visits"
           :categories="categories3"
-          :x-formatter="(tick: number): string => `${chartData[tick].month}`"
+          :marker-config="markerConfiguration"
           :curve-type="CurveType.MonotoneX"
           :legend-position="LegendPosition.Top"
         />
       </Card>
 
-      <Card>
+      <!-- <Card>
         <template #header>
           <h2 class="heading-2 capitalize">Line Chart with single line</h2>
         </template>
@@ -133,7 +151,7 @@ import {
           :categories="categories5"
           :x-formatter="(tick: number): string => `${chartData[tick].month}`"
         />
-      </Card>
+      </Card> -->
     </div>
   </div>
 </template>
