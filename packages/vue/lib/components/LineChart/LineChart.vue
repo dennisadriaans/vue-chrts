@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T">
 import { computed, ref, useSlots, useTemplateRef } from "vue";
-import { Position } from "@unovis/ts";
+import { CurveType, Position } from "@unovis/ts";
 import { createMarkers, getFirstPropertyValue, markerShape } from "../../utils";
 
 import Tooltip from "../Tooltip.vue";
@@ -16,7 +16,6 @@ import {
 
 import { LegendPosition } from "../../types";
 import { LineChartProps } from "./types";
-import { mapDataForChart } from "./mapper";
 
 const props = withDefaults(defineProps<LineChartProps<T>>(), {
   padding: () => {
@@ -33,11 +32,12 @@ const props = withDefaults(defineProps<LineChartProps<T>>(), {
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
 });
 
-
 const svgDefs = computed(() => {
-  if (!props.markerConfig) return '';
+  if (!props.markerConfig) return "";
   return createMarkers(props.markerConfig);
 });
+
+console.log(svgDefs, 'svgDefs')
 
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
@@ -62,41 +62,38 @@ const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
 );
 
- type StackedDataRecord = {
-  x: number;
-  ys: number[];
-};
+const defaultColors = Object.values(props.categories).map(
+  (i, index) => `var(--vis-color${index})`
+);
+const color = (key: number) =>
+  Object.values(props.categories)[key].color ?? defaultColors[key];
 
-
-const data = mapDataForChart(props.data, Object.keys(props.categories));
-
-const legendItems = Array(data[0].values.length)
-  .fill(0)
-  .map((_, i) => ({ name: `Y${i}` }));
-
-const x = (d: StackedDataRecord) => d.idx;
-const y = legendItems.map((_, i) => (d: StackedDataRecord) => d.values[i]);
-
-
+  console.log(props.markerConfig, 'props.markerConfig')
 </script>
 
 <template>
   <div
     class="flex flex-col space-y-4"
-    :class="{ 'flex-col-reverse': LegendPositionTop }"
+    :class="{ 'flex-col-reverse': LegendPositionTop, 'markers' : !!props.markerConfig }"
   >
-    <VisXYContainer :data="data" :padding="padding" :height="height" :svgDefs="svgDefs">
+    <VisXYContainer
+      :data="data"
+      :padding="padding"
+      :height="height"
+      :svgDefs="svgDefs"
+    >
       <VisTooltip
         :horizontal-placement="Position.Right"
         :vertical-placement="Position.Top"
       />
-      <VisLine 
-        v-for="(category, index) in Object.values(categories)" 
-        :key="category.name"
-        :x="x" 
-        :y="y[index]" 
-        :color="category.color"
-      />
+      <template v-for="(i, iKey) in Object.keys(props.categories)" :key="iKey">
+        <VisLine
+          :x="(_: any, i: number) => i"
+          :y="(d: T) => d[i as keyof typeof d]"
+          :color="color(iKey)"
+          :curve-type="curveType ?? CurveType.MonotoneX"
+        />
+      </template>
       <VisAxis
         v-if="!hideXAxis"
         type="x"
@@ -150,10 +147,11 @@ const y = legendItems.map((_, i) => (d: StackedDataRecord) => d.values[i]);
 </template>
 
 <style scoped>
-:deep(*[stroke="#f00"]) {
+/* Stroke maps to color key in categories */
+.markers:deep(*[stroke="#156F36"]) {
   marker: url("#circle-marker-desktop");
 }
-:deep(*[stroke="#4ade80"]) {
+.markers:deep(*[stroke="#4ade80"]) {
   marker: url("#circle-marker-mobile");
 }
 </style>
