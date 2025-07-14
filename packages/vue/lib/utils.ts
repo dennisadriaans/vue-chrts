@@ -1,4 +1,4 @@
-import { MarkerConfig } from "./components/LineChart/types";
+import { MarkerConfig } from "./types";
 
 export function getDistributedIndices(length: number, numTicks: number) {
   // Handle edge cases

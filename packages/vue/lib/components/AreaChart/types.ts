@@ -1,4 +1,4 @@
-import { axisFormatter, LegendPosition } from "../../types";
+import { axisFormatter, LegendPosition, MarkerConfig } from "../../types";
 import type { BulletLegendItemInterface, CurveType } from "@unovis/ts";
 
 export interface AreaChartProps<T> {

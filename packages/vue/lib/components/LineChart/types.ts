@@ -3,6 +3,7 @@ import {
   BulletLegendItemInterface,
   CurveType,
   LegendPosition,
+  MarkerConfig,
 } from "../../types";
 
 export interface LineChartProps<T> {
