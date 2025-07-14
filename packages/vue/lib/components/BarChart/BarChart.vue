@@ -9,7 +9,6 @@ import {
   VisGroupedBar,
   VisStackedBar,
   VisTooltip,
-  VisCrosshair,
   VisXYContainer,
 } from "@unovis/vue";
 
@@ -128,11 +127,6 @@ function generateTooltipContent(d: T): string {
         :tick-format="yFormatter"
         :num-ticks="yNumTicks"
         :tick-line="yTickLine"
-      />
-      <VisCrosshair
-        v-if="!hideTooltip"
-        v-bind="crosshairConfig"
-        :template="onCrosshairUpdate"
       />
     </VisXYContainer>
     <div
