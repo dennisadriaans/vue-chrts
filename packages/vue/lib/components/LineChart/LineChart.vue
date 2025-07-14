@@ -30,6 +30,7 @@ const props = withDefaults(defineProps<LineChartProps<T>>(), {
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   yNumTicks: (props) =>
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
+  lineWidth: 2,
 });
 
 const svgDefs = computed(() => {
@@ -91,6 +92,8 @@ const color = (key: number) =>
           :y="(d: T) => d[i as keyof typeof d]"
           :color="color(iKey)"
           :curve-type="curveType ?? CurveType.MonotoneX"
+          :line-width="lineWidth"
+          :lineDashArray="lineDashArray"
         />
       </template>
       <VisAxis
