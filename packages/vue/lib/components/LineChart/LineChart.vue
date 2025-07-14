@@ -30,6 +30,9 @@ const props = withDefaults(defineProps<LineChartProps<T>>(), {
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   yNumTicks: (props) =>
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
+  crosshairConfig: () => ({
+    color: "#666",
+  }),
 });
 
 const slots = useSlots();

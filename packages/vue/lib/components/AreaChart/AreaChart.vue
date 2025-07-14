@@ -32,7 +32,7 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
     props.data.length > DEFAULT_TICK_COUNT
       ? DEFAULT_TICK_COUNT / DEFAULT_TICK_DIVISOR
       : props.data.length - 1,
-  crosshairConfig: (props) => ({
+  crosshairConfig: () => ({
     color: "#666",
   })
 });
