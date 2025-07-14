@@ -1,4 +1,3 @@
-
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -29,6 +28,11 @@ const router = createRouter({
           path: '/bar-charts',
           name: 'BarCharts',
           component: () => import('./BarChartPage.vue') 
+        },
+        {
+          path: '/donut-charts',
+          name: 'DonutCharts',
+          component: () => import('./DonutExamplePage.vue')
         }
       ],
     history: createWebHistory(),

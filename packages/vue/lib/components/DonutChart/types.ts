@@ -28,6 +28,11 @@ interface DonutChartProps {
     name: string;
     color: string;
   }[];
+
+  /**
+   * Pad angle. Default: 0
+   */
+  padAngle?: number
 };
 
 enum DonutType {
