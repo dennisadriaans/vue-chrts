@@ -55,13 +55,6 @@ function generateTooltipContent(d: T): string {
       :angle-range="isHalf ? [-1.5707963267948966, 1.5707963267948966] : []"
       :pad-angle="props.padAngle || 0"
     />
-    <VisCrosshair
-      v-if="!props.hideTooltip"
-      :color="crosshairConfig?.color || '#666'"
-      :strokeColor="crosshairConfig?.strokeColor"
-      :strokeWidth="crosshairConfig?.strokeWidth"
-      :template="onCrosshairUpdate"
-    />
     </VisSingleContainer>
 
     <slot />
