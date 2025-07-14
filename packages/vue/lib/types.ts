@@ -55,7 +55,7 @@ export {
   type BulletLegendItemInterface,
 };
 
-export type axisFormatter<T> =
+export type axisFormatter =
   | ((tick: number, i?: number, ticks?: number[]) => string)
   | ((tick: Date, i?: number, ticks?: Date[]) => string);
 
