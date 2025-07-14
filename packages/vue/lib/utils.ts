@@ -1,3 +1,5 @@
+import { MarkerConfig } from "./components/LineChart/types";
+
 export function getDistributedIndices(length: number, numTicks: number) {
   // Handle edge cases
   if (numTicks <= 0) return [];
@@ -73,7 +75,7 @@ export const markerShape = (
   }
 };
 
-export function createMarkers(markerConfig) {
+export function createMarkers(markerConfig: Record<string, MarkerConfig>) {
   return Object.entries(markerConfig)
     .map(([key, cfg]) => {
       const type = cfg.type || "circle";
