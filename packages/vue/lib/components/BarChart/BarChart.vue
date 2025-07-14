@@ -9,6 +9,7 @@ import {
   VisGroupedBar,
   VisStackedBar,
   VisTooltip,
+  VisCrosshair,
   VisXYContainer,
 } from "@unovis/vue";
 
@@ -32,6 +33,7 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   yNumTicks: (props) =>
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
+  hideTooltip: false,
 });
 
 const slots = useSlots();
@@ -127,6 +129,11 @@ function generateTooltipContent(d: T): string {
         :num-ticks="yNumTicks"
         :tick-line="yTickLine"
       />
+      <VisCrosshair
+        v-if="!hideTooltip"
+        v-bind="crosshairConfig"
+        :template="onCrosshairUpdate"
+      />
     </VisXYContainer>
     <div
       v-if="!hideLegend"
@@ -143,7 +150,11 @@ function generateTooltipContent(d: T): string {
           :data="hoverValues"
           :categories="categories"
           :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
-          :yFormatter="props.orientation === Orientation.Horizontal ? props.xFormatter : props.yFormatter"
+          :yFormatter="
+            props.orientation === Orientation.Horizontal
+              ? props.xFormatter
+              : props.yFormatter
+          "
         />
       </slot>
     </div>

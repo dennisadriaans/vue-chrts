@@ -57,7 +57,6 @@ function onCrosshairUpdate(d: T): string {
   return generateTooltipContent(d);
 }
 
-
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
 );
@@ -106,7 +105,7 @@ const LegendPositionTop = computed(
       />
       <VisCrosshair
         v-if="!hideTooltip"
-        color="#666"
+        v-bind="crosshairConfig"
         :template="onCrosshairUpdate"
       />
     </VisXYContainer>
