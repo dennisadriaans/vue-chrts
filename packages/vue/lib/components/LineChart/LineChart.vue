@@ -134,7 +134,6 @@ const color = (key: number) =>
     <div ref="slotWrapper" class="hidden">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
-        {{ hoverValues }}
         <Tooltip
           :data="hoverValues"
           :categories="categories"
@@ -146,7 +145,8 @@ const color = (key: number) =>
   </div>
 </template>
 
-<style scoped>
+<!-- Example CSS for custom markers-->
+<!-- <style scoped>
 /* Stroke maps to color key in categories */
 .markers:deep(*[stroke="#156F36"]) {
   marker: url("#circle-marker-desktop");
@@ -154,4 +154,4 @@ const color = (key: number) =>
 .markers:deep(*[stroke="#4ade80"]) {
   marker: url("#circle-marker-mobile");
 }
-</style>
+</style> -->
