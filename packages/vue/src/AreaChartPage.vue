@@ -44,6 +44,20 @@ import {
           :y-num-ticks="3"
           :curve-type="CurveType.MonotoneX"
           :legend-position="LegendPosition.Top"
+          :marker-config="{
+            desktop: {
+              type: 'circle',
+              size: 50,
+              strokeWidth: 2,
+              color: '#f00',
+            },
+            mobile: {
+              type: 'diamond',
+              size: 10,
+              strokeWidth: 3,
+              color: 'black',
+            },
+          }"
         />
       </Card>
 
@@ -63,7 +77,6 @@ import {
           :curve-type="CurveType.Basis"
         />
       </Card>
-
 
       <Card>
         <template #header>

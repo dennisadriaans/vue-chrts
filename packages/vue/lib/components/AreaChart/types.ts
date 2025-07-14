@@ -35,6 +35,11 @@ export interface AreaChartProps<T> {
    * This defines the visual representation and labels for each category in the chart's legend.
    */
   categories: Record<string, BulletLegendItemInterface>;
+
+    /**
+     * A record mapping marker keys to show custom patterns.
+     */
+    markerConfig?: Record<string, MarkerConfig>;
   /**
    * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
    * @param {number} i - The index of the tick in the `ticks` array.

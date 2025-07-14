@@ -5,14 +5,6 @@ import {
   LegendPosition,
 } from "../../types";
 
-
-export type MarkerConfig = {
-  type: 'circle' | 'square' | 'triangle' | 'diamond';
-  size?: number;
-  strokeWidth?: number;
-  color?: string;
-};
-
 export interface LineChartProps<T> {
   /**
    * The data to be displayed in the line chart.
@@ -47,6 +39,10 @@ export interface LineChartProps<T> {
    * This defines the visual representation and labels for each category in the chart's legend.
    */
   categories: Record<string, BulletLegendItemInterface>;
+
+  /**
+   * A record mapping marker keys to show custom patterns.
+   */
   markerConfig?: Record<string, MarkerConfig>;
   /**
    * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.

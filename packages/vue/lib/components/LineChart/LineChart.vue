@@ -37,8 +37,6 @@ const svgDefs = computed(() => {
   return createMarkers(props.markerConfig);
 });
 
-console.log(svgDefs, 'svgDefs')
-
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
@@ -67,14 +65,15 @@ const defaultColors = Object.values(props.categories).map(
 );
 const color = (key: number) =>
   Object.values(props.categories)[key].color ?? defaultColors[key];
-
-  console.log(props.markerConfig, 'props.markerConfig')
 </script>
 
 <template>
   <div
     class="flex flex-col space-y-4"
-    :class="{ 'flex-col-reverse': LegendPositionTop, 'markers' : !!props.markerConfig }"
+    :class="{
+      'flex-col-reverse': LegendPositionTop,
+      markers: !!props.markerConfig,
+    }"
   >
     <VisXYContainer
       :data="data"
@@ -105,7 +104,7 @@ const color = (key: number) =>
         :tick-line="xTickLine"
         :num-ticks="xNumTicks"
         :tick-values="xExplicitTicks"
-        :minMaxTicksOnly="minMaxTicksOnly"
+        :min-max-ticks-only="minMaxTicksOnly"
       />
       <VisAxis
         v-if="!hideYAxis"

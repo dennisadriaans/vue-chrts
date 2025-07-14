@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 import { computed, ref, useSlots, useTemplateRef } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
-import { getFirstPropertyValue } from "../../utils";
+import { createMarkers, getFirstPropertyValue } from "../../utils";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -65,6 +65,11 @@ const svgDefs = computed(() => {
     .join("");
 });
 
+const markersSvgDefs = computed(() => {
+  if (!props.markerConfig) return "";
+  return createMarkers(props.markerConfig);
+});
+
 function getAccessors(id: string): { y: NumericAccessor<T>; color: string } {
   return {
     y: (d: T) => Number(d[id as keyof T]),
@@ -91,13 +96,13 @@ function onCrosshairUpdate(d: T): string {
 <template>
   <div
     class="flex flex-col space-y-4"
-    :class="{ 'flex-col-reverse': isLegendTop }"
+    :class="{ 'flex-col-reverse': isLegendTop, markers: !!props.markerConfig }"
   >
     <VisXYContainer
       :data="data"
       :height="height"
       :padding="padding"
-      :svg-defs="svgDefs"
+      :svg-defs="svgDefs + markersSvgDefs"
     >
       <VisTooltip
         v-if="!hideTooltip"
@@ -177,3 +182,15 @@ function onCrosshairUpdate(d: T): string {
     </div>
   </div>
 </template>
+
+<!-- Example CSS for custom markers-->
+<style scoped>
+/* Stroke maps to color key in categories */
+/* The color should match the color defined in categories */
+.markers:deep(*[stroke="#156F36"]) {
+  marker: url("#circle-marker-desktop");
+}
+.markers:deep(*[stroke="#4ade80"]) {
+  marker: url("#circle-marker-mobile");
+}
+</style>
