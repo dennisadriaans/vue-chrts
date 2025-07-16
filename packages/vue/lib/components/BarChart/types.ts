@@ -1,6 +1,6 @@
 import { BulletLegendItemInterface, Orientation, LegendPosition, axisFormatter } from "../../types";
 
-export interface BarChartProps<T> {
+export type BarChartProps<T> = {
   /**
    * The data to be displayed in the bar chart.
    * Each element of the array represents a data point.
@@ -88,6 +88,10 @@ export interface BarChartProps<T> {
    * If `true`, hides the chart legend.
    */
   hideLegend?: boolean;
+    /**
+   * If `true`, hides the chart tooltip.
+   */
+  hideTooltip?: boolean;
   /**
    * The orientation of the bars (vertical or horizontal).
    * See `Orientation` for available options.

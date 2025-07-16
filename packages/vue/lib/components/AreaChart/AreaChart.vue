@@ -37,7 +37,11 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
     props.data.length > DEFAULT_TICK_COUNT
       ? DEFAULT_TICK_COUNT / DEFAULT_TICK_DIVISOR
       : props.data.length - 1,
+  crosshairConfig: () => ({
+    color: "#666",
+  })
 });
+
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
@@ -157,7 +161,7 @@ function onCrosshairUpdate(d: T): string {
 
       <VisCrosshair
         v-if="!hideTooltip"
-        color="#666"
+        v-bind="crosshairConfig"
         :template="onCrosshairUpdate"
       />
     </VisXYContainer>
