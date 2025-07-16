@@ -59,6 +59,8 @@ function handleChartClick(_: MouseEvent, hoverValues?: LineChartItem) {
           :x-formatter="(tick: number): string => `${chartData[tick].month}`"
           :curve-type="CurveType.MonotoneX"
           :legend-position="LegendPosition.Top"
+          :line-width="5"
+          :line-dash-array="[5, 5]"
           :marker-config="{
             desktop: {
               type: 'circle',
@@ -156,3 +158,14 @@ function handleChartClick(_: MouseEvent, hoverValues?: LineChartItem) {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Stroke maps to color key in categories */
+/* The color should match the color defined in categories */
+.markers:deep(*[stroke="#156F36"]) {
+  marker: url("#circle-marker-desktop");
+}
+.markers:deep(*[stroke="#4ade80"]) {
+  marker: url("#circle-marker-mobile");
+}
+</style>

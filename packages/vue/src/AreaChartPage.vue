@@ -48,7 +48,6 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
           :y-num-ticks="3"
           :curve-type="CurveType.MonotoneX"
           :legend-position="LegendPosition.Top"
-<<<<<<< HEAD
           :marker-config="{
             desktop: {
               type: 'circle',
@@ -63,10 +62,8 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
               color: 'black',
             },
           }"
-=======
           @click="handleChartClick"
->>>>>>> feature/click-events
-        />
+        ></AreaChart>
       </Card>
 
       <Card>
@@ -153,3 +150,14 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Stroke maps to color key in categories */
+/* The color should match the color defined in categories */
+.markers:deep(*[stroke="#156F36"]) {
+  marker: url("#circle-marker-desktop");
+}
+.markers:deep(*[stroke="#4ade80"]) {
+  marker: url("#circle-marker-mobile");
+}
+</style>
