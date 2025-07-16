@@ -59,9 +59,10 @@ export type axisFormatter =
   | ((tick: number, i?: number, ticks?: number[]) => string)
   | ((tick: Date, i?: number, ticks?: Date[]) => string);
 
-export type MarkerConfig = {
-  type: "circle" | "square" | "triangle" | "diamond";
+export interface MarkerConfig {
+  type?: "circle" | "square" | "triangle" | "diamond";
   size?: number;
   strokeWidth?: number;
   color?: string;
-};
+  strokeColor?: string;
+}

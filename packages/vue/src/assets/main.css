@@ -20,7 +20,7 @@
 }
 
 @utility heading-2 {
-  @apply text-xl dark:text-white my-2 font-bold;
+  @apply  dark:text-white my-2 font-bold;
 }
 
 .dark {

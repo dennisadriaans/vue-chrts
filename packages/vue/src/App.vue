@@ -1,8 +1,25 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 
+import Logo from "./elements/Logo.vue";
+
 import { useColorMode } from "@vueuse/core";
 useColorMode();
+
+const mainMenuLinks = [
+  {
+    to: "/",
+    label: "Blocks",
+  },
+  {
+    to: "/charts",
+    label: "Charts",
+  },
+  {
+    to: "/docs",
+    label: "Docs",
+  },
+];
 
 const displayCopyright = computed(() => {
   const currentYear = new Date().getFullYear();
@@ -12,9 +29,39 @@ const displayCopyright = computed(() => {
 
 <template>
   <div>
+    <div
+      class="w-full flex  mx-auto py-4 bg-neutral-950 border-b border-neutral-800"
+    >
+      <div class="flex items-center justify-start max-w-screen-2xl mx-auto w-full">
+        <NuxtLink to="/">
+          <Logo />
+        </NuxtLink>
+
+        <div class="flex items-center gap-2 lg:gap-8 ml-8">
+          <div class="hidden items-center justify-between gap-6 lg:flex">
+            <template v-for="(item, itemKey) in mainMenuLinks" :key="itemKey">
+              <NuxtLink :to="item.to" class="relative">
+                <div
+                  class="w-2 h-2 bg-primary rounded-full absolute top-0 right-0 -mt-0.5 -mr-2"
+                  v-if="itemKey === 0"
+                ></div>
+                <UButton
+                  variant="ghost"
+                  color="neutral"
+                  class="text-neutral-400 font-semibold text-sm"
+                  :class="itemKey === 0 ? '!text-neutral-300' : ''"
+                  >{{ item.label }}</UButton
+                >
+              </NuxtLink>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <RouterView />
     <div class="border-t border-border mt-8">
-      <div class="max-w-7xl mx-auto py-8 flex items-center justify-between">
+      <div class="max-w-screen-2xl mx-auto py-8 flex items-center justify-between">
         <div v-html="displayCopyright"></div>
         <div>
           <a href="https://x.com/DennisAdriaans" target="_blank">

@@ -1,11 +1,9 @@
 <script lang="ts" setup>
 import { BarChart, BulletLegendItemInterface } from "./../lib";
-
 import Card from "./elements/Card.vue";
-
+import Button from "./elements/Button.vue";
 import { VisitorsData, VisitorsCartegories } from "./data/VisitorsData";
-
-import { LegendPosition, Orientation, CurveType } from "./../lib";
+import { LegendPosition, Orientation } from "./../lib";
 import { ref } from "vue";
 
 const RevenueData = [
@@ -16,26 +14,6 @@ const RevenueData = [
   { month: "May", desktop: 209, mobile: 130 },
   { month: "June", desktop: 214, mobile: 140 },
 ];
-
-
-const chartData = ref([
-  { month: 1, amount: 2500 },
-  { month: 2, amount: 1500 },
-  { month: 3, amount: 3000 },
-  { month: 4, amount: 4000 },
-  { month: 5, amount: 4500 },
-  { month: 6, amount: 2800 },
-  { month: 7, amount: 3500 },
-  { month: 8, amount: 3800 },
-  { month: 9, amount: 2000 },
-  { month: 10, amount: 4200 },
-  { month: 11, amount: 2200 },
-  { month: 12, amount: 1800 },
-])
-
-const categories: Record<string, BulletLegendItemInterface> = {
-  amount: { name: 'Monthly Spending', color: '#22c55e' },
-}
 
 const RevenueDataLong = [
   { date: "16/12/25", value: 60000 },
@@ -52,111 +30,157 @@ const RevenueDataLong = [
   { date: "19/09/25", value: 60000 },
   { date: "11/09/25", value: 50000 },
   { date: "03/09/25", value: 80000 },
-  { date: "26/08/25", value: 30000 }, // Estimated
-  { date: "18/08/25", value: 45000 }, // Estimated
-  { date: "10/08/25", value: 55000 }, // Estimated
-  { date: "02/08/25", value: 70000 }, // Estimated
-  { date: "25/07/25", value: 40000 }, // Estimated
-  { date: "17/07/25", value: 60000 }, // Estimated
-  { date: "09/07/25", value: 35000 }, // Estimated
-  { date: "01/07/25", value: 50000 }, // Estimated
-  { date: "23/06/25", value: 65000 }, // Estimated
-  { date: "15/06/25", value: 80000 }, // Estimated
-  { date: "07/06/25", value: 45000 }, // Estimated
-  { date: "30/05/25", value: 75000 }, // Estimated
-  { date: "22/05/25", value: 55000 }, // Estimated
-  { date: "14/05/25", value: 60000 }, // Estimated
-  { date: "06/05/25", value: 40000 }, // Estimated
-  { date: "28/04/25", value: 30000 }, // Estimated
-  { date: "20/04/25", value: 50000 }, // Estimated
-  { date: "12/04/25", value: 70000 }, // Estimated
-  { date: "04/04/25", value: 65000 }, // Estimated
-  { date: "27/03/25", value: 85000 }, // Estimated
-  { date: "19/03/25", value: 55000 }, // Estimated
-  { date: "11/03/25", value: 45000 }, // Estimated
-  { date: "03/03/25", value: 60000 }, // Estimated
-  { date: "25/02/25", value: 35000 }, // Estimated
-  { date: "16/02/25", value: 50000 }, // Estimated
-  { date: "08/02/25", value: 75000 }, // Estimated
-  { date: "31/01/25", value: 65000 }, // Estimated
-  { date: "23/01/25", value: 40000 }, // Estimated
-  { date: "15/01/25", value: 55000 }, // Estimated
-  { date: "07/01/25", value: 80000 }, // Estimated
-  { date: "30/12/24", value: 70000 }, // Estimated
-  { date: "22/12/24", value: 60000 }, // Estimated
-  { date: "14/12/24", value: 45000 }, // Estimated
-  { date: "06/12/24", value: 55000 }, // Estimated
+  { date: "26/08/25", value: 30000 },
+  { date: "18/08/25", value: 45000 },
+  { date: "10/08/25", value: 55000 },
+  { date: "02/08/25", value: 70000 },
+  { date: "25/07/25", value: 40000 },
+  { date: "17/07/25", value: 60000 },
+  { date: "09/07/25", value: 35000 },
+  { date: "01/07/25", value: 50000 },
+  { date: "23/06/25", value: 65000 },
+  { date: "15/06/25", value: 80000 },
+  { date: "07/06/25", value: 45000 },
+  { date: "30/05/25", value: 75000 },
+  { date: "22/05/25", value: 55000 },
+  { date: "14/05/25", value: 60000 },
+  { date: "06/05/25", value: 40000 },
+  { date: "28/04/25", value: 30000 },
+  { date: "20/04/25", value: 50000 },
+  { date: "12/04/25", value: 70000 },
+  { date: "04/04/25", value: 65000 },
+  { date: "27/03/25", value: 85000 },
+  { date: "19/03/25", value: 55000 },
+  { date: "11/03/25", value: 45000 },
+  { date: "03/03/25", value: 60000 },
+  { date: "25/02/25", value: 35000 },
+  { date: "16/02/25", value: 50000 },
+  { date: "08/02/25", value: 75000 },
+  { date: "31/01/25", value: 65000 },
+  { date: "23/01/25", value: 40000 },
+  { date: "15/01/25", value: 55000 },
+  { date: "07/01/25", value: 80000 },
+  { date: "30/12/24", value: 70000 },
+  { date: "22/12/24", value: 60000 },
+  { date: "14/12/24", value: 45000 },
+  { date: "06/12/24", value: 55000 },
 ].reverse();
 
 const RevenueCategories = {
-  value: { name: "value" },
+  value: { name: "value", color: '#22c55e' },
 };
-
 const RevenueCategoriesMobile = {
-  mobile: { name: "Mobile" },
+  mobile: { name: "Mobile", color: '#156F36' },
+};
+const RevenueCategoriesMultiple = {
+  desktop: { name: "Desktop", color: '#156F36' },
+  mobile: { name: "Mobile", color: '#16a34a' },
 };
 
-
-const RevenueCategoriesMultple = {
-  desktop: { name: "Desktop" },
-  mobile: { name: "Mobile" },
-};
-
-const TrafficData = [
+const barChartExamples = [
   {
-    date: "2024-01-01",
-    country: "USA",
-    device: "Desktop",
-    users: 576,
-    unique_users: 389,
-    sessions: 7,
-    pages_per_session: 4.881913133722271,
-    scroll_depth: 56.96127813915611,
-    session_duration: 2,
+    id: 1,
+    title: 'Vertical Bar Chart (Grouped)',
+    description: 'Compare desktop and mobile revenue per month, grouped by device.',
+    data: RevenueData,
+    categories: RevenueCategoriesMultiple,
+    yAxis: ['desktop', 'mobile'],
+    orientation: undefined,
+    stacked: false,
+    groupPadding: 0,
+    barPadding: 0.2,
+    xFormatter: (tick: number, i?: number) => `${RevenueData[typeof i !== 'undefined' ? i : tick]?.month}`,
+    yFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
   },
   {
-    date: "2024-01-01",
-    country: "USA",
-    device: "Mobile",
-    users: 748,
-    unique_users: 504,
-    sessions: 8,
-    pages_per_session: 4.393721820350049,
-    scroll_depth: 45.56902251132489,
-    session_duration: 2,
-  }
-]
-
-const TrafficCategories: Record<string, BulletLegendItemInterface> = {
-  users: { name: "Users", color: "#016538" },
-  unique_users: { name: "Unique users", color: "#403e3e" },
-};
-
-function formatDate(timestamp?: number | string) {
-  if (!timestamp) return "";
-  const options = {
-    month: "short",
-    day: "numeric",
-  };
-
-  const date = new Date(timestamp);
-  const formattedDate = new Intl.DateTimeFormat("en-US", options).format(date);
-
-  return `${formattedDate}`;
-}
-
-const xFormatter = (i: number): string | number => `${TrafficData[i]?.date}`;
-const xFormatterDate = (i: number): string | number => formatDate(new Date(`2025-${chartData.value[i]?.month}-01`).getTime());
-
-
-const formatCurrency = (tick: number | Date) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(Number(tick))
-}
+    id: 2,
+    title: 'Vertical Bar Chart (Single Series)',
+    description: 'Show only desktop revenue per month.',
+    data: RevenueData,
+    categories: RevenueCategoriesMultiple,
+    yAxis: ['desktop'],
+    orientation: undefined,
+    stacked: false,
+    groupPadding: undefined,
+    barPadding: undefined,
+    xFormatter: (tick: number, i?: number) => `${tick}${typeof i !== 'undefined' ? '-' + i : ''}`,
+    yFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
+  },
+  {
+    id: 3,
+    title: 'Horizontal Bar Chart (Single Series)',
+    description: 'Show mobile revenue per month, horizontal orientation.',
+    data: [...RevenueData].reverse(),
+    categories: RevenueCategoriesMobile,
+    yAxis: ['desktop'],
+    orientation: Orientation.Horizontal,
+    stacked: false,
+    groupPadding: undefined,
+    barPadding: 0,
+    xNumTicks: 6,
+    xFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
+    yFormatter: (tick: number, i?: number) => `${[...RevenueData].reverse()[typeof i !== 'undefined' ? i : tick]?.month}`,
+  },
+  {
+    id: 4,
+    title: 'Stacked Bar Chart (Vertical)',
+    description: 'Stack desktop and mobile revenue for each month.',
+    data: RevenueData,
+    categories: RevenueCategoriesMultiple,
+    yAxis: ['desktop', 'mobile'],
+    orientation: undefined,
+    stacked: true,
+    groupPadding: 0,
+    barPadding: 0.2,
+    xNumTicks: 6,
+    xFormatter: (tick: number, i?: number) => `${RevenueData[typeof i !== 'undefined' ? i : tick]?.month}`,
+    yFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
+  },
+  {
+    id: 5,
+    title: 'Stacked Bar Chart (Horizontal)',
+    description: 'Stack desktop and mobile revenue for each month, horizontal orientation.',
+    data: [...RevenueData].reverse(),
+    categories: RevenueCategoriesMultiple,
+    yAxis: ['desktop', 'mobile'],
+    orientation: Orientation.Horizontal,
+    stacked: true,
+    groupPadding: 0,
+    barPadding: 0.2,
+    xNumTicks: 6,
+    xFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
+    yFormatter: (tick: number, i?: number) => `${[...RevenueData].reverse()[typeof i !== 'undefined' ? i : tick]?.month}`,
+  },
+  {
+    id: 6,
+    title: 'Long Data Bar Chart',
+    description: 'Show a long time series of revenue data.',
+    data: RevenueDataLong,
+    categories: RevenueCategories,
+    yAxis: ['value'],
+    orientation: undefined,
+    stacked: false,
+    groupPadding: undefined,
+    barPadding: undefined,
+    xFormatter: (tick: number, i?: number) => `${RevenueDataLong[typeof i !== 'undefined' ? i : tick]?.date}`,
+    yFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
+  },
+  {
+    id: 7,
+    title: 'Visitors Bar Chart',
+    description: 'Show visitors data for the first 6 months.',
+    data: VisitorsData.slice(0, 6),
+    categories: VisitorsCartegories,
+    yAxis: ['visitors'],
+    orientation: undefined,
+    stacked: false,
+    groupPadding: undefined,
+    barPadding: undefined,
+    xNumTicks: 6,
+    xFormatter: (tick: number, i?: number) => `${RevenueData[typeof i !== 'undefined' ? i : tick]?.month}`,
+    yFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
+  },
+];
 
 function handleChartClick(event: MouseEvent, hoverValues: any) {
   console.log("BarChart clicked", hoverValues);
@@ -164,183 +188,48 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
 </script>
 
 <template>
-  <div class="space-y-8 pb-24 pt-8">
-    <div class="max-w-7xl mx-auto space-y-4">
-      <div class="mb-8 space-y-4">
-        <h1 class="text-4xl font-bold">Bar Chart</h1>
-        <p class="text-lg font-medium text-gray-500">
-          Bar charts to represent data, with bar lengths proportional to the
-          values they represent.
-        </p>
+  <div class="space-y-12 pb-24 pt-8 max-w-screen-2xl mx-auto">
+    <div class="mb-8 text-left mt-4 space-y-2">
+      <h1 class="text-3xl font-bold">Bar Chart Examples</h1>
+      <p class="text-lg dark:text-neutral-400 text-neutral-600">
+        Explore different Bar Chart configurations for your Vue or Nuxt projects.
+      </p>
+    </div>
+    <div class="max-w-screen-2xl mx-auto">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+        <Card v-for="example in barChartExamples" :key="example.id">
+          <div class="flex items-center justify-between">
+            <h2 class="heading-2">{{ example.title }}</h2>
+            <Button
+              color="white"
+              class="!bg-neutral-900"
+              icon="i-heroicons:arrow-right-20-solid"
+              :trailing="true"
+              type="outline"
+              size="sm"
+            >
+              View code
+            </Button>
+          </div>
+          <p class="mb-2 text-sm text-neutral-500">{{ example.description }}</p>
+          <BarChart
+            :data="example.data"
+            :height="250"
+            :categories="example.categories"
+            :y-axis="example.yAxis"
+            :group-padding="example.groupPadding"
+            :bar-padding="example.barPadding"
+            :x-num-ticks="example.xNumTicks"
+            :radius="4"
+            :orientation="example.orientation"
+            :stacked="example.stacked"
+            :x-formatter="example.xFormatter"
+            :y-formatter="example.yFormatter"
+            :legend-position="LegendPosition.Top"
+            @click="handleChartClick"
+          />
+        </Card>
       </div>
-    </div>
-
-    <div class="grid grid-cols-3 gap-4 max-w-7xl mx-auto py-4">
-      <Card>
-        <template #header>
-          <h2 class="heading-2">Bar Chart Vertical</h2>
-        </template>
-        <BarChart
-          :data="RevenueData"
-          :height="250"
-          :categories="RevenueCategoriesMultple"
-          :y-axis="['desktop']"
-          :radius="4"
-          :x-formatter="(tick: number, i: number ): string => `${tick}-${i}`"
-          :y-formatter="(i: number) => `${i}`"
-          :legend-position="LegendPosition.Top"
-          @click="handleChartClick"
-        />
-      </Card>
-
-      <Card>
-        <template #header>
-          <h2 class="heading-2">Bar Chart Horizontal</h2>
-          <!-- <p class="text-gray-500">Website visitors per device</p> -->
-        </template>
-        <BarChart
-          :data="[...RevenueData].reverse()"
-          :height="250"
-          :categories="RevenueCategoriesMobile"
-          :y-axis="['desktop']"
-          :xNumTicks="6"
-          :radius="4"
-          :bar-padding="0"
-          :orientation="Orientation.Horizontal"
-          :y-formatter="(i: number): string => `${[...RevenueData].reverse()[i]?.month }`"
-          :legend-position="LegendPosition.Top"
-          @click="handleChartClick"
-        />
-      </Card>
-
-      <Card>
-        <template #header>
-          <h2 class="heading-2">Bar Chart Group</h2>
-          <!-- <p class="text-gray-500">Website visitors per device</p> -->
-        </template>
-        <BarChart
-          :data="RevenueData"
-          :height="250"
-          :categories="RevenueCategoriesMultple"
-          :y-axis="['desktop', 'mobile']"
-          :group-padding="0"
-          :bar-padding="0.2"
-          :radius="4"
-          :x-formatter="(i: number): string => `${RevenueData[i]?.month }`"
-          :y-formatter="(i: number) => i"
-          :legend-position="LegendPosition.Top"
-          @click="handleChartClick"
-        />
-      </Card>
-
-      <Card>
-        <template #header>
-          <h2 class="heading-2">Bar Chart Stacked</h2>
-          <!-- <p class="text-gray-500">Website visitors per device</p> -->
-        </template>
-        <BarChart
-          :data="RevenueData"
-          :stacked="true"
-          :height="250"
-          :categories="RevenueCategoriesMultple"
-          :y-axis="['desktop', 'mobile']"
-          :group-padding="0"
-          :bar-padding="0.2"
-          :xNumTicks="6"
-          :radius="4"
-          :x-formatter="(i: number): string => console.log(i)"
-          :y-formatter="(i: number) => i"
-          :legend-position="LegendPosition.Top"
-          @click="handleChartClick"
-        />
-      </Card>
-
-      <Card>
-        <template #header>
-          <h2 class="heading-2">Bar Chart Vertical</h2>
-          <!-- <p class="text-gray-500">Website visitors per device</p> -->
-        </template>
-        <BarChart
-          :data="VisitorsData.slice(0, 6)"
-          :height="250"
-          :categories="VisitorsCartegories"
-          :y-axis="['visitors']"
-          :x-num-ticks="6"
-          :radius="4"
-          :x-formatter="(i: number): string => `${RevenueData[i]?.month }`"
-          :y-formatter="(i: number) => i"
-          :legend-position="LegendPosition.Top"
-          @click="handleChartClick"
-        />
-      </Card>
-
-      <Card>
-        <template #header>
-          <h2 class="heading-2">Bar Chart Stacked Horizontal</h2>
-          <!-- <p class="text-gray-500">Website visitors per device</p> -->
-        </template>
-        <BarChart
-          :data="[...RevenueData].reverse()"
-          :stacked="true"
-          :height="250"
-          :categories="RevenueCategoriesMultple"
-          :y-axis="['desktop', 'mobile']"
-          :group-padding="0"
-          :bar-padding="0.2"
-          :xNumTicks="6"
-          :radius="4"
-          :orientation="Orientation.Horizontal"
-          :x-formatter="(i: number): string => `${i}`"
-          :y-formatter="(i: number): string => `${[...RevenueData].reverse()[i]?.month }`"
-          :legend-position="LegendPosition.Top"
-          @click="handleChartClick"
-        />
-      </Card>
-    </div>
-
-    <div class="max-w-7xl mx-auto">
-      <BarChart
-        :data="RevenueDataLong"
-        :height="358"
-        :categories="RevenueCategories"
-        :y-axis="['value']"
-        :hide-legend="true"
-        :y-formatter="(i: number) => '123'"
-        :x-formatter="(i) => '123'"
-        @click="handleChartClick"
-      />
-    </div>
-
-    <div class="max-w-7xl mx-auto">
-
-    <BarChart
-        :data="TrafficData"
-        :height="220"
-        :y-num-ticks="4"
-        :group-padding="0.2"
-         :y-axis="['users']"
-        :categories="TrafficCategories"
-        :x-formatter="xFormatter"
-        :grid-line-y="true"
-        :legend-position="LegendPosition.Bottom"
-        @click="handleChartClick"
-      />
-    </div>
-
-
-    <div class="max-w-7xl mx-auto">
-    <BarChart
-        :data="chartData"
-        :height="180"
-        :categories="categories"
-        :y-axis="['amount']"
-        :y-num-ticks="2"
-        :curve-type="CurveType.Basis"
-        :legend-position="LegendPosition.Top"
-        :x-formatter="xFormatterDate"
-        :y-formatter="formatCurrency"
-        @click="handleChartClick"
-      />
     </div>
   </div>
 </template>

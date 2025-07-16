@@ -45,31 +45,32 @@ export const markerShape = (
   type: string,
   size: number,
   strokeWidth: number,
-  color: string
+  color: string,
+  strokeColor: string
 ) => {
   switch (type) {
     case "circle":
       return `<circle cx="${size / 2}" cy="${size / 2}" r="${
         (size - strokeWidth) / 2
-      }" stroke-width="${strokeWidth}" stroke="${color}" fill="none" />`;
+      }" stroke-width="${strokeWidth}" stroke="${strokeColor}" fill="${color}" />`;
     case "square":
       return `<rect x="${strokeWidth / 2}" y="${strokeWidth / 2}" width="${
         size - strokeWidth
       }" height="${
         size - strokeWidth
-      }" stroke-width="${strokeWidth}" stroke="${color}" fill="none" />`;
+      }" stroke-width="${strokeWidth}" stroke="${strokeColor}" fill="${color}" />`;
     case "triangle":
       return `<polygon points="${size / 2},${strokeWidth / 2} ${
         size - strokeWidth / 2
       },${size - strokeWidth / 2} ${strokeWidth / 2},${
         size - strokeWidth / 2
-      }" stroke-width="${strokeWidth}" stroke="${color}" fill="none" />`;
+      }" stroke-width="${strokeWidth}" stroke="${strokeColor}" fill="${color}" />`;
     case "diamond":
       return `<polygon points="${size / 2},${strokeWidth / 2} ${
         size - strokeWidth / 2
       },${size / 2} ${size / 2},${size - strokeWidth / 2} ${strokeWidth / 2},${
         size / 2
-      }" stroke-width="${strokeWidth}" stroke="${color}" fill="none" />`;
+      }" stroke-width="${strokeWidth}" stroke="${strokeColor}" fill="${color}" />`;
     default:
       return "";
   }
@@ -82,12 +83,13 @@ export function createMarkers(markerConfig: Record<string, MarkerConfig>) {
       const size = cfg.size || 10;
       const strokeWidth = cfg.strokeWidth || 2;
       const color = cfg.color || "#000";
+      const strokeColor = cfg.strokeColor || cfg.color || "#000";
       return `<marker id="circle-marker-${key}" viewBox="0 0 ${size} ${size}" refX="${
         size / 2
       }" refY="${size / 2}" markerWidth="${size / 2}" markerHeight="${
         size / 2
       }">
-        ${markerShape(type, size, strokeWidth, color)}
+        ${markerShape(type, size, strokeWidth, color, strokeColor)}
       </marker>`;
     })
     .join("\n");

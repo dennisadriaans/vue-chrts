@@ -105,7 +105,7 @@ function onCrosshairUpdate(d: T): string {
 
 <template>
   <div
-    class="flex flex-col space-y-4"
+    class="flex flex-col"
     :class="{ 'flex-col-reverse': isLegendTop, markers: !!props.markerConfig }"
     @click="emit('click', $event, hoverValues)"
   >
@@ -177,7 +177,7 @@ function onCrosshairUpdate(d: T): string {
     <div
       v-if="!hideLegend"
       class="flex items-center justify-end"
-      :class="{ 'pb-4': isLegendTop }"
+      :class="{ 'pb-4': isLegendTop, 'pt-4': !isLegendTop }"
     >
       <VisBulletLegend :items="Object.values(categories)" />
     </div>
