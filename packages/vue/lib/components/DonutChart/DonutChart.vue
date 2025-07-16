@@ -11,6 +11,7 @@ import {
 } from "@unovis/vue";
 
 const props = defineProps<DonutChartProps>();
+// Provide default for hideTooltip if not set
 
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
@@ -47,13 +48,13 @@ function generateTooltipContent(d: T): string {
         }"
       />
 
-      <VisDonut
-        :value="value"
-        :corner-radius="radius"
-        :color="props.labels.map((l) => l.color)"
-        :angle-range="isHalf ? [-1.5707963267948966, 1.5707963267948966] : []"
-        :pad-angle="props.padAngle || 0"
-      />
+    <VisDonut
+      :value="value"
+      :corner-radius="radius"
+      :color="props.labels.map((l) => l.color)"
+      :angle-range="isHalf ? [-1.5707963267948966, 1.5707963267948966] : []"
+      :pad-angle="props.padAngle || 0"
+    />
     </VisSingleContainer>
 
     <slot />

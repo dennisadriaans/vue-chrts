@@ -32,6 +32,7 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   yNumTicks: (props) =>
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
+  hideTooltip: false,
 });
 
 const slots = useSlots();
@@ -217,7 +218,11 @@ const bar2 = [
           :data="hoverValues"
           :categories="props.categories"
           :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
-          :yFormatter="props.orientation === Orientation.Horizontal ? props.xFormatter : props.yFormatter"
+          :yFormatter="
+            props.orientation === Orientation.Horizontal
+              ? props.xFormatter
+              : props.yFormatter
+          "
         />
       </slot>
     </div>

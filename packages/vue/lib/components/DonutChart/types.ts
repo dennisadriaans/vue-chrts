@@ -1,4 +1,4 @@
-interface DonutChartProps {
+export type DonutChartProps = {
   /**
    * The type of donut chart to render.
    * See `DonutType` for available options.
@@ -40,4 +40,4 @@ enum DonutType {
   Full = "full",
 }
 
-export { type DonutChartProps, DonutType };
+export { DonutType };

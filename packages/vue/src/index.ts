@@ -1,52 +1,50 @@
-import { createApp } from 'vue'
+import { createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
-import './assets/main.css'
+import "./assets/main.css";
 
-import App from './App.vue'
+import App from "./App.vue";
 
-const app = createApp(App)
+const app = createApp(App);
 
 const router = createRouter({
-    routes: [
-        {
-          path: '/',
-          name: 'Home',
-          component: () => import('./Homepage.vue') 
-        },
-        {
-          path: '/area-charts',
-          name: 'AreaCharts',
-          component: () => import('./AreaChartPage.vue') 
-        },
-        {
-          path: '/line-charts',
-          name: 'LineCharts',
-          component: () => import('./LineChartPage.vue') 
-        },
-        {
-          path: '/bar-charts',
-          name: 'BarCharts',
-          component: () => import('./BarChartPage.vue') 
-        },
-        {
-                 path: '/social-deal-examples',
-          name: 'SocialDealExamples',
-          component: () => import('./SocialDealExamples.vue') ,
-        },
-        {
-          path: '/donut-charts',
-          name: 'DonutCharts',
-          component: () => import('./DonutChartPage.vue')
-        }
-      ],
-    history: createWebHistory(),
-  });
+  routes: [
+    {
+      path: "/",
+      name: "Home",
+      component: () => import("./Homepage.vue"),
+    },
+    {
+      path: "/area-charts",
+      name: "AreaCharts",
+      component: () => import("./AreaChartPage.vue"),
+    },
+    {
+      path: "/line-charts",
+      name: "LineCharts",
+      component: () => import("./LineChartPage.vue"),
+    },
+    {
+      path: "/bar-charts",
+      name: "BarCharts",
+      component: () => import("./BarChartPage.vue"),
+    },
+    {
+      path: "/social-deal-examples",
+      name: "SocialDealExamples",
+      component: () => import("./SocialDealExamples.vue"),
+    },
+    {
+      path: "/donut-charts",
+      name: "DonutCharts",
+      component: () => import("./DonutChartPage.vue"),
+    },
+  ],
+  history: createWebHistory(),
+});
 
 app.use(router);
 
-app.mount('#app')
+app.mount("#app");
 
-export default {
-
-}
+export default {};

@@ -13,7 +13,7 @@ import { AreaStackedChartProps } from "./types";
 
 const props = defineProps<AreaStackedChartProps<T>>();
 
-const generateTooltip = computed(() => (d: T, idx: number) => {
+const onCrosshairUpdate = computed(() => (d: T, idx: number) => {
   if (typeof window === "undefined" || typeof document === "undefined") {
     return "";
   }
@@ -55,8 +55,8 @@ const y = [(d: any) => d.firstTime, (d: any) => d.returning];
       <VisAxis type="y" label="Number of visitors" :num-ticks="3" />
       <VisCrosshair
         v-if="!hideTooltip"
-        color="#666"
-        :template="generateTooltip"
+        v-bind="crosshairConfig"
+        :template="onCrosshairUpdate"
       />
     </VisXYContainer>
     <div class="flex items center justify-end">
