@@ -158,6 +158,7 @@ const columns = [
             :labels="DonutData"
             :hide-pagination="true"
             :radius="0"
+            @click="(e, t) => console.log(t)"
           >
             <div class="absolute text-center">
               <div class="font-semibold dark:text-white">Label</div>
@@ -298,6 +299,7 @@ const columns = [
               :minMaxTicksOnly="true"
               :y-formatter="(i: number) => i"
               :x-formatter="(i: number): string => RevenueData[i]?.date"
+                @click="(e, t) => console.log(t)"
             />
           </Card>
         </div>

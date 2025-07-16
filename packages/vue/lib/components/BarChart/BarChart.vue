@@ -13,8 +13,13 @@ import {
 } from "@unovis/vue";
 
 import Tooltip from "../Tooltip.vue";
+
 import { LegendPosition } from "../../types";
 import { BarChartProps } from "./types";
+
+const emit = defineEmits<{
+  (e: "click", event: MouseEvent, values?: T): void;
+}>();
 
 const props = withDefaults(defineProps<BarChartProps<T>>(), {
   orientation: Orientation.Vertical,
@@ -74,6 +79,7 @@ function generateTooltipContent(d: T): string {
   <div
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': LegendPositionTop }"
+    @click="emit('click', $event, hoverValues)"
   >
     <VisXYContainer :padding="padding" :height="height">
       <VisTooltip

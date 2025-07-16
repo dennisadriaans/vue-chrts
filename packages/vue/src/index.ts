@@ -28,11 +28,6 @@ const router = createRouter({
           path: '/bar-charts',
           name: 'BarCharts',
           component: () => import('./BarChartPage.vue') 
-        },
-        {
-          path: '/donut-charts',
-          name: 'DonutCharts',
-          component: () => import('./DonutExamplePage.vue')
         }
       ],
     history: createWebHistory(),

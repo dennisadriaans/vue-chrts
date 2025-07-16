@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T">
 import { computed, ref, useSlots, useTemplateRef } from "vue";
-import { CurveType, Position } from "@unovis/ts";
+import { CurveType, Line, Position } from "@unovis/ts";
 import { getFirstPropertyValue } from "../../utils";
 
 import Tooltip from "../Tooltip.vue";
@@ -16,6 +16,10 @@ import {
 
 import { LegendPosition } from "../../types";
 import { LineChartProps } from "./types";
+
+const emit = defineEmits<{
+  (e: "click", event: MouseEvent, values?: T): void;
+}>();
 
 const props = withDefaults(defineProps<LineChartProps<T>>(), {
   padding: () => {
@@ -42,7 +46,7 @@ const defaultColors = Object.values(props.categories).map(
 const color = (key: number) =>
   Object.values(props.categories)[key].color ?? defaultColors[key];
 
-function generateTooltipContent(d: T): string {
+function generateTooltipContent(): string {
   if (typeof window === "undefined") {
     return "";
   }
@@ -54,7 +58,7 @@ function generateTooltipContent(d: T): string {
 
 function onCrosshairUpdate(d: T): string {
   hoverValues.value = d;
-  return generateTooltipContent(d);
+  return generateTooltipContent();
 }
 
 
@@ -67,6 +71,7 @@ const LegendPositionTop = computed(
   <div
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': LegendPositionTop }"
+    @click="emit('click', $event, hoverValues)"
   >
     <VisXYContainer :data="data" :padding="padding" :height="height">
       <VisTooltip

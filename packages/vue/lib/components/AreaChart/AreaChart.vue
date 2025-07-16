@@ -16,7 +16,12 @@ import {
 } from "@unovis/vue";
 
 import { LegendPosition } from "../../types";
-import { type AreaChartProps } from "./types";
+
+import type { AreaChartProps } from "./types";
+
+const emit = defineEmits<{
+  (e: "click", event: MouseEvent, values?: T): void;
+}>();
 
 const DEFAULT_TICK_COUNT = 24;
 const DEFAULT_TICK_DIVISOR = 4;
@@ -92,6 +97,7 @@ function onCrosshairUpdate(d: T): string {
   <div
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': isLegendTop }"
+    @click="emit('click', $event, hoverValues)"
   >
     <VisXYContainer
       :data="data"
