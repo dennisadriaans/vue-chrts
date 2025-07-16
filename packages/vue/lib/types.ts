@@ -55,5 +55,13 @@ export {
   type BulletLegendItemInterface,
 };
 
+export type axisFormatter =
+  | ((tick: number, i?: number, ticks?: number[]) => string)
+  | ((tick: Date, i?: number, ticks?: Date[]) => string);
 
-export type axisFormatter<T> = ((tick: number, i?: number, ticks?: number[]) => string) | ((tick: Date, i?: number, ticks?: Date[]) => string)
+export type MarkerConfig = {
+  type: "circle" | "square" | "triangle" | "diamond";
+  size?: number;
+  strokeWidth?: number;
+  color?: string;
+};

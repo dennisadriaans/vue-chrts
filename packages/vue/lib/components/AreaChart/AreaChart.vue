@@ -1,10 +1,6 @@
 <script setup lang="ts" generic="T">
-import { computed, ref, useSlots, useTemplateRef } from "vue";
+import { computed, createApp, ref, onUnmounted } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
-import { getFirstPropertyValue } from "../../utils";
-
-import Tooltip from "../Tooltip.vue";
-
 import {
   VisArea,
   VisAxis,
@@ -15,6 +11,7 @@ import {
   VisXYContainer,
 } from "@unovis/vue";
 
+import Tooltip from "../Tooltip.vue";
 import { LegendPosition } from "../../types";
 
 import type { AreaChartProps } from "./types";
@@ -23,12 +20,21 @@ const emit = defineEmits<{
   (e: "click", event: MouseEvent, values?: T): void;
 }>();
 
+// Constants for default values
 const DEFAULT_TICK_COUNT = 24;
 const DEFAULT_TICK_DIVISOR = 4;
 const DEFAULT_OPACITY = 0.5;
 const DEFAULT_COLOR = "#3b82f6";
+
 const props = withDefaults(defineProps<AreaChartProps<T>>(), {
-  padding: () => ({ top: 5, right: 5, bottom: 5, left: 5 }),
+  padding: () => {
+    return {
+      top: 5,
+      right: 5,
+      bottom: 5,
+      left: 5,
+    };
+  },
   xNumTicks: (props) =>
     props.data.length > DEFAULT_TICK_COUNT
       ? DEFAULT_TICK_COUNT / DEFAULT_TICK_DIVISOR
@@ -51,51 +57,70 @@ const colors = computed(() =>
   Object.values(props.categories).map((c) => c.color)
 );
 
-const isLegendTop = computed(() => props.legendPosition === LegendPosition.Top);
+const generateTooltip = computed(() => (d: T ) => {
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    return "";
+  }
 
-const svgDefs = computed(() => {
-  const createGradientWithHex = (id: number, color: string) => `
-    <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
-      <stop offset="0%" stop-color="${color}" stop-opacity="1" />
-      <stop offset="100%" stop-color="${color}" stop-opacity="0" />
-    </linearGradient>
-  `;
-  const createGradientWithCssVar = (id: number, color: string) => `
-    <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
-      <stop offset="0%" style="stop-color:var(--vis-color0);stop-opacity:1" />
-      <stop offset="100%" style="stop-color:var(--vis-color0);stop-opacity:0" />
-    </linearGradient>
-  `;
-  return colors.value
-    .map((color, index) =>
-      color?.includes("#")
-        ? createGradientWithHex(index, color)
-        : createGradientWithCssVar(index, color ?? DEFAULT_COLOR)
-    )
-    .join("");
+  try {
+    const app = createApp(Tooltip, {
+      data: d,
+      categories: props.categories,
+      toolTipTitle: getFirstPropertyValue(d),
+      yFormatter: props.yFormatter
+    });
+
+    const container = document.createElement("div");
+    app.mount(container);
+
+    const html = container.innerHTML;
+    app.unmount();
+
+    return html;
+  } catch (error) {
+    return "";
+  }
 });
 
-function getAccessors(id: string): { y: NumericAccessor<T>; color: string } {
+
+function accessors(id: string): { y: NumericAccessor<T>; color: string } {
   return {
     y: (d: T) => Number(d[id as keyof T]),
     color: props.categories[id]?.color ?? DEFAULT_COLOR,
   };
 }
 
-function generateTooltipContent(d: T): string {
-  if (typeof window === "undefined") {
-    return "";
-  }
-  if (slotWrapperRef.value) {
-    return slotWrapperRef.value.innerHTML;
-  }
-  return "";
+function generateCSSVarsSvg(index: number, color: string) {
+  return `
+  <linearGradient id="gradient${index}-${color}" gradientTransform="rotate(90)">
+  <stop offset="0%" style="stop-color:var(--vis-color0);stop-opacity:1" />
+    <stop offset="100%" style="stop-color:var(--vis-color0);stop-opacity:0" />
+  </linearGradient>
+`;
 }
 
-function onCrosshairUpdate(d: T): string {
-  hoverValues.value = d;
-  return generateTooltipContent(d);
+function generateSvg(index: number, color: string) {
+  return `
+  <linearGradient id="gradient${index}-${color}" gradientTransform="rotate(90)">
+    <stop offset="0%" stop-color="${color}" stop-opacity="1" />
+    <stop offset="100%" stop-color="${color}" stop-opacity="0" />
+  </linearGradient>
+`;
 }
+
+const svgDefs = computed(() =>
+  colors
+    .map((color, index) =>
+      color?.includes("#")
+        ? generateSvg(index, color)
+        : generateCSSVarsSvg(index, color ?? DEFAULT_COLOR)
+    )
+    .join("")
+);
+
+const LegendPositionTop = computed(
+  () => props.legendPosition === LegendPosition.Top
+);
 </script>
 
 <template>
@@ -115,78 +140,57 @@ function onCrosshairUpdate(d: T): string {
         :horizontal-placement="Position.Right"
         :vertical-placement="Position.Top"
       />
-
-      <template
-        v-for="(categoryId, index) in Object.keys(props.categories)"
-        :key="categoryId"
-      >
+      <template v-for="(i, iKey) in Object.keys(props.categories)" :key="iKey">
         <VisArea
           :x="(_: T, i: number) => i"
-          v-bind="getAccessors(categoryId)"
-          :color="`url(#gradient${index}-${colors[index]})`"
+          v-bind="accessors(i)"
+          :color="`url(#gradient${iKey}-${colors[iKey]})`"
           :opacity="DEFAULT_OPACITY"
           :curve-type="curveType ?? CurveType.MonotoneX"
         />
         <VisLine
           :x="(_: T, i: number) => i"
-          :y="(d: T) => d[categoryId as keyof T]"
-          :color="colors[index]"
+          :y="(d: T) => d[i as keyof T]"
+          :color="colors[iKey]"
           :curve-type="curveType ?? CurveType.MonotoneX"
-          :line-width="lineWidth"
-          :lineDashArray="lineDashArray"
         />
       </template>
 
       <VisAxis
         v-if="!hideXAxis"
         type="x"
+        :tick-format="xFormatter"
         :label="xLabel"
         :label-margin="8"
-        :num-ticks="xNumTicks"
-        :tick-format="xFormatter"
-        :tick-values="xExplicitTicks"
-        :grid-line="xGridLine"
         :domain-line="xDomainLine"
+        :grid-line="xGridLine"
+        :num-ticks="xNumTicks"
         :tick-line="xTickLine"
+        :tick-values="xExplicitTicks"
         :min-max-ticks-only="minMaxTicksOnly"
       />
-
       <VisAxis
         v-if="!hideYAxis"
         type="y"
-        :label="yLabel"
         :num-ticks="yNumTicks"
         :tick-format="yFormatter"
+        :label="yLabel"
         :grid-line="yGridLine"
         :domain-line="yDomainLine"
         :tick-line="yTickLine"
       />
-
       <VisCrosshair
         v-if="!hideTooltip"
         v-bind="crosshairConfig"
         :template="onCrosshairUpdate"
       />
     </VisXYContainer>
-
     <div
       v-if="!hideLegend"
       class="flex items-center justify-end"
-      :class="{ 'pb-4': isLegendTop }"
+      :class="{ 'pb-4': LegendPositionTop }"
     >
       <VisBulletLegend :items="Object.values(categories)" />
-    </div>
-
-    <div ref="slotWrapper" class="hidden">
-      <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
-      <slot v-else-if="hoverValues" name="fallback">
-        <Tooltip
-          :data="hoverValues"
-          :categories="categories"
-          :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
-          :yFormatter="props.yFormatter"
-        />
-      </slot>
     </div>
   </div>
 </template>

@@ -1,9 +1,6 @@
 <script setup lang="ts" generic="T">
-import { computed, ref, useSlots, useTemplateRef } from "vue";
+import { computed, createApp } from "vue";
 import { CurveType, Position } from "@unovis/ts";
-import { getFirstPropertyValue } from "../../utils";
-
-import Tooltip from "../Tooltip.vue";
 
 import {
   VisAxis,
@@ -14,8 +11,10 @@ import {
   VisTooltip,
 } from "@unovis/vue";
 
+import Tooltip from "../Tooltip.vue";
 import { LegendPosition } from "../../types";
 import { LineChartProps } from "./types";
+import { getFirstPropertyValue } from "../../utils";
 
 const props = withDefaults(defineProps<LineChartProps<T>>(), {
   padding: () => {
@@ -30,33 +29,36 @@ const props = withDefaults(defineProps<LineChartProps<T>>(), {
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   yNumTicks: (props) =>
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
-  lineWidth: 2,
 });
 
-const slots = useSlots();
-const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
-const hoverValues = ref<T>();
+const defaultColors = Object.values(props.categories).map((i, index) => `var(--vis-color${index})`)
+const color = (key: number) => Object.values(props.categories)[key].color ?? defaultColors[key];
 
-const defaultColors = Object.values(props.categories).map(
-  (i, index) => `var(--vis-color${index})`
-);
-const color = (key: number) =>
-  Object.values(props.categories)[key].color ?? defaultColors[key];
 
-function generateTooltipContent(d: T): string {
-  if (typeof window === "undefined") {
+const generateTooltip = computed(() => (d: T, idx: number) => {
+  if (typeof window === "undefined" || typeof document === "undefined") {
     return "";
   }
-  if (slotWrapperRef.value) {
-    return slotWrapperRef.value.innerHTML;
-  }
-  return "";
-}
 
-function onCrosshairUpdate(d: T): string {
-  hoverValues.value = d;
-  return generateTooltipContent(d);
-}
+  try {
+    const app = createApp(Tooltip, {
+      data: d,
+      categories: props.categories,
+      toolTipTitle: getFirstPropertyValue(d),
+      yFormatter: props.yFormatter
+    });
+
+    const container = document.createElement("div");
+    app.mount(container);
+
+    const html = container.innerHTML;
+    app.unmount();
+
+    return html;
+  } catch (error) {
+    return "";
+  }
+});
 
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
@@ -80,8 +82,6 @@ const LegendPositionTop = computed(
           :y="(d: T) => d[i as keyof typeof d]"
           :color="color(iKey)"
           :curve-type="curveType ?? CurveType.MonotoneX"
-          :line-width="lineWidth"
-          :lineDashArray="lineDashArray"
         />
       </template>
       <VisAxis
@@ -110,7 +110,7 @@ const LegendPositionTop = computed(
       <VisCrosshair
         v-if="!hideTooltip"
         color="#666"
-        :template="onCrosshairUpdate"
+        :template="generateTooltip"
       />
     </VisXYContainer>
     <div
@@ -119,18 +119,6 @@ const LegendPositionTop = computed(
       :class="{ 'pb-4': LegendPositionTop }"
     >
       <VisBulletLegend :items="Object.values(categories)" />
-    </div>
-
-    <div ref="slotWrapper" class="hidden">
-      <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
-      <slot v-else-if="hoverValues" name="fallback">
-        <Tooltip
-          :data="hoverValues"
-          :categories="categories"
-          :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
-          :yFormatter="props.yFormatter"
-        />
-      </slot>
     </div>
   </div>
 </template>
