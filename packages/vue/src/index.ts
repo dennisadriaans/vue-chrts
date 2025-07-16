@@ -8,42 +8,6 @@ import App from "./App.vue";
 const app = createApp(App);
 
 const router = createRouter({
-<<<<<<< HEAD
-  routes: [
-    {
-      path: "/",
-      name: "Home",
-      component: () => import("./Homepage.vue"),
-    },
-    {
-      path: "/area-charts",
-      name: "AreaCharts",
-      component: () => import("./AreaChartPage.vue"),
-    },
-    {
-      path: "/line-charts",
-      name: "LineCharts",
-      component: () => import("./LineChartPage.vue"),
-    },
-    {
-      path: "/bar-charts",
-      name: "BarCharts",
-      component: () => import("./BarChartPage.vue"),
-    },
-    {
-      path: "/social-deal-examples",
-      name: "SocialDealExamples",
-      component: () => import("./SocialDealExamples.vue"),
-    },
-    {
-      path: "/donut-charts",
-      name: "DonutCharts",
-      component: () => import("./DonutChartPage.vue"),
-    },
-  ],
-  history: createWebHistory(),
-});
-=======
     routes: [
         {
           path: '/',
@@ -64,11 +28,15 @@ const router = createRouter({
           path: '/bar-charts',
           name: 'BarCharts',
           component: () => import('./BarChartPage.vue') 
+        },
+        {
+          path: '/social-deal-examples',
+          name: 'SocialDealExamples',
+          component: () => import('./SocialDealExamples.vue') 
         }
       ],
     history: createWebHistory(),
   });
->>>>>>> feature/click-events
 
 app.use(router);
 

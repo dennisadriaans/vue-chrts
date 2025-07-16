@@ -59,6 +59,9 @@ function handleChartClick(_: MouseEvent, hoverValues?: LineChartItem) {
           :x-formatter="(tick: number): string => `${chartData[tick].month}`"
           :curve-type="CurveType.MonotoneX"
           :legend-position="LegendPosition.Top"
+<<<<<<< HEAD
+          @click="handleChartClick"
+=======
           :marker-config="{
             desktop: {
               type: 'circle',
@@ -73,7 +76,7 @@ function handleChartClick(_: MouseEvent, hoverValues?: LineChartItem) {
               color: 'black',
             },
           }"
-          @click="handleChartClick"
+>>>>>>> feature/refactor-line-chart
         />
       </Card>
 

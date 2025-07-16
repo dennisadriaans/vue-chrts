@@ -89,6 +89,17 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
 
       <Card>
         <template #header>
+          <h2 class="text-xl my-2 font-bold">Area Chart Stacked</h2>
+        </template>
+        <AreaStackedChart
+          :height="200"
+          :data="AreaChartData3"
+          :categories="categories4"
+        />
+      </Card>
+
+      <Card>
+        <template #header>
           <h2 class="text-xl my-2 font-bold">Area Chart Natrual</h2>
         </template>
         <AreaChart

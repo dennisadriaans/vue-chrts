@@ -14,12 +14,10 @@ import {
   VisTooltip,
 } from "@unovis/vue";
 
+import Tooltip from "../Tooltip.vue";
 import { LegendPosition } from "../../types";
 import { LineChartProps } from "./types";
-
-const emit = defineEmits<{
-  (e: "click", event: MouseEvent, values?: T): void;
-}>();
+import { getFirstPropertyValue } from "../../utils";
 
 const props = withDefaults(defineProps<LineChartProps<T>>(), {
   padding: () => {
@@ -60,16 +58,26 @@ function generateTooltipContent(): string {
   if (typeof window === "undefined") {
     return "";
   }
-  if (slotWrapperRef.value) {
-    return slotWrapperRef.value.innerHTML;
-  }
-  return "";
-}
 
-function onCrosshairUpdate(d: T): string {
-  hoverValues.value = d;
-  return generateTooltipContent();
-}
+  try {
+    const app = createApp(Tooltip, {
+      data: d,
+      categories: props.categories,
+      toolTipTitle: getFirstPropertyValue(d),
+      yFormatter: props.yFormatter
+    });
+
+    const container = document.createElement("div");
+    app.mount(container);
+
+    const html = container.innerHTML;
+    app.unmount();
+
+    return html;
+  } catch (error) {
+    return "";
+  }
+});
 
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
@@ -86,12 +94,7 @@ const LegendPositionTop = computed(
     }"
     @click="emit('click', $event, hoverValues)"
   >
-    <VisXYContainer
-      :data="data"
-      :padding="padding"
-      :height="height"
-      :svgDefs="svgDefs"
-    >
+    <VisXYContainer :data="data" :padding="padding" :height="height">
       <VisTooltip
         :horizontal-placement="Position.Right"
         :vertical-placement="Position.Top"
@@ -102,8 +105,6 @@ const LegendPositionTop = computed(
           :y="(d: T) => d[i as keyof typeof d]"
           :color="color(iKey)"
           :curve-type="curveType ?? CurveType.MonotoneX"
-          :line-width="lineWidth"
-          :lineDashArray="lineDashArray"
         />
       </template>
       <VisAxis
@@ -117,7 +118,7 @@ const LegendPositionTop = computed(
         :tick-line="xTickLine"
         :num-ticks="xNumTicks"
         :tick-values="xExplicitTicks"
-        :min-max-ticks-only="minMaxTicksOnly"
+        :minMaxTicksOnly="minMaxTicksOnly"
       />
       <VisAxis
         v-if="!hideYAxis"
@@ -131,8 +132,8 @@ const LegendPositionTop = computed(
       />
       <VisCrosshair
         v-if="!hideTooltip"
-        v-bind="crosshairConfig"
-        :template="onCrosshairUpdate"
+        color="#666"
+        :template="generateTooltip"
       />
     </VisXYContainer>
     <div
@@ -142,28 +143,5 @@ const LegendPositionTop = computed(
     >
       <VisBulletLegend :items="Object.values(categories)" />
     </div>
-
-    <div ref="slotWrapper" class="hidden">
-      <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
-      <slot v-else-if="hoverValues" name="fallback">
-        <Tooltip
-          :data="hoverValues"
-          :categories="categories"
-          :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
-          :yFormatter="props.yFormatter"
-        />
-      </slot>
-    </div>
   </div>
 </template>
-
-<!-- Example CSS for custom markers-->
-<!-- <style scoped>
-/* Stroke maps to color key in categories */
-.markers:deep(*[stroke="#156F36"]) {
-  marker: url("#circle-marker-desktop");
-}
-.markers:deep(*[stroke="#4ade80"]) {
-  marker: url("#circle-marker-mobile");
-}
-</style> -->
