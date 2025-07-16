@@ -26,6 +26,10 @@ import {
   categories3,
   categories5,
 } from "./data/AreaChartData";
+
+function handleChartClick(_: MouseEvent, hoverValues: LineChartItem) {
+  console.log("Chart clicked", hoverValues);
+}
 </script>
 
 <template>
@@ -33,7 +37,7 @@ import {
     <div class="max-w-7xl mx-auto space-y-4">
       <div class="mb-8 space-y-4">
         <h1 class="text-4xl font-bold">Line Chart</h1>
-        <p class="text-lg font-medium text-gray-500">
+        <p class="text-lg text-neutral-400">
           Charts to effectively display trends and changes in data over time by
           connecting data points with lines.
         </p>
@@ -55,6 +59,7 @@ import {
           :x-formatter="(tick: number): string => `${chartData[tick].month}`"
           :curve-type="CurveType.MonotoneX"
           :legend-position="LegendPosition.Top"
+          @click="handleChartClick"
         />
       </Card>
 
