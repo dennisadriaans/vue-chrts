@@ -10,6 +10,10 @@ import {
   VisTooltip,
 } from "@unovis/vue";
 
+const emit = defineEmits<{
+  (e: "click", event: MouseEvent, values?: any): void;
+}>();
+
 const props = defineProps<DonutChartProps>();
 // Provide default for hideTooltip if not set
 
@@ -38,7 +42,10 @@ function generateTooltipContent(d: T): string {
 </script>
 
 <template>
-  <div class="flex items-center justify-center">
+  <div
+    class="flex items-center justify-center"
+    @click="emit('click', $event, hoverValues)"
+  >
     <VisSingleContainer :data="data" :height="height" :margin="{}">
       <VisTooltip
         :horizontal-shift="20"
@@ -64,7 +71,9 @@ function generateTooltipContent(d: T): string {
         <div class="flex items-center">
           <div
             class="w-2 h-2 rounded-full mr-2"
-            :style="`background-color: ${ props.labels[hoverValues.index].color } ;`"
+            :style="`background-color: ${
+              props.labels[hoverValues.index].color
+            } ;`"
           ></div>
           <div>{{ hoverValues.data }}</div>
         </div>

@@ -14,6 +14,10 @@ import {
   categories4,
   categories5,
 } from "./data/AreaChartData";
+
+function handleChartClick(event: MouseEvent, hoverValues: any) {
+  console.log("AreaChart clicked", hoverValues);
+}
 </script>
 
 <template>
@@ -44,6 +48,7 @@ import {
           :y-num-ticks="3"
           :curve-type="CurveType.MonotoneX"
           :legend-position="LegendPosition.Top"
+<<<<<<< HEAD
           :marker-config="{
             desktop: {
               type: 'circle',
@@ -58,6 +63,9 @@ import {
               color: 'black',
             },
           }"
+=======
+          @click="handleChartClick"
+>>>>>>> feature/click-events
         />
       </Card>
 
@@ -75,6 +83,7 @@ import {
           :x-num-ticks="7"
           :x-formatter="(i: number) => AreaChartData2[i].hour"
           :curve-type="CurveType.Basis"
+          @click="handleChartClick"
         />
       </Card>
 
@@ -92,6 +101,7 @@ import {
           :x-num-ticks="7"
           :x-formatter="(i: number) => AreaChartData4[i].month"
           :curve-type="CurveType.Natural"
+          @click="handleChartClick"
         />
       </Card>
 
@@ -109,6 +119,7 @@ import {
           :x-num-ticks="7"
           :x-formatter="(i: number) => AreaChartData4[i].month"
           :curve-type="CurveType.Step"
+          @click="handleChartClick"
         />
       </Card>
 
@@ -125,6 +136,7 @@ import {
           :y-num-ticks="4"
           :x-num-ticks="7"
           :x-formatter="(i: number) => AreaChartData4[i].month"
+          @click="handleChartClick"
         />
       </Card>
     </div>

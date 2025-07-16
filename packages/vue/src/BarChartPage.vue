@@ -157,6 +157,10 @@ const formatCurrency = (tick: number | Date) => {
     maximumFractionDigits: 0,
   }).format(Number(tick))
 }
+
+function handleChartClick(event: MouseEvent, hoverValues: any) {
+  console.log("BarChart clicked", hoverValues);
+}
 </script>
 
 <template>
@@ -185,6 +189,7 @@ const formatCurrency = (tick: number | Date) => {
           :x-formatter="(tick: number, i: number ): string => `${tick}-${i}`"
           :y-formatter="(i: number) => `${i}`"
           :legend-position="LegendPosition.Top"
+          @click="handleChartClick"
         />
       </Card>
 
@@ -204,6 +209,7 @@ const formatCurrency = (tick: number | Date) => {
           :orientation="Orientation.Horizontal"
           :y-formatter="(i: number): string => `${[...RevenueData].reverse()[i]?.month }`"
           :legend-position="LegendPosition.Top"
+          @click="handleChartClick"
         />
       </Card>
 
@@ -223,6 +229,7 @@ const formatCurrency = (tick: number | Date) => {
           :x-formatter="(i: number): string => `${RevenueData[i]?.month }`"
           :y-formatter="(i: number) => i"
           :legend-position="LegendPosition.Top"
+          @click="handleChartClick"
         />
       </Card>
 
@@ -244,6 +251,7 @@ const formatCurrency = (tick: number | Date) => {
           :x-formatter="(i: number): string => console.log(i)"
           :y-formatter="(i: number) => i"
           :legend-position="LegendPosition.Top"
+          @click="handleChartClick"
         />
       </Card>
 
@@ -262,6 +270,7 @@ const formatCurrency = (tick: number | Date) => {
           :x-formatter="(i: number): string => `${RevenueData[i]?.month }`"
           :y-formatter="(i: number) => i"
           :legend-position="LegendPosition.Top"
+          @click="handleChartClick"
         />
       </Card>
 
@@ -284,6 +293,7 @@ const formatCurrency = (tick: number | Date) => {
           :x-formatter="(i: number): string => `${i}`"
           :y-formatter="(i: number): string => `${[...RevenueData].reverse()[i]?.month }`"
           :legend-position="LegendPosition.Top"
+          @click="handleChartClick"
         />
       </Card>
     </div>
@@ -297,22 +307,24 @@ const formatCurrency = (tick: number | Date) => {
         :hide-legend="true"
         :y-formatter="(i: number) => '123'"
         :x-formatter="(i) => '123'"
+        @click="handleChartClick"
       />
     </div>
 
     <div class="max-w-7xl mx-auto">
 
-      <BarChart
-          :data="TrafficData"
-          :height="220"
-          :y-num-ticks="4"
-          :group-padding="0.2"
-           :y-axis="['users']"
-          :categories="TrafficCategories"
-          :x-formatter="xFormatter"
-          :grid-line-y="true"
-          :legend-position="LegendPosition.Bottom"
-        />
+    <BarChart
+        :data="TrafficData"
+        :height="220"
+        :y-num-ticks="4"
+        :group-padding="0.2"
+         :y-axis="['users']"
+        :categories="TrafficCategories"
+        :x-formatter="xFormatter"
+        :grid-line-y="true"
+        :legend-position="LegendPosition.Bottom"
+        @click="handleChartClick"
+      />
     </div>
 
 
@@ -327,6 +339,7 @@ const formatCurrency = (tick: number | Date) => {
         :legend-position="LegendPosition.Top"
         :x-formatter="xFormatterDate"
         :y-formatter="formatCurrency"
+        @click="handleChartClick"
       />
     </div>
   </div>

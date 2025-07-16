@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 import { computed, ref, useSlots, useTemplateRef } from "vue";
 import { CurveType, Position } from "@unovis/ts";
-import { createMarkers, getFirstPropertyValue, markerShape } from "../../utils";
+import { createMarkers, getFirstPropertyValue } from "../../utils";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -16,6 +16,10 @@ import {
 
 import { LegendPosition } from "../../types";
 import { LineChartProps } from "./types";
+
+const emit = defineEmits<{
+  (e: "click", event: MouseEvent, values?: T): void;
+}>();
 
 const props = withDefaults(defineProps<LineChartProps<T>>(), {
   padding: () => {
@@ -45,7 +49,14 @@ const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
 
-function generateTooltipContent(d: T): string {
+
+const defaultColors = Object.values(props.categories).map(
+  (i, index) => `var(--vis-color${index})`
+);
+const color = (key: number) =>
+  Object.values(props.categories)[key].color ?? defaultColors[key];
+
+function generateTooltipContent(): string {
   if (typeof window === "undefined") {
     return "";
   }
@@ -57,18 +68,13 @@ function generateTooltipContent(d: T): string {
 
 function onCrosshairUpdate(d: T): string {
   hoverValues.value = d;
-  return generateTooltipContent(d);
+  return generateTooltipContent();
 }
 
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
 );
 
-const defaultColors = Object.values(props.categories).map(
-  (i, index) => `var(--vis-color${index})`
-);
-const color = (key: number) =>
-  Object.values(props.categories)[key].color ?? defaultColors[key];
 </script>
 
 <template>
@@ -78,6 +84,7 @@ const color = (key: number) =>
       'flex-col-reverse': LegendPositionTop,
       markers: !!props.markerConfig,
     }"
+    @click="emit('click', $event, hoverValues)"
   >
     <VisXYContainer
       :data="data"

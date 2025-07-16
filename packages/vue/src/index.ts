@@ -8,6 +8,7 @@ import App from "./App.vue";
 const app = createApp(App);
 
 const router = createRouter({
+<<<<<<< HEAD
   routes: [
     {
       path: "/",
@@ -42,6 +43,32 @@ const router = createRouter({
   ],
   history: createWebHistory(),
 });
+=======
+    routes: [
+        {
+          path: '/',
+          name: 'Home',
+          component: () => import('./Homepage.vue') 
+        },
+        {
+          path: '/area-charts',
+          name: 'AreaCharts',
+          component: () => import('./AreaChartPage.vue') 
+        },
+        {
+          path: '/line-charts',
+          name: 'LineCharts',
+          component: () => import('./LineChartPage.vue') 
+        },
+        {
+          path: '/bar-charts',
+          name: 'BarCharts',
+          component: () => import('./BarChartPage.vue') 
+        }
+      ],
+    history: createWebHistory(),
+  });
+>>>>>>> feature/click-events
 
 app.use(router);
 
