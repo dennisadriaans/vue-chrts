@@ -67,6 +67,7 @@ const LegendPositionTop = computed(
   <div
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': LegendPositionTop }"
+    @click="emit('click', $event, hoverValues)"
   >
     <VisXYContainer :data="data" :padding="padding" :height="height">
       <VisTooltip

@@ -13,8 +13,13 @@ import {
 } from "@unovis/vue";
 
 import Tooltip from "../Tooltip.vue";
+
 import { LegendPosition } from "../../types";
 import { BarChartProps } from "./types";
+
+const emit = defineEmits<{
+  (e: "click", event: MouseEvent, values?: T): void;
+}>();
 
 const props = withDefaults(defineProps<BarChartProps<T>>(), {
   orientation: Orientation.Vertical,
@@ -32,6 +37,7 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   yNumTicks: (props) =>
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
+  hideTooltip: false,
 });
 
 const slots = useSlots();
@@ -127,6 +133,7 @@ const bar2 = [
   <div
     class="flex flex-col space-y-4"
     :class="{ 'flex-col-reverse': LegendPositionTop }"
+    @click="emit('click', $event, hoverValues)"
   >
     <VisXYContainer :padding="padding" :height="height">
       <VisTooltip
@@ -217,7 +224,11 @@ const bar2 = [
           :data="hoverValues"
           :categories="props.categories"
           :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
-          :yFormatter="props.orientation === Orientation.Horizontal ? props.xFormatter : props.yFormatter"
+          :yFormatter="
+            props.orientation === Orientation.Horizontal
+              ? props.xFormatter
+              : props.yFormatter
+          "
         />
       </slot>
     </div>
