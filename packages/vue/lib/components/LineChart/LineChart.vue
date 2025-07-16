@@ -17,6 +17,10 @@ import {
 import { LegendPosition } from "../../types";
 import { LineChartProps } from "./types";
 
+const emit = defineEmits<{
+  (e: "click", event: MouseEvent, values?: T): void;
+}>();
+
 const props = withDefaults(defineProps<LineChartProps<T>>(), {
   padding: () => {
     return {
@@ -75,6 +79,7 @@ const color = (key: number) =>
       'flex-col-reverse': LegendPositionTop,
       markers: !!props.markerConfig,
     }"
+    @click="emit('click', $event, hoverValues)"
   >
     <VisXYContainer
       :data="data"
