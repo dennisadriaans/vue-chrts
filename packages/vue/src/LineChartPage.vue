@@ -26,7 +26,6 @@ import {
   categories3,
   categories5,
 } from "./data/AreaChartData";
-import { MarkerConfig } from "../lib/components/LineChart/types";
 </script>
 
 <template>

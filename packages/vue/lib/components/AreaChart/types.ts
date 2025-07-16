@@ -46,14 +46,14 @@ export interface AreaChartProps<T> {
    * @param {(number[]|Date[])} ticks - An array of all tick values for the x-axis.
    * @returns {string} The formatted string representation of the tick.
    */
-  xFormatter?: axisFormatter<T>;
+  xFormatter?: axisFormatter;
   /**
    * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the y-axis.
    * @param {number} i - The index of the tick in the `ticks` array.
    * @param {(number[]|Date[])} ticks - An array of all tick values for the y-axis.
    * @returns {string} The formatted string representation of the tick.
    */
-  yFormatter?: axisFormatter<T>;
+  yFormatter?: axisFormatter;
   /**
    * The type of curve to use for the area chart lines.
    * See `CurveType` for available options.
