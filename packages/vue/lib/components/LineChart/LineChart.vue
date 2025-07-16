@@ -34,6 +34,9 @@ const props = withDefaults(defineProps<LineChartProps<T>>(), {
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   yNumTicks: (props) =>
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
+  crosshairConfig: () => ({
+    color: "#666",
+  }),
   lineWidth: 2,
 });
 
@@ -126,7 +129,7 @@ const color = (key: number) =>
       />
       <VisCrosshair
         v-if="!hideTooltip"
-        color="#666"
+        v-bind="crosshairConfig"
         :template="onCrosshairUpdate"
       />
     </VisXYContainer>

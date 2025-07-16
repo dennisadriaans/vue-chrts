@@ -61,6 +61,10 @@ function handleChartClick(_: MouseEvent, hoverValues?: LineChartItem) {
           :legend-position="LegendPosition.Top"
           :line-width="5"
           :line-dash-array="[5, 5]"
+           :crosshair-config="{
+            color: 'red',
+            strokeColor: 'yellow'
+          }"
           :marker-config="{
             desktop: {
               type: 'circle',

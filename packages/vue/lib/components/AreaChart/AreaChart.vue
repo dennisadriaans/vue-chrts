@@ -37,10 +37,10 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
     props.data.length > DEFAULT_TICK_COUNT
       ? DEFAULT_TICK_COUNT / DEFAULT_TICK_DIVISOR
       : props.data.length - 1,
-  lineWidth: 2,
   crosshairConfig: () => ({
     color: "#666",
   }),
+  lineWidth: 2,
 });
 
 const slots = useSlots();

@@ -48,6 +48,10 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
           :y-num-ticks="3"
           :curve-type="CurveType.MonotoneX"
           :legend-position="LegendPosition.Top"
+          :crosshair-config="{
+            color: 'red',
+            strokeColor: 'yellow'
+          }"
           :marker-config="{
             desktop: {
               type: 'circle',

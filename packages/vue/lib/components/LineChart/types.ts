@@ -64,7 +64,7 @@ export interface LineChartProps<T> {
    * See `CurveType` for available options.
    */
   curveType?: CurveType;
-    /**
+  /**
    * The width of the line in pixels. Default is 2px.
    */
   lineWidth?: number;
