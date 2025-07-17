@@ -94,3 +94,26 @@ export function createMarkers(markerConfig: Record<string, MarkerConfig>) {
     })
     .join("\n");
 }
+
+function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export const flattenData = (data: T[]) => {
+  const keys = Object.keys(data[0]).filter((key) => key !== "month");
+
+  const states = Object.keys((data[0] as any)[keys[0]]);
+
+  return data.map((entry: any) => {
+    return {
+      month: entry.month,
+      ...keys
+        .flatMap((key) =>
+          states.map((state) => ({
+            [`${key}${capitalize(state)}`]: entry[key][state],
+          }))
+        )
+        .reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+  });
+};
