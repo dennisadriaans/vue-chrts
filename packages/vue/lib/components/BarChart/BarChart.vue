@@ -34,9 +34,9 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
       left: 5,
     };
   },
-  xNumTicks: (props) =>
+  xNumTicks: (props: BarChartProps<T>) =>
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
-  yNumTicks: (props) =>
+  yNumTicks: (props: BarChartProps<T>) =>
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   hideTooltip: false,
 });
@@ -61,6 +61,7 @@ const stackedGroupedData = useStackedGrouped({
   data: props.data,
   categories: props.categories,
   stackAndGrouped: props.stackAndGrouped,
+  xAxis: props.xAxis,
 });
 
 const LegendPositionTop = computed(
@@ -81,8 +82,6 @@ function generateTooltipContent(d: T): string {
   }
   return "";
 }
-
-
 </script>
 
 <template>
@@ -107,8 +106,8 @@ function generateTooltipContent(d: T): string {
           :y="stackedGroupedData.bars[state]"
           :color="stackedGroupedData.colorFunctions[state]"
           :rounded-corners="radius ?? 0"
-          :group-padding="0.9"
-          :bar-padding="0.7"
+          :group-padding="groupPadding ?? 0"
+          :bar-padding="barPadding ?? 0.2"
           :orientation="orientation ?? Orientation.Vertical"
         />
       </template>

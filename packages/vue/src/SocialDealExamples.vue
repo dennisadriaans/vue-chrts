@@ -91,6 +91,7 @@ const yFormatter = (i: number) => i.toString();
       :data="RevenueData"
       :height="400"
       :categories="RevenueCategoriesMultple"
+      x-axis="month"
       :y-axis="['desktop', 'mobile', 'android', 'ios']"
       :group-padding="0.5"
       :bar-padding="0.5"
@@ -102,9 +103,9 @@ const yFormatter = (i: number) => i.toString();
       :hide-legend="false"
       :y-grid-line="true"
     >
-    <template #tooltip="values">
+      <!-- <template #tooltip="values">
       {{ values }}
-    </template>
-  </BarChart>
+    </template> -->
+    </BarChart>
   </div>
 </template>

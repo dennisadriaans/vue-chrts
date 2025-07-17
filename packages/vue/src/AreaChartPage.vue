@@ -10,7 +10,6 @@ interface ChartConfig {
   id: number;
   title: string;
   curveType: CurveType;
-
   xGridLine: boolean;
   yGridLine: boolean;
   yDomainLine: boolean;

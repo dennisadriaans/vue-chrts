@@ -5,8 +5,18 @@ import Button from "./elements/Button.vue";
 import { VisitorsData, VisitorsCartegories } from "./data/VisitorsData";
 import { LegendPosition, Orientation } from "./../lib";
 import { ref } from "vue";
+import { BarChartProps } from "../lib/types";
 
-const RevenueData = [
+type DataProps = {
+  month?: string;
+  desktop?: number;
+  mobile?: number;
+  date?: string;
+  value?: number;
+  visitors?: number;
+};
+
+const RevenueData: DataProps[] = [
   { month: "January", desktop: 186, mobile: 80 },
   { month: "February", desktop: 305, mobile: 200 },
   { month: "March", desktop: 237, mobile: 120 },
@@ -15,7 +25,7 @@ const RevenueData = [
   { month: "June", desktop: 214, mobile: 140 },
 ];
 
-const RevenueDataLong = [
+const RevenueDataLong: DataProps[] = [
   { date: "16/12/25", value: 60000 },
   { date: "08/12/25", value: 40000 },
   { date: "30/11/25", value: 40000 },
@@ -67,118 +77,142 @@ const RevenueDataLong = [
 ].reverse();
 
 const RevenueCategories = {
-  value: { name: "value", color: '#22c55e' },
+  value: { name: "value", color: "#22c55e" },
 };
 const RevenueCategoriesMobile = {
-  mobile: { name: "Mobile", color: '#156F36' },
+  mobile: { name: "Mobile", color: "#156F36" },
 };
 const RevenueCategoriesMultiple = {
-  desktop: { name: "Desktop", color: '#156F36' },
-  mobile: { name: "Mobile", color: '#16a34a' },
+  desktop: { name: "Desktop", color: "#156F36" },
+  mobile: { name: "Mobile", color: "#16a34a" },
 };
 
-const barChartExamples = [
+type PreviewProps = { id: number; title: string; description: string };
+
+type BarChartExample = Partial<BarChartProps<DataProps>> & PreviewProps;
+
+const barChartExamples: BarChartExample[] = [
   {
     id: 1,
-    title: 'Vertical Bar Chart (Grouped)',
-    description: 'Compare desktop and mobile revenue per month, grouped by device.',
+    title: "Vertical Bar Chart (Grouped)",
+    description:
+      "Compare desktop and mobile revenue per month, grouped by device.",
     data: RevenueData,
     categories: RevenueCategoriesMultiple,
-    yAxis: ['desktop', 'mobile'],
+    yAxis: ["desktop", "mobile"],
     orientation: undefined,
     stacked: false,
     groupPadding: 0,
     barPadding: 0.2,
-    xFormatter: (tick: number, i?: number) => `${RevenueData[typeof i !== 'undefined' ? i : tick]?.month}`,
-    yFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
+    xFormatter: (tick: number, i?: number) =>
+      `${RevenueData[typeof i !== "undefined" ? i : tick]?.month}`,
+    yFormatter: (tick: number, i?: number) =>
+      `${typeof i !== "undefined" ? i : tick}`,
   },
   {
     id: 2,
-    title: 'Vertical Bar Chart (Single Series)',
-    description: 'Show only desktop revenue per month.',
+    title: "Vertical Bar Chart (Single Series)",
+    description: "Show only desktop revenue per month.",
     data: RevenueData,
     categories: RevenueCategoriesMultiple,
-    yAxis: ['desktop'],
+    yAxis: ["desktop"],
     orientation: undefined,
     stacked: false,
     groupPadding: undefined,
     barPadding: undefined,
-    xFormatter: (tick: number, i?: number) => `${tick}${typeof i !== 'undefined' ? '-' + i : ''}`,
-    yFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
+    xFormatter: (tick: number, i?: number) =>
+      `${tick}${typeof i !== "undefined" ? "-" + i : ""}`,
+    yFormatter: (tick: number, i?: number) =>
+      `${typeof i !== "undefined" ? i : tick}`,
   },
   {
     id: 3,
-    title: 'Horizontal Bar Chart (Single Series)',
-    description: 'Show mobile revenue per month, horizontal orientation.',
+    title: "Horizontal Bar Chart (Single Series)",
+    description: "Show mobile revenue per month, horizontal orientation.",
     data: [...RevenueData].reverse(),
     categories: RevenueCategoriesMobile,
-    yAxis: ['desktop'],
+    yAxis: ["desktop"],
     orientation: Orientation.Horizontal,
     stacked: false,
     groupPadding: undefined,
     barPadding: 0,
     xNumTicks: 6,
-    xFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
-    yFormatter: (tick: number, i?: number) => `${[...RevenueData].reverse()[typeof i !== 'undefined' ? i : tick]?.month}`,
+    xFormatter: (tick: number, i?: number) =>
+      `${typeof i !== "undefined" ? i : tick}`,
+    yFormatter: (tick: number, i?: number) =>
+      `${
+        [...RevenueData].reverse()[typeof i !== "undefined" ? i : tick]?.month
+      }`,
   },
   {
     id: 4,
-    title: 'Stacked Bar Chart (Vertical)',
-    description: 'Stack desktop and mobile revenue for each month.',
+    title: "Stacked Bar Chart (Vertical)",
+    description: "Stack desktop and mobile revenue for each month.",
     data: RevenueData,
     categories: RevenueCategoriesMultiple,
-    yAxis: ['desktop', 'mobile'],
+    yAxis: ["desktop", "mobile"],
     orientation: undefined,
     stacked: true,
     groupPadding: 0,
     barPadding: 0.2,
     xNumTicks: 6,
-    xFormatter: (tick: number, i?: number) => `${RevenueData[typeof i !== 'undefined' ? i : tick]?.month}`,
-    yFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
+    xFormatter: (tick: number, i?: number) =>
+      `${RevenueData[typeof i !== "undefined" ? i : tick]?.month}`,
+    yFormatter: (tick: number, i?: number) =>
+      `${typeof i !== "undefined" ? i : tick}`,
   },
   {
     id: 5,
-    title: 'Stacked Bar Chart (Horizontal)',
-    description: 'Stack desktop and mobile revenue for each month, horizontal orientation.',
+    title: "Stacked Bar Chart (Horizontal)",
+    description:
+      "Stack desktop and mobile revenue for each month, horizontal orientation.",
     data: [...RevenueData].reverse(),
     categories: RevenueCategoriesMultiple,
-    yAxis: ['desktop', 'mobile'],
+    yAxis: ["desktop", "mobile"],
     orientation: Orientation.Horizontal,
     stacked: true,
     groupPadding: 0,
     barPadding: 0.2,
     xNumTicks: 6,
-    xFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
-    yFormatter: (tick: number, i?: number) => `${[...RevenueData].reverse()[typeof i !== 'undefined' ? i : tick]?.month}`,
+    xFormatter: (tick: number, i?: number) =>
+      `${typeof i !== "undefined" ? i : tick}`,
+    yFormatter: (tick: number, i?: number) =>
+      `${
+        [...RevenueData].reverse()[typeof i !== "undefined" ? i : tick]?.month
+      }`,
   },
   {
     id: 6,
-    title: 'Long Data Bar Chart',
-    description: 'Show a long time series of revenue data.',
+    title: "Long Data Bar Chart",
+    description: "Show a long time series of revenue data.",
     data: RevenueDataLong,
     categories: RevenueCategories,
-    yAxis: ['value'],
+    yAxis: ["value"],
     orientation: undefined,
     stacked: false,
     groupPadding: undefined,
     barPadding: undefined,
-    xFormatter: (tick: number, i?: number) => `${RevenueDataLong[typeof i !== 'undefined' ? i : tick]?.date}`,
-    yFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
+    xFormatter: (tick: number, i?: number) =>
+      `${RevenueDataLong[typeof i !== "undefined" ? i : tick]?.date}`,
+    yFormatter: (tick: number, i?: number) =>
+      `${typeof i !== "undefined" ? i : tick}`,
   },
   {
     id: 7,
-    title: 'Visitors Bar Chart',
-    description: 'Show visitors data for the first 6 months.',
+    title: "Visitors Bar Chart",
+    description: "Show visitors data for the first 6 months.",
     data: VisitorsData.slice(0, 6),
     categories: VisitorsCartegories,
-    yAxis: ['visitors'],
+    yAxis: ["visitors"],
     orientation: undefined,
     stacked: false,
     groupPadding: undefined,
     barPadding: undefined,
     xNumTicks: 6,
-    xFormatter: (tick: number, i?: number) => `${RevenueData[typeof i !== 'undefined' ? i : tick]?.month}`,
-    yFormatter: (tick: number, i?: number) => `${typeof i !== 'undefined' ? i : tick}`,
+    xFormatter: (tick: number, i?: number) =>
+      `${RevenueData[typeof i !== "undefined" ? i : tick]?.month}`,
+    yFormatter: (tick: number, i?: number) =>
+      `${typeof i !== "undefined" ? i : tick}`,
   },
 ];
 
@@ -192,12 +226,18 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
     <div class="mb-8 text-left mt-4 space-y-2">
       <h1 class="text-3xl font-bold">Bar Chart Examples</h1>
       <p class="text-lg dark:text-neutral-400 text-neutral-600">
-        Explore different Bar Chart configurations for your Vue or Nuxt projects.
+        Explore different Bar Chart configurations for your V
       </p>
     </div>
+
     <div class="max-w-screen-2xl mx-auto">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
-        <Card v-for="example in barChartExamples" :key="example.id">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch"
+      >
+        <Card
+          v-for="(example, exampleKey) in barChartExamples"
+          :key="exampleKey"
+        >
           <div class="flex items-center justify-between">
             <h2 class="heading-2">{{ example.title }}</h2>
             <Button
