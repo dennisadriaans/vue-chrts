@@ -99,7 +99,7 @@ function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export const flattenData = (data: T[], xAxis: string) => {
+export const flattenData = (data: any[], xAxis: string) => {
   const keys = Object.keys(data[0]).filter((key) => key !== xAxis);
 
   const states = Object.keys((data[0] as any)[keys[0]]);
