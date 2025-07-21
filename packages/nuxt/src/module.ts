@@ -42,18 +42,20 @@ export default defineNuxtModule<ModuleOptions>({
     include: [],
   },
   async setup(options, nuxt) {
+    nuxt.options.vite = nuxt.options.vite || {};
     nuxt.options.vite.optimizeDeps = nuxt.options.vite.optimizeDeps || {};
-    nuxt.options.vite.optimizeDeps.include =
-      nuxt.options.vite.optimizeDeps.include || [];
-
-    nuxt.options.vite.optimizeDeps.include = [
-      "@unovis/ts",
-      ...nuxt.options.vite.optimizeDeps.include,
-    ];
-    nuxt.options.build.transpile = [
-      "@unovis/ts",
-      ...nuxt.options.build.transpile,
-    ];
+    nuxt.options.vite.optimizeDeps.include = nuxt.options.vite.optimizeDeps.include || [];
+    
+    if (!nuxt.options.vite.optimizeDeps.include.includes('@unovis/ts')) {
+      nuxt.options.vite.optimizeDeps.include.push('@unovis/ts');
+    }
+    
+    // nuxt.options.build = nuxt.options.build || {};
+    // nuxt.options.build.transpile = nuxt.options.build.transpile || [];
+    
+    // if (!nuxt.options.build.transpile.includes('@unovis/ts')) {
+    //   nuxt.options.build.transpile.push('@unovis/ts');
+    // }
 
     const { resolve } = createResolver(import.meta.url);
 
