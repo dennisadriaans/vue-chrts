@@ -1,67 +1,72 @@
-import { defineNuxtModule, createResolver } from "@nuxt/kit";
-import { resolveComponents, resolveImports } from "./core";
+import { defineNuxtModule, addComponent, createResolver } from '@nuxt/kit'
+import { resolveComponents } from './runtime/core/components'
 
 export interface ModuleOptions {
   /**
    * Prefix for component names
    * @default ''
    */
-  prefix?: string;
+  prefix?: string
 
   /**
    * Register global components
    * @default true
    */
-  global?: boolean;
+  global?: boolean
 
   /**
    * Use auto-imports (recommended)
    * @default true
    */
-  autoImports?: boolean;
+  autoImports?: boolean
 
   /**
    * Components to include (empty array means all components)
    * @default []
    */
-  include?: string[];
+  include?: string[]
 }
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: "nuxt-charts",
-    configKey: "nuxtCharts",
+    name: 'nuxt-charts',
+    configKey: 'nuxtCharts',
     compatibility: {
-      nuxt: ">=3",
+      nuxt: '>=3',
     },
   },
   defaults: {
-    prefix: "",
+    prefix: '',
     global: true,
     autoImports: true,
     include: [],
   },
   async setup(options, nuxt) {
-    nuxt.options.vite = nuxt.options.vite || {};
-    nuxt.options.vite.optimizeDeps = nuxt.options.vite.optimizeDeps || {};
-    nuxt.options.vite.optimizeDeps.include = nuxt.options.vite.optimizeDeps.include || [];
-    
-    if (!nuxt.options.vite.optimizeDeps.include.includes('@unovis/ts')) {
-      nuxt.options.vite.optimizeDeps.include.push('@unovis/ts');
-    }
-    
-    // nuxt.options.build = nuxt.options.build || {};
-    // nuxt.options.build.transpile = nuxt.options.build.transpile || [];
-    
-    // if (!nuxt.options.build.transpile.includes('@unovis/ts')) {
-    //   nuxt.options.build.transpile.push('@unovis/ts');
-    // }
+    const { resolve } = createResolver(import.meta.url)
 
-    const { resolve } = createResolver(import.meta.url);
+    const runtimePath = resolve('./runtime')
 
-    const runtimePath = resolve("./runtime/vue-chrts");
+    // Register custom LineChart component
+    resolveComponents(options, runtimePath)
 
-    resolveImports(options, runtimePath);
-    resolveComponents(options, runtimePath);
+    // Register @unovis/vue components that LineChart depends on
+    const availableComponents = [
+      {
+        name: 'VisXYContainer',
+        export: 'VisXYContainer',
+        filePath: '@unovis/vue',
+      },
+      { name: 'VisLine', export: 'VisLine', filePath: '@unovis/vue' },
+      { name: 'VisAxis', export: 'VisAxis', filePath: '@unovis/vue' },
+    ]
+
+    availableComponents.forEach((component) => {
+      addComponent({
+        name: component.name,
+        export: component.export,
+        filePath: component.filePath,
+        mode: 'client',
+      })
+    })
   },
-});
+})

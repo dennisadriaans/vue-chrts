@@ -1,109 +1,84 @@
-# nuxt-charts
+<!--
+Get your module up and running quickly.
+
+Find and replace all on all files (CMD+SHIFT+F):
+- Name: My Module
+- Package name: my-module
+- Description: My new Nuxt module
+-->
+
+# My Module
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![License][license-src]][license-href]
+[![Nuxt][nuxt-src]][nuxt-href]
 
-Nuxt module for [vue-chrts](https://github.com/dennisadriaans/vue-chrts/tree/main/packages/vue)
+My new Nuxt module for doing amazing things.
+
+- [✨ &nbsp;Release Notes](/CHANGELOG.md)
+<!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/my-module?file=playground%2Fapp.vue) -->
+<!-- - [📖 &nbsp;Documentation](https://example.com) -->
 
 ## Features
 
-- 📊 Use beautiful chart components in your Nuxt applications
-- 🔄 Auto-imports for all chart components
-- 📊 Multiple types: Line, Bar, Area, Donut
-- 🎨 Easily customizable
-- 💡 Simple, intuitive API
-- 🚀 Built with Vue 3 and TypeScript
+<!-- Highlight some of the features your module provide here -->
+- ⛰ &nbsp;Foo
+- 🚠 &nbsp;Bar
+- 🌲 &nbsp;Baz
 
-## Installation
+## Quick Setup
+
+Install the module to your Nuxt application with one command:
 
 ```bash
-# npm
-npm install nuxt-charts
-
-# yarn
-yarn add nuxt-charts
-
-# pnpm
-pnpm add nuxt-charts
+npx nuxi module add my-module
 ```
 
-## Usage
+That's it! You can now use My Module in your Nuxt app ✨
 
-Add the module to your Nuxt config:
 
-```ts
-// nuxt.config.ts
-export default defineNuxtConfig({
-  modules: ["nuxt-charts"]
-});
-```
+## Contribution
 
-Then use the components in your Nuxt application:
+<details>
+  <summary>Local development</summary>
+  
+  ```bash
+  # Install dependencies
+  npm install
+  
+  # Generate type stubs
+  npm run dev:prepare
+  
+  # Develop with the playground
+  npm run dev
+  
+  # Build the playground
+  npm run dev:build
+  
+  # Run ESLint
+  npm run lint
+  
+  # Run Vitest
+  npm run test
+  npm run test:watch
+  
+  # Release new version
+  npm run release
+  ```
 
-```vue
-<template>
-  <div class="chart-wrapper">
-  <LineChart
-    :data="data"
-    :categories="categories"
-    :height="300"
-    :xFormatter="xFormatter"
-    xLabel="Month"
-    yLabel="Amount"
-  />
-  </div>
-</template>
+</details>
 
-<script setup>
-import { LineChart } from 'vue-chrts';
-
-const data = [
-  { month: 'Jan', sales: 100, profit: 50 },
-  { month: 'Feb', sales: 120, profit: 55 },
-  { month: 'Mar', sales: 180, profit: 80 },
-  { month: 'Apr', sales: 110, profit: 40 },
-  { month: 'May', sales: 90, profit: 30 },
-];
-
-const categories = {
-  sales: {
-    name: 'Sales',
-    color: '#3b82f6'
-  },
-  profit: {
-    name: 'Profit', 
-    color: '#10b981'
-  }
-};
-
-const xFormatter = (i) => data[i].month;
-</script>
-```
-
-## Available Components
-
-- `AreaChart` - Area chart
-- `AreaStackedChart` - Stacked area chart
-- `LineChart` - Line chart
-- `BarChart` - Bar chart
-- `DonutChart` - Donut chart
-
-## Auto-imported Types
-
-The following types are auto-imported:
-
-- `LegendPosition`
-- `CurveType`
-- `Orientation`
-- `BulletLegendItemInterface`
-
-## License
-
-MIT
 
 <!-- Badges -->
+[npm-version-src]: https://img.shields.io/npm/v/my-module/latest.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-version-href]: https://npmjs.com/package/my-module
 
-[npm-version-src]: https://img.shields.io/npm/v/nuxt-charts/latest.svg?style=flat&colorA=18181B&colorB=28CF8D
-[npm-version-href]: https://npmjs.com/package/nuxt-charts
-[npm-downloads-src]: https://img.shields.io/npm/dm/nuxt-charts.svg?style=flat&colorA=18181B&colorB=28CF8D
-[npm-downloads-href]: https://npmjs.com/package/nuxt-charts
+[npm-downloads-src]: https://img.shields.io/npm/dm/my-module.svg?style=flat&colorA=020420&colorB=00DC82
+[npm-downloads-href]: https://npm.chart.dev/my-module
+
+[license-src]: https://img.shields.io/npm/l/my-module.svg?style=flat&colorA=020420&colorB=00DC82
+[license-href]: https://npmjs.com/package/my-module
+
+[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
+[nuxt-href]: https://nuxt.com

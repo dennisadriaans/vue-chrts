@@ -1,19 +1,33 @@
 {
-  "name": "nuxt-charts",
-  "version": "0.2.0-test.23",
-  "description": "Nuxt module for vue-chrts",
+  "name": "my-module",
+  "version": "1.0.0",
+  "description": "My new Nuxt module",
+  "repository": "your-org/my-module",
   "license": "MIT",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.mts",
+      "import": "./dist/module.mjs"
+    }
+  },
   "main": "./dist/module.mjs",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/types.d.mts"
+      ]
+    }
+  },
   "files": [
     "dist"
   ],
   "scripts": {
     "prepack": "nuxt-module-build build",
-    "dev": "nuxi dev playground",
+    "dev": "npm run dev:prepare && nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-    "release": "npm run prepack && commit-and-tag-version && npm publish",
+    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
@@ -21,21 +35,20 @@
   },
   "dependencies": {
     "@nuxt/kit": "^4.0.1",
-    "@unovis/ts": "^1.5.2",
-    "@unovis/vue": "^1.5.2",
-    "vue-chrts": "0.2.0-beta.2"
+    "@unovis/vue": "^1.5.2"
   },
   "devDependencies": {
-    "@nuxt/eslint": "1.7.0",
-    "@nuxt/eslint-config": "^1.7.0",
+    "@nuxt/devtools": "^2.6.2",
+    "@nuxt/eslint-config": "^1.6.0",
     "@nuxt/module-builder": "^1.0.1",
     "@nuxt/schema": "^4.0.1",
-    "@types/node": "^24.1.0",
+    "@nuxt/test-utils": "^3.19.2",
+    "@types/node": "latest",
     "changelogen": "^0.6.2",
-    "commit-and-tag-version": "^12.5.1",
     "eslint": "^9.31.0",
     "nuxt": "^4.0.1",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.4"
+    "typescript": "~5.8.3",
+    "vitest": "^3.2.4",
+    "vue-tsc": "^3.0.3"
   }
 }
