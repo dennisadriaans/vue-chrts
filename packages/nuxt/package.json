@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@nuxt/kit": "^4.0.1",
+    "@unovis/ts": "^1.5.2",
     "@unovis/vue": "^1.5.2"
   },
   "devDependencies": {
@@ -46,7 +47,7 @@
     "@types/node": "latest",
     "changelogen": "^0.6.2",
     "eslint": "^9.31.0",
-    "nuxt": "^4.0.1",
+    "nuxt": "3.17.6",
     "typescript": "~5.8.3",
     "vitest": "^3.2.4",
     "vue-tsc": "^3.0.3"

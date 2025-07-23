@@ -1,4 +1,9 @@
-import { defineNuxtModule, addComponent, createResolver } from '@nuxt/kit'
+import {
+  defineNuxtModule,
+  addComponent,
+  createResolver,
+  addImports,
+} from '@nuxt/kit'
 import { resolveComponents } from './runtime/core/components'
 
 export interface ModuleOptions {
@@ -46,9 +51,26 @@ export default defineNuxtModule<ModuleOptions>({
 
     const runtimePath = resolve('./runtime')
 
+    // Optimize @unovis/ts for Vite
+
+
     // Register custom LineChart component
     resolveComponents(options, runtimePath)
 
+    const requiredImports = [
+      {
+        name: 'BulletLegendItemInterface',
+        from: '@unovis/ts',
+      },
+      {
+        name: 'CurveType',
+        from: '@unovis/ts',
+      },
+      {
+        name: 'Position',
+        from: '@unovis/ts',
+      },
+    ]
     // Register @unovis/vue components that LineChart depends on
     const availableComponents = [
       {
@@ -58,6 +80,13 @@ export default defineNuxtModule<ModuleOptions>({
       },
       { name: 'VisLine', export: 'VisLine', filePath: '@unovis/vue' },
       { name: 'VisAxis', export: 'VisAxis', filePath: '@unovis/vue' },
+      {
+        name: 'VisBulletLegend',
+        export: 'VisBulletLegend',
+        filePath: '@unovis/vue',
+      },
+      { name: 'VisCrosshair', export: 'VisCrosshair', filePath: '@unovis/vue' },
+      { name: 'VisTooltip', export: 'VisTooltip', filePath: '@unovis/vue' },
     ]
 
     availableComponents.forEach((component) => {
@@ -67,6 +96,10 @@ export default defineNuxtModule<ModuleOptions>({
         filePath: component.filePath,
         mode: 'client',
       })
+    })
+
+    requiredImports.forEach((imp) => {
+      addImports({ name: imp.name, as: imp.name, from: imp.from })
     })
   },
 })
