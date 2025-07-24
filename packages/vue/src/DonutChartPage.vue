@@ -28,6 +28,8 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
           :height="220"
           :labels="DonutCategories"
           :radius="80"
+          :pad-angle="0.5"
+          :arc-width="40"
           @click="handleChartClick"
         />
       </Card>

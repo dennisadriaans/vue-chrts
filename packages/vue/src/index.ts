@@ -30,6 +30,11 @@ const router = createRouter({
           component: () => import('./BarChartPage.vue') 
         },
         {
+          path: '/donut-charts',
+          name: 'DonutCharts',
+          component: () => import('./DonutChartPage.vue') 
+        },
+        {
           path: '/social-deal-examples',
           name: 'SocialDealExamples',
           component: () => import('./SocialDealExamples.vue') 
