@@ -142,7 +142,50 @@ const columns = [
             :x-formatter="(i: number): string => `${InvestmentData[i]?.date}`"
             :curve-type="CurveType.MonotoneX"
             :legend-position="LegendPosition.Top"
-          />
+          >
+            <template #tooltip="{ values }">
+              <div
+                class="w-60 rounded-tremor-default border border-tremor-border bg-tremor-background px-4 py-3 text-tremor-default shadow-tremor-dropdown dark:border-dark-tremor-border dark:bg-dark-tremor-background dark:shadow-dark-tremor-dropdown"
+              >
+                <p class="flex items-center justify-between">
+                  <span class="font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                    Date
+                  </span>
+                  <span class="text-tremor-content dark:text-dark-tremor-content">
+                    {{ values?.date || '' }}
+                  </span>
+                </p>
+                <div class="my-3 border-t border-tremor-border dark:border-dark-tremor-border"></div>
+                <div class="space-y-2">
+                  <div
+                    v-for="(cat, idx) in Object.keys(categories)"
+                    :key="cat"
+                    class="flex items-center space-x-2.5"
+                  >
+                    <span
+                      class="inline-block rounded-full"
+                      :style="{
+                        width: '14px',
+                        height: '14px',
+                        backgroundColor: categories[cat]?.color || `var(--vis-color${idx})`,
+                      }"
+                      aria-hidden="true"
+                    ></span>
+                    <div class="flex w-full justify-between">
+                      <span class="text-tremor-content dark:text-dark-tremor-content-emphasis">
+                        {{ categories[cat]?.name }}
+                      </span>
+                      <div class="flex items-center space-x-1">
+                        <span class="font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                          {{ values?.[cat] }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </BaseLine>
         </Card>
       </div>
 
@@ -299,7 +342,7 @@ const columns = [
               :minMaxTicksOnly="true"
               :y-formatter="(i: number) => i"
               :x-formatter="(i: number): string => RevenueData[i]?.date"
-                @click="(e, t) => console.log(t)"
+              @click="(e, t) => console.log(t)"
             />
           </Card>
         </div>
