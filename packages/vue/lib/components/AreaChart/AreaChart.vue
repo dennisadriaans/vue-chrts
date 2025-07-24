@@ -138,7 +138,7 @@ function onCrosshairUpdate(d: T): string {
           :color="colors[index]"
           :curve-type="curveType ?? CurveType.MonotoneX"
           :line-width="lineWidth"
-          :lineDashArray="lineDashArray"
+          :lineDashArray="lineDashArray ? lineDashArray[index] : undefined"
         />
       </template>
 

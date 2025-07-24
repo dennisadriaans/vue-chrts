@@ -101,7 +101,7 @@ const color = (key: number) =>
           :color="color(iKey)"
           :curve-type="curveType ?? CurveType.MonotoneX"
           :line-width="lineWidth"
-          :lineDashArray="lineDashArray"
+          :lineDashArray="lineDashArray ? lineDashArray[iKey] : undefined"
         />
       </template>
       <VisAxis

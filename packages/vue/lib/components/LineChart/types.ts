@@ -71,7 +71,7 @@ export interface LineChartProps<T> {
   /**
    * Line dash array, see SVG's stroke-dasharray. Default: `undefined`
    */
-  lineDashArray?: number[];
+  lineDashArray?: number[][];
   /**
    * The desired number of ticks on the x-axis.
    */

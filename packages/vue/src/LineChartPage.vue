@@ -40,6 +40,7 @@ interface ChartConfig {
   minMaxTicksOnly: boolean;
   hideLegend: boolean;
   markerConfig?: Record<string, MarkerConfig>;
+  lineDashArray?: number[][];
 }
 
 const chartConfigs: ChartConfig[] = [
@@ -58,6 +59,11 @@ const chartConfigs: ChartConfig[] = [
     id: 1,
     title: "Spline Legend",
     curveType: CurveType.Natural,
+
+    lineDashArray: [
+      [0, 0],
+      [5, 5]
+    ],
 
     xGridLine: false,
     yGridLine: true,
