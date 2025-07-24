@@ -664,6 +664,32 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
       </div>
     </div>
 
+  <AreaChart
+    :data="AreaChartData1"
+    :height="220"
+    :categories="categories1"
+    :curve-type="CurveType.StepAfter"
+    :x-grid-line="false"
+    :y-grid-line="false"
+    :y-domain-line="false"
+    :x-domain-line="true"
+    :min-max-ticks-only="false"
+    :hide-legend="false"
+    :marker-config="{
+      desktop: {
+        type: 'circle',
+        size: 6,
+        strokeWidth: 5,
+        color: '#156F36',
+      }
+    }"
+    :crosshair-config="{
+      color: 'red',
+      strokeColor: 'blue',
+    }"
+    @click="handleChartClick"
+  />
+
     <!-- Use a container div for the grid to apply potential flex properties -->
     <div class="max-w-screen-2xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
       <div

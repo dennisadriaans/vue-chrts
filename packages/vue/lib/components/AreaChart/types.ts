@@ -1,5 +1,5 @@
-import { axisFormatter, LegendPosition, MarkerConfig } from "../../types";
-import type { BulletLegendItemInterface, CurveType } from "@unovis/ts";
+import { axisFormatter, CrosshairConfig, LegendPosition, MarkerConfig } from "../../types";
+import type { BulletLegendItemInterface, Crosshair, CurveType } from "@unovis/ts";
 
 export interface AreaChartProps<T> {
   /**
@@ -131,19 +131,5 @@ export interface AreaChartProps<T> {
   /**
    * Crosshair configuration object for customizing the appearance of the crosshair line.
    */
-  crosshairConfig?: {
-    /**
-     * The color of the crosshair line. Accepts any valid CSS color string.
-     * Example: '#f00', 'rgba(0,0,0,0.5)', 'blue'
-     */
-    color?: string;
-    /**
-     * The stroke color of the crosshair line. Accepts any valid CSS color string.
-     */
-    strokeColor?: string;
-    /**
-     * The stroke width of the crosshair line in pixels.
-     */
-    strokeWidth?: number;
-  };
+  crosshairConfig?: CrosshairConfig;
 }

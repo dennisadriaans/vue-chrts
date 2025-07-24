@@ -9,6 +9,8 @@ import {
     CurveType,
     Orientation,
     type BulletLegendItemInterface,
+    MarkerConfig,
+    CrosshairConfig,
 } from "./types";
 
 export {
@@ -24,4 +26,6 @@ export {
 
 export type {
     BulletLegendItemInterface,
+    MarkerConfig,
+    CrosshairConfig
 }

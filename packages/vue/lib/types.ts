@@ -66,3 +66,19 @@ export interface MarkerConfig {
   color?: string;
   strokeColor?: string;
 }
+
+export interface CrosshairConfig {
+  /**
+   * The color of the crosshair line. Accepts any valid CSS color string.
+   * Example: '#f00', 'rgba(0,0,0,0.5)', 'blue'
+   */
+  color?: string;
+  /**
+   * The stroke color of the crosshair line. Accepts any valid CSS color string.
+   */
+  strokeColor?: string;
+  /**
+   * The stroke width of the crosshair line in pixels.
+   */
+  strokeWidth?: number;
+}
