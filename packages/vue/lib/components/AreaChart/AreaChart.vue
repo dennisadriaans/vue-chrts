@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 import { computed, ref, useSlots, useTemplateRef } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
-import { getFirstPropertyValue } from "../../utils";
+import { createMarkers, getFirstPropertyValue } from "../../utils";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -16,7 +16,12 @@ import {
 } from "@unovis/vue";
 
 import { LegendPosition } from "../../types";
-import { type AreaChartProps } from "./types";
+
+import type { AreaChartProps } from "./types";
+
+const emit = defineEmits<{
+  (e: "click", event: MouseEvent, values?: T): void;
+}>();
 
 const DEFAULT_TICK_COUNT = 24;
 const DEFAULT_TICK_DIVISOR = 4;
@@ -32,7 +37,12 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
     props.data.length > DEFAULT_TICK_COUNT
       ? DEFAULT_TICK_COUNT / DEFAULT_TICK_DIVISOR
       : props.data.length - 1,
+  crosshairConfig: () => ({
+    color: "#666",
+  }),
+  lineWidth: 2,
 });
+
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
@@ -40,6 +50,11 @@ const hoverValues = ref<T>();
 const colors = computed(() =>
   Object.values(props.categories).map((c) => c.color)
 );
+
+const markersSvgDefs = computed(() => {
+  if (!props.markerConfig) return "";
+  return createMarkers(props.markerConfig);
+});
 
 const isLegendTop = computed(() => props.legendPosition === LegendPosition.Top);
 
@@ -90,14 +105,15 @@ function onCrosshairUpdate(d: T): string {
 
 <template>
   <div
-    class="flex flex-col space-y-4"
-    :class="{ 'flex-col-reverse': isLegendTop }"
+    class="flex flex-col"
+    :class="{ 'flex-col-reverse': isLegendTop, markers: !!props.markerConfig }"
+    @click="emit('click', $event, hoverValues)"
   >
     <VisXYContainer
       :data="data"
       :height="height"
       :padding="padding"
-      :svg-defs="svgDefs"
+      :svg-defs="svgDefs + markersSvgDefs"
     >
       <VisTooltip
         v-if="!hideTooltip"
@@ -121,6 +137,8 @@ function onCrosshairUpdate(d: T): string {
           :y="(d: T) => d[categoryId as keyof T]"
           :color="colors[index]"
           :curve-type="curveType ?? CurveType.MonotoneX"
+          :line-width="lineWidth"
+          :lineDashArray="lineDashArray"
         />
       </template>
 
@@ -151,7 +169,7 @@ function onCrosshairUpdate(d: T): string {
 
       <VisCrosshair
         v-if="!hideTooltip"
-        color="#666"
+        v-bind="crosshairConfig"
         :template="onCrosshairUpdate"
       />
     </VisXYContainer>
@@ -159,7 +177,7 @@ function onCrosshairUpdate(d: T): string {
     <div
       v-if="!hideLegend"
       class="flex items-center justify-end"
-      :class="{ 'pb-4': isLegendTop }"
+      :class="{ 'pb-4': isLegendTop, 'pt-4': !isLegendTop }"
     >
       <VisBulletLegend :items="Object.values(categories)" />
     </div>

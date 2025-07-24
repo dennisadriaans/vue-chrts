@@ -1,4 +1,4 @@
-import { axisFormatter, LegendPosition } from "../../types";
+import { axisFormatter, LegendPosition, MarkerConfig } from "../../types";
 import type { BulletLegendItemInterface, CurveType } from "@unovis/ts";
 
 export interface AreaChartProps<T> {
@@ -35,25 +35,38 @@ export interface AreaChartProps<T> {
    * This defines the visual representation and labels for each category in the chart's legend.
    */
   categories: Record<string, BulletLegendItemInterface>;
+
+  /**
+   * A record mapping marker keys to show custom patterns.
+   */
+  markerConfig?: Record<string, MarkerConfig>;
   /**
    * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
    * @param {number} i - The index of the tick in the `ticks` array.
    * @param {(number[]|Date[])} ticks - An array of all tick values for the x-axis.
    * @returns {string} The formatted string representation of the tick.
    */
-  xFormatter?: axisFormatter<T>;
+  xFormatter?: axisFormatter;
   /**
    * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the y-axis.
    * @param {number} i - The index of the tick in the `ticks` array.
    * @param {(number[]|Date[])} ticks - An array of all tick values for the y-axis.
    * @returns {string} The formatted string representation of the tick.
    */
-  yFormatter?: axisFormatter<T>;
+  yFormatter?: axisFormatter;
   /**
    * The type of curve to use for the area chart lines.
    * See `CurveType` for available options.
    */
   curveType?: CurveType;
+  /**
+   * The width of the line in pixels. Default is 2px.
+   */
+  lineWidth?: number;
+  /**
+   * Line dash array, see SVG's stroke-dasharray. Default: `undefined`
+   */
+  lineDashArray?: number[];
   /**
    * The desired number of ticks on the x-axis.
    */
@@ -115,4 +128,22 @@ export interface AreaChartProps<T> {
    * If `true`, hide the y-axis.
    */
   hideYAxis?: boolean;
+  /**
+   * Crosshair configuration object for customizing the appearance of the crosshair line.
+   */
+  crosshairConfig?: {
+    /**
+     * The color of the crosshair line. Accepts any valid CSS color string.
+     * Example: '#f00', 'rgba(0,0,0,0.5)', 'blue'
+     */
+    color?: string;
+    /**
+     * The stroke color of the crosshair line. Accepts any valid CSS color string.
+     */
+    strokeColor?: string;
+    /**
+     * The stroke width of the crosshair line in pixels.
+     */
+    strokeWidth?: number;
+  };
 }

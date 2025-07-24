@@ -1,6 +1,6 @@
 {
   "name": "vue-chrts",
-  "version": "0.1.12-beta.1",
+  "version": "0.2.0-beta.2",
   "type": "module",
   "files": [
     "dist"
@@ -27,8 +27,8 @@
     "@tailwindcss/vite": "^4.0.15",
     "@tanstack/vue-table": "^8.21.2",
     "@types/node": "^22.13.11",
-    "@unovis/ts": "^1.5.1",
-    "@unovis/vue": "^1.5.1",
+    "@unovis/ts": "^1.5.2",
+    "@unovis/vue": "^1.5.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
     "@vueuse/core": "^13.0.0",

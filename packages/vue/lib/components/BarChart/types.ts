@@ -1,6 +1,7 @@
 import { BulletLegendItemInterface, Orientation, LegendPosition, axisFormatter } from "../../types";
 
-export interface BarChartProps<T> {
+
+type BarChartPropsBase<T> = {
   /**
    * The data to be displayed in the bar chart.
    * Each element of the array represents a data point.
@@ -23,35 +24,35 @@ export interface BarChartProps<T> {
    * Optional label for the y-axis.
    */
   yLabel?: string;
-    /**
+  /**
    * Optional padding applied to the chart.
    * Allows specifying individual padding values for the top, right, bottom, and left sides.
    */
-    padding?: {
-      top: number;
-      right: number;
-      bottom: number;
-      left: number;
-    };
+  padding?: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
   /**
    * A record mapping category keys to `BulletLegendItemInterface` objects.
    * This defines the visual representation and labels for each category in the chart's legend.
    */
   categories: Record<string, BulletLegendItemInterface>;
   /**
- * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
- * @param {number} i - The index of the tick in the `ticks` array.
- * @param {(number[]|Date[])} ticks - An array of all tick values for the x-axis.
- * @returns {string} The formatted string representation of the tick.
- */
-  xFormatter?:  axisFormatter<T>
+   * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
+   * @param {number} i - The index of the tick in the `ticks` array.
+   * @param {(number[]|Date[])} ticks - An array of all tick values for the x-axis.
+   * @returns {string} The formatted string representation of the tick.
+   */
+  xFormatter?: axisFormatter;
   /**
- * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the y-axis.
- * @param {number} i - The index of the tick in the `ticks` array.
- * @param {(number[]|Date[])} ticks - An array of all tick values for the y-axis.
- * @returns {string} The formatted string representation of the tick.
- */
-  yFormatter?: axisFormatter<T>
+   * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the y-axis.
+   * @param {number} i - The index of the tick in the `ticks` array.
+   * @param {(number[]|Date[])} ticks - An array of all tick values for the y-axis.
+   * @returns {string} The formatted string representation of the tick.
+   */
+  yFormatter?: axisFormatter;
   /**
    * The desired number of ticks on the y-axis.
    */
@@ -88,6 +89,10 @@ export interface BarChartProps<T> {
    * If `true`, hides the chart legend.
    */
   hideLegend?: boolean;
+  /**
+   * If `true`, hides the chart tooltip.
+   */
+  hideTooltip?: boolean;
   /**
    * The orientation of the bars (vertical or horizontal).
    * See `Orientation` for available options.
@@ -131,3 +136,23 @@ export interface BarChartProps<T> {
    */
   hideYAxis?: boolean;
 };
+
+type BarChartPropsStackAndGrouped<T> = BarChartPropsBase<T> & {
+  stackAndGrouped: true;
+  /**
+   * The key in the data object type 'T' to be used for the x-axis values.
+   * Required when stackAndGrouped is true.
+   */
+  xAxis: keyof T;
+};
+
+type BarChartPropsNormal<T> = BarChartPropsBase<T> & {
+  stackAndGrouped?: false;
+  /**
+   * The key in the data object type 'T' to be used for the x-axis values.
+   * Optional when stackAndGrouped is not true.
+   */
+  xAxis?: keyof T;
+};
+
+export type BarChartProps<T> = BarChartPropsStackAndGrouped<T> | BarChartPropsNormal<T>;

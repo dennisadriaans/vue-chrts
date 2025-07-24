@@ -1,11 +1,11 @@
-import { createApp } from 'vue'
+import { createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
-import './assets/main.css'
+import "./assets/main.css";
 
-import App from './App.vue'
+import App from "./App.vue";
 
-const app = createApp(App)
+const app = createApp(App);
 
 const router = createRouter({
     routes: [
@@ -30,9 +30,9 @@ const router = createRouter({
           component: () => import('./BarChartPage.vue') 
         },
         {
-          path: '/donut-charts',
-          name: 'DonutCharts',
-          component: () => import('./DonutExamplePage.vue')
+          path: '/social-deal-examples',
+          name: 'SocialDealExamples',
+          component: () => import('./SocialDealExamples.vue') 
         }
       ],
     history: createWebHistory(),
@@ -40,8 +40,6 @@ const router = createRouter({
 
 app.use(router);
 
-app.mount('#app')
+app.mount("#app");
 
-export default {
-
-}
+export default {};
