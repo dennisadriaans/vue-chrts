@@ -15,8 +15,8 @@ dependencies:
     specifier: ^1.5.2
     version: 1.5.2(@unovis/ts@1.5.2)(vue@3.5.18)
   vue-chrts:
-    specifier: 0.2.0-beta.3
-    version: 0.2.0-beta.3(vue@3.5.18)
+    specifier: 0.2.0
+    version: 0.2.0(vue@3.5.18)
 
 devDependencies:
   '@nuxt/eslint':
@@ -11531,8 +11531,8 @@ packages:
       ufo: 1.6.1
     dev: true
 
-  /vue-chrts@0.2.0-beta.3(vue@3.5.18):
-    resolution: {integrity: sha512-0us3z/234258omadkflnpUfz9bidKQR09NRCeh/JPOK1H/2Y91xm36ZJMZ2N0v3QLeJ9EVb5JB479G+FF34Njw==}
+  /vue-chrts@0.2.0(vue@3.5.18):
+    resolution: {integrity: sha512-p9H/zdPYQVhfh5ObwQ7q6d3CAX5qCb4f3EiSCog1vJM+5rA+uc7PKZ6pGW6YOowUlTYbe/fEnxt6K0+BZyo3sg==}
     peerDependencies:
       vue: ^3.5.13
     dependencies:
