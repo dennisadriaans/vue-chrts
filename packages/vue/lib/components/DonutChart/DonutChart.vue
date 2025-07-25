@@ -54,21 +54,21 @@ function generateTooltipContent(d: T): string {
         }"
       />
 
-    <VisDonut
-      :value="value"
-      :corner-radius="radius"
-      :arc-width="arcWidth ?? 20"
-      :color="props.labels.map((l) => l.color)"
-      :angle-range="isHalf ? [-1.5707963267948966, 1.5707963267948966] : []"
-      :pad-angle="props.padAngle || 0"
-    />
+      <VisDonut
+        :value="value"
+        :corner-radius="radius"
+        :arc-width="arcWidth ?? 20"
+        :color="props.labels.map((l) => l.color)"
+        :angle-range="isHalf ? [-1.5707963267948966, 1.5707963267948966] : []"
+        :pad-angle="props.padAngle || 0"
+      />
     </VisSingleContainer>
 
     <slot />
     <div ref="slotWrapper" class="hidden">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
-      <slot v-else-if="hoverValues" name="fallback" >
-        <div class="flex items-center px-[15px] py-[10px]">
+      <slot v-else-if="hoverValues" name="fallback">
+        <div class="flex items-center" style="padding: 10px 15px">
           <div
             class="w-2 h-2 rounded-full mr-2"
             :style="`background-color: ${
