@@ -42,6 +42,19 @@ export default defineNuxtModule<ModuleOptions>({
     include: [],
   },
   async setup(options, nuxt) {
+    nuxt.options.vite.optimizeDeps = nuxt.options.vite.optimizeDeps || {};
+    nuxt.options.vite.optimizeDeps.include =
+      nuxt.options.vite.optimizeDeps.include || [];
+
+    nuxt.options.vite.optimizeDeps.include = [
+      "@unovis/ts",
+      ...nuxt.options.vite.optimizeDeps.include,
+    ];
+    nuxt.options.build.transpile = [
+      "@unovis/ts",
+      ...nuxt.options.build.transpile,
+    ];
+
     nuxt.options.vite.ssr = nuxt.options.vite.ssr || {};
     nuxt.options.vite.ssr.noExternal = nuxt.options.vite.ssr.noExternal || [];
 
