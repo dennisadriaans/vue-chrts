@@ -67,8 +67,8 @@ function generateTooltipContent(d: T): string {
     <slot />
     <div ref="slotWrapper" class="hidden">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
-      <slot v-else-if="hoverValues" name="fallback">
-        <div class="flex items-center">
+      <slot v-else-if="hoverValues" name="fallback" >
+        <div class="flex items-center px-[15px] py-[10px]">
           <div
             class="w-2 h-2 rounded-full mr-2"
             :style="`background-color: ${

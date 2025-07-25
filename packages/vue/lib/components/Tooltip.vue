@@ -20,7 +20,7 @@ const visibleEntries = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div class="px-[15px] py-[10px]">
     <div
       class="capitalize border-b mb-1 pb-1"
       :style="{
