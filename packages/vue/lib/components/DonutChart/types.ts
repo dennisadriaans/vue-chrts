@@ -10,6 +10,10 @@ export type DonutChartProps = {
    */
   data: number[];
   /**
+   * The arc width of the chart in pixels.
+   */
+  arcWidth?: number;
+    /**
    * The height of the chart in pixels.
    */
   height: number;
