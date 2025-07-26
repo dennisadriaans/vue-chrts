@@ -43,10 +43,10 @@ const Mapping = {
 } as const
 
 // Input validation
-function validateExample(example: string): example is keyof typeof Mapping {
-  if (typeof example !== 'string') return false
-  if (!/^[a-z0-9-]+$/.test(example)) return false
-  return example in Mapping
+function validateComponent(component: string): component is keyof typeof Mapping {
+  if (typeof component !== 'string') return false
+  if (!/^[a-z0-9-]+$/.test(component)) return false
+  return component in Mapping
 }
 
 function validatePath(inputPath: string): boolean {
@@ -164,23 +164,22 @@ async function downloadWithTimeout(
 }
 
 program
-  .command('add <example> [version] [targetPath]')
+  .command('add <component> [version] [targetPath]')
   .description(
-    'Copy an example component to a target path (default: ./app/components/<ExampleName>). Optionally specify a version (default: v2)',
+    'Copy a component to a target path (default: ./app/components/<ComponentName>). Optionally specify a version',
   )
   .option('-t, --token <token>', 'API token for authentication')
   .action(
     async (
-      example: string,
+      component: string,
       version?: string,
       targetPath?: string,
       options?: { token?: string },
     ) => {
-      // Input validation
-      if (!validateExample(example)) {
-        console.error(chalk.red(`Invalid example name: ${example}`))
+      if (!validateComponent(component)) {
+        console.error(chalk.red(`Invalid component name: ${component}`))
         console.log(
-          chalk.dim('Available examples:'),
+          chalk.dim('Available components:'),
           Object.keys(Mapping).join(', '),
         )
         return
@@ -198,7 +197,7 @@ program
       const latestVersion = 'v1'
       const useVersion = version || latestVersion
 
-      const pascalName = Mapping[example]
+      const pascalName = Mapping[component]
       const baseUrl = `${CONFIG.BASE_URL}/${useVersion}/${pascalName}`
 
       // Get token: CLI option > config file
@@ -269,7 +268,7 @@ program
 
             console.log(
               chalk.green(
-                `✓ Example '${example}' extracted to '${extractDir}'`,
+                `✓ Component '${component}' extracted to '${extractDir}'`,
               ),
             )
           } catch (extractError) {
@@ -302,12 +301,12 @@ program
 
           await fs.writeFile(absTarget, content, 'utf-8')
           console.log(
-            chalk.green(`✓ File for '${example}' saved to '${absTarget}'`),
+            chalk.green(`✓ File for '${component}' saved to '${absTarget}'`),
           )
         }
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : String(err)
-        console.error(chalk.red(`Failed to copy example: ${errorMessage}`))
+        console.error(chalk.red(`Failed to copy component: ${errorMessage}`))
 
         // Don't exit with process.exit(1) - let the caller handle it
         // This is better for testing and when used as a library
