@@ -1,10 +1,11 @@
 {
   "name": "nuxt-charts-cli",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Awesome CLI tool for downloading Nuxt Charts components",
   "main": "dist/index.js",
   "type": "module",
   "bin": {
+    "nuxt-charts": "./dist/index.js",
     "nuxt-charts-cli": "./dist/index.js"
   },
   "files": [
