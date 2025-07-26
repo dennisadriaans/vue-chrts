@@ -3,8 +3,29 @@ import { Command } from 'commander'
 import chalk from 'chalk'
 import fs from 'fs/promises'
 import path from 'path'
+import os from 'os'
 
 const program = new Command()
+
+// Config file location
+const CONFIG_PATH = path.join(os.homedir(), '.nuxtcharts-cli.json')
+
+// Read token from config file
+async function getTokenFromConfig(): Promise<string | undefined> {
+  try {
+    const data = await fs.readFile(CONFIG_PATH, 'utf-8')
+    const config = JSON.parse(data)
+    return typeof config.token === 'string' ? config.token : undefined
+  } catch {
+    return undefined
+  }
+}
+
+// Write token to config file
+async function setTokenToConfig(token: string): Promise<void> {
+  const config = { token }
+  await fs.writeFile(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf-8')
+}
 
 program.version('0.0.1').description('A custom CLI for nuxt-charts-site')
 
@@ -129,8 +150,6 @@ async function downloadWithTimeout(
     headers['Authorization'] = `Bearer ${token}`
   }
 
-  console.log(headers, 'headers')
-
   try {
     const response = await fetch(url, {
       signal: controller.signal,
@@ -182,13 +201,19 @@ program
       const pascalName = Mapping[example]
       const baseUrl = `${CONFIG.BASE_URL}/${useVersion}/${pascalName}`
 
+      // Get token: CLI option > config file
+      let token = options?.token
+      if (!token) {
+        token = await getTokenFromConfig()
+      }
+
       try {
         console.log(chalk.dim(`Fetching from: ${baseUrl}`))
 
         const res = await downloadWithTimeout(
           baseUrl + '.zip',
           CONFIG.TIMEOUT,
-          options?.token,
+          token,
         )
 
         if (!res.ok) {
@@ -290,6 +315,22 @@ program
       }
     },
   )
+// Config command to set token
+program
+  .command('config')
+  .description('Configuration commands')
+  .command('set-token')
+  .description('Set and persist the API token for authentication')
+  .argument('<token>', 'API token value')
+  .action(async (token: string) => {
+    try {
+      await setTokenToConfig(token)
+      console.log(chalk.green('✓ Token saved to config'))
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : String(err)
+      console.error(chalk.red(`Failed to save token: ${errorMessage}`))
+    }
+  })
 
 // Add help command
 program
