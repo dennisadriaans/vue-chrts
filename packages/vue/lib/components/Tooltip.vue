@@ -1,12 +1,12 @@
 <script lang="ts" setup generic="T">
 import { computed } from "vue";
-import { BulletLegendItemInterface } from "../types";
+import { axisFormatter, BulletLegendItemInterface } from "../types";
 
 const props = defineProps<{
   data: T;
   categories: Record<string, BulletLegendItemInterface>;
   toolTipTitle: string | number;
-  yFormatter?: (value: T) => any;
+  yFormatter?: axisFormatter;
 }>();
 
 const keyBlockList = ["_index", "_stacked", "_ending"];
@@ -20,7 +20,7 @@ const visibleEntries = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div style="padding: 10px 15px;">
     <div
       class="capitalize border-b mb-1 pb-1"
       :style="{

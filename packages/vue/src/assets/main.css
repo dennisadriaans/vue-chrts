@@ -17,10 +17,12 @@
   --vis-color2: red !important;
   --vis-color3: yellow !important;
   --vis-color4: purple !important;
+
+    --vis-tooltip-padding: 0 !important;
 }
 
 @utility heading-2 {
-  @apply text-xl dark:text-white my-2 font-bold;
+  @apply  dark:text-white my-2 font-bold;
 }
 
 .dark {

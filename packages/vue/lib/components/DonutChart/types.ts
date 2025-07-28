@@ -1,4 +1,4 @@
-interface DonutChartProps {
+export type DonutChartProps = {
   /**
    * The type of donut chart to render.
    * See `DonutType` for available options.
@@ -10,6 +10,10 @@ interface DonutChartProps {
    */
   data: number[];
   /**
+   * The arc width of the chart in pixels.
+   */
+  arcWidth?: number;
+    /**
    * The height of the chart in pixels.
    */
   height: number;
@@ -28,6 +32,11 @@ interface DonutChartProps {
     name: string;
     color: string;
   }[];
+
+  /**
+   * Pad angle. Default: 0
+   */
+  padAngle?: number
 };
 
 enum DonutType {
@@ -35,4 +44,4 @@ enum DonutType {
   Full = "full",
 }
 
-export { type DonutChartProps, DonutType };
+export { DonutType };
