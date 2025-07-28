@@ -59,9 +59,21 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.vite.ssr.noExternal = nuxt.options.vite.ssr.noExternal || [];
 
     // Ensure 'to-px' is added to noExternal if not already present
-    if (!nuxt.options.vite.ssr.noExternal.includes("to-px")) {
-      nuxt.options.vite.ssr.noExternal.push("to-px");
-    }
+    // if (!nuxt.options.vite.ssr.noExternal.includes("to-px")) {
+    //   nuxt.options.vite.ssr.noExternal.push("to-px");
+    // }
+
+    // Add custom Vite $server config
+    nuxt.options.vite = {
+      ...nuxt.options.vite,
+      $server: {
+        ...(nuxt.options.vite?.$server || {}),
+        resolve: {
+          ...(nuxt.options.vite?.$server?.resolve || {}),
+          mainFields: ['module', 'jsnext:main', 'jsnext'],
+        },
+      },
+    };
 
     const { resolve } = createResolver(import.meta.url);
 
