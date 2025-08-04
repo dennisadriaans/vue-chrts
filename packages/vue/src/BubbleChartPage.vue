@@ -1,48 +1,53 @@
 <script lang="ts" setup>
-import { BubbleChart, BulletLegendItemInterface } from "./../lib";
+import {
+  BubbleChart,
+  BulletLegendItemInterface,
+  LegendPosition,
+} from "./../lib";
 import Card from "./elements/Card.vue";
 import { data as bubbleChartData } from "./data/BubbleChartData";
 
 const bubbleCategories: Record<string, BulletLegendItemInterface> = {
-  y: { name: "Monthly Spending", color: "#22c55e" },
+  Id: { name: "Id", color: "#b0b0b0" },
 };
 
-function formatCurrency(tick: number | Date) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(Number(tick));
+function formatNumber(tick: number | Date) {
+  return typeof tick === "number" ? tick.toLocaleString() : String(tick);
 }
 
-const xFormatter = (i: number) => bubbleChartData[i]?.major ?? "";
+const xAccessor = (d: any) => d.createdAt;
+const yAccessor = (d: any) => d.timeToTriage;
+const sizeAccessor = (d: any) => d.comments;
+const colorAccessor = (d: any) => "#f00";
 </script>
 
 <template>
-  <div class="space-y-8 pb-24 pt-8">
-    <div class="max-w-7xl mx-auto space-y-4">
-      <div class="mb-8 space-y-4">
-        <h1 class="text-4xl font-bold">Bubble Chart</h1>
-        <p class="text-lg font-medium text-gray-500">
-          Bubble charts visualize three dimensions of data: X, Y, and bubble size.
-        </p>
-      </div>
-    </div>
-
+  <div class="space-y-4 pb-24 pt-8">
     <div class="max-w-7xl mx-auto">
       <Card>
-        <template #header>
-          <h2 class="heading-2">Monthly Spending Bubble Chart</h2>
-        </template>
-        <BubbleChart
-          :data="bubbleChartData"
-          :height="400"
-          :categories="bubbleCategories"
-          :x-formatter="xFormatter"
-          :y-formatter="formatCurrency"
-          :legend-position="'top'"
-        />
+        <div>
+          <h2 class="heading-2 mb-0 text-xl">Linear Tasks: Time to Triage</h2>
+          <p class="text-neutral-400 text-sm">
+            Bubble charts visualize three dimensions of data: X, Y, and bubble
+            size.
+          </p>
+        </div>
+        <div class="mt-4">
+          <BubbleChart
+            :data="bubbleChartData"
+            :height="400"
+            :categories="bubbleCategories"
+            :x-accessor="xAccessor"
+            :y-accessor="yAccessor"
+            :y-grid-line="false"
+            :hide-y-axis="true"
+            :size-accessor="sizeAccessor"
+            :color-accessor="colorAccessor"
+            :legend-position="LegendPosition.Bottom"
+            :x-formatter="(v) => `Week: ${v}`"
+            :y-formatter="formatNumber"
+          />
+        </div>
       </Card>
     </div>
   </div>

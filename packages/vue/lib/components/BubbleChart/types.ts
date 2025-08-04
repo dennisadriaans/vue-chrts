@@ -23,7 +23,45 @@ export interface SizeOptions {
   // scale?: 'linear' | 'sqrt' | 'log'; // Simplified, default to sqrt logic in component
 }
 
+import type { NumericAccessor, StringAccessor, Position } from "@unovis/ts";
+
 export interface BubbleChartProps<T> {
+  /**
+   * Accessor for x value (index, property, etc). If not provided, defaults to d.beakLength.
+   */
+  xAccessor?: NumericAccessor<T>;
+  /**
+   * Accessor for y value. If not provided, defaults to d.flipperLength.
+   */
+  yAccessor?: NumericAccessor<T>;
+  /**
+   * Accessor for bubble size. If not provided, defaults to 1.
+   */
+  sizeAccessor?: NumericAccessor<T>;
+  /**
+   * Accessor for color. If not provided, uses category/color logic.
+   */
+  colorAccessor?: StringAccessor<T>;
+  /**
+   * Label position for bubbles (default: Position.Bottom)
+   */
+  labelPosition?: Position;
+  /**
+   * Range for bubble sizes (default: [1, 20])
+   */
+  sizeRange?: [number, number];
+  /**
+   * Opacity for bubbles
+   */
+  opacity?: number;
+  /**
+   * Explicit tick values for x axis
+   */
+  xExplicitTicks?: (number | string | Date)[];
+  /**
+   * Only show min/max ticks for x axis
+   */
+  minMaxTicksOnly?: boolean;
   /**
    * The data to be displayed in the bubble chart.
    * Each element of the array represents a data point.
@@ -60,7 +98,7 @@ export interface BubbleChartProps<T> {
    * A record mapping category keys to `BulletLegendItemInterface` objects.
    * This defines the visual representation and labels for each category in the chart's legend.
    */
-  categories: Record<string, BulletLegendItemInterface>;
+  categories?: Record<string, BulletLegendItemInterface>;
   /**
    * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
    * @param {number} i - The index of the tick in the `ticks` array.
@@ -122,4 +160,14 @@ export interface BubbleChartProps<T> {
    * The desired number of ticks on the y-axis.
    */
   yNumTicks?: number;
+  /**
+   * If `true`, hides the tooltip.
+   */
+  hideTooltip?: boolean;
+  /**
+   * Configuration for the crosshair behavior.
+   */
+  crosshairConfig?: {
+    color?: string;
+  };
 }

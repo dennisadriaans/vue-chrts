@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="T extends {} = {}">
+import { computed, ref, useSlots, useTemplateRef } from "vue";
 import { Position, Scale, Scatter } from "@unovis/ts";
 import {
   VisXYContainer,
@@ -6,9 +7,13 @@ import {
   VisAxis,
   VisTooltip,
   VisBulletLegend,
+  VisCrosshair,
 } from "@unovis/vue";
 import { BubbleChartProps, DataRecord } from "./types";
 import { LegendPosition } from "../../types";
+import { getFirstPropertyValue } from "../../utils";
+
+import Tooltip from "../Tooltip.vue";
 
 import type { NumericAccessor, StringAccessor } from "@unovis/ts";
 
@@ -29,46 +34,84 @@ const props = withDefaults(defineProps<BubbleChartProps<T>>(), {
   minMaxTicksOnly: false,
   hideLegend: false,
   legendPosition: LegendPosition.Bottom,
+  padding: () => ({ top: 5, right: 5, bottom: 5, left: 5 }),
+  hideTooltip: false,
+  crosshairConfig: () => ({
+    color: "#666",
+  }),
 });
 
-const legendItems = [
-  { name: "Male", color: "#1fc3aa" },
-  { name: "Female", color: "#8624F5" },
-  { name: "No Data", color: "#aaa" },
-];
+const slots = useSlots();
+const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
+const hoverValues = ref<T>();
 
-const x: NumericAccessor<DataRecord> = (d) => d.beakLength;
-const y: NumericAccessor<DataRecord> = (d) => d.flipperLength;
-const color: StringAccessor<DataRecord> = (d) =>
-  legendItems.find((i) => i.name === (d.sex ?? "No Data"))?.color;
+const legendItems = computed(() => {
+  if (
+    props.categories &&
+    typeof props.categories === "object" &&
+    !Array.isArray(props.categories)
+  ) {
+    return Object.values(props.categories);
+  }
+  if (Array.isArray(props.categories)) {
+    return props.categories;
+  }
+  return [];
+});
+
+const x: NumericAccessor<T> = props.xAccessor!;
+const y: NumericAccessor<T> = props.yAccessor!;
+// Default to 'comments' property if sizeAccessor is not provided
+const size: NumericAccessor<T> = props.sizeAccessor || ((d: any) => (typeof d.comments === 'number' ? d.comments : 1));
+const color: StringAccessor<T> = props.colorAccessor!;
+
+const emit = defineEmits<{
+  (e: "click", event: MouseEvent, values?: T): void;
+}>();
+
+function onCrosshairUpdate(d: T): string {
+  hoverValues.value = d;
+  return generateTooltipContent(d);
+}
+
+function generateTooltipContent(d: T): string {
+  if (typeof window === "undefined") {
+    return "";
+  }
+  if (slotWrapperRef.value) {
+    return slotWrapperRef.value.innerHTML;
+  }
+  return "";
+}
 
 const triggers = {
-  [Scatter.selectors.point]: (d: any) => `
-      ${d.major}<br/>Number of graduates: ${d.total.toLocaleString()}
-    `,
-};
-
-const VisScatterLabel: string = 'test label'
+  [Scatter.selectors.point]: onCrosshairUpdate
+}
 </script>
 
 <template>
-  <h2>American College Graduates, 2010-2012</h2>
   <div
-    v-if="!props.hideLegend"
-    class="flex items-center justify-end"
-    :class="{ 'pb-4': props.legendPosition === LegendPosition.Top }"
+    v-if="!props.hideLegend && props.legendPosition === LegendPosition.Top"
+    class="flex items-center justify-end pb-4"
   >
     <VisBulletLegend :items="legendItems" />
   </div>
-  <VisXYContainer :data="props.data" :height="600" :scaleByDomain="true">
+  <VisXYContainer
+    :data="props.data"
+    :height="props.height || 600"
+    :padding="props.padding"
+    :scaleByDomain="true"
+    @click="emit('click', $event, hoverValues)"
+  >
+    <VisTooltip v-if="!props.hideTooltip" :triggers="triggers" />
     <VisScatter
       :x="x"
       :y="y"
       :color="color"
-      :size="1"
-      :label="VisScatterLabel"
-      :labelPosition="Position.Bottom"
-      :sizeRange="[1, 20]"
+      :size="size"
+      :labelPosition="props.labelPosition || Position.Bottom"
+      :sizeRange="props.sizeRange || [1, 20]"
+      :opacity="props.opacity"
       cursor="pointer"
     />
     <VisAxis
@@ -80,6 +123,8 @@ const VisScatterLabel: string = 'test label'
       :domainLine="!!props.xDomainLine"
       :tickLine="props.xTickLine"
       :numTicks="props.xNumTicks"
+      :tickValues="props.xExplicitTicks"
+      :minMaxTicksOnly="props.minMaxTicksOnly"
     />
     <VisAxis
       v-if="!props.hideYAxis"
@@ -91,6 +136,22 @@ const VisScatterLabel: string = 'test label'
       :tickLine="props.yTickLine"
       :numTicks="props.yNumTicks"
     />
-    <VisTooltip :triggers="triggers" />
   </VisXYContainer>
+  <div
+    v-if="!props.hideLegend && props.legendPosition === LegendPosition.Bottom"
+    class="flex items-center justify-end pt-4"
+  >
+    <VisBulletLegend :items="legendItems" />
+  </div>
+  <div ref="slotWrapper" class="hidden">
+    <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
+    <slot v-else-if="hoverValues" name="fallback">
+      <Tooltip
+        :data="hoverValues"
+        :categories="props.categories || {}"
+        :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
+        :yFormatter="props.yFormatter"
+      />
+    </slot>
+  </div>
 </template>
