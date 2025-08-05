@@ -22,10 +22,12 @@ const visibleEntries = computed(() => {
 <template>
   <div style="padding: 10px 15px;">
     <div
-      class="capitalize border-b mb-1 pb-1"
       :style="{
         color: 'var(--tooltip-value-color)',
-        borderColor: 'rgba(255, 255, 255, 0.05)',
+        textTransform: 'capitalize',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+        marginBottom: '0.25rem',
+        paddingBottom: '0.25rem',
       }"
     >
       {{ toolTipTitle }}
