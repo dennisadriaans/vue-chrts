@@ -4,8 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:vue": "turbo run build --filter=vue-chrts",
     "build": "turbo run build --filter=!nuxt-charts-cli",
     "dev": "turbo run dev --filter=!nuxt-charts-cli",
+    "dev:nuxt": "turbo run dev --filter=nuxt-charts",
     "test": "turbo run test --filter=!nuxt-charts-cli",
     "lint": "turbo run lint --filter=!nuxt-charts-cli",
     "typecheck": "turbo run typecheck --filter=!nuxt-charts-cli",
