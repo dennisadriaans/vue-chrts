@@ -69,7 +69,7 @@ function generateTooltipContent(d: T): string {
     </VisSingleContainer>
 
     <slot />
-    <div ref="slotWrapper" class="hidden">
+    <div ref="slotWrapper" style="display: none;">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
         <div style="display: flex; align-items: center; padding: 10px 15px;">
