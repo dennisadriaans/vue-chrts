@@ -58,7 +58,7 @@ importers:
         specifier: ^1.5.2
         version: 1.5.2(@unovis/ts@1.5.2)(vue@3.5.18)
       vue-chrts:
-        specifier: 0.2.1
+        specifier: 0.2.2-test.0
         version: link:../vue
     devDependencies:
       '@nuxt/eslint':
@@ -4203,7 +4203,7 @@ packages:
       vue: ^3
     dependencies:
       '@unovis/ts': 1.5.2
-      vue: 3.5.18(typescript@5.7.3)
+      vue: 3.5.18(typescript@5.9.2)
 
   /@unrs/resolver-binding-android-arm-eabi@1.11.1:
     resolution: {integrity: sha512-ppLRUgHVaGRWUx0R0Ut06Mjo9gBaBkg3v/8AxusGLhsIotbBLuRk51rAzqLC8gq6NyyAojEXglNjzf6R948DNw==}
@@ -11392,7 +11392,6 @@ packages:
     resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
     engines: {node: '>=14.17'}
     hasBin: true
-    dev: true
 
   /ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
@@ -12229,7 +12228,6 @@ packages:
       '@vue/server-renderer': 3.5.18(vue@3.5.18)
       '@vue/shared': 3.5.18
       typescript: 5.9.2
-    dev: true
 
   /w3c-xmlserializer@5.0.0:
     resolution: {integrity: sha512-o8qghlI8NZHU1lLPrpi2+Uq7abh4GGPpYANlalzWxyWteJOCsr/P+oPBA49TOLu5FTZO4d3F9MnWJfiMo4BkmA==}
