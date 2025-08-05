@@ -1,4 +1,4 @@
 packages:
   - 'packages/cli'
-  - 'packages/nuxt'
   - 'packages/vue'
+  - 'packages/nuxt'

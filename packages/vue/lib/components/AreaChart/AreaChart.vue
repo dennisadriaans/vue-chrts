@@ -112,7 +112,6 @@ function onCrosshairUpdate(d: T): string {
     :class="{ markers: !!props.markerConfig }"
     @click="emit('click', $event, hoverValues)"
   >
-  123
     <VisXYContainer
       :data="data"
       :height="height"
