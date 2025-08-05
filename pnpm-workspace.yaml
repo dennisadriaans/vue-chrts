@@ -1,2 +1,4 @@
 packages:
-  - 'packages/*'
+  - 'packages/cli'
+  - 'packages/nuxt'
+  - 'packages/vue'
