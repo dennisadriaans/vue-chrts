@@ -32,7 +32,6 @@ const xFormatter = (tick: number): string => {
 
 <template>
   <div>
-    <ClientOnly>
       <AreaChart
         :data="AreaChartData"
         :height="300"
@@ -43,6 +42,5 @@ const xFormatter = (tick: number): string => {
         :legend-position="LegendPosition.Top"
         :hide-legend="false"
       />
-    </ClientOnly>
   </div>
 </template>

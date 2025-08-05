@@ -18,7 +18,7 @@
   "scripts": {
     "prepack": "nuxt-module-build build",
     "dev": "nuxi dev playground",
-    "dev:build": "nuxi build playground",
+    "build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "release": "npm run prepack && commit-and-tag-version && npm publish",
     "lint": "eslint .",
@@ -30,19 +30,20 @@
     "@nuxt/kit": "^3.17.7",
     "@unovis/ts": "^1.5.2",
     "@unovis/vue": "^1.5.2",
-    "vue-chrts": "0.2.0"
+    "vue-chrts": "0.2.1"
   },
   "devDependencies": {
-    "@nuxt/eslint": "1.3.0",
-    "@nuxt/eslint-config": "^0.2.0",
+    "@nuxt/eslint": "^1.7.1",
+    "@nuxt/eslint-config": "^1.7.1",
     "@nuxt/module-builder": "^0.8.4",
     "@nuxt/schema": "^3.17.7",
     "@types/node": "^20.19.9",
     "changelogen": "^0.6.2",
     "commit-and-tag-version": "^12.5.1",
-    "eslint": "^8.57.1",
+    "eslint": "^9.0.0",
     "nuxt": "^4.0.1",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
-  }
+  },
+  "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2"
 }
