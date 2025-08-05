@@ -109,6 +109,7 @@ function onCrosshairUpdate(d: T): string {
     :class="{ 'flex-col-reverse': isLegendTop, markers: !!props.markerConfig }"
     @click="emit('click', $event, hoverValues)"
   >
+  123
     <VisXYContainer
       :data="data"
       :height="height"

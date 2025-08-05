@@ -38,5 +38,9 @@ export default defineConfig({
       output: [outputDefault('es', 'js')],
     },
   },
+  server: {
+    host: '0.0.0.0',
+    port: 5173
+  },
   plugins: [vue(), dts(), tailwindcss()]
 })
