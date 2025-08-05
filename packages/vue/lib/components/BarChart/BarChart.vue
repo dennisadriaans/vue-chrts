@@ -86,8 +86,11 @@ function generateTooltipContent(d: T): string {
 
 <template>
   <div
-    class="flex flex-col space-y-4"
-    :class="{ 'flex-col-reverse': LegendPositionTop }"
+    :style="{
+      display: 'flex',
+      flexDirection: LegendPositionTop ? 'column-reverse' : 'column',
+      gap: '1rem',
+    }"
     @click="emit('click', $event, hoverValues)"
   >
     <VisXYContainer :padding="padding" :height="height">
@@ -158,13 +161,17 @@ function generateTooltipContent(d: T): string {
     </VisXYContainer>
     <div
       v-if="!hideLegend"
-      class="flex items center justify-end"
-      :class="{ 'pb-4': LegendPositionTop }"
+      :style="{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingBottom: LegendPositionTop ? '1rem' : undefined,
+      }"
     >
       <VisBulletLegend :items="Object.values(props.categories)" />
     </div>
 
-    <div ref="slotWrapper" class="hidden">
+    <div ref="slotWrapper" style="display: none;">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
         <Tooltip

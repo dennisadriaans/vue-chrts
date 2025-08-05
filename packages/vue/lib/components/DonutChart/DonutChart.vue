@@ -42,7 +42,11 @@ function generateTooltipContent(d: T): string {
 
 <template>
   <div
-    class="flex items-center justify-center"
+    :style="{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }"
     @click="emit('click', $event, hoverValues)"
   >
     <VisSingleContainer :data="data" :height="height" :margin="{}">
@@ -65,15 +69,18 @@ function generateTooltipContent(d: T): string {
     </VisSingleContainer>
 
     <slot />
-    <div ref="slotWrapper" class="hidden">
+    <div ref="slotWrapper" style="display: none;">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
-        <div class="flex items-center" style="padding: 10px 15px">
+        <div style="display: flex; align-items: center; padding: 10px 15px;">
           <div
-            class="w-2 h-2 rounded-full mr-2"
-            :style="`background-color: ${
-              props.labels[hoverValues.index].color
-            } ;`"
+            :style="{
+              width: '0.5rem',
+              height: '0.5rem',
+              borderRadius: '9999px',
+              marginRight: '0.5rem',
+              backgroundColor: props.labels[hoverValues.index].color,
+            }"
           ></div>
           <div>{{ hoverValues.data }}</div>
         </div>
@@ -81,7 +88,14 @@ function generateTooltipContent(d: T): string {
     </div>
   </div>
 
-  <div v-if="!hideLegend" class="flex items-center justify-center mt-4">
+  <div v-if="!hideLegend"
+    :style="{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: '1rem',
+    }"
+  >
     <VisBulletLegend :items="labels" />
   </div>
 </template>
