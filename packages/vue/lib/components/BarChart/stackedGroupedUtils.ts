@@ -7,6 +7,7 @@ export interface StackedGroupedConfig<T> {
   stackAndGrouped: boolean;
   xAxis?: keyof T;
   spacing?: number;
+  
 }
 
 export interface StackedGroupedResult<T> {
@@ -30,7 +31,6 @@ export function useStackedGrouped<T extends {}>(
     const colorFunctions = generateColorFunctions(colors);
     const positions = calculatePositions(states, config.spacing);
 
-    console.log(config, 'config')
     const chartData = config.stackAndGrouped
       ? flattenData(config.data, config.xAxis as string)
       : config.data;
