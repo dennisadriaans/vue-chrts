@@ -93,7 +93,6 @@ const yFormatter = (i: number) => i.toString();
       :categories="RevenueCategoriesMultple"
       x-axis="month"
       :y-axis="['desktop', 'mobile', 'android', 'ios']"
-      :group-padding="0.5"
       :bar-padding="0.5"
       :radius="4"
       :x-formatter="xFormatter"
