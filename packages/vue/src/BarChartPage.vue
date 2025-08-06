@@ -16,6 +16,19 @@ type DataProps = {
   visitors?: number;
 };
 
+// SocialDeal chart data type (flattened)
+type SocialDealChartData = {
+  month: string;
+  desktopDone: number;
+  desktopPending: number;
+  mobileDone: number;
+  mobilePending: number;
+  androidDone: number;
+  androidPending: number;
+  iosDone: number;
+  iosPending: number;
+};
+
 const RevenueData: DataProps[] = [
   { month: "January", desktop: 186, mobile: 80 },
   { month: "February", desktop: 305, mobile: 200 },
@@ -89,7 +102,9 @@ const RevenueCategoriesMultiple = {
 
 type PreviewProps = { id: number; title: string; description: string };
 
-type BarChartExample = Partial<BarChartProps<DataProps>> & PreviewProps;
+type BarChartExample =
+  | (Partial<BarChartProps<DataProps>> & PreviewProps)
+  | (Partial<BarChartProps<SocialDealChartData>> & PreviewProps);
 
 const barChartExamples: BarChartExample[] = [
   {
@@ -108,6 +123,95 @@ const barChartExamples: BarChartExample[] = [
       `${RevenueData[typeof i !== "undefined" ? i : tick]?.month}`,
     yFormatter: (tick: number, i?: number) =>
       `${typeof i !== "undefined" ? i : tick}`,
+  },
+  {
+    id: 8,
+    title: "Stacked & Grouped Bar Chart (SocialDeal)",
+    description:
+      "Stacked and grouped bar chart with multiple device types and statuses.",
+    data: [
+      {
+        month: "January",
+        desktop: {
+          done: 25,
+          pending: 25,
+        },
+        mobile: {
+          done: 25,
+          pending: 50,
+        },
+        android: {
+          done: 25,
+          pending: 50,
+        },
+        ios: {
+          done: 0,
+          pending: 25,
+        },
+      },
+      {
+        month: "February",
+        desktop: {
+          done: 25,
+          pending: 25,
+        },
+        mobile: {
+          done: 25,
+          pending: 25,
+        },
+        android: {
+          done: 25,
+          pending: 25,
+        },
+        ios: {
+          done: 25,
+          pending: 25,
+        },
+      },
+      {
+        month: "Maart",
+        desktop: {
+          done: 25,
+          pending: 25,
+        },
+        mobile: {
+          done: 25,
+          pending: 25,
+        },
+        android: {
+          done: 25,
+          pending: 25,
+        },
+        ios: {
+          done: 25,
+          pending: 25,
+        },
+      },
+    ],
+    categories: {
+      desktopDone: { name: "Desktop Done", color: "#2B7FFF" },
+      mobileDone: { name: "Mobile Done", color: "#EFB100" },
+      androidDone: { name: "Android Done", color: "#00C16A" },
+      iosDone: { name: "iOS Done", color: "#AD46FF" },
+      desktopPending: { name: "Desktop Pending", color: "#8EC5FF" },
+      mobilePending: { name: "Mobile Pending", color: "#FFDF20" },
+      androidPending: { name: "Android Pending", color: "#7FE0A8" },
+      iosPending: { name: "iOS Pending", color: "#D69FFF" },
+    },
+    xAxis: "month",
+    yAxis: ['desktop', 'mobile', 'android', 'ios'],
+    stackAndGrouped: true,
+    radius: 4,
+    xFormatter: (tick: number, i?: number) => {
+      const months = ["January", "February", "Maart"];
+      return months[typeof i !== "undefined" ? i : tick] || String(tick);
+    },
+    yFormatter: (tick: number, i?: number) => String(tick),
+    legendPosition: LegendPosition.Top,
+    barPadding: 0.8,
+    stackedGroupedSpacing: 0.2,
+    hideLegend: false,
+    yGridLine: true,
   },
   {
     id: 2,
@@ -256,6 +360,7 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
             :data="example.data"
             :height="250"
             :categories="example.categories"
+            :x-axis="example.xAxis"
             :y-axis="example.yAxis"
             :group-padding="example.groupPadding"
             :bar-padding="example.barPadding"
@@ -263,6 +368,8 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
             :radius="4"
             :orientation="example.orientation"
             :stacked="example.stacked"
+            :stack-and-grouped="example.stackAndGrouped"
+            :stacked-grouped-spacing="example.stackedGroupedSpacing"
             :x-formatter="example.xFormatter"
             :y-formatter="example.yFormatter"
             :legend-position="LegendPosition.Top"
