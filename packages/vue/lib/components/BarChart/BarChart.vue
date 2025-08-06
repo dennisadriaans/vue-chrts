@@ -39,6 +39,7 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
   yNumTicks: (props: BarChartProps<T>) =>
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   hideTooltip: false,
+  stackedGroupedSpacing: 0.1,
 });
 
 const slots = useSlots();
@@ -57,12 +58,16 @@ const yAxis: ComputedRef<((d: T) => T[keyof T])[]> = computed(() => {
 
 const color = (_: T, i: number) => Object.values(props.categories)[i]?.color;
 
-const stackedGroupedData = useStackedGrouped({
-  data: props.data,
-  categories: props.categories,
-  stackAndGrouped: props.stackAndGrouped,
-  xAxis: props.xAxis,
-});
+const stackedGroupedData = computed(
+  () =>
+    useStackedGrouped({
+      data: props.data,
+      categories: props.categories,
+      stackAndGrouped: props.stackAndGrouped,
+      xAxis: props.xAxis,
+      spacing: props.stackedGroupedSpacing,
+    }).value
+);
 
 const LegendPositionTop = computed(
   () => props.legendPosition === LegendPosition.Top
@@ -110,7 +115,7 @@ function generateTooltipContent(d: T): string {
           :color="stackedGroupedData.colorFunctions[state]"
           :rounded-corners="radius ?? 0"
           :group-padding="groupPadding ?? 0"
-          :bar-padding="barPadding ?? 0.2"
+          :bar-padding="barPadding"
           :orientation="orientation ?? Orientation.Vertical"
         />
       </template>
@@ -171,7 +176,7 @@ function generateTooltipContent(d: T): string {
       <VisBulletLegend :items="Object.values(props.categories)" />
     </div>
 
-    <div ref="slotWrapper" style="display: none;">
+    <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
         <Tooltip

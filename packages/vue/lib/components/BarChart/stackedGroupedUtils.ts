@@ -6,6 +6,8 @@ export interface StackedGroupedConfig<T> {
   categories: Record<string, { color?: string }>;
   stackAndGrouped: boolean;
   xAxis?: keyof T;
+  spacing?: number;
+  
 }
 
 export interface StackedGroupedResult<T> {
@@ -27,9 +29,8 @@ export function useStackedGrouped<T extends {}>(
     const colors = generateColors(groupedByState, config.categories);
     const bars = generateBars(groupedByState);
     const colorFunctions = generateColorFunctions(colors);
-    const positions = calculatePositions(states);
+    const positions = calculatePositions(states, config.spacing);
 
-    console.log(config, 'config')
     const chartData = config.stackAndGrouped
       ? flattenData(config.data, config.xAxis as string)
       : config.data;
@@ -118,9 +119,8 @@ function generateColorFunctions(
   return colorFunctions;
 }
 
-function calculatePositions(states: string[]): Record<string, number> {
+function calculatePositions(states: string[], spacing = 0.4): Record<string, number> {
   const numStates = states.length;
-  const spacing = 0.4;
   const positions: Record<string, number> = {};
 
   states.forEach((state, index) => {
