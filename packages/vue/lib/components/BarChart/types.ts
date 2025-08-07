@@ -135,6 +135,8 @@ type BarChartPropsBase<T> = {
    * If `true`, hide the y-axis.
    */
   hideYAxis?: boolean;
+
+  stackedGroupedSpacing?: number;
 };
 
 type BarChartPropsStackAndGrouped<T> = BarChartPropsBase<T> & {

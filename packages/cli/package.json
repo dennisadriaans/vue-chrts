@@ -32,7 +32,6 @@
     "adm-zip": "^0.5.10",
     "chalk": "^5.3.0",
     "commander": "^11.1.0",
-    "inquirer": "^9.2.12",
     "pluralize": "^8.0.0"
   },
   "devDependencies": {
@@ -43,5 +42,5 @@
     "tsx": "^4.20.3",
     "typescript": "^5.3.3"
   },
-  "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321"
+  "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2"
 }

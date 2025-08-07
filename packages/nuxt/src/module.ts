@@ -47,21 +47,21 @@ export default defineNuxtModule<ModuleOptions>({
       nuxt.options.vite.optimizeDeps.include || [];
 
     nuxt.options.vite.optimizeDeps.include = [
-      "@unovis/ts",
+      "vue-chrts",
       ...nuxt.options.vite.optimizeDeps.include,
     ];
     nuxt.options.build.transpile = [
-      "@unovis/ts",
+      "vue-chrts",
       ...nuxt.options.build.transpile,
     ];
 
-    nuxt.options.vite.ssr = nuxt.options.vite.ssr || {};
-    nuxt.options.vite.ssr.noExternal = nuxt.options.vite.ssr.noExternal || [];
+    // nuxt.options.vite.ssr = nuxt.options.vite.ssr || {};
+    // nuxt.options.vite.ssr.noExternal = nuxt.options.vite.ssr.noExternal || [];
 
-    // Ensure 'to-px' is added to noExternal if not already present
-    if (!nuxt.options.vite.ssr.noExternal.includes("to-px")) {
-      nuxt.options.vite.ssr.noExternal.push("to-px");
-    }
+    // // Ensure 'to-px' is added to noExternal if not already present
+    // if (!nuxt.options.vite.ssr.noExternal.includes("to-px")) {
+    //   nuxt.options.vite.ssr.noExternal.push("to-px");
+    // }
 
     const { resolve } = createResolver(import.meta.url);
 
