@@ -89,7 +89,6 @@ const emit = defineEmits<{
 }>();
 
 function onCrosshairUpdate(d: T): string {
-  console.log(d)
   hoverValues.value = d;
   return generateTooltipContent(d);
 }
