@@ -199,7 +199,7 @@ const barChartExamples: BarChartExample[] = [
       iosPending: { name: "iOS Pending", color: "#D69FFF" },
     },
     xAxis: "month",
-    yAxis: ['desktop', 'mobile', 'android', 'ios'],
+    yAxis: ['desktopDone', 'mobileDone', 'androidDone', 'iosDone'],
     stackAndGrouped: true,
     radius: 4,
     xFormatter: (tick: number, i?: number) => {
@@ -209,7 +209,7 @@ const barChartExamples: BarChartExample[] = [
     yFormatter: (tick: number, i?: number) => String(tick),
     legendPosition: LegendPosition.Top,
     barPadding: 0.8,
-    stackedGroupedSpacing: 0.2,
+    stackedGroupedSpacing: 0.25,
     hideLegend: false,
     yGridLine: true,
   },
