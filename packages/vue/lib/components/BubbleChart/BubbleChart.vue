@@ -7,15 +7,14 @@ import {
   VisAxis,
   VisTooltip,
   VisBulletLegend,
-  VisCrosshair,
 } from "@unovis/vue";
-import { BubbleChartProps, DataRecord } from "./types";
+import { BubbleChartProps } from "./types";
 import { LegendPosition } from "../../types";
 import { getFirstPropertyValue } from "../../utils";
 
 import Tooltip from "../Tooltip.vue";
 
-import type { NumericAccessor, StringAccessor } from "@unovis/ts";
+import type { NumericAccessor } from "@unovis/ts";
 
 const props = withDefaults(defineProps<BubbleChartProps<T>>(), {
   hideXAxis: false,
@@ -59,17 +58,38 @@ const legendItems = computed(() => {
   return [];
 });
 
+
 const x: NumericAccessor<T> = props.xAccessor!;
 const y: NumericAccessor<T> = props.yAccessor!;
-// Default to 'comments' property if sizeAccessor is not provided
 const size: NumericAccessor<T> = props.sizeAccessor || ((d: any) => (typeof d.comments === 'number' ? d.comments : 1));
-const color: StringAccessor<T> = props.colorAccessor!;
+
+const color = (d: T) => {
+  if (!props.categories || !props.categoryKey) {
+    console.warn('BubbleChart: categories and categoryKey are required for color mapping');
+    return '#cccccc';
+  }
+  
+  const categoryValue = String(d[props.categoryKey as keyof T]);
+  let categoryColor = props.categories[categoryValue]?.color;
+
+  if(Object.keys(props.categories).length === 1) {
+    categoryColor = props.categories[props.categoryKey as keyof typeof props.categories]?.color
+  }
+
+  if (!categoryColor) {
+    console.warn(`BubbleChart: No color defined for category "${categoryValue}"`);
+    return '#cccccc';
+  }
+  
+  return categoryColor;
+};
 
 const emit = defineEmits<{
   (e: "click", event: MouseEvent, values?: T): void;
 }>();
 
 function onCrosshairUpdate(d: T): string {
+  console.log(d)
   hoverValues.value = d;
   return generateTooltipContent(d);
 }

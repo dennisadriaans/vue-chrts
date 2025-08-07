@@ -5,7 +5,6 @@ export const data = [
     createdAt: 10,
     timeToTriage: 2,
     priority: 3,
-    status: "In Progress",
     comments: 5,
   },
   {
@@ -14,7 +13,7 @@ export const data = [
     createdAt: 1,
     timeToTriage: 0.5,
     priority: 1,
-    status: "Done",
+
     comments: 1,
   },
   {
@@ -23,7 +22,7 @@ export const data = [
     createdAt: 12,
     timeToTriage: 36,
     priority: 2,
-    status: "In Progress",
+
     comments: 8,
   },
   {
@@ -32,7 +31,7 @@ export const data = [
     createdAt: 7,
     timeToTriage: 4,
     priority: 2,
-    status: "Review",
+
     comments: 3,
   },
   {
@@ -41,7 +40,7 @@ export const data = [
     createdAt: 15,
     timeToTriage: 12,
     priority: 1,
-    status: "In Progress",
+
     comments: 10,
   },
   {
@@ -50,7 +49,7 @@ export const data = [
     createdAt: 3,
     timeToTriage: 1,
     priority: 3,
-    status: "Done",
+
     comments: 2,
   },
   {
@@ -59,7 +58,7 @@ export const data = [
     createdAt: 2,
     timeToTriage: 0.2,
     priority: 2,
-    status: "Done",
+
     comments: 0,
   },
   {
@@ -68,7 +67,7 @@ export const data = [
     createdAt: 9,
     timeToTriage: 6,
     priority: 1,
-    status: "In Progress",
+
     comments: 7,
   },
   // More realistic Linear-style todo app data
@@ -78,7 +77,7 @@ export const data = [
     createdAt: 5,
     timeToTriage: 3,
     priority: 1,
-    status: "Todo",
+
     comments: 4,
   },
   {
@@ -87,7 +86,7 @@ export const data = [
     createdAt: 2,
     timeToTriage: 0.8,
     priority: 2,
-    status: "In Progress",
+
     comments: 2,
   },
   {
@@ -96,7 +95,7 @@ export const data = [
     createdAt: 14,
     timeToTriage: 18,
     priority: 1,
-    status: "Todo",
+
     comments: 6,
   },
   {
@@ -105,7 +104,7 @@ export const data = [
     createdAt: 20,
     timeToTriage: 24,
     priority: 2,
-    status: "Backlog",
+
     comments: 3,
   },
   {
@@ -114,7 +113,7 @@ export const data = [
     createdAt: 6,
     timeToTriage: 2.5,
     priority: 2,
-    status: "Review",
+
     comments: 5,
   },
   {
@@ -123,7 +122,7 @@ export const data = [
     createdAt: 18,
     timeToTriage: 30,
     priority: 1,
-    status: "Todo",
+
     comments: 9,
   },
   {
@@ -132,7 +131,7 @@ export const data = [
     createdAt: 4,
     timeToTriage: 0.3,
     priority: 3,
-    status: "Done",
+
     comments: 0,
   },
   {
@@ -141,7 +140,7 @@ export const data = [
     createdAt: 8,
     timeToTriage: 5,
     priority: 2,
-    status: "In Progress",
+
     comments: 2,
   },
   {
@@ -150,7 +149,7 @@ export const data = [
     createdAt: 11,
     timeToTriage: 8,
     priority: 1,
-    status: "Todo",
+
     comments: 7,
   },
   {
@@ -159,7 +158,7 @@ export const data = [
     createdAt: 13,
     timeToTriage: 2,
     priority: 2,
-    status: "Review",
+
     comments: 1,
   },
   {
@@ -168,7 +167,7 @@ export const data = [
     createdAt: 1,
     timeToTriage: 0.1,
     priority: 3,
-    status: "Done",
+
     comments: 0,
   },
   {
@@ -177,7 +176,7 @@ export const data = [
     createdAt: 16,
     timeToTriage: 10,
     priority: 2,
-    status: "Todo",
+
     comments: 3,
   },
   {
@@ -186,7 +185,7 @@ export const data = [
     createdAt: 17,
     timeToTriage: 7,
     priority: 1,
-    status: "Backlog",
+
     comments: 4,
   },
   {
@@ -195,7 +194,7 @@ export const data = [
     createdAt: 2,
     timeToTriage: 0.6,
     priority: 2,
-    status: "Done",
+
     comments: 1,
   },
   // Additional Linear-style todo app data
@@ -205,7 +204,7 @@ export const data = [
     createdAt: 21,
     timeToTriage: 15,
     priority: 1,
-    status: "Todo",
+
     comments: 8,
   },
   {
@@ -214,7 +213,7 @@ export const data = [
     createdAt: 7,
     timeToTriage: 2.2,
     priority: 2,
-    status: "In Progress",
+
     comments: 3,
   },
   {
@@ -223,7 +222,7 @@ export const data = [
     createdAt: 3,
     timeToTriage: 0.7,
     priority: 3,
-    status: "Done",
+
     comments: 1,
   },
   {
@@ -232,7 +231,7 @@ export const data = [
     createdAt: 12,
     timeToTriage: 5,
     priority: 2,
-    status: "Review",
+
     comments: 4,
   },
   {
@@ -241,7 +240,7 @@ export const data = [
     createdAt: 18,
     timeToTriage: 20,
     priority: 1,
-    status: "Backlog",
+
     comments: 6,
   },
   {
@@ -250,7 +249,7 @@ export const data = [
     createdAt: 2,
     timeToTriage: 0.4,
     priority: 3,
-    status: "Done",
+
     comments: 0,
   },
   {
@@ -259,7 +258,7 @@ export const data = [
     createdAt: 10,
     timeToTriage: 3.5,
     priority: 2,
-    status: "Todo",
+
     comments: 2,
   },
   {
@@ -268,7 +267,7 @@ export const data = [
     createdAt: 8,
     timeToTriage: 4,
     priority: 2,
-    status: "In Progress",
+
     comments: 5,
   },
   {
@@ -277,7 +276,7 @@ export const data = [
     createdAt: 6,
     timeToTriage: 1.5,
     priority: 3,
-    status: "Todo",
+
     comments: 1,
   },
   {
@@ -286,7 +285,7 @@ export const data = [
     createdAt: 4,
     timeToTriage: 0.9,
     priority: 2,
-    status: "Review",
+
     comments: 2,
   },
   {
@@ -295,7 +294,7 @@ export const data = [
     createdAt: 11,
     timeToTriage: 2.8,
     priority: 1,
-    status: "Todo",
+
     comments: 7,
   },
   {
@@ -304,7 +303,7 @@ export const data = [
     createdAt: 13,
     timeToTriage: 6,
     priority: 2,
-    status: "Backlog",
+
     comments: 3,
   },
   {
@@ -313,7 +312,7 @@ export const data = [
     createdAt: 5,
     timeToTriage: 0.5,
     priority: 3,
-    status: "Done",
+
     comments: 0,
   },
   {
@@ -322,7 +321,7 @@ export const data = [
     createdAt: 9,
     timeToTriage: 3,
     priority: 2,
-    status: "Todo",
+
     comments: 2,
   },
   {
@@ -331,7 +330,7 @@ export const data = [
     createdAt: 7,
     timeToTriage: 2.1,
     priority: 2,
-    status: "Review",
+
     comments: 1,
   },
   {
@@ -340,7 +339,7 @@ export const data = [
     createdAt: 15,
     timeToTriage: 8,
     priority: 1,
-    status: "Backlog",
+
     comments: 5,
   },
   {
@@ -349,7 +348,7 @@ export const data = [
     createdAt: 3,
     timeToTriage: 0.2,
     priority: 3,
-    status: "Done",
+
     comments: 0,
   },
   {
@@ -358,7 +357,7 @@ export const data = [
     createdAt: 17,
     timeToTriage: 12,
     priority: 2,
-    status: "Todo",
+
     comments: 6,
   },
   {
@@ -367,7 +366,7 @@ export const data = [
     createdAt: 14,
     timeToTriage: 7,
     priority: 1,
-    status: "In Progress",
+
     comments: 4,
   },
   {
@@ -376,7 +375,7 @@ export const data = [
     createdAt: 2,
     timeToTriage: 0.3,
     priority: 2,
-    status: "Done",
+
     comments: 1,
   },
 ];

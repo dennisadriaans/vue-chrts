@@ -23,7 +23,7 @@ export interface SizeOptions {
   // scale?: 'linear' | 'sqrt' | 'log'; // Simplified, default to sqrt logic in component
 }
 
-import type { NumericAccessor, StringAccessor, Position } from "@unovis/ts";
+import type { NumericAccessor, Position } from "@unovis/ts";
 
 export interface BubbleChartProps<T> {
   /**
@@ -38,10 +38,6 @@ export interface BubbleChartProps<T> {
    * Accessor for bubble size. If not provided, defaults to 1.
    */
   sizeAccessor?: NumericAccessor<T>;
-  /**
-   * Accessor for color. If not provided, uses category/color logic.
-   */
-  colorAccessor?: StringAccessor<T>;
   /**
    * Label position for bubbles (default: Position.Bottom)
    */
@@ -97,8 +93,10 @@ export interface BubbleChartProps<T> {
   /**
    * A record mapping category keys to `BulletLegendItemInterface` objects.
    * This defines the visual representation and labels for each category in the chart's legend.
+   * REQUIRED: Each unique value in your data's categoryKey field must have a corresponding entry with a color.
    */
-  categories?: Record<string, BulletLegendItemInterface>;
+  categories: Record<string, BulletLegendItemInterface>;
+  categoryKey: keyof T; // Key to access category in data
   /**
    * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
    * @param {number} i - The index of the tick in the `ticks` array.
