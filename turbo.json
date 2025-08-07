@@ -10,6 +10,13 @@
     },
     "dev": {
       "cache": false
+    },
+    "version": {
+      "cache": false
+    },
+    "publish": {
+      "dependsOn": ["build", "test"],
+      "cache": false
     }
   }
 }

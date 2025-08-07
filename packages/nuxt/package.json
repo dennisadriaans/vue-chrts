@@ -20,7 +20,7 @@
     "dev": "nuxi dev playground",
     "build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-    "release": "npm run prepack && commit-and-tag-version && npm publish",
+    "release": "pnpm run prepack && commit-and-tag-version && pnpm publish",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
@@ -30,7 +30,7 @@
     "@nuxt/kit": "^3.17.7",
     "@unovis/ts": "^1.5.2",
     "@unovis/vue": "^1.5.2",
-    "vue-chrts": "^0.2.2"
+    "vue-chrts": "workspace:*"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.7.1",

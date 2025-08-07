@@ -1,6 +1,6 @@
 {
   "version": "0.0.0",
-  "name": "vue-chrts-monorepo",
+  "name": "vue-chrts",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,7 +15,8 @@
     "cli:dev": "pnpm --filter nuxt-charts-cli dev",
     "cli:test": "pnpm --filter nuxt-charts-cli test",
     "vue:release": "pnpm --filter vue-chrts release",
-    "nuxt:release": "pnpm --filter nuxt-charts release"
+    "nuxt:release": "pnpm --filter nuxt-charts release",
+    "sync-versions": "node scripts/sync-versions.js"
   },
   "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2",
   "devDependencies": {
