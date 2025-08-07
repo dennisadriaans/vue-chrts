@@ -58,7 +58,7 @@ importers:
         specifier: ^1.5.2
         version: 1.5.2(@unovis/ts@1.5.2)(vue@3.5.18)
       vue-chrts:
-        specifier: 0.2.2-test.0
+        specifier: 0.2.2-test.1
         version: link:../vue
     devDependencies:
       '@nuxt/eslint':
