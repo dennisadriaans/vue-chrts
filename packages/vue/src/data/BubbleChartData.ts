@@ -1,0 +1,381 @@
+export const data = [
+  {
+    id: "ENG-101",
+    title: "Fix login bug",
+    createdAt: 10,
+    timeToTriage: 2,
+    priority: 3,
+    comments: 5,
+  },
+  {
+    id: "ENG-106",
+    title: "Fix typo in docs",
+    createdAt: 1,
+    timeToTriage: 0.5,
+    priority: 1,
+
+    comments: 1,
+  },
+  {
+    id: "ENG-108",
+    title: "Add new analytics dashboard widget",
+    createdAt: 12,
+    timeToTriage: 36,
+    priority: 2,
+
+    comments: 8,
+  },
+  {
+    id: "ENG-110",
+    title: "Refactor user profile page",
+    createdAt: 7,
+    timeToTriage: 4,
+    priority: 2,
+
+    comments: 3,
+  },
+  {
+    id: "ENG-115",
+    title: "Implement dark mode",
+    createdAt: 15,
+    timeToTriage: 12,
+    priority: 1,
+
+    comments: 10,
+  },
+  {
+    id: "ENG-120",
+    title: "Optimize image loading",
+    createdAt: 3,
+    timeToTriage: 1,
+    priority: 3,
+
+    comments: 2,
+  },
+  {
+    id: "ENG-125",
+    title: "Update dependencies",
+    createdAt: 2,
+    timeToTriage: 0.2,
+    priority: 2,
+
+    comments: 0,
+  },
+  {
+    id: "ENG-130",
+    title: "Add password strength meter",
+    createdAt: 9,
+    timeToTriage: 6,
+    priority: 1,
+
+    comments: 7,
+  },
+  // More realistic Linear-style todo app data
+  {
+    id: "ENG-135",
+    title: "Design onboarding flow",
+    createdAt: 5,
+    timeToTriage: 3,
+    priority: 1,
+
+    comments: 4,
+  },
+  {
+    id: "ENG-140",
+    title: "Fix notification badge count bug",
+    createdAt: 2,
+    timeToTriage: 0.8,
+    priority: 2,
+
+    comments: 2,
+  },
+  {
+    id: "ENG-145",
+    title: "Implement recurring tasks",
+    createdAt: 14,
+    timeToTriage: 18,
+    priority: 1,
+
+    comments: 6,
+  },
+  {
+    id: "ENG-150",
+    title: "Add calendar integration",
+    createdAt: 20,
+    timeToTriage: 24,
+    priority: 2,
+
+    comments: 3,
+  },
+  {
+    id: "ENG-155",
+    title: "Improve mobile responsiveness",
+    createdAt: 6,
+    timeToTriage: 2.5,
+    priority: 2,
+
+    comments: 5,
+  },
+  {
+    id: "ENG-160",
+    title: "Add multi-user support",
+    createdAt: 18,
+    timeToTriage: 30,
+    priority: 1,
+
+    comments: 9,
+  },
+  {
+    id: "ENG-165",
+    title: "Fix broken links in help section",
+    createdAt: 4,
+    timeToTriage: 0.3,
+    priority: 3,
+
+    comments: 0,
+  },
+  {
+    id: "ENG-170",
+    title: "Refactor task detail modal",
+    createdAt: 8,
+    timeToTriage: 5,
+    priority: 2,
+
+    comments: 2,
+  },
+  {
+    id: "ENG-175",
+    title: "Add support for file attachments",
+    createdAt: 11,
+    timeToTriage: 8,
+    priority: 1,
+
+    comments: 7,
+  },
+  {
+    id: "ENG-180",
+    title: "Update user settings UI",
+    createdAt: 13,
+    timeToTriage: 2,
+    priority: 2,
+
+    comments: 1,
+  },
+  {
+    id: "ENG-185",
+    title: "Fix search bar autofocus",
+    createdAt: 1,
+    timeToTriage: 0.1,
+    priority: 3,
+
+    comments: 0,
+  },
+  {
+    id: "ENG-190",
+    title: "Implement task archiving",
+    createdAt: 16,
+    timeToTriage: 10,
+    priority: 2,
+
+    comments: 3,
+  },
+  {
+    id: "ENG-195",
+    title: "Add Slack notifications",
+    createdAt: 17,
+    timeToTriage: 7,
+    priority: 1,
+
+    comments: 4,
+  },
+  {
+    id: "ENG-200",
+    title: "Fix date picker bug",
+    createdAt: 2,
+    timeToTriage: 0.6,
+    priority: 2,
+
+    comments: 1,
+  },
+  // Additional Linear-style todo app data
+  {
+    id: "ENG-205",
+    title: "Implement Kanban board view",
+    createdAt: 21,
+    timeToTriage: 15,
+    priority: 1,
+
+    comments: 8,
+  },
+  {
+    id: "ENG-210",
+    title: "Add Google login support",
+    createdAt: 7,
+    timeToTriage: 2.2,
+    priority: 2,
+
+    comments: 3,
+  },
+  {
+    id: "ENG-215",
+    title: "Fix avatar upload issue",
+    createdAt: 3,
+    timeToTriage: 0.7,
+    priority: 3,
+
+    comments: 1,
+  },
+  {
+    id: "ENG-220",
+    title: "Add markdown support to comments",
+    createdAt: 12,
+    timeToTriage: 5,
+    priority: 2,
+
+    comments: 4,
+  },
+  {
+    id: "ENG-225",
+    title: "Implement push notifications",
+    createdAt: 18,
+    timeToTriage: 20,
+    priority: 1,
+
+    comments: 6,
+  },
+  {
+    id: "ENG-230",
+    title: "Fix task sorting bug",
+    createdAt: 2,
+    timeToTriage: 0.4,
+    priority: 3,
+
+    comments: 0,
+  },
+  {
+    id: "ENG-235",
+    title: "Add custom labels feature",
+    createdAt: 10,
+    timeToTriage: 3.5,
+    priority: 2,
+
+    comments: 2,
+  },
+  {
+    id: "ENG-240",
+    title: "Refactor notification system",
+    createdAt: 8,
+    timeToTriage: 4,
+    priority: 2,
+
+    comments: 5,
+  },
+  {
+    id: "ENG-245",
+    title: "Add export to CSV",
+    createdAt: 6,
+    timeToTriage: 1.5,
+    priority: 3,
+
+    comments: 1,
+  },
+  {
+    id: "ENG-250",
+    title: "Fix mobile drag-and-drop",
+    createdAt: 4,
+    timeToTriage: 0.9,
+    priority: 2,
+
+    comments: 2,
+  },
+  {
+    id: "ENG-255",
+    title: "Implement dark/light theme toggle",
+    createdAt: 11,
+    timeToTriage: 2.8,
+    priority: 1,
+
+    comments: 7,
+  },
+  {
+    id: "ENG-260",
+    title: "Add recurring reminders",
+    createdAt: 13,
+    timeToTriage: 6,
+    priority: 2,
+
+    comments: 3,
+  },
+  {
+    id: "ENG-265",
+    title: "Fix project color picker bug",
+    createdAt: 5,
+    timeToTriage: 0.5,
+    priority: 3,
+
+    comments: 0,
+  },
+  {
+    id: "ENG-270",
+    title: "Add API documentation page",
+    createdAt: 9,
+    timeToTriage: 3,
+    priority: 2,
+
+    comments: 2,
+  },
+  {
+    id: "ENG-275",
+    title: "Refactor workspace settings",
+    createdAt: 7,
+    timeToTriage: 2.1,
+    priority: 2,
+
+    comments: 1,
+  },
+  {
+    id: "ENG-280",
+    title: "Add SSO support",
+    createdAt: 15,
+    timeToTriage: 8,
+    priority: 1,
+
+    comments: 5,
+  },
+  {
+    id: "ENG-285",
+    title: "Fix task duplication bug",
+    createdAt: 3,
+    timeToTriage: 0.2,
+    priority: 3,
+
+    comments: 0,
+  },
+  {
+    id: "ENG-290",
+    title: "Add timeline view",
+    createdAt: 17,
+    timeToTriage: 12,
+    priority: 2,
+
+    comments: 6,
+  },
+  {
+    id: "ENG-295",
+    title: "Implement 2FA login",
+    createdAt: 14,
+    timeToTriage: 7,
+    priority: 1,
+
+    comments: 4,
+  },
+  {
+    id: "ENG-300",
+    title: "Fix email notification bug",
+    createdAt: 2,
+    timeToTriage: 0.3,
+    priority: 2,
+
+    comments: 1,
+  },
+];

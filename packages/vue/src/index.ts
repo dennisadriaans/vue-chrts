@@ -30,6 +30,11 @@ const router = createRouter({
           component: () => import('./BarChartPage.vue') 
         },
         {
+          path: '/bubble-charts',
+          name: 'BubbleCharts',
+          component: () => import('./BubbleChartPage.vue') 
+        },
+        {
           path: '/donut-charts',
           name: 'DonutCharts',
           component: () => import('./DonutChartPage.vue') 
