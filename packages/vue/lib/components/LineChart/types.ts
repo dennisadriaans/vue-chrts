@@ -138,4 +138,8 @@ export interface LineChartProps<T> {
    * Crosshair configuration object for customizing the appearance of the crosshair line.
    */
   crosshairConfig?: CrosshairConfig;
+  /**
+   * The domain for the y-axis, specified as a tuple of two values.
+   */
+  yDomain?: [number, number];
 }
