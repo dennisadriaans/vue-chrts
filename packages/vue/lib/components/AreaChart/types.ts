@@ -74,7 +74,7 @@ export interface AreaChartProps<T> {
   /**
    * Force specific ticks on the x-axis.
    */
-  xExplicitTicks?: number;
+  xExplicitTicks?: (number | string | Date)[];
   /**
    * Force only first and last ticks on the x-axis.
    */

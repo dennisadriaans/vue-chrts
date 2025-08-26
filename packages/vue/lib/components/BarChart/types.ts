@@ -68,7 +68,7 @@ type BarChartPropsBase<T> = {
   /**
    * Force specific ticks on the x-axis.
    */
-  xExplicitTicks?: number;
+  xExplicitTicks?: (number | string | Date)[];
   /**
    * An array of property keys from the data object type 'T' to be used for the y-axis values.
    */
