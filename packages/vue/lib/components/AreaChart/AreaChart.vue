@@ -117,6 +117,8 @@ function onCrosshairUpdate(d: T): string {
       :height="height"
       :padding="padding"
       :svg-defs="svgDefs + markersSvgDefs"
+      :y-domain="yDomain"
+      :x-domain="xDomain"
     >
       <VisTooltip
         v-if="!hideTooltip"
