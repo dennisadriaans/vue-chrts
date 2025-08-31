@@ -5,6 +5,18 @@ import fs from 'fs/promises'
 import path from 'path'
 import os from 'os'
 
+
+// Read version from package.json at runtime for compatibility
+async function getPackageVersion() {
+  try {
+    const pkgPath = path.join(__dirname || path.dirname(new URL(import.meta.url).pathname), '../package.json')
+    const data = await fs.readFile(pkgPath, 'utf-8')
+    return JSON.parse(data).version || '0.0.0'
+  } catch {
+    return '0.0.0'
+  }
+}
+
 const program = new Command()
 
 // Config file location
@@ -27,7 +39,17 @@ async function setTokenToConfig(token: string): Promise<void> {
   await fs.writeFile(CONFIG_PATH, JSON.stringify(config, null, 2), 'utf-8')
 }
 
-program.version('0.0.1').description('A custom CLI for nuxt-charts-site')
+// Set version dynamically at runtime
+(async () => {
+  const version = await getPackageVersion()
+  program.version(version).description('A custom CLI for nuxt-charts-site')
+  program.parse(process.argv)
+
+  // Show help if no command provided
+  if (!process.argv.slice(2).length) {
+    program.outputHelp()
+  }
+})()
 
 // Configuration
 const CONFIG = {
@@ -38,14 +60,14 @@ const CONFIG = {
 } as const
 
 const Mapping = {
-  'progress-circle': 'ProgressCircle',
-  calendar: 'Calendar',
+  'ProgressCircle': 'ProgressCircle',
+  'StatusTracker': 'StatusTracker',
+  'calendar': 'Calendar',
 } as const
 
 // Input validation
 function validateComponent(component: string): component is keyof typeof Mapping {
   if (typeof component !== 'string') return false
-  if (!/^[a-z0-9-]+$/.test(component)) return false
   return component in Mapping
 }
 
@@ -194,7 +216,7 @@ program
         return
       }
 
-      const latestVersion = 'v1'
+      const latestVersion = 'v2'
       const useVersion = version || latestVersion
 
       const pascalName = Mapping[component]
@@ -268,7 +290,7 @@ program
 
             console.log(
               chalk.green(
-                `✓ Component '${component}' extracted to '${extractDir}'`,
+                `✓ Component '${component}' ${useVersion} extracted to '${extractDir}'`,
               ),
             )
           } catch (extractError) {
@@ -347,10 +369,3 @@ program.on('command:*', function (operands) {
   console.error(chalk.red(`Unknown command: ${operands[0]}`))
   console.log(chalk.dim('Run "nuxt-charts --help" for available commands'))
 })
-
-program.parse(process.argv)
-
-// Show help if no command provided
-if (!process.argv.slice(2).length) {
-  program.outputHelp()
-}
