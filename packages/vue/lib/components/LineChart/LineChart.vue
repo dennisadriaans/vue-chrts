@@ -90,6 +90,8 @@ const color = (key: number) =>
       :padding="padding"
       :height="height"
       :svgDefs="svgDefs"
+      :yDomain="yDomain"
+      :xDomain="xDomain"
     >
       <VisTooltip
         :horizontal-placement="Position.Right"
