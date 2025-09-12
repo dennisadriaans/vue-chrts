@@ -3,7 +3,7 @@ import { flattenData } from "../../utils";
 
 export interface StackedGroupedConfig<T> {
   data: T[];
-  categories: Record<string, { color?: string }>;
+  categories: Record<string, { color?: string | Array<string> }>;
   stackAndGrouped: boolean;
   xAxis?: keyof T;
   spacing?: number;
@@ -48,7 +48,7 @@ export function useStackedGrouped<T extends {}>(
 }
 
 function extractStates(
-  categories: Record<string, { color?: string }>
+  categories:  Record<string, { color?: string | Array<string> }>
 ): string[] {
   const states = new Set<string>();
   const categoryKeys = Object.keys(categories);
@@ -64,7 +64,7 @@ function extractStates(
 }
 
 function groupCategoriesByState(
-  categories: Record<string, { color?: string }>,
+  categories:  Record<string, { color?: string | Array<string> }>,
   states: string[]
 ): Record<string, string[]> {
   const grouped: Record<string, string[]> = {};
@@ -80,12 +80,18 @@ function groupCategoriesByState(
 
 function generateColors(
   groupedByState: Record<string, string[]>,
-  categories: Record<string, { color?: string }>
+  categories:  Record<string, { color?: string | Array<string> }>
 ): Record<string, string[]> {
   const colorsByState: Record<string, string[]> = {};
 
   Object.entries(groupedByState).forEach(([state, keys]) => {
-    colorsByState[state] = keys.map((key) => categories[key]?.color ?? "#ccc");
+    colorsByState[state] = keys.map((key) => {
+      const color = categories[key]?.color;
+      if (Array.isArray(color)) {
+        return color[0] ?? "#ccc";
+      }
+      return color ?? "#ccc";
+    });
   });
 
   return colorsByState;

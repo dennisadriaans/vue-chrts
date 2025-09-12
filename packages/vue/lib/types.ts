@@ -32,7 +32,7 @@ enum CurveType {
 
 interface BulletLegendItemInterface {
   name: string | number;
-  color?: string;
+  color?: string | Array<string>;
   className?: string;
   shape?: any;
   inactive?: boolean;

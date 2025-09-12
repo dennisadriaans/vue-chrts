@@ -59,13 +59,13 @@ const markersSvgDefs = computed(() => {
 const isLegendTop = computed(() => props.legendPosition === LegendPosition.Top);
 
 const svgDefs = computed(() => {
-  const createGradientWithHex = (id: number, color: string) => `
+  const createGradientWithHex = (id: number, color: string | string[]) => `
     <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
       <stop offset="0%" stop-color="${color}" stop-opacity="1" />
       <stop offset="100%" stop-color="${color}" stop-opacity="0" />
     </linearGradient>
   `;
-  const createGradientWithCssVar = (id: number, color: string) => `
+  const createGradientWithCssVar = (id: number, color: string | string[]) => `
     <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
       <stop offset="0%" style="stop-color:var(--vis-color0);stop-opacity:1" />
       <stop offset="100%" style="stop-color:var(--vis-color0);stop-opacity:0" />
@@ -80,7 +80,7 @@ const svgDefs = computed(() => {
     .join("");
 });
 
-function getAccessors(id: string): { y: NumericAccessor<T>; color: string } {
+function getAccessors(id: string): { y: NumericAccessor<T>; color: string | string[] } {
   return {
     y: (d: T) => Number(d[id as keyof T]),
     color: props.categories[id]?.color ?? DEFAULT_COLOR,

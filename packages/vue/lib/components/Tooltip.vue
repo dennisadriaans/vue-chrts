@@ -40,7 +40,7 @@ const visibleEntries = computed(() => {
       <span
         style="width: 8px; height: 8px; border-radius: 4px; margin-right: 8px"
         :style="{
-          backgroundColor: categories[key]?.color
+          backgroundColor: typeof categories[key]?.color === 'string' && categories[key]?.color
             ? categories[key].color
             : `var(--vis-color${index})`,
         }"
