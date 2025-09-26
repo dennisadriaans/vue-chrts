@@ -7,6 +7,8 @@ import { LegendPosition, Orientation } from "./../lib";
 import { ref } from "vue";
 import { BarChartProps } from "../lib/types";
 
+import BarWithLabel from './components/BarWithLabel.vue'
+
 type DataProps = {
   month?: string;
   desktop?: number;
@@ -333,6 +335,8 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
         Explore different Bar Chart configurations for your V
       </p>
     </div>
+
+    <BarWithLabel />
 
     <div class="max-w-screen-2xl mx-auto">
       <div
