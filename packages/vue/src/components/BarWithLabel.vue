@@ -16,11 +16,8 @@ const x = (d: ElectionDatum) => d.year;
 const y = [(d: ElectionDatum) => d.republican];
 const color = (d: ElectionDatum, i: number) => items[i].color;
 
- enum XYLabelPositioning {
-  AbsolutePx = 'absolute_px',
-  AbsolutePercentage = 'absolute_percentage',
-  DataSpace = 'data_space',
-}
+// Define a consistent pixel offset for the label above the bar end
+const PIXEL_OFFSET = 50000000000; // Negative value moves the label up by 5 pixels
 
 </script>
 
@@ -34,14 +31,13 @@ const color = (d: ElectionDatum, i: number) => items[i].color;
     }"
   >
     <VisStackedBar :data="data" :x="x" :y="y" :color="color" />
-    <div class="py-4">
-      <VisXYLabels
-        :data="data"
-        :y="(d) => d.republican * 1.05"
-        :x="(d) => d.year "
-        :label="(d) => `bps 123`"
-      />
-    </div>
+
+    <VisXYLabels
+      :data="data"
+      :x="(d) => d.year" 
+      :y="(d) => d.republican" 
+      :label="(d) => `bps 123`"
+    />
 
     <VisAxis type="x" label="Election Year" :numTicks="data.length" />
     <VisAxis
