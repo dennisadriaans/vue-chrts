@@ -34,6 +34,8 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
   orientation: Orientation.Vertical,
   LegendPosition: LegendPosition.Bottom,
   yGridLine: true,
+  groupPadding: 0,
+  barPadding: 0.2,
   padding: () => {
     return {
       top: 5,
@@ -95,6 +97,57 @@ function generateTooltipContent(d: T): string {
   }
   return "";
 }
+
+const accessors = props.yAxis.map((i) => {
+  return (d: any) => d[i]
+});
+
+const numBars = accessors.length;
+
+interface LabelDatum {
+  x: number;
+  y: number;
+  itemIndex: number;
+}
+
+const labelData: LabelDatum[] = props.data.flatMap((item, colIndex) =>
+  accessors.map((yAccessor, itemIndex) => ({
+    x: colIndex,
+    y: Number(yAccessor(item) ?? 0),
+    itemIndex,
+  }))
+);
+
+// Compute label x-position so each value label sits centered over (or in front of) its own bar
+// instead of the middle of the group. For stacked or stacked+grouped charts we leave the default.
+// NOTE: We approximate group width as 1 (same assumption Unovis uses when x accessor returns index)
+// and shrink by groupPadding (external) – this is a heuristic but yields visually correct alignment.
+// If barPadding is large, Unovis internally adjusts bar widths; we ignore intra-bar padding here
+// because labels should track bar centers, not gaps.
+const labelX = (d: LabelDatum) => {
+  // Do not offset for stacked variants
+  if (props.stacked || props.stackAndGrouped) return d.x;
+  const n = numBars;
+  if (n <= 1) return d.x; // single series, already centered
+
+  // Effective drawable width of the group after outer group padding (heuristic)
+  const groupPaddingRatio = props.groupPadding ?? 0; // 0..1 proportion
+  const groupEffectiveWidth = 1 - groupPaddingRatio;
+  const barEffectiveWidth = groupEffectiveWidth / n;
+
+  // Start (left) edge of effective group relative to group center (which is at d.x)
+  // We treat group center as 0 and shift bars left by half the effective width.
+  const leftOffsetFromCenter = -groupEffectiveWidth / 2;
+  const barCenterOffset = barEffectiveWidth * d.itemIndex + barEffectiveWidth / 2;
+  // Bars inside the group usually don't span the full theoretical width due to internal barPadding.
+  // This caused first label to lean left edge and last to lean right edge. Compress offsets towards center.
+  const barPaddingRatio = props.barPadding ?? 0; // 0..1
+  const compression = 1 - barPaddingRatio; // pull towards center
+  const offsetFromCenter = (leftOffsetFromCenter + barCenterOffset) * compression;
+
+  return d.x + offsetFromCenter;
+};
+
 </script>
 
 <template>
@@ -108,23 +161,14 @@ function generateTooltipContent(d: T): string {
   >
     <VisXYContainer :padding="padding" :height="height">
       <VisXYLabels
-        :data="data"
-        :x="
-          (d: T, _idx: number) => data.findIndex((i) => i[props.xAxis] === d[props.xAxis])
-        "
-        :label="(d: T) => props.yAxis.map((x) => d[x])"
-        :y="(d: T) => {
-          const spacing = props.valueLabel?.labelSpacing || 0;
-          if (Array.isArray(props.yAxis)) {
-        return props.yAxis.reduce((sum, key) => sum + Number(d[key]), spacing);
-          }
-          return Number(d[props.yAxis]) + spacing;
-        }"
+        :data="labelData"
+        :x="labelX"
+        :y="(d: any) => d.y + (props.valueLabel?.labelSpacing ?? 0)"
+        :label="props.valueLabel?.label"
         :backgroundColor="props.valueLabel?.backgroundColor ?? 'transparent'"
         :color="props.valueLabel?.color ?? 'red'"
         :labelFontSize="props.valueLabel?.labelFontSize"
-      >
-      </VisXYLabels>
+      />
 
       <VisTooltip
         :triggers="{

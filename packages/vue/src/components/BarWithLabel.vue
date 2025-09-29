@@ -33,7 +33,6 @@ console.log(data, 'data')
     <VisXYLabels
       :data="data"
       :x="(d) => {
-        console.log(d.year);
         return d.year
       }"
       :labelFontSize="16"

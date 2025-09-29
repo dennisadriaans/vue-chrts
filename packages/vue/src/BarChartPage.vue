@@ -32,12 +32,12 @@ type SocialDealChartData = {
 };
 
 const RevenueData: DataProps[] = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { month: 'january', desktop: 186, mobile: 80, tablet: 40 },
+  { month: 'february', desktop: 305, mobile: 200, tablet: 60 },
+  { month: 'march', desktop: 237, mobile: 120, tablet: 50 },
+  { month: 'april', desktop: 73, mobile: 190, tablet: 30 },
+  { month: 'may', desktop: 209, mobile: 130, tablet: 70 },
+  { month: 'jun', desktop: 214, mobile: 140, tablet: 55 },
 ];
 
 const RevenueDataLong: DataProps[] = [
@@ -118,14 +118,14 @@ const barChartExamples: BarChartExample[] = [
     categories: RevenueCategoriesMultiple,
     valueLabel: {
       label: (d) => {
-        return d['desktop']
+        return '99'
       },
       labelSpacing: 25,
       color: 'red',
       labelFontSize: 16
     },
     xAxis: 'month',
-    yAxis: ["desktop"],
+    yAxis: ["desktop", "mobile", "tablet"],
     orientation: undefined,
     stacked: false,
     groupPadding: 0,
@@ -349,7 +349,7 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
 
     <div class="max-w-screen-2xl mx-auto">
       <div
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-8 items-stretch"
       >
         <Card
           v-for="(example, exampleKey) in barChartExamples"
