@@ -19,7 +19,9 @@
   --vis-color4: purple !important;
 
   --vis-tooltip-padding: 0 !important;
+
 }
+
 
 @utility heading-2 {
   @apply dark:text-white my-2 font-bold;

@@ -16,9 +16,7 @@ const x = (d: ElectionDatum) => d.year;
 const y = [(d: ElectionDatum) => d.republican];
 const color = (d: ElectionDatum, i: number) => items[i].color;
 
-// Define a consistent pixel offset for the label above the bar end
-const PIXEL_OFFSET = 50000000000; // Negative value moves the label up by 5 pixels
-
+console.log(data, 'data')
 </script>
 
 <template>
@@ -34,10 +32,22 @@ const PIXEL_OFFSET = 50000000000; // Negative value moves the label up by 5 pixe
 
     <VisXYLabels
       :data="data"
-      :x="(d) => d.year" 
-      :y="(d) => d.republican" 
+      :x="(d) => {
+        console.log(d.year);
+        return d.year
+      }"
+      :labelFontSize="16"
       :label="(d) => `bps 123`"
-    />
+      :y="
+        (d) => {
+          const sum = Object.keys(d)
+            .filter((key) => key !== 'year')
+            .reduce((accumulator, key) => accumulator + (d[key] ?? 0), 0);
+          return sum + 1;
+        }
+      "
+    >
+    </VisXYLabels>
 
     <VisAxis type="x" label="Election Year" :numTicks="data.length" />
     <VisAxis

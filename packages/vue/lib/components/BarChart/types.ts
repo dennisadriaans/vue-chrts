@@ -69,6 +69,11 @@ type BarChartPropsBase<T> = {
    * Force specific ticks on the x-axis.
    */
   xExplicitTicks?: (number | string | Date)[];
+
+    /**
+   * The key in the data object type 'T' to be used for the x-axis values.
+   */
+  xAxis: keyof T;
   /**
    * An array of property keys from the data object type 'T' to be used for the y-axis values.
    */
@@ -136,25 +141,29 @@ type BarChartPropsBase<T> = {
    */
   hideYAxis?: boolean;
 
+  /**
+   * Specific spacing between stacked and grouped bars in pixels.
+   * Only applicable if `stackAndGrouped` is `true`.
+   */
   stackedGroupedSpacing?: number;
+
+  valueLabel?: ValueLabel;
 };
 
 type BarChartPropsStackAndGrouped<T> = BarChartPropsBase<T> & {
   stackAndGrouped: true;
-  /**
-   * The key in the data object type 'T' to be used for the x-axis values.
-   * Required when stackAndGrouped is true.
-   */
-  xAxis: keyof T;
 };
 
 type BarChartPropsNormal<T> = BarChartPropsBase<T> & {
   stackAndGrouped?: false;
-  /**
-   * The key in the data object type 'T' to be used for the x-axis values.
-   * Optional when stackAndGrouped is not true.
-   */
-  xAxis?: keyof T;
 };
 
 export type BarChartProps<T> = BarChartPropsStackAndGrouped<T> | BarChartPropsNormal<T>;
+
+export type ValueLabel = {
+  label: (d: any, index: number) => string | number;
+  labelSpacing?: number;
+  backgroundColor?: string;
+  color?: string;
+  labelFontSize?: number;
+}

@@ -116,210 +116,219 @@ const barChartExamples: BarChartExample[] = [
       "Compare desktop and mobile revenue per month, grouped by device.",
     data: RevenueData,
     categories: RevenueCategoriesMultiple,
-    yAxis: ["desktop", "mobile"],
-    orientation: undefined,
-    stacked: false,
-    groupPadding: 0,
-    barPadding: 0.2,
-    xFormatter: (tick: number, i?: number) =>
-      `${RevenueData[typeof i !== "undefined" ? i : tick]?.month}`,
-    yFormatter: (tick: number, i?: number) =>
-      `${typeof i !== "undefined" ? i : tick}`,
-  },
-  {
-    id: 8,
-    title: "Stacked & Grouped Bar Chart (SocialDeal)",
-    description:
-      "Stacked and grouped bar chart with multiple device types and statuses.",
-    data: [
-      {
-        month: "January",
-        desktop: {
-          done: 25,
-          pending: 25,
-        },
-        mobile: {
-          done: 25,
-          pending: 50,
-        },
-        android: {
-          done: 25,
-          pending: 50,
-        },
-        ios: {
-          done: 0,
-          pending: 25,
-        },
+    valueLabel: {
+      label: (d) => {
+        return d['desktop']
       },
-      {
-        month: "February",
-        desktop: {
-          done: 25,
-          pending: 25,
-        },
-        mobile: {
-          done: 25,
-          pending: 25,
-        },
-        android: {
-          done: 25,
-          pending: 25,
-        },
-        ios: {
-          done: 25,
-          pending: 25,
-        },
-      },
-      {
-        month: "Maart",
-        desktop: {
-          done: 25,
-          pending: 25,
-        },
-        mobile: {
-          done: 25,
-          pending: 25,
-        },
-        android: {
-          done: 25,
-          pending: 25,
-        },
-        ios: {
-          done: 25,
-          pending: 25,
-        },
-      },
-    ],
-    categories: {
-      desktopDone: { name: "Desktop Done", color: "#2B7FFF" },
-      mobileDone: { name: "Mobile Done", color: "#EFB100" },
-      androidDone: { name: "Android Done", color: "#00C16A" },
-      iosDone: { name: "iOS Done", color: "#AD46FF" },
-      desktopPending: { name: "Desktop Pending", color: "#8EC5FF" },
-      mobilePending: { name: "Mobile Pending", color: "#FFDF20" },
-      androidPending: { name: "Android Pending", color: "#7FE0A8" },
-      iosPending: { name: "iOS Pending", color: "#D69FFF" },
+      labelSpacing: 25,
+      color: 'red',
+      labelFontSize: 16
     },
-    xAxis: "month",
-    yAxis: ['desktopDone', 'mobileDone', 'androidDone', 'iosDone'],
-    stackAndGrouped: true,
-    radius: 4,
-    xFormatter: (tick: number, i?: number) => {
-      const months = ["January", "February", "Maart"];
-      return months[typeof i !== "undefined" ? i : tick] || String(tick);
-    },
-    yFormatter: (tick: number, i?: number) => String(tick),
-    legendPosition: LegendPosition.Top,
-    barPadding: 0.8,
-    stackedGroupedSpacing: 0.25,
-    hideLegend: false,
-    yGridLine: true,
-  },
-  {
-    id: 2,
-    title: "Vertical Bar Chart (Single Series)",
-    description: "Show only desktop revenue per month.",
-    data: RevenueData,
-    categories: RevenueCategoriesMultiple,
+    xAxis: 'month',
     yAxis: ["desktop"],
     orientation: undefined,
     stacked: false,
-    groupPadding: undefined,
-    barPadding: undefined,
-    xFormatter: (tick: number, i?: number) =>
-      `${tick}${typeof i !== "undefined" ? "-" + i : ""}`,
-    yFormatter: (tick: number, i?: number) =>
-      `${typeof i !== "undefined" ? i : tick}`,
-  },
-  {
-    id: 3,
-    title: "Horizontal Bar Chart (Single Series)",
-    description: "Show mobile revenue per month, horizontal orientation.",
-    data: [...RevenueData].reverse(),
-    categories: RevenueCategoriesMobile,
-    yAxis: ["desktop"],
-    orientation: Orientation.Horizontal,
-    stacked: false,
-    groupPadding: undefined,
-    barPadding: 0,
-    xNumTicks: 6,
-    xFormatter: (tick: number, i?: number) =>
-      `${typeof i !== "undefined" ? i : tick}`,
-    yFormatter: (tick: number, i?: number) =>
-      `${
-        [...RevenueData].reverse()[typeof i !== "undefined" ? i : tick]?.month
-      }`,
-  },
-  {
-    id: 4,
-    title: "Stacked Bar Chart (Vertical)",
-    description: "Stack desktop and mobile revenue for each month.",
-    data: RevenueData,
-    categories: RevenueCategoriesMultiple,
-    yAxis: ["desktop", "mobile"],
-    orientation: undefined,
-    stacked: true,
     groupPadding: 0,
     barPadding: 0.2,
-    xNumTicks: 6,
     xFormatter: (tick: number, i?: number) =>
       `${RevenueData[typeof i !== "undefined" ? i : tick]?.month}`,
     yFormatter: (tick: number, i?: number) =>
-      `${typeof i !== "undefined" ? i : tick}`,
+      `${typeof i !== "undefined" ? tick : tick}`,
   },
-  {
-    id: 5,
-    title: "Stacked Bar Chart (Horizontal)",
-    description:
-      "Stack desktop and mobile revenue for each month, horizontal orientation.",
-    data: [...RevenueData].reverse(),
-    categories: RevenueCategoriesMultiple,
-    yAxis: ["desktop", "mobile"],
-    orientation: Orientation.Horizontal,
-    stacked: true,
-    groupPadding: 0,
-    barPadding: 0.2,
-    xNumTicks: 6,
-    xFormatter: (tick: number, i?: number) =>
-      `${typeof i !== "undefined" ? i : tick}`,
-    yFormatter: (tick: number, i?: number) =>
-      `${
-        [...RevenueData].reverse()[typeof i !== "undefined" ? i : tick]?.month
-      }`,
-  },
-  {
-    id: 6,
-    title: "Long Data Bar Chart",
-    description: "Show a long time series of revenue data.",
-    data: RevenueDataLong,
-    categories: RevenueCategories,
-    yAxis: ["value"],
-    orientation: undefined,
-    stacked: false,
-    groupPadding: undefined,
-    barPadding: undefined,
-    xFormatter: (tick: number, i?: number) =>
-      `${RevenueDataLong[typeof i !== "undefined" ? i : tick]?.date}`,
-    yFormatter: (tick: number, i?: number) =>
-      `${typeof i !== "undefined" ? i : tick}`,
-  },
-  {
-    id: 7,
-    title: "Visitors Bar Chart",
-    description: "Show visitors data for the first 6 months.",
-    data: VisitorsData.slice(0, 6),
-    categories: VisitorsCartegories,
-    yAxis: ["visitors"],
-    orientation: undefined,
-    stacked: false,
-    groupPadding: undefined,
-    barPadding: undefined,
-    xNumTicks: 6,
-    xFormatter: (tick: number, i?: number) =>
-      `${RevenueData[typeof i !== "undefined" ? i : tick]?.month}`,
-    yFormatter: (tick: number, i?: number) =>
-      `${typeof i !== "undefined" ? i : tick}`,
-  },
+  // {
+  //   id: 8,
+  //   title: "Stacked & Grouped Bar Chart (SocialDeal)",
+  //   description:
+  //     "Stacked and grouped bar chart with multiple device types and statuses.",
+  //   data: [
+  //     {
+  //       month: "January",
+  //       desktop: {
+  //         done: 25,
+  //         pending: 25,
+  //       },
+  //       mobile: {
+  //         done: 25,
+  //         pending: 50,
+  //       },
+  //       android: {
+  //         done: 25,
+  //         pending: 50,
+  //       },
+  //       ios: {
+  //         done: 0,
+  //         pending: 25,
+  //       },
+  //     },
+  //     {
+  //       month: "February",
+  //       desktop: {
+  //         done: 25,
+  //         pending: 25,
+  //       },
+  //       mobile: {
+  //         done: 25,
+  //         pending: 25,
+  //       },
+  //       android: {
+  //         done: 25,
+  //         pending: 25,
+  //       },
+  //       ios: {
+  //         done: 25,
+  //         pending: 25,
+  //       },
+  //     },
+  //     {
+  //       month: "Maart",
+  //       desktop: {
+  //         done: 25,
+  //         pending: 25,
+  //       },
+  //       mobile: {
+  //         done: 25,
+  //         pending: 25,
+  //       },
+  //       android: {
+  //         done: 25,
+  //         pending: 25,
+  //       },
+  //       ios: {
+  //         done: 25,
+  //         pending: 25,
+  //       },
+  //     },
+  //   ],
+  //   categories: {
+  //     desktopDone: { name: "Desktop Done", color: "#2B7FFF" },
+  //     mobileDone: { name: "Mobile Done", color: "#EFB100" },
+  //     androidDone: { name: "Android Done", color: "#00C16A" },
+  //     iosDone: { name: "iOS Done", color: "#AD46FF" },
+  //     desktopPending: { name: "Desktop Pending", color: "#8EC5FF" },
+  //     mobilePending: { name: "Mobile Pending", color: "#FFDF20" },
+  //     androidPending: { name: "Android Pending", color: "#7FE0A8" },
+  //     iosPending: { name: "iOS Pending", color: "#D69FFF" },
+  //   },
+  //   xAxis: "month",
+  //   yAxis: ['desktopDone', 'mobileDone', 'androidDone', 'iosDone'],
+  //   stackAndGrouped: true,
+  //   radius: 4,
+  //   xFormatter: (tick: number, i?: number) => {
+  //     const months = ["January", "February", "Maart"];
+  //     return months[typeof i !== "undefined" ? i : tick] || String(tick);
+  //   },
+  //   yFormatter: (tick: number, i?: number) => String(tick),
+  //   legendPosition: LegendPosition.Top,
+  //   barPadding: 0.8,
+  //   stackedGroupedSpacing: 0.25,
+  //   hideLegend: false,
+  //   yGridLine: true,
+  // },
+  // {
+  //   id: 2,
+  //   title: "Vertical Bar Chart (Single Series)",
+  //   description: "Show only desktop revenue per month.",
+  //   data: RevenueData,
+  //   categories: RevenueCategoriesMultiple,
+  //   yAxis: ["desktop"],
+  //   orientation: undefined,
+  //   stacked: false,
+  //   groupPadding: undefined,
+  //   barPadding: undefined,
+  //   xFormatter: (tick: number, i?: number) =>
+  //     `${tick}${typeof i !== "undefined" ? "-" + i : ""}`,
+  //   yFormatter: (tick: number, i?: number) =>
+  //     `${typeof i !== "undefined" ? i : tick}`,
+  // },
+  // {
+  //   id: 3,
+  //   title: "Horizontal Bar Chart (Single Series)",
+  //   description: "Show mobile revenue per month, horizontal orientation.",
+  //   data: [...RevenueData].reverse(),
+  //   categories: RevenueCategoriesMobile,
+  //   yAxis: ["desktop"],
+  //   orientation: Orientation.Horizontal,
+  //   stacked: false,
+  //   groupPadding: undefined,
+  //   barPadding: 0,
+  //   xNumTicks: 6,
+  //   xFormatter: (tick: number, i?: number) =>
+  //     `${typeof i !== "undefined" ? i : tick}`,
+  //   yFormatter: (tick: number, i?: number) =>
+  //     `${
+  //       [...RevenueData].reverse()[typeof i !== "undefined" ? i : tick]?.month
+  //     }`,
+  // },
+  // {
+  //   id: 4,
+  //   title: "Stacked Bar Chart (Vertical)",
+  //   description: "Stack desktop and mobile revenue for each month.",
+  //   data: RevenueData,
+  //   categories: RevenueCategoriesMultiple,
+  //   yAxis: ["desktop", "mobile"],
+  //   orientation: undefined,
+  //   stacked: true,
+  //   groupPadding: 0,
+  //   barPadding: 0.2,
+  //   xNumTicks: 6,
+  //   xFormatter: (tick: number, i?: number) =>
+  //     `${RevenueData[typeof i !== "undefined" ? i : tick]?.month}`,
+  //   yFormatter: (tick: number, i?: number) =>
+  //     `${typeof i !== "undefined" ? i : tick}`,
+  // },
+  // {
+  //   id: 5,
+  //   title: "Stacked Bar Chart (Horizontal)",
+  //   description:
+  //     "Stack desktop and mobile revenue for each month, horizontal orientation.",
+  //   data: [...RevenueData].reverse(),
+  //   categories: RevenueCategoriesMultiple,
+  //   yAxis: ["desktop", "mobile"],
+  //   orientation: Orientation.Horizontal,
+  //   stacked: true,
+  //   groupPadding: 0,
+  //   barPadding: 0.2,
+  //   xNumTicks: 6,
+  //   xFormatter: (tick: number, i?: number) =>
+  //     `${typeof i !== "undefined" ? i : tick}`,
+  //   yFormatter: (tick: number, i?: number) =>
+  //     `${
+  //       [...RevenueData].reverse()[typeof i !== "undefined" ? i : tick]?.month
+  //     }`,
+  // },
+  // {
+  //   id: 6,
+  //   title: "Long Data Bar Chart",
+  //   description: "Show a long time series of revenue data.",
+  //   data: RevenueDataLong,
+  //   categories: RevenueCategories,
+  //   yAxis: ["value"],
+  //   orientation: undefined,
+  //   stacked: false,
+  //   groupPadding: undefined,
+  //   barPadding: undefined,
+  //   xFormatter: (tick: number, i?: number) =>
+  //     `${RevenueDataLong[typeof i !== "undefined" ? i : tick]?.date}`,
+  //   yFormatter: (tick: number, i?: number) =>
+  //     `${typeof i !== "undefined" ? i : tick}`,
+  // },
+  // {
+  //   id: 7,
+  //   title: "Visitors Bar Chart",
+  //   description: "Show visitors data for the first 6 months.",
+  //   data: VisitorsData.slice(0, 6),
+  //   categories: VisitorsCartegories,
+  //   yAxis: ["visitors"],
+  //   orientation: undefined,
+  //   stacked: false,
+  //   groupPadding: undefined,
+  //   barPadding: undefined,
+  //   xNumTicks: 6,
+  //   xFormatter: (tick: number, i?: number) =>
+  //     `${RevenueData[typeof i !== "undefined" ? i : tick]?.month}`,
+  //   yFormatter: (tick: number, i?: number) =>
+  //     `${typeof i !== "undefined" ? i : tick}`,
+  // },
 ];
 
 function handleChartClick(event: MouseEvent, hoverValues: any) {
@@ -361,22 +370,7 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
           </div>
           <p class="mb-2 text-sm text-neutral-500">{{ example.description }}</p>
           <BarChart
-            :data="example.data"
-            :height="250"
-            :categories="example.categories"
-            :x-axis="example.xAxis"
-            :y-axis="example.yAxis"
-            :group-padding="example.groupPadding"
-            :bar-padding="example.barPadding"
-            :x-num-ticks="example.xNumTicks"
-            :radius="4"
-            :orientation="example.orientation"
-            :stacked="example.stacked"
-            :stack-and-grouped="example.stackAndGrouped"
-            :stacked-grouped-spacing="example.stackedGroupedSpacing"
-            :x-formatter="example.xFormatter"
-            :y-formatter="example.yFormatter"
-            :legend-position="LegendPosition.Top"
+            v-bind="example"
             @click="handleChartClick"
           />
         </Card>

@@ -1,5 +1,12 @@
 <script setup lang="ts" generic="T extends {}">
-import { computed, ComputedRef, ref, useSlots, useTemplateRef } from "vue";
+import {
+  computed,
+  ComputedRef,
+  ref,
+  useSlots,
+  useTemplateRef,
+  onMounted,
+} from "vue";
 import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
 import { getFirstPropertyValue } from "../../utils";
 import { useStackedGrouped } from "./stackedGroupedUtils";
@@ -11,6 +18,7 @@ import {
   VisStackedBar,
   VisTooltip,
   VisXYContainer,
+  VisXYLabels,
 } from "@unovis/vue";
 
 import Tooltip from "../Tooltip.vue";
@@ -34,10 +42,6 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
       left: 5,
     };
   },
-  xNumTicks: (props: BarChartProps<T>) =>
-    props.data.length > 24 ? 24 / 4 : props.data.length - 1,
-  yNumTicks: (props: BarChartProps<T>) =>
-    props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   hideTooltip: false,
   stackedGroupedSpacing: 0.1,
 });
@@ -45,6 +49,10 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
+
+if (!props.xAxis) {
+  throw new Error("xAxis is required");
+}
 
 if (!props.yAxis || props.yAxis.length === 0) {
   throw new Error("yAxis is required");
@@ -99,6 +107,25 @@ function generateTooltipContent(d: T): string {
     @click="emit('click', $event, hoverValues)"
   >
     <VisXYContainer :padding="padding" :height="height">
+      <VisXYLabels
+        :data="data"
+        :x="
+          (d: T, _idx: number) => data.findIndex((i) => i[props.xAxis] === d[props.xAxis])
+        "
+        :label="(d: T) => props.yAxis.map((x) => d[x])"
+        :y="(d: T) => {
+          const spacing = props.valueLabel?.labelSpacing || 0;
+          if (Array.isArray(props.yAxis)) {
+        return props.yAxis.reduce((sum, key) => sum + Number(d[key]), spacing);
+          }
+          return Number(d[props.yAxis]) + spacing;
+        }"
+        :backgroundColor="props.valueLabel?.backgroundColor ?? 'transparent'"
+        :color="props.valueLabel?.color ?? 'red'"
+        :labelFontSize="props.valueLabel?.labelFontSize"
+      >
+      </VisXYLabels>
+
       <VisTooltip
         :triggers="{
           [GroupedBar.selectors.bar]: onCrosshairUpdate,
@@ -173,7 +200,14 @@ function generateTooltipContent(d: T): string {
         paddingBottom: LegendPositionTop ? '1rem' : undefined,
       }"
     >
-      <VisBulletLegend :items="Object.values(props.categories)" />
+      <VisBulletLegend
+        :items="
+          Object.values(props.categories).map((item) => ({
+            ...item,
+            color: Array.isArray(item.color) ? item.color[0] : item.color,
+          }))
+        "
+      />
     </div>
 
     <div ref="slotWrapper" style="display: none">
