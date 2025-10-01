@@ -147,36 +147,24 @@ type BarChartPropsBase<T> = {
   stackedGroupedSpacing?: number;
 };
 
-export type BarChartProps<T> = BarChartPropsBase<T> &
-  (
-    | {
-        stackAndGrouped: true;
-        valueLabel?: ValueLabel;
-        /**
-         * The key in the data object type 'T' to be used for the x-axis values.
-         * Required when stackAndGrouped is true.
-         */
-        xAxis: keyof T;
-      }
-    | {
-        stackAndGrouped?: false;
-        valueLabel: ValueLabel;
-        /**
-         * The key in the data object type 'T' to be used for the x-axis values.
-         * Required when valueLabel is defined.
-         */
-        xAxis: keyof T;
-      }
-    | {
-        stackAndGrouped?: false;
-        valueLabel?: undefined;
-        /**
-         * The key in the data object type 'T' to be used for the x-axis values.
-         * Optional when neither stackAndGrouped nor valueLabel are set.
-         */
-        xAxis?: keyof T;
-      }
-  );
+export type BarChartProps<T> = BarChartPropsBase<T> & {
+  /**
+   * Whether the bars should be stacked and grouped.
+   * If true, `valueLabel` is optional and `xAxis` is required.
+   */
+  stackAndGrouped?: boolean;
+  /**
+   * Configuration for the value label display.
+   * Required if `stackAndGrouped` is false and `xAxis` is present.
+   * Optional otherwise.
+   */
+  valueLabel?: ValueLabel;
+  /**
+   * The data key for the X-axis.
+   * Required if `stackAndGrouped` is true, or if `stackAndGrouped` is false AND `valueLabel` is present.
+   */
+  xAxis?: keyof T;
+};
 
 export type ValueLabel = {
   label: (d: any, index: number) => string | number;
