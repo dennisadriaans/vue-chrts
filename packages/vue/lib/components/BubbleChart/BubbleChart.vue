@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends {} = {}">
-import { computed, ref, useSlots, useTemplateRef } from "vue";
-import { Position, Scale, Scatter } from "@unovis/ts";
+import { ref, useSlots, useTemplateRef } from "vue";
+import { Position, Scatter } from "@unovis/ts";
 import {
   VisXYContainer,
   VisScatter,
@@ -44,43 +44,36 @@ const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
 
-const legendItems = computed(() => {
-  if (
-    props.categories &&
-    typeof props.categories === "object" &&
-    !Array.isArray(props.categories)
-  ) {
-    return Object.values(props.categories);
-  }
-  if (Array.isArray(props.categories)) {
-    return props.categories;
-  }
-  return [];
-});
-
-
 const x: NumericAccessor<T> = props.xAccessor!;
 const y: NumericAccessor<T> = props.yAccessor!;
-const size: NumericAccessor<T> = props.sizeAccessor || ((d: any) => (typeof d.comments === 'number' ? d.comments : 1));
+const size: NumericAccessor<T> =
+  props.sizeAccessor ||
+  ((d: any) => (typeof d.comments === "number" ? d.comments : 1));
 
 const color = (d: T) => {
   if (!props.categories || !props.categoryKey) {
-    console.warn('BubbleChart: categories and categoryKey are required for color mapping');
-    return '#cccccc';
+    console.warn(
+      "BubbleChart: categories and categoryKey are required for color mapping"
+    );
+    return "#cccccc";
   }
-  
+
   const categoryValue = String(d[props.categoryKey as keyof T]);
   let categoryColor = props.categories[categoryValue]?.color;
 
-  if(Object.keys(props.categories).length === 1) {
-    categoryColor = props.categories[props.categoryKey as keyof typeof props.categories]?.color
+  if (Object.keys(props.categories).length === 1) {
+    categoryColor =
+      props.categories[props.categoryKey as keyof typeof props.categories]
+        ?.color;
   }
 
   if (!categoryColor) {
-    console.warn(`BubbleChart: No color defined for category "${categoryValue}"`);
-    return '#cccccc';
+    console.warn(
+      `BubbleChart: No color defined for category "${categoryValue}"`
+    );
+    return "#cccccc";
   }
-  
+
   return categoryColor;
 };
 
@@ -104,8 +97,8 @@ function generateTooltipContent(d: T): string {
 }
 
 const triggers = {
-  [Scatter.selectors.point]: onCrosshairUpdate
-}
+  [Scatter.selectors.point]: onCrosshairUpdate,
+};
 </script>
 
 <template>
@@ -113,7 +106,14 @@ const triggers = {
     v-if="!props.hideLegend && props.legendPosition === LegendPosition.Top"
     class="flex items-center justify-end pb-4"
   >
-    <VisBulletLegend :items="legendItems" />
+    <VisBulletLegend
+      :items="
+        Object.values(props.categories).map((item) => ({
+          ...item,
+          color: Array.isArray(item.color) ? item.color[0] : item.color,
+        }))
+      "
+    />
   </div>
   <VisXYContainer
     :data="props.data"
@@ -156,12 +156,7 @@ const triggers = {
       :numTicks="props.yNumTicks"
     />
   </VisXYContainer>
-  <div
-    v-if="!props.hideLegend && props.legendPosition === LegendPosition.Bottom"
-    class="flex items-center justify-end pt-4"
-  >
-    <VisBulletLegend :items="legendItems" />
-  </div>
+
   <div ref="slotWrapper" class="hidden">
     <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
     <slot v-else-if="hoverValues" name="fallback">

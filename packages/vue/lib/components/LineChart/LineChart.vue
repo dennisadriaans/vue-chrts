@@ -145,10 +145,17 @@ const color = (key: number) =>
         paddingBottom: LegendPositionTop ? '1rem' : undefined,
       }"
     >
-      <VisBulletLegend :items="Object.values(categories)" />
+      <VisBulletLegend
+        :items="
+          Object.values(props.categories).map((item) => ({
+            ...item,
+            color: Array.isArray(item.color) ? item.color[0] : item.color,
+          }))
+        "
+      />
     </div>
 
-    <div ref="slotWrapper" style="display: none;">
+    <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
         <Tooltip

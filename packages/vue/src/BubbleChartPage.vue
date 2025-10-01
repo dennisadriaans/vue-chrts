@@ -3,7 +3,6 @@ import { BubbleChart, LegendPosition } from './../lib';
 import Card from './elements/Card.vue';
 import { data as bubbleChartData } from './data/BubbleChartData';
 import { data as bubbleChartData2 } from './data/BubbleChartData2';
-import { data as bubbleChartData3 } from './data/BubbleChartData3';
 
 const categories1 = {
   'title': { name: 'title', color: '#f00' },
@@ -90,30 +89,6 @@ const sizeAccessor3 = (d: any) => d.population;
             :y-formatter="formatNumber"
             x-label="Value"
             y-label="Priority"
-          />
-        </div>
-      </Card>
-      <Card>
-        <div>
-          <h2 class="heading-2 mb-0 text-xl">Country GDP, Life Expectancy, and Population</h2>
-          <p class="text-neutral-400 text-sm">
-            A bubble chart showing the relationship between GDP, life expectancy, and population of different countries, categorized by continent.
-          </p>
-        </div>
-        <div class="mt-4">
-          <BubbleChart
-            :data="bubbleChartData3"
-            :height="600"
-            :categories="categories3"
-            category-key="continent"
-            :x-accessor="xAccessor3"
-            :y-accessor="yAccessor3"
-            :size-accessor="sizeAccessor3"
-            :legend-position="LegendPosition.Top"
-            :y-formatter="formatNumber"
-            :x-formatter="formatNumber"
-            x-label="GDP (in billions)"
-            y-label="Life Expectancy"
           />
         </div>
       </Card>
