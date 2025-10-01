@@ -1,5 +1,9 @@
-import { BulletLegendItemInterface, Orientation, LegendPosition, axisFormatter } from "../../types";
-
+import {
+  BulletLegendItemInterface,
+  Orientation,
+  LegendPosition,
+  axisFormatter,
+} from "../../types";
 
 type BarChartPropsBase<T> = {
   /**
@@ -69,11 +73,6 @@ type BarChartPropsBase<T> = {
    * Force specific ticks on the x-axis.
    */
   xExplicitTicks?: (number | string | Date)[];
-
-    /**
-   * The key in the data object type 'T' to be used for the x-axis values.
-   */
-  xAxis: keyof T;
   /**
    * An array of property keys from the data object type 'T' to be used for the y-axis values.
    */
@@ -146,19 +145,38 @@ type BarChartPropsBase<T> = {
    * Only applicable if `stackAndGrouped` is `true`.
    */
   stackedGroupedSpacing?: number;
-
-  valueLabel?: ValueLabel;
 };
 
-type BarChartPropsStackAndGrouped<T> = BarChartPropsBase<T> & {
-  stackAndGrouped: true;
-};
-
-type BarChartPropsNormal<T> = BarChartPropsBase<T> & {
-  stackAndGrouped?: false;
-};
-
-export type BarChartProps<T> = BarChartPropsStackAndGrouped<T> | BarChartPropsNormal<T>;
+export type BarChartProps<T> = BarChartPropsBase<T> &
+  (
+    | {
+        stackAndGrouped: true;
+        valueLabel?: ValueLabel;
+        /**
+         * The key in the data object type 'T' to be used for the x-axis values.
+         * Required when stackAndGrouped is true.
+         */
+        xAxis: keyof T;
+      }
+    | {
+        stackAndGrouped?: false;
+        valueLabel: ValueLabel;
+        /**
+         * The key in the data object type 'T' to be used for the x-axis values.
+         * Required when valueLabel is defined.
+         */
+        xAxis: keyof T;
+      }
+    | {
+        stackAndGrouped?: false;
+        valueLabel?: undefined;
+        /**
+         * The key in the data object type 'T' to be used for the x-axis values.
+         * Optional when neither stackAndGrouped nor valueLabel are set.
+         */
+        xAxis?: keyof T;
+      }
+  );
 
 export type ValueLabel = {
   label: (d: any, index: number) => string | number;
@@ -166,4 +184,4 @@ export type ValueLabel = {
   backgroundColor?: string;
   color?: string;
   labelFontSize?: number;
-}
+};

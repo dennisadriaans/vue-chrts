@@ -1,12 +1,5 @@
 <script setup lang="ts" generic="T extends {}">
-import {
-  computed,
-  ComputedRef,
-  ref,
-  useSlots,
-  useTemplateRef,
-  onMounted,
-} from "vue";
+import { computed, ComputedRef, ref, useSlots, useTemplateRef } from "vue";
 import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
 import { getFirstPropertyValue } from "../../utils";
 import { useStackedGrouped } from "./stackedGroupedUtils";
@@ -52,8 +45,10 @@ const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
 
-if (!props.xAxis) {
-  throw new Error("xAxis is required");
+if (props.valueLabel && !props.xAxis) {
+  throw new Error(
+    "BarChart: 'xAxis' prop is required when 'valueLabel' is enabled. Please provide an 'xAxis' to display value labels."
+  );
 }
 
 if (!props.yAxis || props.yAxis.length === 0) {
@@ -99,7 +94,7 @@ function generateTooltipContent(d: T): string {
 }
 
 const accessors = props.yAxis.map((i) => {
-  return (d: any) => d[i]
+  return (d: any) => d[i];
 });
 
 const numBars = accessors.length;
@@ -138,16 +133,17 @@ const labelX = (d: LabelDatum) => {
   // Start (left) edge of effective group relative to group center (which is at d.x)
   // We treat group center as 0 and shift bars left by half the effective width.
   const leftOffsetFromCenter = -groupEffectiveWidth / 2;
-  const barCenterOffset = barEffectiveWidth * d.itemIndex + barEffectiveWidth / 2;
+  const barCenterOffset =
+    barEffectiveWidth * d.itemIndex + barEffectiveWidth / 2;
   // Bars inside the group usually don't span the full theoretical width due to internal barPadding.
   // This caused first label to lean left edge and last to lean right edge. Compress offsets towards center.
   const barPaddingRatio = props.barPadding ?? 0; // 0..1
   const compression = 1 - barPaddingRatio; // pull towards center
-  const offsetFromCenter = (leftOffsetFromCenter + barCenterOffset) * compression;
+  const offsetFromCenter =
+    (leftOffsetFromCenter + barCenterOffset) * compression;
 
   return d.x + offsetFromCenter;
 };
-
 </script>
 
 <template>
@@ -161,6 +157,7 @@ const labelX = (d: LabelDatum) => {
   >
     <VisXYContainer :padding="padding" :height="height">
       <VisXYLabels
+        v-if="!!valueLabel"
         :data="labelData"
         :x="labelX"
         :y="(d: any) => d.y + (props.valueLabel?.labelSpacing ?? 0)"
