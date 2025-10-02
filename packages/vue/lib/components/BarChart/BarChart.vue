@@ -250,6 +250,7 @@ const labelX = (d: LabelDatum) => {
         "
       />
     </div>
+    
 
     <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />

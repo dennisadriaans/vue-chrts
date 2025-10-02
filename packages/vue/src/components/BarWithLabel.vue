@@ -56,3 +56,12 @@ console.log(data, 'data')
     />
   </VisXYContainer>
 </template>
+
+<style scoped>
+.bulletLegendOverrides {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: var(--vis-legend-spacing);
+}
+</style>

@@ -324,6 +324,7 @@ const barChartExamples: BarChartExample[] = [
     stacked: false,
     groupPadding: undefined,
     barPadding: undefined,
+    legendPosition: 'bottom',
     xNumTicks: 6,
     xFormatter: (tick: number, i?: number) =>
       `${RevenueData[typeof i !== "undefined" ? i : tick]?.month}`,

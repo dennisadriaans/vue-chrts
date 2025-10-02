@@ -4,6 +4,7 @@ import Card from './elements/Card.vue';
 import { data as bubbleChartData } from './data/BubbleChartData';
 import { data as bubbleChartData2 } from './data/BubbleChartData2';
 
+import BubbleChartTest from '../src/components/BubbleTest.vue'
 const categories1 = {
   'title': { name: 'title', color: '#f00' },
 };
@@ -45,6 +46,11 @@ const sizeAccessor3 = (d: any) => d.population;
 <template>
   <div class="space-y-4 pb-24 pt-8">
     <div class="max-w-7xl mx-auto space-y-8">
+
+      <Card>
+        <BubbleChartTest />
+      </Card>
+
       <Card>
         <div>
           <h2 class="heading-2 mb-0 text-xl">Linear Tasks: Time to Triage</h2>
