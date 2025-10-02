@@ -41,6 +41,9 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
     color: "#666",
   }),
   lineWidth: 2,
+  legendPosition: LegendPosition.BottomCenter,
+  legendStyle: undefined,
+  hideLegend: false,
 });
 
 const slots = useSlots();
@@ -56,7 +59,13 @@ const markersSvgDefs = computed(() => {
   return createMarkers(props.markerConfig);
 });
 
-const isLegendTop = computed(() => props.legendPosition === LegendPosition.Top);
+const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
+
+const legendAlignment = computed(() => {
+  if (props.legendPosition.includes("left")) return "flex-start";
+  if (props.legendPosition.includes("right")) return "flex-end";
+  return "center";
+});
 
 const svgDefs = computed(() => {
   const createGradientWithHex = (id: number, color: string | string[]) => `
@@ -108,6 +117,7 @@ function onCrosshairUpdate(d: T): string {
     :style="{
       display: 'flex',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',
+      gap: 'var(--vis-legend-spacing)'
     }"
     :class="{ markers: !!props.markerConfig }"
     @click="emit('click', $event, hoverValues)"
@@ -180,16 +190,19 @@ function onCrosshairUpdate(d: T): string {
     </VisXYContainer>
 
     <div
-      v-if="!hideLegend"
+      v-if="!props.hideLegend"
       :style="{
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        paddingBottom: isLegendTop ? '1rem' : undefined,
-        paddingTop: !isLegendTop ? '1rem' : undefined,
+        justifyContent: legendAlignment,
       }"
     >
-      <VisBulletLegend :items="Object.values(categories)" />
+      <VisBulletLegend
+        :style="[
+          props.legendStyle,
+          'display: flex; gap: var(--vis-legend-spacing);',
+        ]"
+        :items="Object.values(props.categories)"
+      />
     </div>
 
     <div ref="slotWrapper" style="display: none;">
