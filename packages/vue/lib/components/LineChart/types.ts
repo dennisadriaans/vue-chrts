@@ -103,6 +103,10 @@ export interface LineChartProps<T> {
    */
   legendPosition?: LegendPosition;
   /**
+   * Optional style object for the legend container. Allows custom CSS styling.
+   */
+  legendStyle?: string | Record<string, string>;
+  /**
    * If `true`, displays grid lines along the x-axis.
    */
   xGridLine?: boolean;

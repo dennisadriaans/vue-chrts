@@ -25,18 +25,18 @@ const emit = defineEmits<{
 
 const props = withDefaults(defineProps<BarChartProps<T>>(), {
   orientation: Orientation.Vertical,
-  LegendPosition: LegendPosition.Bottom,
+  legendPosition: LegendPosition.BottomCenter,
+  legendStyle: undefined,
+  hideLegend: false,
   yGridLine: true,
   groupPadding: 0,
   barPadding: 0.2,
-  padding: () => {
-    return {
-      top: 5,
-      right: 5,
-      bottom: 5,
-      left: 5,
-    };
-  },
+  padding: () => ({
+    top: 5,
+    right: 5,
+    bottom: 5,
+    left: 5,
+  }),
   hideTooltip: false,
   stackedGroupedSpacing: 0.1,
 });
@@ -74,9 +74,13 @@ const stackedGroupedData = computed(
     }).value
 );
 
-const LegendPositionTop = computed(
-  () => props.legendPosition === LegendPosition.Top
-);
+const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
+
+const legendAlignment = computed(() => {
+  if (props.legendPosition.includes("left")) return "flex-start";
+  if (props.legendPosition.includes("right")) return "flex-end";
+  return "center";
+});
 
 function onCrosshairUpdate(d: T): string {
   hoverValues.value = d;
@@ -150,8 +154,8 @@ const labelX = (d: LabelDatum) => {
   <div
     :style="{
       display: 'flex',
-      flexDirection: LegendPositionTop ? 'column-reverse' : 'column',
-      gap: '1rem',
+      flexDirection: isLegendTop ? 'column-reverse' : 'column',
+      gap: 'var(--vis-legend-spacing)',
     }"
     @click="emit('click', $event, hoverValues)"
   >
@@ -232,16 +236,19 @@ const labelX = (d: LabelDatum) => {
         :tick-line="yTickLine"
       />
     </VisXYContainer>
+    
     <div
-      v-if="!hideLegend"
+      v-if="!props.hideLegend"
       :style="{
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        paddingBottom: LegendPositionTop ? '1rem' : undefined,
+        justifyContent: legendAlignment,
       }"
     >
       <VisBulletLegend
+        :style="[
+          props.legendStyle,
+          'display: flex; gap: var(--vis-legend-spacing);',
+        ]"
         :items="
           Object.values(props.categories).map((item) => ({
             ...item,
@@ -251,7 +258,6 @@ const labelX = (d: LabelDatum) => {
       />
     </div>
     
-
     <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">

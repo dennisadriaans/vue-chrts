@@ -27,7 +27,7 @@
 
 
 @utility heading-2 {
-  @apply dark:text-white my-2 font-bold;
+  @apply dark:text-white font-bold;
 }
 
 .dark {
@@ -55,7 +55,5 @@
 
   /* --vis-axis-grid-line-width: 5px !important; */
   --vis-axis-domain-line-dasharray: 'none' !important;
-  --vis-axis-grid-line-dasharray: 10px 10px !important;
   --vis-axis-tick-label-weight: 900 !important;
-  --vis-axis-tick-label-text-decoration: line-through !important;
 }

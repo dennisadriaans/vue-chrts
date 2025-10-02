@@ -147,6 +147,7 @@ const barChartExamples: BarChartExample[] = [
         desktop: {
           done: 25,
           pending: 25,
+          tablet: 22
         },
         mobile: {
           done: 25,

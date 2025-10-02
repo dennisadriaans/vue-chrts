@@ -18,7 +18,7 @@ import type { NumericAccessor } from "@unovis/ts";
 
 const props = withDefaults(
   defineProps<
-    BubbleChartProps<T> & { legendStyle?: string | Record<string, string> }
+    BubbleChartProps<T> 
   >(),
   {
     hideXAxis: false,
@@ -36,7 +36,7 @@ const props = withDefaults(
     xExplicitTicks: undefined,
     minMaxTicksOnly: false,
     hideLegend: false,
-    legendPosition: LegendPosition.Bottom,
+    legendPosition: LegendPosition.BottomCenter,
     padding: () => ({ top: 5, right: 5, bottom: 5, left: 5 }),
     hideTooltip: false,
     crosshairConfig: () => ({
@@ -102,30 +102,27 @@ function generateTooltipContent(d: T): string {
   return "";
 }
 
-const isLegendTop = computed(() => props.legendPosition === LegendPosition.Top);
-
 const triggers = {
   [Scatter.selectors.point]: onCrosshairUpdate,
 };
+
+const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
+
+const legendAlignment = computed(() => {
+  if (props.legendPosition.includes("left")) return "flex-start";
+  if (props.legendPosition.includes("right")) return "flex-end";
+  return "center";
+});
 </script>
 
 <template>
-  <div>
-    <div v-if="!props.hideLegend && isLegendTop">
-      <VisBulletLegend
-        class="bulletLegendOverrides"
-        :style="[
-          props.legendStyle,
-          isLegendTop ? 'margin-bottom: 16px' : '',
-        ]"
-        :items="
-          Object.values(props.categories).map((item) => ({
-            ...item,
-            color: Array.isArray(item.color) ? item.color[0] : item.color,
-          }))
-        "
-      />
-    </div>
+  <div
+    :style="{
+      display: 'flex',
+      flexDirection: isLegendTop ? 'column-reverse' : 'column',
+      gap: 'var(--vis-legend-spacing)',
+    }"
+  >
     <VisXYContainer
       :data="props.data"
       :height="props.height || 600"
@@ -168,6 +165,28 @@ const triggers = {
       />
     </VisXYContainer>
 
+    <div
+      v-if="!props.hideLegend"
+      :style="{
+        display: 'flex',
+        justifyContent: legendAlignment,
+      }"
+    >
+      <VisBulletLegend
+        class="bulletLegendOverrides"
+        :style="[
+          props.legendStyle,
+          'display: flex; gap: var(--vis-legend-spacing);',
+        ]"
+        :items="
+          Object.values(props.categories).map((item) => ({
+            ...item,
+            color: Array.isArray(item.color) ? item.color[0] : item.color,
+          }))
+        "
+      />
+    </div>
+
     <div ref="slotWrapper" class="hidden">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
@@ -179,30 +198,5 @@ const triggers = {
         />
       </slot>
     </div>
-
-    <div v-if="!props.hideLegend && !isLegendTop">
-      <VisBulletLegend
-        class="bulletLegendOverrides"
-        :style="[
-          props.legendStyle ??
-          isLegendTop ? 'margin-bottom: 16px' : 'margin-top: 16px;',
-        ]"
-        :items="
-          Object.values(props.categories).map((item) => ({
-            ...item,
-            color: Array.isArray(item.color) ? item.color[0] : item.color,
-          }))
-        "
-      />
-    </div>
   </div>
 </template>
-
-<style scoped>
-.bulletLegendOverrides {
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  gap: var(--vis-legend-spacing);
-}
-</style>

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { LegendPosition } from '../../lib'
 import BubbleChart from './../../lib/components/BubbleChart/BubbleChart.vue'
 const bubbleChartData = [
   {
@@ -653,10 +654,10 @@ const sizeAccessor1 = (d: any) => d.subscribers
     :y-accessor="yAccessor1"
     :y-domain-line="false"
     :size-accessor="sizeAccessor1"
-    :legend-position="'top'"
-    :legend-style="`
-      justify-content: end;
-    `"
+    :legend-position="LegendPosition.TopCenter"
+    :legend-style="{
+      border: '2px solid red'
+    }"
     :x-formatter="(tick: number) => monthNames[tick - 1] ?? String(tick)"
     :y-formatter="(v: number | Date) => `${formatNumber(v)}B hrs`"
   />

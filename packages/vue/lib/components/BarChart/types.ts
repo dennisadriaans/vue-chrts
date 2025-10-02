@@ -108,6 +108,10 @@ type BarChartPropsBase<T> = {
    */
   legendPosition?: LegendPosition;
   /**
+   * Optional style object for the legend container. Allows custom CSS styling.
+   */
+  legendStyle?: string | Record<string, string>;
+  /**
    * If `true`, displays a domain line (axis line) along the x-axis.
    */
   xDomainLine?: boolean;
