@@ -16,35 +16,30 @@ import Tooltip from "../Tooltip.vue";
 
 import type { NumericAccessor } from "@unovis/ts";
 
-const props = withDefaults(
-  defineProps<
-    BubbleChartProps<T> 
-  >(),
-  {
-    hideXAxis: false,
-    hideYAxis: false,
-    xLabel: "",
-    yLabel: "",
-    xGridLine: false,
-    yGridLine: true,
-    xDomainLine: true,
-    yDomainLine: true,
-    xTickLine: true,
-    yTickLine: true,
-    xNumTicks: undefined,
-    yNumTicks: undefined,
-    xExplicitTicks: undefined,
-    minMaxTicksOnly: false,
-    hideLegend: false,
-    legendPosition: LegendPosition.BottomCenter,
-    padding: () => ({ top: 5, right: 5, bottom: 5, left: 5 }),
-    hideTooltip: false,
-    crosshairConfig: () => ({
-      color: "#666",
-    }),
-    legendStyle: undefined,
-  }
-);
+const props = withDefaults(defineProps<BubbleChartProps<T>>(), {
+  hideXAxis: false,
+  hideYAxis: false,
+  xLabel: "",
+  yLabel: "",
+  xGridLine: false,
+  yGridLine: true,
+  xDomainLine: true,
+  yDomainLine: true,
+  xTickLine: true,
+  yTickLine: true,
+  xNumTicks: undefined,
+  yNumTicks: undefined,
+  xExplicitTicks: undefined,
+  minMaxTicksOnly: false,
+  hideLegend: false,
+  legendPosition: LegendPosition.BottomCenter,
+  padding: () => ({ top: 5, right: 5, bottom: 5, left: 5 }),
+  hideTooltip: false,
+  crosshairConfig: () => ({
+    color: "#666",
+  }),
+  legendStyle: undefined,
+});
 
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { DonutChart } from "./../lib";
+import { DonutChart, LegendPosition } from "./../lib";
 import Card from "./elements/Card.vue";
 import { DonutChartData, DonutCategories } from "./data/DonutChartData";
 
@@ -30,6 +30,7 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
           :radius="80"
           :pad-angle="0.5"
           :arc-width="40"
+          :legend-position="LegendPosition.Bottom"
           @click="handleChartClick"
         />
       </Card>

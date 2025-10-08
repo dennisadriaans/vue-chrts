@@ -1,3 +1,5 @@
+import { LegendPosition } from "../../types";
+
 export type DonutChartProps = {
   /**
    * The type of donut chart to render.
@@ -25,6 +27,15 @@ export type DonutChartProps = {
    * If `true`, hides the chart legend.
    */
   hideLegend?: boolean;
+    /**
+   * Optional position for the legend, if applicable.
+   * See `LegendPosition` for available options.
+   */
+  legendPosition?: LegendPosition;
+  /**
+   * Optional style object for the legend container. Allows custom CSS styling.
+   */
+  legendStyle?: string | Record<string, string>;
   /**
    * An array of label objects defining the name and color for each segment.
    */
