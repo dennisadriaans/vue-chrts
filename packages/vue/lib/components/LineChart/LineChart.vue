@@ -22,14 +22,12 @@ const emit = defineEmits<{
 }>();
 
 const props = withDefaults(defineProps<LineChartProps<T>>(), {
-  padding: () => {
-    return {
-      top: 5,
-      right: 5,
-      bottom: 5,
-      left: 5,
-    };
-  },
+  padding: () => ({
+    top: 5,
+    right: 5,
+    bottom: 5,
+    left: 5,
+  }),
   xNumTicks: (props) =>
     props.data.length > 24 ? 24 / 4 : props.data.length - 1,
   yNumTicks: (props) =>
@@ -38,6 +36,9 @@ const props = withDefaults(defineProps<LineChartProps<T>>(), {
     color: "#666",
   }),
   lineWidth: 2,
+  legendPosition: LegendPosition.BottomCenter,
+  legendStyle: undefined,
+  hideLegend: false,
 });
 
 const svgDefs = computed(() => {
@@ -64,9 +65,13 @@ function onCrosshairUpdate(d: T): string {
   return generateTooltipContent(d);
 }
 
-const LegendPositionTop = computed(
-  () => props.legendPosition === LegendPosition.Top
-);
+const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
+
+const legendAlignment = computed(() => {
+  if (props.legendPosition.includes("left")) return "flex-start";
+  if (props.legendPosition.includes("right")) return "flex-end";
+  return "center";
+});
 
 const defaultColors = Object.values(props.categories).map(
   (i, index) => `var(--vis-color${index})`
@@ -79,8 +84,8 @@ const color = (key: number) =>
   <div
     :style="{
       display: 'flex',
-      flexDirection: LegendPositionTop ? 'column-reverse' : 'column',
-      gap: '1rem',
+      flexDirection: isLegendTop ? 'column-reverse' : 'column',
+      gap: 'var(--vis-legend-spacing)',
     }"
     :class="{ markers: !!props.markerConfig }"
     @click="emit('click', $event, hoverValues)"
@@ -137,18 +142,27 @@ const color = (key: number) =>
       />
     </VisXYContainer>
     <div
-      v-if="!hideLegend"
+      v-if="!props.hideLegend"
       :style="{
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        paddingBottom: LegendPositionTop ? '1rem' : undefined,
+        justifyContent: legendAlignment,
       }"
     >
-      <VisBulletLegend :items="Object.values(categories)" />
+      <VisBulletLegend
+        :style="[
+          props.legendStyle,
+          'display: flex; gap: var(--vis-legend-spacing);',
+        ]"
+        :items="
+          Object.values(props.categories).map((item) => ({
+            ...item,
+            color: Array.isArray(item.color) ? item.color[0] : item.color,
+          }))
+        "
+      />
     </div>
 
-    <div ref="slotWrapper" style="display: none;">
+    <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
         <Tooltip

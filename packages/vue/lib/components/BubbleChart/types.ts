@@ -116,6 +116,10 @@ export interface BubbleChartProps<T> {
    * See `LegendPosition` for available options.
    */
   legendPosition?: LegendPosition;
+  /**
+   * Optional inline CSS styles for the legend container.
+   */
+  legendStyle?: Record<string, string>;
   /** Options for controlling bubble sizes. */
   sizeOptions?: SizeOptions;
   /**

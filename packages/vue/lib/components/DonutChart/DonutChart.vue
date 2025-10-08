@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends {}">
 import { Donut } from "@unovis/ts";
-import { ref, useSlots, useTemplateRef } from "vue";
+import { ref, useSlots, useTemplateRef, computed } from "vue";
 import { type DonutChartProps, DonutType } from "./types";
 
 import {
@@ -9,12 +9,15 @@ import {
   VisSingleContainer,
   VisTooltip,
 } from "@unovis/vue";
+import { LegendPosition } from "../../types";
 
 const emit = defineEmits<{
   (e: "click", event: MouseEvent, values?: any): void;
 }>();
 
-const props = defineProps<DonutChartProps>();
+const props = withDefaults(defineProps<DonutChartProps>(), {
+  legendPosition: LegendPosition.BottomCenter,
+})
 
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
@@ -38,14 +41,22 @@ function generateTooltipContent(d: T): string {
   }
   return "";
 }
+
+const isLegendTop = computed(() => props.legendPosition.includes("top"));
+
+const legendAlignment = computed(() => {
+  if (props.legendPosition.includes("left")) return "flex-start";
+  if (props.legendPosition.includes("right")) return "flex-end";
+  return "center";
+});
 </script>
 
 <template>
   <div
     :style="{
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      flexDirection: isLegendTop ? 'column-reverse' : 'column',
+      gap: 'var(--vis-legend-spacing)',
     }"
     @click="emit('click', $event, hoverValues)"
   >
@@ -68,11 +79,28 @@ function generateTooltipContent(d: T): string {
       />
     </VisSingleContainer>
 
+    <div
+      v-if="!props.hideLegend"
+      :style="{
+        display: 'flex',
+        justifyContent: legendAlignment,
+      }"
+    >
+      <VisBulletLegend
+        :style="[
+          props.legendStyle,
+          'display: flex; gap: var(--vis-legend-spacing);',
+        ]"
+        :items="labels"
+      />
+    </div>
+
     <slot />
-    <div ref="slotWrapper" style="display: none;">
+
+    <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
-        <div style="display: flex; align-items: center; padding: 10px 15px;">
+        <div style="display: flex; align-items: center; padding: 10px 15px">
           <div
             :style="{
               width: '0.5rem',
@@ -86,16 +114,5 @@ function generateTooltipContent(d: T): string {
         </div>
       </slot>
     </div>
-  </div>
-
-  <div v-if="!hideLegend"
-    :style="{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginTop: '1rem',
-    }"
-  >
-    <VisBulletLegend :items="labels" />
   </div>
 </template>

@@ -1,5 +1,9 @@
-import { BulletLegendItemInterface, Orientation, LegendPosition, axisFormatter } from "../../types";
-
+import {
+  BulletLegendItemInterface,
+  Orientation,
+  LegendPosition,
+  axisFormatter,
+} from "../../types";
 
 type BarChartPropsBase<T> = {
   /**
@@ -104,6 +108,10 @@ type BarChartPropsBase<T> = {
    */
   legendPosition?: LegendPosition;
   /**
+   * Optional style object for the legend container. Allows custom CSS styling.
+   */
+  legendStyle?: string | Record<string, string>;
+  /**
    * If `true`, displays a domain line (axis line) along the x-axis.
    */
   xDomainLine?: boolean;
@@ -136,25 +144,36 @@ type BarChartPropsBase<T> = {
    */
   hideYAxis?: boolean;
 
+  /**
+   * Specific spacing between stacked and grouped bars in pixels.
+   * Only applicable if `stackAndGrouped` is `true`.
+   */
   stackedGroupedSpacing?: number;
 };
 
-type BarChartPropsStackAndGrouped<T> = BarChartPropsBase<T> & {
-  stackAndGrouped: true;
+export type BarChartProps<T> = BarChartPropsBase<T> & {
   /**
-   * The key in the data object type 'T' to be used for the x-axis values.
-   * Required when stackAndGrouped is true.
+   * Whether the bars should be stacked and grouped.
+   * If true, `valueLabel` is optional and `xAxis` is required.
    */
-  xAxis: keyof T;
-};
-
-type BarChartPropsNormal<T> = BarChartPropsBase<T> & {
-  stackAndGrouped?: false;
+  stackAndGrouped?: boolean;
   /**
-   * The key in the data object type 'T' to be used for the x-axis values.
-   * Optional when stackAndGrouped is not true.
+   * Configuration for the value label display.
+   * Required if `stackAndGrouped` is false and `xAxis` is present.
+   * Optional otherwise.
+   */
+  valueLabel?: ValueLabel;
+  /**
+   * The data key for the X-axis.
+   * Required if `stackAndGrouped` is true, or if `stackAndGrouped` is false AND `valueLabel` is present.
    */
   xAxis?: keyof T;
 };
 
-export type BarChartProps<T> = BarChartPropsStackAndGrouped<T> | BarChartPropsNormal<T>;
+export type ValueLabel = {
+  label: (d: any, index: number) => string | number;
+  labelSpacing?: number;
+  backgroundColor?: string;
+  color?: string;
+  labelFontSize?: number;
+};

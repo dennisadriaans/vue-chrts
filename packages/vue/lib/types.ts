@@ -5,8 +5,12 @@ import { DonutChartProps } from "./components/DonutChart/types";
 import { BubbleChartProps } from "./components/BubbleChart/types";
 
 enum LegendPosition {
-  Top = "top",
-  Bottom = "bottom",
+  TopLeft = "top-left",
+  TopCenter = "top-center",
+  TopRight = "top-right",
+  BottomLeft = "bottom-left",
+  BottomCenter = "bottom-center",
+  BottomRight = "bottom-right",
 }
 
 enum CurveType {
