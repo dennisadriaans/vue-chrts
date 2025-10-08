@@ -295,4 +295,6 @@ export const AreaChartData4: AreaChartItem4[] = [
   { month: "April", desktop: 73 },
   { month: "May", desktop: 209 },
   { month: "June", desktop: 214 },
+  { month: "July", desktop: 560 },
+  { month: "August", desktop: 560 },
 ]

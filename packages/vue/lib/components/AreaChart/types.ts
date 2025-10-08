@@ -60,6 +60,14 @@ export interface AreaChartProps<T> {
    */
   curveType?: CurveType;
   /**
+   * If `true`, hides the area fill, displaying only the line.
+   */
+  hideArea?: boolean;
+  /**
+   * Edit the gradient stops for the area fill.
+   */
+  gradientStops?: Array<{ offset: string; stopOpacity: number }>;
+  /**
    * The width of the line in pixels. Default is 2px.
    */
   lineWidth?: number;
