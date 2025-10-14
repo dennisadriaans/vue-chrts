@@ -23,6 +23,8 @@
   --vis-legend-item-spacing: 0px !important;
   --vis-legend-spacing: 24px !important;
 
+  --vis-timeline-row-even-fill-color: transparent !important;
+  --vis-timeline-row-odd-fill-color: transparent !important;
 }
 
 

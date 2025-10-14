@@ -38,6 +38,11 @@ const router = createRouter({
           path: '/donut-charts',
           name: 'DonutCharts',
           component: () => import('./DonutChartPage.vue') 
+        },
+        {
+          path: '/timeline',
+          name: 'Timeline',
+          component: () => import('./TimelinePage.vue') 
         }
       ],
     history: createWebHistory(),
