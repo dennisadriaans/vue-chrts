@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { LineChart, LegendPosition } from "../lib";
+import { LineChart } from "../lib";
 
 import Card from "./elements/Card.vue";
 
