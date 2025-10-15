@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { ref, computed } from "vue";
+
+import { ref, computed } from 'vue';
 import { VisSingleContainer, VisTopoJSONMap, VisTooltip } from "@unovis/vue";
 import { MapsData } from "./types";
 import { TopoJSONMap } from "@unovis/ts";
@@ -13,16 +14,31 @@ const tooltipTriggers = {
 const pointRadius = (d: any) => 5;
 
 const hoveredArea = ref<string | null>(null);
-const areas = computed(() =>
-  hoveredArea.value === "US" ? [{ id: "US", color: "red" }] : []
-);
+const areas = computed(() => hoveredArea.value === 'US' ? [
+  { id: 'US', color: 'red' }
+] : []);
 
 console.log(props.data);
 </script>
 
 <template>
   <div class="bg-white p-48">
-    <VisSingleContainer :height="800" :duration="600">
+    <VisSingleContainer
+      :height="800"
+      :duration="600"
+      :data="{
+        areas: areas,
+        points: [
+          {
+            id: 'ams',
+            latitude: 52.35598,
+            longitude: 4.95035,
+            label: 'Amsterdam',
+            color: 'red'
+          },
+        ],
+      }"
+    >
       <VisTopoJSONMap
         :topojson="data"
         :pointRadius="pointRadius"
