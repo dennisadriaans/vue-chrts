@@ -1,5 +1,4 @@
 import AreaChart from "./components/AreaChart/AreaChart.vue";
-import AreaStackedChart from "./components/AreaStackedChart/AreaStackedChart.vue";
 import LineChart from "./components/LineChart/LineChart.vue";
 import BarChart from "./components/BarChart/BarChart.vue";
 import DonutChart from "./components/DonutChart/DonutChart.vue";
@@ -16,7 +15,6 @@ import {
 
 export {
     AreaChart,
-    AreaStackedChart,
     LineChart,
     BarChart,
     DonutChart,

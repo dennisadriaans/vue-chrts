@@ -23,20 +23,10 @@ const emit = defineEmits<{
   (e: "click", event: MouseEvent, values?: T): void;
 }>();
 
-const DEFAULT_TICK_COUNT = 24;
-const DEFAULT_TICK_DIVISOR = 4;
 const DEFAULT_OPACITY = 0.5;
 const DEFAULT_COLOR = "#3b82f6";
 const props = withDefaults(defineProps<AreaChartProps<T>>(), {
   padding: () => ({ top: 5, right: 5, bottom: 5, left: 5 }),
-  xNumTicks: (props) =>
-    props.data.length > DEFAULT_TICK_COUNT
-      ? DEFAULT_TICK_COUNT / DEFAULT_TICK_DIVISOR
-      : props.data.length - 1,
-  yNumTicks: (props) =>
-    props.data.length > DEFAULT_TICK_COUNT
-      ? DEFAULT_TICK_COUNT / DEFAULT_TICK_DIVISOR
-      : props.data.length - 1,
   crosshairConfig: () => ({
     color: "#666",
   }),
@@ -44,15 +34,25 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
   legendPosition: LegendPosition.BottomCenter,
   legendStyle: undefined,
   hideLegend: false,
+  hideArea: false,
+  gradientStops: () => [
+    { offset: "0%", stopOpacity: 1 },
+    { offset: "75%", stopOpacity: 0 },
+  ],
 });
 
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
 
-const colors = computed(() =>
-  Object.values(props.categories).map((c) => c.color)
-);
+const colors = computed(() => {
+  const defaultColors = Object.values(props.categories).map(
+    (_, index) => `var(--vis-color${index})`
+  );
+  return Object.values(props.categories).map(
+    (c, i) => c.color ?? defaultColors[i]
+  );
+});
 
 const markersSvgDefs = computed(() => {
   if (!props.markerConfig) return "";
@@ -70,14 +70,29 @@ const legendAlignment = computed(() => {
 const svgDefs = computed(() => {
   const createGradientWithHex = (id: number, color: string | string[]) => `
     <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
-      <stop offset="0%" stop-color="${color}" stop-opacity="1" />
+      ${
+        props.gradientStops
+          ?.map(
+            (stop) =>
+              `<stop offset="${stop.offset}" stop-color="${color}" stop-opacity="${stop.stopOpacity}" />`
+          )
+          .join("") ?? ""
+      }
       <stop offset="100%" stop-color="${color}" stop-opacity="0" />
     </linearGradient>
   `;
   const createGradientWithCssVar = (id: number, color: string | string[]) => `
     <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
-      <stop offset="0%" style="stop-color:var(--vis-color0);stop-opacity:1" />
-      <stop offset="100%" style="stop-color:var(--vis-color0);stop-opacity:0" />
+
+    ${
+      props.gradientStops
+        ?.map(
+          (stop) => `
+      <stop offset="${stop.offset}" style="stop-color:var(${color});stop-opacity:${stop.stopOpacity}" />
+    `
+        )
+        .join("") ?? ""
+    }
     </linearGradient>
   `;
   return colors.value
@@ -89,7 +104,10 @@ const svgDefs = computed(() => {
     .join("");
 });
 
-function getAccessors(id: string): { y: NumericAccessor<T>; color: string | string[] } {
+function getAccessors(id: string): {
+  y: NumericAccessor<T>;
+  color: string | string[];
+} {
   return {
     y: (d: T) => Number(d[id as keyof T]),
     color: props.categories[id]?.color ?? DEFAULT_COLOR,
@@ -117,7 +135,7 @@ function onCrosshairUpdate(d: T): string {
     :style="{
       display: 'flex',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',
-      gap: 'var(--vis-legend-spacing)'
+      gap: 'var(--vis-legend-spacing)',
     }"
     :class="{ markers: !!props.markerConfig }"
     @click="emit('click', $event, hoverValues)"
@@ -144,7 +162,7 @@ function onCrosshairUpdate(d: T): string {
           :x="(_: T, i: number) => i"
           v-bind="getAccessors(categoryId)"
           :color="`url(#gradient${index}-${colors[index]})`"
-          :opacity="DEFAULT_OPACITY"
+          :opacity="hideArea ? 0 : DEFAULT_OPACITY"
           :curve-type="curveType ?? CurveType.MonotoneX"
         />
         <VisLine
@@ -201,11 +219,16 @@ function onCrosshairUpdate(d: T): string {
           props.legendStyle,
           'display: flex; gap: var(--vis-legend-spacing);',
         ]"
-        :items="Object.values(props.categories)"
+        :items="
+          Object.values(props.categories).map((item) => ({
+            ...item,
+            color: Array.isArray(item.color) ? item.color[0] : item.color,
+          }))
+        "
       />
     </div>
 
-    <div ref="slotWrapper" style="display: none;">
+    <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
         <Tooltip
