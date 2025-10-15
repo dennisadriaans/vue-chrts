@@ -117,3 +117,40 @@ export const flattenData = (data: any[], xAxis: string) => {
     };
   });
 };
+
+// A new key to store the user's preference to disable the message permanently.
+const disableLoggingKey = 'nuxt-charts-disable-premium-message';
+// The existing key to check if the message has been shown once.
+const hasLoggedKey = 'nuxt-charts-premium-message-logged';
+
+// Check if the user has explicitly disabled the message.
+const isLoggingDisabled = localStorage.getItem(disableLoggingKey) === 'true';
+
+// Check if the message has already been logged in this session/by user's action.
+let hasLoggedMessage = localStorage.getItem(hasLoggedKey) === 'true';
+
+export function logPremiumUpgradeMessage() {
+  // 1. Check if the user has disabled logging OR if it has already been logged once.
+  if (isLoggingDisabled || hasLoggedMessage) {
+    return;
+  }
+
+  // If we reach here, log the message and update the 'hasLoggedMessage' flag.
+  console.log(
+    '%c✨ Thanks for using Nuxt Charts!\n\n' +
+    'We are growing rapidly, to make sure we can continue building. Please consider upgrading to premium chart blocks or templates.\n\n' +
+    '→ Checkout the Premium Blocks: https://nuxtcharts.com/blocks\n' +
+    '→ Or buy me a coffee: https://buymeacoffee.com/dennisadriaans\n\n' +
+    'Built with 💚 for the Nuxt community\n\n' + 
+    '%cTo permanently disable this message, run the following in your console:\n' +
+    `localStorage.setItem('${disableLoggingKey}', 'true');`,
+    'color: inherit;',
+    'color: #888; font-style: italic;'
+  );
+
+  // Set the flag so it doesn't log again on subsequent calls.
+  hasLoggedMessage = true;
+  // Note: You might also want to set the local storage item here if you want it
+  // to persist across page loads/sessions even if the user hasn't explicitly disabled it.
+  // localStorage.setItem(hasLoggedKey, 'true');
+}

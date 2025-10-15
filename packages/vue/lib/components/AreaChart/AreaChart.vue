@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
-import { computed, ref, useSlots, useTemplateRef } from "vue";
+import { computed, onMounted, ref, useSlots, useTemplateRef } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
-import { createMarkers, getFirstPropertyValue } from "../../utils";
+import { createMarkers, getFirstPropertyValue, logPremiumUpgradeMessage } from "../../utils";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -110,6 +110,10 @@ function onCrosshairUpdate(d: T): string {
   hoverValues.value = d;
   return generateTooltipContent(d);
 }
+
+onMounted(() => {
+  logPremiumUpgradeMessage();
+})
 </script>
 
 <template>
