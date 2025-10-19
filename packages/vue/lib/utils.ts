@@ -117,3 +117,5 @@ export const flattenData = (data: any[], xAxis: string) => {
     };
   });
 };
+
+export const dateFormatter = (date: number) => Intl.DateTimeFormat().format(date);

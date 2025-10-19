@@ -1,55 +1,41 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { computed } from "vue";
-import { Timeline, Position } from "@unovis/ts";
+import { computed, ref, useSlots, useTemplateRef } from "vue";
+import { Timeline } from "@unovis/ts";
+import { dateFormatter, getFirstPropertyValue } from "../../utils";
+import Tooltip from "../Tooltip.vue";
+
 import {
   VisXYContainer,
   VisBulletLegend,
   VisTooltip,
   VisTimeline,
   VisAxis,
+  VisCrosshair,
 } from "@unovis/vue";
 
-import { LegendPosition } from "../../types";
+import { LegendPosition, TimelineProps } from "../../types";
 
 export interface TimelineCategory {
   name: string;
   color?: string | string[];
 }
 
-const props = withDefaults(
-  defineProps<{
-    data: T[];
-    labelWidth?: number;
-    height?: number;
-    title?: string;
-    categories?: Record<string, TimelineCategory>;
-    x: (d: T) => number;
-    length: (d: T) => number;
-    type: (d: T) => string;
-    color: (d: T) => string;
-    getTooltipText?: (label: string, index: number, data: T[]) => string;
-    dateFormatter?: (date: number) => string;
-    showLabels?: boolean;
-    hideTooltip?: boolean;
-    lineWidth?: number;
-    rowHeight?: number;
-    legendPosition?: LegendPosition;
-    legendStyle?: Record<string, string>;
-    hideLegend?: boolean;
-  }>(),
-  {
-    labelWidth: 220,
-    height: 500,
-    title: "",
-    dateFormatter: (date: number) => Intl.DateTimeFormat().format(date),
-    showLabels: true,
-    hideTooltip: false,
-    lineWidth: 12,
-    rowHeight: 24,
-    legendPosition: LegendPosition.BottomCenter,
-    hideLegend: false,
-  }
-);
+const props = withDefaults(defineProps<TimelineProps<T>>(), {
+  labelWidth: 220,
+  title: "",
+  showLabels: true,
+  hideTooltip: false,
+  lineWidth: 12,
+  rowHeight: 24,
+  legendPosition: LegendPosition.TopRight,
+});
+
+const slots = useSlots();
+const slotWrapper = useTemplateRef<HTMLDivElement>("slotWrapper");
+const labelSlotWrapper = useTemplateRef<HTMLDivElement>("labelSlotWrapper");
+
+const labelSlotHoverValue = ref<T>();
+const slotValue = ref<T>();
 
 const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
 
@@ -59,21 +45,27 @@ const legendAlignment = computed(() => {
   return "center";
 });
 
-function defaultTooltipText(_: string, i: number): string {
-  const item = props.data[i];
-  const startDate = props.x(item);
-  const endDate = props.x(item) + props.length(item);
-  return `
-      <div style="width:${props.labelWidth}px">
-        ${[startDate, endDate].map(props.dateFormatter).join(" - ")}
-      </div>`;
+const triggers = { [Timeline.selectors.label]: generateLabelTooltip };
+
+function generateLabelTooltip(d: T): string {
+  labelSlotHoverValue.value = d;
+  if (typeof window === "undefined") {
+    return "";
+  }
+  if (labelSlotWrapper.value) {
+    return labelSlotWrapper.value.innerHTML;
+  }
+  return "";
 }
 
-const getTooltip = props.getTooltipText
-  ? (_: string, i: number) => props.getTooltipText!(_, i, props.data)
-  : defaultTooltipText;
-
-const triggers = { [Timeline.selectors.label]: getTooltip };
+const colors = computed(() => {
+  const defaultColors = Object.values(props.categories).map(
+    (_, index) => `var(--vis-color${index})`
+  );
+  return Object.values(props.categories).map(
+    (c, i) => c.color ?? defaultColors[i]
+  );
+});
 </script>
 
 <template>
@@ -91,16 +83,50 @@ const triggers = { [Timeline.selectors.label]: getTooltip };
         :lineWidth="props.lineWidth"
         :rowHeight="props.rowHeight"
         :type="props.type"
-        :color="props.color"
+        :color="colors"
         :labelWidth="props.labelWidth"
         :showLabels="props.showLabels"
       />
-      <VisTooltip
-        v-if="!props.hideTooltip"
-        :horizontal-placement="Position.Right"
-        :vertical-placement="Position.Top"
-      />
-      <VisAxis type="x" :tickFormat="props.dateFormatter" :numTicks="10" />
+
+      <VisTooltip :triggers="triggers" />
+      <VisAxis type="x" :tickFormat="dateFormatter" :numTicks="10" />
+    
     </VisXYContainer>
+
+    <div
+      v-if="!props.hideLegend"
+      :style="{
+        display: 'flex',
+        justifyContent: legendAlignment,
+      }"
+    >
+      <VisBulletLegend
+        :style="[
+          props.legendStyle,
+          'display: flex; gap: var(--vis-legend-spacing);',
+        ]"
+        :items="
+          Object.values(props.categories).map((item) => ({
+            ...item,
+            color: Array.isArray(item.color) ? item.color[0] : item.color,
+          }))
+        "
+      />
+    </div>
+
+    <div ref="labelSlotWrapper" style="display: none">
+      <slot
+        v-if="slots.labelTooltip"
+        name="labelTooltip"
+        :values="labelSlotHoverValue"
+      />
+      <slot v-else-if="labelSlotHoverValue" name="fallback">
+        <Tooltip
+          :data="labelSlotHoverValue"
+          :categories="categories"
+          :toolTipTitle="getFirstPropertyValue(labelSlotHoverValue) ?? ''"
+        />
+      </slot>
+    </div>
   </div>
 </template>
