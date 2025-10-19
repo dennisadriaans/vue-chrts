@@ -18,14 +18,13 @@ const categories: Record<string, BulletLegendItemInterface> = {
 const timelineExamples = [
   {
     id: 1,
-    data: data, // Show first 20 items
+    data: data, 
     height: 600,
     showLabels: true,
     labelWidth: 220,
     hideLegend: false,
   },
 ];
-
 </script>
 
 <template>
@@ -58,16 +57,9 @@ const timelineExamples = [
 
           <template #labelTooltip="{ values }">
             <div class="p-2">
-              {{  values  }} 
+              {{  values?.label  }} 
             </div>
           </template>
-
-          <!-- <template #tooltip="{ values }">
-            <div class="p-2">
-              {{  values?.name  }} 
-            </div>
-          </template> -->
-
         </Timeline>
         </Card>
       </div>

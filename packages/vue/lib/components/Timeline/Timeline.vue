@@ -10,7 +10,6 @@ import {
   VisTooltip,
   VisTimeline,
   VisAxis,
-  VisCrosshair,
 } from "@unovis/vue";
 
 import { LegendPosition, TimelineProps } from "../../types";
@@ -30,11 +29,15 @@ const props = withDefaults(defineProps<TimelineProps<T>>(), {
   legendPosition: LegendPosition.TopRight,
 });
 
+const emit = defineEmits<{
+  click: [event: MouseEvent, data: { index: number; item: T }];
+  scroll: [distance: number];
+  labelHover: [item: T | undefined];
+}>();
+
 const slots = useSlots();
 const slotWrapper = useTemplateRef<HTMLDivElement>("slotWrapper");
-const labelSlotWrapper = useTemplateRef<HTMLDivElement>("labelSlotWrapper");
 
-const labelSlotHoverValue = ref<T>();
 const slotValue = ref<T>();
 
 const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
@@ -48,14 +51,23 @@ const legendAlignment = computed(() => {
 const triggers = { [Timeline.selectors.label]: generateLabelTooltip };
 
 function generateLabelTooltip(d: T): string {
-  labelSlotHoverValue.value = d;
+  slotValue.value = d;
+  emit("labelHover", d);
   if (typeof window === "undefined") {
     return "";
   }
-  if (labelSlotWrapper.value) {
-    return labelSlotWrapper.value.innerHTML;
+  if (slotWrapper.value) {
+    return slotWrapper.value.innerHTML;
   }
   return "";
+}
+
+function handleTimelineClick(datum: T, index: number, event: MouseEvent) {
+  emit("click", event, { index, item: datum });
+}
+
+function handleScroll(event: WheelEvent) {
+  emit("scroll", event.deltaY);
 }
 
 const colors = computed(() => {
@@ -76,7 +88,11 @@ const colors = computed(() => {
       gap: 'var(--vis-legend-spacing)',
     }"
   >
-    <VisXYContainer :data="props.data" :height="props.height">
+    <VisXYContainer
+      :data="props.data"
+      :height="props.height"
+      @wheel="handleScroll"
+    >
       <VisTimeline
         :x="props.x"
         :length="props.length"
@@ -86,11 +102,11 @@ const colors = computed(() => {
         :color="colors"
         :labelWidth="props.labelWidth"
         :showLabels="props.showLabels"
+        @click="handleTimelineClick"
       />
 
       <VisTooltip :triggers="triggers" />
       <VisAxis type="x" :tickFormat="dateFormatter" :numTicks="10" />
-    
     </VisXYContainer>
 
     <div
@@ -114,17 +130,13 @@ const colors = computed(() => {
       />
     </div>
 
-    <div ref="labelSlotWrapper" style="display: none">
-      <slot
-        v-if="slots.labelTooltip"
-        name="labelTooltip"
-        :values="labelSlotHoverValue"
-      />
-      <slot v-else-if="labelSlotHoverValue" name="fallback">
+    <div ref="slotWrapper" style="display: none">
+      <slot v-if="slots.labelTooltip" name="labelTooltip" :values="slotValue" />
+      <slot v-else-if="slotValue" name="fallback">
         <Tooltip
-          :data="labelSlotHoverValue"
+          :data="slotValue"
           :categories="categories"
-          :toolTipTitle="getFirstPropertyValue(labelSlotHoverValue) ?? ''"
+          :toolTipTitle="getFirstPropertyValue(slotValue) ?? ''"
         />
       </slot>
     </div>

@@ -5,6 +5,7 @@ export type DataRecord = {
   endDate: number;
   department: 'Frontend' | 'Backend' | 'UX'; // Changed from 'type'
   description?: string;
+  label?: string;
 };
 
 // Define constants for the new departments and their associated colors
