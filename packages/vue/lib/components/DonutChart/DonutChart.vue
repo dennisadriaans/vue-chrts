@@ -55,7 +55,6 @@ const legendAlignment = computed(() => {
   <div
     :style="{
       display: 'flex',
-      position: 'relative',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',
       gap: 'var(--vis-legend-spacing)',
     }"
