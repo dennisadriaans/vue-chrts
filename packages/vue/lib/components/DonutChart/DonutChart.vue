@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends {}">
+<script setup lang="ts" generic="T extends Record<string, any> = any">
 import { Donut } from "@unovis/ts";
 import { ref, useSlots, useTemplateRef, computed } from "vue";
 import { type DonutChartProps, DonutType } from "./types";
@@ -27,19 +27,8 @@ const value = (d: number) => d;
 
 const isHalf = props.type === DonutType.Half;
 
-function onCrosshairUpdate(d: T): string {
+function onCrosshairUpdate(d: T) {
   hoverValues.value = d;
-  return generateTooltipContent(d);
-}
-
-function generateTooltipContent(d: T): string {
-  if (typeof window === "undefined") {
-    return "";
-  }
-  if (slotWrapperRef.value) {
-    return slotWrapperRef.value.innerHTML;
-  }
-  return "";
 }
 
 const isLegendTop = computed(() => props.legendPosition.includes("top"));
@@ -65,7 +54,10 @@ const legendAlignment = computed(() => {
         :horizontal-shift="20"
         :vertical-shift="20"
         :triggers="{
-          [Donut.selectors.segment]: onCrosshairUpdate,
+          [Donut.selectors.segment]: (d: T) => {
+            onCrosshairUpdate(d);
+            return d ? slotWrapperRef?.innerHTML : '';
+          },
         }"
       />
 

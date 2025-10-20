@@ -1,5 +1,4 @@
 import { computed, ComputedRef } from "vue";
-import { flattenData } from "../../utils";
 
 export interface StackedGroupedConfig<T> {
   data: T[];
@@ -7,7 +6,6 @@ export interface StackedGroupedConfig<T> {
   stackAndGrouped: boolean;
   xAxis?: keyof T;
   spacing?: number;
-  
 }
 
 export interface StackedGroupedResult<T> {
@@ -20,10 +18,20 @@ export interface StackedGroupedResult<T> {
   chartData: T[] | any[];
 }
 
-export function useStackedGrouped<T extends {}>(
-  config: StackedGroupedConfig<T>
-): ComputedRef<StackedGroupedResult<T>> {
+export function useStackedGrouped<T extends {}>(config: StackedGroupedConfig<T>): ComputedRef<StackedGroupedResult<T>> {
   return computed(() => {
+    if (!config.stackAndGrouped) {
+      return {
+        states: [],
+        groupedByState: {},
+        colors: {},
+        bars: {},
+        colorFunctions: {},
+        positions: {},
+        chartData: config.data,
+      };
+    }
+
     const states = extractStates(config.categories);
     const groupedByState = groupCategoriesByState(config.categories, states);
     const colors = generateColors(groupedByState, config.categories);
@@ -31,9 +39,7 @@ export function useStackedGrouped<T extends {}>(
     const colorFunctions = generateColorFunctions(colors);
     const positions = calculatePositions(states, config.spacing);
 
-    const chartData = config.stackAndGrouped
-      ? flattenData(config.data, config.xAxis as string)
-      : config.data;
+    const chartData = flattenData(config.data, config.xAxis as string);
 
     return {
       states,
@@ -44,6 +50,21 @@ export function useStackedGrouped<T extends {}>(
       positions,
       chartData,
     };
+  });
+}
+
+function flattenData<T>(data: T[], xAxis: keyof T): any[] {
+  const keys = Object.keys(data[0] as {}).filter((key) => key !== xAxis);
+  const states = Object.keys((data[0] as any)[keys[0]]);
+
+  return data.map((entry: any) => {
+    const flattened: any = { [xAxis]: entry[xAxis] };
+    keys.forEach((key) => {
+      states.forEach((state) => {
+        flattened[`${key}${state}`] = entry[key][state];
+      });
+    });
+    return flattened;
   });
 }
 

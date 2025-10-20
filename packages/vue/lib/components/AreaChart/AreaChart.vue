@@ -46,6 +46,7 @@ const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
 
 const colors = computed(() => {
+  if (!props.categories) return [];
   const defaultColors = Object.values(props.categories).map(
     (_, index) => `var(--vis-color${index})`
   );
@@ -114,19 +115,8 @@ function getAccessors(id: string): {
   };
 }
 
-function generateTooltipContent(d: T): string {
-  if (typeof window === "undefined") {
-    return "";
-  }
-  if (slotWrapperRef.value) {
-    return slotWrapperRef.value.innerHTML;
-  }
-  return "";
-}
-
-function onCrosshairUpdate(d: T): string {
+function onCrosshairUpdate(d: T) {
   hoverValues.value = d;
-  return generateTooltipContent(d);
 }
 </script>
 
@@ -187,6 +177,7 @@ function onCrosshairUpdate(d: T): string {
         :domain-line="xDomainLine"
         :tick-line="xTickLine"
         :min-max-ticks-only="minMaxTicksOnly"
+        v-bind="xAxisConfig"
       />
 
       <VisAxis
@@ -198,13 +189,10 @@ function onCrosshairUpdate(d: T): string {
         :grid-line="yGridLine"
         :domain-line="yDomainLine"
         :tick-line="yTickLine"
+        v-bind="yAxisConfig"
       />
 
-      <VisCrosshair
-        v-if="!hideTooltip"
-        v-bind="crosshairConfig"
-        :template="onCrosshairUpdate"
-      />
+      <VisCrosshair v-if="!hideTooltip" v-bind="crosshairConfig" @update="onCrosshairUpdate" />
     </VisXYContainer>
 
     <div

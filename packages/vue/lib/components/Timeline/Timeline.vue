@@ -50,16 +50,9 @@ const legendAlignment = computed(() => {
 
 const triggers = { [Timeline.selectors.label]: generateLabelTooltip };
 
-function generateLabelTooltip(d: T): string {
+function generateLabelTooltip(d: T) {
   slotValue.value = d;
   emit("labelHover", d);
-  if (typeof window === "undefined") {
-    return "";
-  }
-  if (slotWrapper.value) {
-    return slotWrapper.value.innerHTML;
-  }
-  return "";
 }
 
 function handleTimelineClick(datum: T, index: number, event: MouseEvent) {
@@ -105,8 +98,23 @@ const colors = computed(() => {
         @click="handleTimelineClick"
       />
 
-      <VisTooltip :triggers="triggers" />
-      <VisAxis type="x" :tickFormat="dateFormatter" :numTicks="10" />
+      <VisTooltip
+        :triggers="{
+          [Timeline.selectors.label]: (d: T) => {
+            generateLabelTooltip(d);
+            return d ? slotWrapper?.innerHTML : '';
+          },
+        }"
+      />
+      <VisAxis
+        type="x"
+        :tickFormat="xTickFormat || dateFormatter"
+        :numTicks="xNumTicks"
+        :tick-line="xTickLine"
+        :grid-line="xGridLine"
+        :domain-line="xDomainLine"
+        v-bind="xAxisConfig"
+      />
     </VisXYContainer>
 
     <div

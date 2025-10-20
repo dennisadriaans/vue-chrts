@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends {} = {}">
+<script setup lang="ts" generic="T">
 import { computed, ref, useSlots, useTemplateRef } from "vue";
 import { Position, Scatter } from "@unovis/ts";
 import {
@@ -147,6 +147,7 @@ const legendAlignment = computed(() => {
         :numTicks="props.xNumTicks"
         :tickValues="props.xExplicitTicks"
         :minMaxTicksOnly="props.minMaxTicksOnly"
+        v-bind="xAxisConfig"
       />
       <VisAxis
         v-if="!props.hideYAxis"
@@ -157,6 +158,7 @@ const legendAlignment = computed(() => {
         :domainLine="!!props.yDomainLine"
         :tickLine="props.yTickLine"
         :numTicks="props.yNumTicks"
+        v-bind="yAxisConfig"
       />
     </VisXYContainer>
 

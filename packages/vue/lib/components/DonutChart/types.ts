@@ -5,7 +5,7 @@ export type DonutChartProps = {
    * The type of donut chart to render.
    * See `DonutType` for available options.
    */
-  type?: string;
+  type?: DonutType;
   /**
    * The data to be displayed in the donut chart.
    * Each number in the array represents a segment value.
@@ -15,7 +15,7 @@ export type DonutChartProps = {
    * The arc width of the chart in pixels.
    */
   arcWidth?: number;
-    /**
+  /**
    * The height of the chart in pixels.
    */
   height: number;
@@ -27,7 +27,7 @@ export type DonutChartProps = {
    * If `true`, hides the chart legend.
    */
   hideLegend?: boolean;
-    /**
+  /**
    * Optional position for the legend, if applicable.
    * See `LegendPosition` for available options.
    */
@@ -47,7 +47,7 @@ export type DonutChartProps = {
   /**
    * Pad angle. Default: 0
    */
-  padAngle?: number
+  padAngle?: number;
 };
 
 enum DonutType {

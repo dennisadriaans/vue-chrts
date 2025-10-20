@@ -2,25 +2,14 @@ import {
   axisFormatter,
   BulletLegendItemInterface,
   LegendPosition,
+  XYAxisTextProps,
+  CrosshairConfig,
+  AxisConfig,
 } from "../../types";
 
-export type DataRecord = {
-  species: string;
-  island: string;
-  beakLength: number | undefined;
-  beakDepth: number | undefined;
-  flipperLength: number | undefined;
-  bodyMass: number | undefined;
-  sex: string;
-};
-
-/**
- * Configuration for bubble sizes.
- */
 export interface SizeOptions {
-  minRadius?: number; // Minimum radius for a bubble
-  maxRadius?: number; // Maximum radius for a bubble
-  // scale?: 'linear' | 'sqrt' | 'log'; // Simplified, default to sqrt logic in component
+  minRadius?: number;
+  maxRadius?: number;
 }
 
 import type { NumericAccessor, Position } from "@unovis/ts";
@@ -167,9 +156,15 @@ export interface BubbleChartProps<T> {
    */
   hideTooltip?: boolean;
   /**
-   * Configuration for the crosshair behavior.
+   * Crosshair configuration object for customizing the appearance of the crosshair line.
    */
-  crosshairConfig?: {
-    color?: string;
-  };
+  crosshairConfig?: CrosshairConfig;
+  /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  xAxisConfig?: AxisConfig;
+  /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  yAxisConfig?: AxisConfig;
 }

@@ -1,5 +1,5 @@
-import { axisFormatter, CrosshairConfig, LegendPosition, MarkerConfig } from "../../types";
-import type { BulletLegendItemInterface, Crosshair, CurveType } from "@unovis/ts";
+import { axisFormatter, CrosshairConfig, LegendPosition, MarkerConfig, AxisConfig } from "../../types";
+import type { BulletLegendItemInterface, CurveType } from "@unovis/ts";
 
 export interface AreaChartProps<T> {
   /**
@@ -41,17 +41,11 @@ export interface AreaChartProps<T> {
    */
   markerConfig?: Record<string, MarkerConfig>;
   /**
-   * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
-   * @param {number} i - The index of the tick in the `ticks` array.
-   * @param {(number[]|Date[])} ticks - An array of all tick values for the x-axis.
-   * @returns {string} The formatted string representation of the tick.
+   * A function that formats the x-axis tick labels.
    */
   xFormatter?: axisFormatter;
   /**
-   * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the y-axis.
-   * @param {number} i - The index of the tick in the `ticks` array.
-   * @param {(number[]|Date[])} ticks - An array of all tick values for the y-axis.
-   * @returns {string} The formatted string representation of the tick.
+   * A function that formats the y-axis tick labels.
    */
   yFormatter?: axisFormatter;
   /**
@@ -145,6 +139,14 @@ export interface AreaChartProps<T> {
    */
   crosshairConfig?: CrosshairConfig;
   /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  xAxisConfig?: AxisConfig;
+  /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  yAxisConfig?: AxisConfig;
+  /**
    * The domain for the y-axis, specified as a tuple of two values.
    */
   yDomain?: [number | undefined, number | undefined];
@@ -152,5 +154,4 @@ export interface AreaChartProps<T> {
    * The domain for the x-axis, specified as a tuple of two values.
    */
   xDomain?: [number | undefined, number | undefined];
-
 }
