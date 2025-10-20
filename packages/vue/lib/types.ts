@@ -3,6 +3,7 @@ import { BarChartProps } from "./components/BarChart/types";
 import { LineChartProps } from "./components/LineChart/types";
 import { DonutChartProps } from "./components/DonutChart/types";
 import { BubbleChartProps } from "./components/BubbleChart/types";
+import { TimelineProps, TimelineLegendItem } from "./components/Timeline/types";
 
 enum LegendPosition {
   TopLeft = "top-left",
@@ -58,7 +59,9 @@ export {
   type LineChartProps,
   type DonutChartProps,
   type BulletLegendItemInterface,
-  type BubbleChartProps
+  type BubbleChartProps,
+  type TimelineProps,
+  type TimelineLegendItem
 };
 
 export type axisFormatter =

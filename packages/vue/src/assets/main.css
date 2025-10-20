@@ -23,6 +23,8 @@
   --vis-legend-item-spacing: 0px !important;
   --vis-legend-spacing: 24px !important;
 
+  --vis-timeline-row-even-fill-color: transparent !important;
+  --vis-timeline-row-odd-fill-color: transparent !important;
 }
 
 
@@ -56,4 +58,6 @@
   /* --vis-axis-grid-line-width: 5px !important; */
   --vis-axis-domain-line-dasharray: 'none' !important;
   --vis-axis-tick-label-weight: 900 !important;
+
+    --vis-timeline-label-color: var(--vis-axis-tick-label-color, red) !important
 }
