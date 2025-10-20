@@ -31,8 +31,7 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
           :pad-angle="0.5"
           :arc-width="40"
           :legend-position="LegendPosition.Bottom"
-          @click="handleChartClick"
-        />
+          @click="handleChartClick"/>
       </Card>
     </div>
   </div>

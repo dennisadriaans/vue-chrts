@@ -55,6 +55,7 @@ const legendAlignment = computed(() => {
   <div
     :style="{
       display: 'flex',
+      position: 'relative',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',
       gap: 'var(--vis-legend-spacing)',
     }"
@@ -77,6 +78,10 @@ const legendAlignment = computed(() => {
         :angle-range="isHalf ? [-1.5707963267948966, 1.5707963267948966] : []"
         :pad-angle="props.padAngle || 0"
       />
+
+      <div class="absolute top-1/2 left-1/2 -translate-1/2">
+        <slot />
+      </div>
     </VisSingleContainer>
 
     <div
@@ -94,8 +99,6 @@ const legendAlignment = computed(() => {
         :items="labels"
       />
     </div>
-
-    <slot />
 
     <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
