@@ -26,13 +26,36 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
         <DonutChart
           :data="DonutChartData"
           :height="220"
-          :labels="DonutCategories"
+          :categories="DonutCategories"
           :radius="80"
           :pad-angle="0.5"
           :arc-width="40"
           :legend-position="LegendPosition.Bottom"
           @click="handleChartClick"
-        />
+        >
+      <div>
+        123
+      </div></DonutChart>
+      </Card>
+
+      <Card>
+        <template #header>
+          <h2 class="heading-2">Half Donut Chart Example</h2>
+        </template>
+        <DonutChart
+          :data="DonutChartData"
+          :height="140"
+          :categories="DonutCategories"
+          :radius="0"
+          :arc-width="40"
+          :legend-position="LegendPosition.Bottom"
+          :type="'half'"
+          @click="handleChartClick"
+        >
+      <div class="pt-16">
+        1234
+      </div>
+      </DonutChart>
       </Card>
     </div>
   </div>

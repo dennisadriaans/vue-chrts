@@ -28,7 +28,7 @@ const DonutData = [
     :pad-angle="0.1"
     :radius="50"
   >
-    <div class="absolute text-center">
+    <div class="text-center">
       <div class="font-semibold">Label</div>
       <div class="text-muted">2 seconds ago</div>
     </div>

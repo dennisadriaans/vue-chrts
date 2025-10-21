@@ -203,7 +203,7 @@ const columns = [
             :radius="0"
             @click="(e, t) => console.log(t)"
           >
-            <div class="absolute text-center">
+            <div class="text-center">
               <div class="font-semibold dark:text-white">Label</div>
               <div class="text-gray-500">2 seconds ago</div>
             </div>
