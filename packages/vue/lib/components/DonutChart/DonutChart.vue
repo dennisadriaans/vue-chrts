@@ -27,6 +27,34 @@ const value = (d: number) => d;
 
 const isHalf = props.type === DonutType.Half;
 
+const colors = computed(() =>
+  Object.values(props.categories).map((c) => {
+    const color = c.color;
+    return Array.isArray(color) ? color[0] : (color ?? "#3b82f6");
+  })
+);
+
+const legendItems = computed(() =>
+  Object.values(props.categories).map((c) => ({
+    ...c,
+    color: Array.isArray(c.color) ? c.color[0] : (c.color ?? "#3b82f6"),
+  }))
+);
+
+const colors = computed(() =>
+  Object.values(props.categories).map((c) => {
+    const color = c.color;
+    return Array.isArray(color) ? color[0] : (color ?? "#3b82f6");
+  })
+);
+
+const legendItems = computed(() =>
+  Object.values(props.categories).map((c) => ({
+    ...c,
+    color: Array.isArray(c.color) ? c.color[0] : (c.color ?? "#3b82f6"),
+  }))
+);
+
 function onCrosshairUpdate(d: T) {
   hoverValues.value = d;
 }
@@ -65,7 +93,7 @@ const legendAlignment = computed(() => {
         :value="value"
         :corner-radius="radius"
         :arc-width="arcWidth ?? 20"
-        :color="props.labels.map((l) => l.color)"
+        :color="colors"
         :angle-range="isHalf ? [-1.5707963267948966, 1.5707963267948966] : []"
         :pad-angle="props.padAngle || 0"
       />
@@ -83,7 +111,7 @@ const legendAlignment = computed(() => {
           props.legendStyle,
           'display: flex; gap: var(--vis-legend-spacing);',
         ]"
-        :items="labels"
+        :items="legendItems"
       />
     </div>
 
@@ -99,7 +127,7 @@ const legendAlignment = computed(() => {
               height: '0.5rem',
               borderRadius: '9999px',
               marginRight: '0.5rem',
-              backgroundColor: props.labels[hoverValues.index].color,
+              backgroundColor: colors[hoverValues.index],
             }"
           ></div>
           <div>{{ hoverValues.data }}</div>
