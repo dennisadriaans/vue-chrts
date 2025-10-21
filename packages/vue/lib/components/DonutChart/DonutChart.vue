@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends Record<string, any> = any">
+<script setup lang="ts" generic="T extends {}">
 import { Donut } from "@unovis/ts";
 import { ref, useSlots, useTemplateRef, computed } from "vue";
 import { type DonutChartProps, DonutType } from "./types";
@@ -17,7 +17,7 @@ const emit = defineEmits<{
 
 const props = withDefaults(defineProps<DonutChartProps>(), {
   legendPosition: LegendPosition.BottomCenter,
-})
+});
 
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
@@ -27,22 +27,19 @@ const value = (d: number) => d;
 
 const isHalf = props.type === DonutType.Half;
 
-const colors = computed(() =>
-  Object.values(props.categories).map((c) => {
-    const color = c.color;
-    return Array.isArray(color) ? color[0] : (color ?? "#3b82f6");
-  })
-);
-
-const legendItems = computed(() =>
-  Object.values(props.categories).map((c) => ({
-    ...c,
-    color: Array.isArray(c.color) ? c.color[0] : (c.color ?? "#3b82f6"),
-  }))
-);
-
-function onCrosshairUpdate(d: T) {
+function onCrosshairUpdate(d: T): string {
   hoverValues.value = d;
+  return generateTooltipContent(d);
+}
+
+function generateTooltipContent(d: T): string {
+  if (typeof window === "undefined") {
+    return "";
+  }
+  if (slotWrapperRef.value) {
+    return slotWrapperRef.value.innerHTML;
+  }
+  return "";
 }
 
 const isLegendTop = computed(() => props.legendPosition.includes("top"));
@@ -52,6 +49,19 @@ const legendAlignment = computed(() => {
   if (props.legendPosition.includes("right")) return "flex-end";
   return "center";
 });
+
+const normalizeColor = (color: string | string[] | undefined, fallback = '#ccc'): string => {
+  if (!color) return fallback;
+  return Array.isArray(color) ? (color[0] || fallback) : color;
+};
+
+const categoriesArray = computed(() => Object.values(props.categories));
+
+const colors = (_: number, i: number) => {
+  const cat = categoriesArray.value[i];
+  if (!cat) return undefined;
+  return normalizeColor(cat.color);
+};
 </script>
 
 <template>
@@ -68,10 +78,7 @@ const legendAlignment = computed(() => {
         :horizontal-shift="20"
         :vertical-shift="20"
         :triggers="{
-          [Donut.selectors.segment]: (d: T) => {
-            onCrosshairUpdate(d);
-            return d ? slotWrapperRef?.innerHTML : '';
-          },
+          [Donut.selectors.segment]: onCrosshairUpdate,
         }"
       />
 
@@ -83,6 +90,9 @@ const legendAlignment = computed(() => {
         :angle-range="isHalf ? [-1.5707963267948966, 1.5707963267948966] : []"
         :pad-angle="props.padAngle || 0"
       />
+      <div class="absolute top-1/2 left-1/2 -translate-1/2">
+        <slot />
+      </div>
     </VisSingleContainer>
 
     <div
@@ -97,11 +107,14 @@ const legendAlignment = computed(() => {
           props.legendStyle,
           'display: flex; gap: var(--vis-legend-spacing);',
         ]"
-        :items="legendItems"
+        :items="
+          categoriesArray.map((item) => ({
+            ...item,
+            color: normalizeColor(item.color),
+          }))
+        "
       />
     </div>
-
-    <slot />
 
     <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
@@ -113,7 +126,7 @@ const legendAlignment = computed(() => {
               height: '0.5rem',
               borderRadius: '9999px',
               marginRight: '0.5rem',
-              backgroundColor: colors[hoverValues.index],
+              backgroundColor: normalizeColor(categoriesArray[hoverValues.index]?.color),
             }"
           ></div>
           <div>{{ hoverValues.data }}</div>
