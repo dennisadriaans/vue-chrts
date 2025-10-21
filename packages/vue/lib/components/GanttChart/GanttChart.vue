@@ -12,14 +12,14 @@ import {
   VisAxis,
 } from "@unovis/vue";
 
-import { LegendPosition, TimelineProps } from "../../types";
+import { LegendPosition, GanttChartProps } from "../../types";
 
 export interface TimelineCategory {
   name: string;
   color?: string | string[];
 }
 
-const props = withDefaults(defineProps<TimelineProps<T>>(), {
+const props = withDefaults(defineProps<GanttChartProps<T>>(), {
   labelWidth: 220,
   title: "",
   showLabels: true,

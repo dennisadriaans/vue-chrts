@@ -5,12 +5,7 @@ import {
   AxisConfig,
 } from "../../types";
 
-export interface TimelineLegendItem {
-  name: string;
-  color: string;
-}
-
-export interface TimelineProps<T> {
+export interface GanttChartProps<T> {
   /**
    * The data to be displayed in the timeline chart.
    * Each element of the array represents a timeline event or item.
