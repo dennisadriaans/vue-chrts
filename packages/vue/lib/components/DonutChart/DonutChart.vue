@@ -41,20 +41,6 @@ const legendItems = computed(() =>
   }))
 );
 
-const colors = computed(() =>
-  Object.values(props.categories).map((c) => {
-    const color = c.color;
-    return Array.isArray(color) ? color[0] : (color ?? "#3b82f6");
-  })
-);
-
-const legendItems = computed(() =>
-  Object.values(props.categories).map((c) => ({
-    ...c,
-    color: Array.isArray(c.color) ? c.color[0] : (c.color ?? "#3b82f6"),
-  }))
-);
-
 function onCrosshairUpdate(d: T) {
   hoverValues.value = d;
 }
