@@ -9,7 +9,7 @@ export const resolveImports = (_: ModuleOptions, filePath: string) => {
         imports: [...allTypes]
     })
 
-    const allImports = ['CurveType', 'LegendPosition', 'Orientation']
+    const allImports = ['CurveType', 'LegendPosition', 'Orientation', 'DonutType']
     addImportsSources({
         from: filePath,
         imports: [...allImports]

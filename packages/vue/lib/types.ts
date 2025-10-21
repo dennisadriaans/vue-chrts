@@ -1,7 +1,7 @@
 import { AreaChartProps } from "./components/AreaChart/types";
 import { BarChartProps } from "./components/BarChart/types";
 import { LineChartProps } from "./components/LineChart/types";
-import { DonutChartProps } from "./components/DonutChart/types";
+import { DonutChartProps, DonutType } from "./components/DonutChart/types";
 import { BubbleChartProps } from "./components/BubbleChart/types";
 import { GanttChartProps } from "./components/GanttChart/types";
 
@@ -53,6 +53,7 @@ export {
   LegendPosition,
   CurveType,
   Orientation,
+  DonutType,
   type AreaChartProps,
   type BarChartProps,
   type LineChartProps,

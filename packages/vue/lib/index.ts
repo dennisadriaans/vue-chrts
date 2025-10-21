@@ -12,6 +12,7 @@ import {
     type BulletLegendItemInterface,
     MarkerConfig,
     CrosshairConfig,
+    DonutType
 } from "./types";
 
 export {
@@ -23,7 +24,8 @@ export {
     GanttChart,
     Orientation,
     CurveType,
-    LegendPosition
+    LegendPosition,
+    DonutType
 };
 
 export type {
