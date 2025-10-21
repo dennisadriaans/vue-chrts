@@ -2,7 +2,6 @@ import {
   axisFormatter,
   BulletLegendItemInterface,
   LegendPosition,
-  XYAxisTextProps,
   CrosshairConfig,
   AxisConfig,
 } from "../../types";

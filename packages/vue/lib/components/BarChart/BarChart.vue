@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T">
+<script setup lang="ts" generic="T extends {}">
 import { computed, ref, useSlots, useTemplateRef } from "vue";
 import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
 import { getFirstPropertyValue } from "../../utils";

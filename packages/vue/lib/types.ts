@@ -39,7 +39,6 @@ interface BulletLegendItemInterface {
   name: string | number;
   color?: string | Array<string>;
   className?: string;
-  shape?: "circle" | "square" | "triangle" | "diamond";
   inactive?: boolean;
   hidden?: boolean;
   pointer?: boolean;
