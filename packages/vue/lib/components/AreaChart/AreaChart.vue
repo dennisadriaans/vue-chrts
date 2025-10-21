@@ -187,6 +187,7 @@ function onCrosshairUpdate(d: T): string {
         :domain-line="xDomainLine"
         :tick-line="xTickLine"
         :min-max-ticks-only="minMaxTicksOnly"
+        v-bind="xAxisConfig"
       />
 
       <VisAxis
@@ -198,6 +199,7 @@ function onCrosshairUpdate(d: T): string {
         :grid-line="yGridLine"
         :domain-line="yDomainLine"
         :tick-line="yTickLine"
+        v-bind="yAxisConfig"
       />
 
       <VisCrosshair

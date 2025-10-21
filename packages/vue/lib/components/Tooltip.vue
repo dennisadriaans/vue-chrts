@@ -25,7 +25,7 @@ const visibleEntries = computed(() => {
       :style="{
         color: 'var(--tooltip-value-color)',
         textTransform: 'capitalize',
-        borderBottom: 'borderBottom: 1px solid var(--tooltip-border-color)',
+        borderBottom: '1px solid var(--tooltip-border-color)',
         marginBottom: '0.25rem',
         paddingBottom: '0.25rem',
       }"

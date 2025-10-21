@@ -5,7 +5,7 @@ export type DonutChartProps = {
    * The type of donut chart to render.
    * See `DonutType` for available options.
    */
-  type?: string;
+  type?: DonutType;
   /**
    * The data to be displayed in the donut chart.
    * Each number in the array represents a segment value.

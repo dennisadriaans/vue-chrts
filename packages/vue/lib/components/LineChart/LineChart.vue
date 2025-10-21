@@ -10,7 +10,7 @@ const props = defineProps<LineChartProps<T>>();
 </script>
 
 <template>
-  <AreaChart v-bind="{ ...$attrs, ...props }" :hide-area="true">
+  <AreaChart v-bind="props" :hide-area="true">
     <template v-for="(_, slot) in $slots" #[slot]="scope">
       <slot :name="slot" v-bind="scope" />
     </template>

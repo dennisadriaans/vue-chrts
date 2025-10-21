@@ -1,5 +1,5 @@
-<script setup lang="ts" generic="T extends {}">
-import { computed, ComputedRef, ref, useSlots, useTemplateRef } from "vue";
+<script setup lang="ts" generic="T">
+import { computed, ref, useSlots, useTemplateRef } from "vue";
 import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
 import { getFirstPropertyValue } from "../../utils";
 import { useStackedGrouped } from "./stackedGroupedUtils";
@@ -55,7 +55,7 @@ if (!props.yAxis || props.yAxis.length === 0) {
   throw new Error("yAxis is required");
 }
 
-const yAxis: ComputedRef<((d: T) => T[keyof T])[]> = computed(() => {
+const yAxis = computed(() => {
   return props.yAxis.map((key) => (d: T) => {
     return d[key];
   });
@@ -82,19 +82,8 @@ const legendAlignment = computed(() => {
   return "center";
 });
 
-function onCrosshairUpdate(d: T): string {
+function onCrosshairUpdate(d: T) {
   hoverValues.value = d;
-  return generateTooltipContent(d);
-}
-
-function generateTooltipContent(d: T): string {
-  if (typeof window === "undefined") {
-    return "";
-  }
-  if (slotWrapperRef.value) {
-    return slotWrapperRef.value.innerHTML;
-  }
-  return "";
 }
 
 const accessors = props.yAxis.map((i) => {
@@ -173,8 +162,14 @@ const labelX = (d: LabelDatum) => {
 
       <VisTooltip
         :triggers="{
-          [GroupedBar.selectors.bar]: onCrosshairUpdate,
-          [StackedBar.selectors.bar]: onCrosshairUpdate,
+          [GroupedBar.selectors.bar]: (d: T) => {
+            onCrosshairUpdate(d);
+            return d ? slotWrapperRef?.innerHTML : '';
+          },
+          [StackedBar.selectors.bar]: (d: T) => {
+            onCrosshairUpdate(d);
+            return d ? slotWrapperRef?.innerHTML : '';
+          },
         }"
       />
       <template v-if="stackAndGrouped">
@@ -224,6 +219,7 @@ const labelX = (d: LabelDatum) => {
         :num-ticks="xNumTicks"
         :tick-values="xExplicitTicks"
         :minMaxTicksOnly="minMaxTicksOnly"
+        v-bind="xAxisConfig"
       />
       <VisAxis
         v-if="!hideYAxis"
@@ -234,6 +230,7 @@ const labelX = (d: LabelDatum) => {
         :tick-format="yFormatter"
         :num-ticks="yNumTicks"
         :tick-line="yTickLine"
+        v-bind="yAxisConfig"
       />
     </VisXYContainer>
     

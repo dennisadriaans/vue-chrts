@@ -3,6 +3,7 @@ import {
   Orientation,
   LegendPosition,
   axisFormatter,
+  AxisConfig,
 } from "../../types";
 
 type BarChartPropsBase<T> = {
@@ -149,6 +150,15 @@ type BarChartPropsBase<T> = {
    * Only applicable if `stackAndGrouped` is `true`.
    */
   stackedGroupedSpacing?: number;
+
+  /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  xAxisConfig?: AxisConfig;
+  /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  yAxisConfig?: AxisConfig;
 };
 
 export type BarChartProps<T> = BarChartPropsBase<T> & {
