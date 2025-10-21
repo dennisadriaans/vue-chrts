@@ -33,10 +33,10 @@ export function getDistributedIndices(length: number, numTicks: number) {
   return indices;
 }
 
-export function getFirstPropertyValue<T>(obj: T): T[keyof T] | undefined {
+export function getFirstPropertyValue(obj: unknown) {
   if (obj && Object.keys(obj).length > 0) {
-    const firstKey = Object.keys(obj)[0] as keyof T;
-    return obj[firstKey];
+    const firstKey = Object.keys(obj)[0];
+    return obj[firstKey as keyof typeof obj];
   }
   return undefined;
 }
@@ -72,13 +72,11 @@ export const markerShape = (
         size / 2
       }" stroke-width="${strokeWidth}" stroke="${strokeColor}" fill="${color}" />`;
     default:
-      return `<circle cx="${size / 2}" cy="${size / 2}" r="${
-        (size - strokeWidth) / 2
-      }" stroke-width="${strokeWidth}" stroke="${strokeColor}" fill="${color}" />`;
+      return "";
   }
 };
 
-export function createMarkers(markerConfig: Record<string, MarkerConfig>): string {
+export function createMarkers(markerConfig: Record<string, MarkerConfig>) {
   return Object.entries(markerConfig)
     .map(([key, cfg]) => {
       const type = cfg.type || "circle";
@@ -96,5 +94,28 @@ export function createMarkers(markerConfig: Record<string, MarkerConfig>): strin
     })
     .join("\n");
 }
+
+function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export const flattenData = (data: any[], xAxis: string) => {
+  const keys = Object.keys(data[0]).filter((key) => key !== xAxis);
+
+  const states = Object.keys((data[0] as any)[keys[0]]);
+
+  return data.map((entry: any) => {
+    return {
+      month: entry.month,
+      ...keys
+        .flatMap((key) =>
+          states.map((state) => ({
+            [`${key}${capitalize(state)}`]: entry[key][state],
+          }))
+        )
+        .reduce((acc, curr) => ({ ...acc, ...curr }), {}),
+    };
+  });
+};
 
 export const dateFormatter = (date: number) => Intl.DateTimeFormat().format(date);

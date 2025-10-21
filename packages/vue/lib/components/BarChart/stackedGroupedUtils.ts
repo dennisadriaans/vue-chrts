@@ -1,11 +1,14 @@
 import { computed, ComputedRef } from "vue";
+import { flattenData } from "../../utils";
+import { BulletLegendItemInterface } from "../../types";
 
 export interface StackedGroupedConfig<T> {
   data: T[];
-  categories: Record<string, { color?: string | Array<string> }>;
+  categories: Record<string, BulletLegendItemInterface>;
   stackAndGrouped: boolean;
   xAxis?: keyof T;
   spacing?: number;
+  
 }
 
 export interface StackedGroupedResult<T> {
@@ -18,20 +21,10 @@ export interface StackedGroupedResult<T> {
   chartData: T[] | any[];
 }
 
-export function useStackedGrouped<T extends {}>(config: StackedGroupedConfig<T>): ComputedRef<StackedGroupedResult<T>> {
+export function useStackedGrouped<T extends {}>(
+  config: StackedGroupedConfig<T>
+): ComputedRef<StackedGroupedResult<T>> {
   return computed(() => {
-    if (!config.stackAndGrouped) {
-      return {
-        states: [],
-        groupedByState: {},
-        colors: {},
-        bars: {},
-        colorFunctions: {},
-        positions: {},
-        chartData: config.data,
-      };
-    }
-
     const states = extractStates(config.categories);
     const groupedByState = groupCategoriesByState(config.categories, states);
     const colors = generateColors(groupedByState, config.categories);
@@ -39,7 +32,9 @@ export function useStackedGrouped<T extends {}>(config: StackedGroupedConfig<T>)
     const colorFunctions = generateColorFunctions(colors);
     const positions = calculatePositions(states, config.spacing);
 
-    const chartData = flattenData(config.data, config.xAxis as string);
+    const chartData = config.stackAndGrouped
+      ? flattenData(config.data, config.xAxis as string)
+      : config.data;
 
     return {
       states,
@@ -53,23 +48,8 @@ export function useStackedGrouped<T extends {}>(config: StackedGroupedConfig<T>)
   });
 }
 
-function flattenData<T>(data: T[], xAxis: keyof T): any[] {
-  const keys = Object.keys(data[0] as {}).filter((key) => key !== xAxis);
-  const states = Object.keys((data[0] as any)[keys[0]]);
-
-  return data.map((entry: any) => {
-    const flattened: any = { [xAxis]: entry[xAxis] };
-    keys.forEach((key) => {
-      states.forEach((state) => {
-        flattened[`${key}${state}`] = entry[key][state];
-      });
-    });
-    return flattened;
-  });
-}
-
 function extractStates(
-  categories:  Record<string, { color?: string | Array<string> }>
+  categories: Record<string, { color?: string }>
 ): string[] {
   const states = new Set<string>();
   const categoryKeys = Object.keys(categories);
@@ -85,7 +65,7 @@ function extractStates(
 }
 
 function groupCategoriesByState(
-  categories:  Record<string, { color?: string | Array<string> }>,
+  categories: Record<string, { color?: string }>,
   states: string[]
 ): Record<string, string[]> {
   const grouped: Record<string, string[]> = {};
@@ -101,18 +81,12 @@ function groupCategoriesByState(
 
 function generateColors(
   groupedByState: Record<string, string[]>,
-  categories:  Record<string, { color?: string | Array<string> }>
+  categories: Record<string, { color?: string }>
 ): Record<string, string[]> {
   const colorsByState: Record<string, string[]> = {};
 
   Object.entries(groupedByState).forEach(([state, keys]) => {
-    colorsByState[state] = keys.map((key) => {
-      const color = categories[key]?.color;
-      if (Array.isArray(color)) {
-        return color[0] ?? "#ccc";
-      }
-      return color ?? "#ccc";
-    });
+    colorsByState[state] = keys.map((key) => categories[key]?.color ?? "#ccc");
   });
 
   return colorsByState;

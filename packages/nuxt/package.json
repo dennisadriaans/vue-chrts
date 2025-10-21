@@ -30,7 +30,7 @@
     "@nuxt/kit": "^3.17.7",
     "@unovis/ts": "^1.5.2",
     "@unovis/vue": "^1.5.2",
-    "vue-chrts": "0.2.5-test.3"
+    "vue-chrts": "workspace:*"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.7.1",
