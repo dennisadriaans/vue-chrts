@@ -1,6 +1,6 @@
 {
   "name": "nuxt-charts",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Nuxt module for vue-chrts",
   "license": "MIT",
   "type": "module",
@@ -30,7 +30,7 @@
     "@nuxt/kit": "^3.17.7",
     "@unovis/ts": "^1.5.2",
     "@unovis/vue": "^1.5.2",
-    "vue-chrts": "workspace:*"
+    "vue-chrts": "1.0.0"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.7.1",
