@@ -141,7 +141,7 @@ const columns = [
             :x-tick-line="false"
             :x-formatter="(i: number): string => `${InvestmentData[i]?.date}`"
             :curve-type="CurveType.MonotoneX"
-            :legend-position="LegendPosition.Top"
+            :legend-position="LegendPosition.TopRight"
           >
             <template #tooltip="{ values }">
               <div

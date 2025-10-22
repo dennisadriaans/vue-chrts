@@ -217,7 +217,7 @@ const barChartExamples: BarChartExample[] = [
       return months[typeof i !== "undefined" ? i : tick] || String(tick);
     },
     yFormatter: (tick: number, i?: number) => String(tick),
-    legendPosition: LegendPosition.Top,
+    legendPosition: LegendPosition.TopRight,
     barPadding: 0.8,
     stackedGroupedSpacing: 0.25,
     hideLegend: false,

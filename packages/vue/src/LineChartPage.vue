@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { LineChart } from "../lib";
+import { LineChart, LegendPosition } from "../lib";
 
 import Card from "./elements/Card.vue";
 
@@ -54,7 +54,7 @@ import {
           :categories="categories3"
           :x-formatter="(tick: number): string => `${chartData[tick].month}`"
           :curve-type="CurveType.MonotoneX"
-          :legend-position="LegendPosition.Top"
+          :legend-position="LegendPosition.TopRight"
         />
       </Card>
 

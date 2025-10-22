@@ -91,7 +91,7 @@ const sizeAccessor3 = (d: any) => d.population;
             :x-accessor="xAccessor2"
             :y-accessor="yAccessor2"
             :size-accessor="sizeAccessor2"
-            :legend-position="LegendPosition.Top"
+            :legend-position="LegendPosition.TopRight"
             :y-formatter="formatNumber"
             x-label="Value"
             y-label="Priority"

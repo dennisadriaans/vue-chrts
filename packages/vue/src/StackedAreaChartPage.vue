@@ -42,7 +42,7 @@ import {
           :x-formatter="(i: number) => AreaChartData1[i].date"
           :y-num-ticks="3"
           :curve-type="CurveType.Step"
-          :legend-position="LegendPosition.Top"
+          :legend-position="LegendPosition.TopRight"
         />
       </Card>
 
