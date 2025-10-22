@@ -1,6 +1,6 @@
 {
   "name": "vue-chrts",
-  "version": "1.0.0-test.1",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist"
@@ -42,8 +42,5 @@
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.2.4"
   },
-  "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2",
-  "dependencies": {
-    "@types/topojson-specification": "^1.0.5"
-  }
+  "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2"
 }
