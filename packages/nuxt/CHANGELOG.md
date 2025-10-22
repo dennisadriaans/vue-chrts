@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.1.0](https://github.com/dennisadriaans/vue-chrts/compare/v0.2.4...v1.1.0) (2025-10-22)
+
+
+### Features
+
+* better legend positions ([3d94556](https://github.com/dennisadriaans/vue-chrts/commit/3d945561442995ec9e94bd34c4944ae297446622))
+* handle area opacity and use area as base of line chart with proper types ([f3a3ac5](https://github.com/dennisadriaans/vue-chrts/commit/f3a3ac5ca261491fc34bf137856a28e35ad80c23))
+
+
+### Bug Fixes
+
+* add legend position settings to donut chart ([1062963](https://github.com/dennisadriaans/vue-chrts/commit/10629638027a7d934d8eb1bef8c781279f23eee2))
+* add map container area and points again ([0aaaa5c](https://github.com/dennisadriaans/vue-chrts/commit/0aaaa5c9f1964b67c3375205f5b59720b9be3346))
+* bar chart generic types and categories type ([2d39ffc](https://github.com/dennisadriaans/vue-chrts/commit/2d39ffc692ebf8ff844b827d65929ff230d6624f))
+* check for xAxis value label and format code ([b88f4a1](https://github.com/dennisadriaans/vue-chrts/commit/b88f4a17fc3fd82e9895fe4a73deb84279f4329e))
+* donut chart categories ([cb70f86](https://github.com/dennisadriaans/vue-chrts/commit/cb70f86beba44f3c9017047101e578a07d38bf64))
+* donut slot to css | add and export DonutType type ([7dfff2f](https://github.com/dennisadriaans/vue-chrts/commit/7dfff2f4f13ed4153067214986c19ab307f841d5))
+* force type check on xAxis for valueLabel and stackAndGrouped ([970c308](https://github.com/dennisadriaans/vue-chrts/commit/970c308009c3263aea87268c9bdfc54566424e25))
+* imporve reusability and examples ([57ab707](https://github.com/dennisadriaans/vue-chrts/commit/57ab707777698fb3b6de18a2ee2992740c540b8c))
+* improve overal code quality and types | add axis tick config options ([626313e](https://github.com/dennisadriaans/vue-chrts/commit/626313eb3d524685d6ac9de6645900a6c2b3161d))
+* legendposition usage in examples ([293846d](https://github.com/dennisadriaans/vue-chrts/commit/293846d98b4bca7538466cf12672dad3ba6c9b13))
+* merge donut chart changes add examples ([4e114e2](https://github.com/dennisadriaans/vue-chrts/commit/4e114e2f52f389620e8982a3bd33aefff6c3653d))
+* remove duplicate ([fa6690e](https://github.com/dennisadriaans/vue-chrts/commit/fa6690ed781040c2b978a6b6f887ab45134a1bd6))
+* restore changes ([eb988b7](https://github.com/dennisadriaans/vue-chrts/commit/eb988b7dcaf16e1ca0b69e17253584a4fd215e64))
+* type hinting line chart ([a501357](https://github.com/dennisadriaans/vue-chrts/commit/a50135713a5b2d1bccc7116100930939502d644b))
+* upgrade timeline component ([48280d1](https://github.com/dennisadriaans/vue-chrts/commit/48280d110f988c18f6507be87003e91ef3cd409e))
+* use categories with legend interface for donut charts ([883fb0e](https://github.com/dennisadriaans/vue-chrts/commit/883fb0ec3819069931a178f0e83b1b62bad2b84f))
+
 ## [0.2.3](https://github.com/dennisadriaans/vue-chrts/compare/v0.2.4...v0.2.3) (2025-08-07)
 
 ## [0.2.4](https://github.com/dennisadriaans/vue-chrts/compare/v0.1.11...v0.2.4) (2025-08-07)
