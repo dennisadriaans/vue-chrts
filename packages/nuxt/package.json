@@ -27,7 +27,6 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.17.7",
     "@unovis/ts": "^1.5.2",
     "@unovis/vue": "^1.5.2",
     "vue-chrts": "1.0.0"
@@ -35,13 +34,14 @@
   "devDependencies": {
     "@nuxt/eslint": "^1.7.1",
     "@nuxt/eslint-config": "^1.7.1",
+    "@nuxt/kit": "^4.2.0",
     "@nuxt/module-builder": "^0.8.4",
-    "@nuxt/schema": "^3.17.7",
+    "@nuxt/schema": "^4.2.0",
     "@types/node": "^20.19.9",
     "changelogen": "^0.6.2",
     "commit-and-tag-version": "^12.5.1",
     "eslint": "^9.0.0",
-    "nuxt": "^4.0.1",
+    "nuxt": "^4.2.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   },

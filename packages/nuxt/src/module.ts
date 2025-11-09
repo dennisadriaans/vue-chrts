@@ -41,6 +41,9 @@ export default defineNuxtModule<ModuleOptions>({
     autoImports: true,
     include: [],
   },
+  moduleDependencies: {
+
+  },
   async setup(options, nuxt) {
     nuxt.options.vite.optimizeDeps = nuxt.options.vite.optimizeDeps || {};
     nuxt.options.vite.optimizeDeps.include =
@@ -54,14 +57,6 @@ export default defineNuxtModule<ModuleOptions>({
       "vue-chrts",
       ...nuxt.options.build.transpile,
     ];
-
-    // nuxt.options.vite.ssr = nuxt.options.vite.ssr || {};
-    // nuxt.options.vite.ssr.noExternal = nuxt.options.vite.ssr.noExternal || [];
-
-    // // Ensure 'to-px' is added to noExternal if not already present
-    // if (!nuxt.options.vite.ssr.noExternal.includes("to-px")) {
-    //   nuxt.options.vite.ssr.noExternal.push("to-px");
-    // }
 
     const { resolve } = createResolver(import.meta.url);
 
