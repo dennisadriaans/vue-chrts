@@ -4,7 +4,7 @@ import Card from "./elements/Card.vue";
 import { AreaChart } from "./../lib";
 import { CurveType, LegendPosition, MarkerConfig } from "./../lib/types";
 
-import { AreaChartData1, AreaChartItem1, categories1 } from "./data/AreaChartData";
+import { AreaChartData1, categories1 } from "./data/AreaChartData";
 
 interface ChartConfig {
   id: number;
@@ -687,7 +687,7 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
       color: 'red',
       strokeColor: 'blue',
     }"
-    :title-formatter="(data) => data.date + ' or format'"
+    :title-formatter="data => `${new Date(data.date).getFullYear()}`"
     @click="handleChartClick"
   />
 
