@@ -236,7 +236,7 @@ function onCrosshairUpdate(d: T): string {
         <Tooltip
           :data="hoverValues"
           :categories="categories"
-          :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
+          :toolTipTitle="props.titleFormatter ?? getFirstPropertyValue(hoverValues)"
           :yFormatter="props.yFormatter"
         />
       </slot>

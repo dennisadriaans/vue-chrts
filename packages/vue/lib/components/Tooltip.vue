@@ -5,7 +5,7 @@ import { axisFormatter, BulletLegendItemInterface } from "../types";
 const props = defineProps<{
   data: T;
   categories: Record<string, BulletLegendItemInterface>;
-  toolTipTitle: string | number;
+  toolTipTitle: (data: T) => string | number;
   yFormatter?: axisFormatter;
 }>();
 
@@ -30,7 +30,7 @@ const visibleEntries = computed(() => {
         paddingBottom: '0.25rem',
       }"
     >
-      {{ toolTipTitle }}
+      {{ typeof toolTipTitle === 'function' ? toolTipTitle(props.data) : toolTipTitle }}
     </div>
     <div
       v-for="([key, value], index) in visibleEntries"
