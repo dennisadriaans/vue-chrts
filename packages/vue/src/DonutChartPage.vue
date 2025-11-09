@@ -32,7 +32,9 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
         <div class="text-center">
           <div class="font-semibold">La123123123123bel</div>
           <div class="text-muted">2 seconds ago</div>
-        </div></DonutChart
+        </div>
+        
+        </DonutChart
       >
 
       <Card>

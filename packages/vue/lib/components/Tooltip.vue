@@ -20,7 +20,7 @@ const visibleEntries = computed(() => {
 </script>
 
 <template>
-  <div style="padding: 10px 15px;">
+  <div style="padding: 10px 15px">
     <div
       :style="{
         color: 'var(--tooltip-value-color)',
@@ -40,9 +40,10 @@ const visibleEntries = computed(() => {
       <span
         style="width: 8px; height: 8px; border-radius: 4px; margin-right: 8px"
         :style="{
-          backgroundColor: typeof categories[key]?.color === 'string' && categories[key]?.color
-            ? categories[key].color
-            : `var(--vis-color${index})`,
+          backgroundColor:
+            typeof categories[key]?.color === 'string' && categories[key]?.color
+              ? categories[key].color
+              : `var(--vis-color${index})`,
         }"
       ></span>
       <div>
@@ -54,7 +55,7 @@ const visibleEntries = computed(() => {
         <span
           style="font-weight: 400"
           :style="{ color: 'var(--tooltip-value-color)' }"
-          >{{ yFormatter ? yFormatter(value) : value  }}</span
+          >{{ yFormatter ? yFormatter(value) : value }}</span
         >
       </div>
     </div>

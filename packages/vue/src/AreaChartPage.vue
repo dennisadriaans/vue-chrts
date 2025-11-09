@@ -688,7 +688,9 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
       strokeColor: 'blue',
     }"
     @click="handleChartClick"
-  />
+  >
+   <template #tooltip="{ values }">{{  values }}</template>
+  </AreaChart>
 
     <!-- Use a container div for the grid to apply potential flex properties -->
     <div class="max-w-screen-2xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
