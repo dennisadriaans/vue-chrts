@@ -53,6 +53,7 @@ import {
           y-label="Number of visits"
           :categories="categories3"
           :x-formatter="(tick: number): string => `${chartData[tick].month}`"
+          :tooltip-title-formatter="(data) => data.month"
           :curve-type="CurveType.MonotoneX"
           :legend-position="LegendPosition.TopRight"
         />

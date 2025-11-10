@@ -59,6 +59,10 @@ type BarChartPropsBase<T> = {
    */
   yFormatter?: axisFormatter;
   /**
+   * Use custom formatter for tooltip titles
+   */
+  tooltipTitleFormatter?: (data: T) => string | number;
+  /**
    * The desired number of ticks on the y-axis.
    */
   yNumTicks?: number;

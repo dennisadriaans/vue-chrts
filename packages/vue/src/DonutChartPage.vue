@@ -32,7 +32,9 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
         <div class="text-center">
           <div class="font-semibold">La123123123123bel</div>
           <div class="text-muted">2 seconds ago</div>
-        </div></DonutChart
+        </div>
+        
+        </DonutChart
       >
 
       <Card>
@@ -50,6 +52,10 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
           @click="handleChartClick"
         >
           <div class="pt-16">1231231231231231231234</div>
+
+          <template #tooltip="{values}">
+            {{ values.label }}
+          </template>
         </DonutChart>
       </Card>
     </div>

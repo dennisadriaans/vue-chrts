@@ -1,13 +1,16 @@
 <script lang="ts" setup generic="T">
 import { computed } from "vue";
 import { axisFormatter, BulletLegendItemInterface } from "../types";
+import { getFirstPropertyValue } from "../utils";
 
 const props = defineProps<{
   data: T;
   categories: Record<string, BulletLegendItemInterface>;
-  toolTipTitle: string | number;
+  titleFormatter?: (data: T) => string | number;
   yFormatter?: axisFormatter;
 }>();
+
+const titleFormat = computed(() => props.titleFormatter ? props.titleFormatter(props.data) : (getFirstPropertyValue(props.data)));
 
 const keyBlockList = ["_index", "_stacked", "_ending"];
 
@@ -20,7 +23,7 @@ const visibleEntries = computed(() => {
 </script>
 
 <template>
-  <div style="padding: 10px 15px;">
+  <div style="padding: 10px 15px">
     <div
       :style="{
         color: 'var(--tooltip-value-color)',
@@ -30,7 +33,7 @@ const visibleEntries = computed(() => {
         paddingBottom: '0.25rem',
       }"
     >
-      {{ toolTipTitle }}
+      {{ titleFormat }}
     </div>
     <div
       v-for="([key, value], index) in visibleEntries"
@@ -40,9 +43,10 @@ const visibleEntries = computed(() => {
       <span
         style="width: 8px; height: 8px; border-radius: 4px; margin-right: 8px"
         :style="{
-          backgroundColor: typeof categories[key]?.color === 'string' && categories[key]?.color
-            ? categories[key].color
-            : `var(--vis-color${index})`,
+          backgroundColor:
+            typeof categories[key]?.color === 'string' && categories[key]?.color
+              ? categories[key].color
+              : `var(--vis-color${index})`,
         }"
       ></span>
       <div>
@@ -54,7 +58,7 @@ const visibleEntries = computed(() => {
         <span
           style="font-weight: 400"
           :style="{ color: 'var(--tooltip-value-color)' }"
-          >{{ yFormatter ? yFormatter(value) : value  }}</span
+          >{{ yFormatter ? yFormatter(value) : value }}</span
         >
       </div>
     </div>

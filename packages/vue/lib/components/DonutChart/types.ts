@@ -1,6 +1,6 @@
 import { BulletLegendItemInterface, LegendPosition } from "../../types";
 
-export type DonutChartProps = {
+export type DonutChartProps<T> = {
   /**
    * The type of donut chart to render.
    * See `DonutType` for available options.
@@ -46,6 +46,10 @@ export type DonutChartProps = {
    * Pad angle. Default: 0
    */
   padAngle?: number;
+  /**
+   * Use custom formatter for tooltip titles
+   */
+  tooltipTitleFormatter?: (data: T) => string | number;
 };
 
 enum DonutType {

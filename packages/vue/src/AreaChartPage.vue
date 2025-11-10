@@ -687,8 +687,11 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
       color: 'red',
       strokeColor: 'blue',
     }"
+    :title-formatter="data => `${new Date(data.date).getFullYear()}`"
     @click="handleChartClick"
-  />
+  >
+   <template #tooltip="{ values }">{{  values }}</template>
+  </AreaChart>
 
     <!-- Use a container div for the grid to apply potential flex properties -->
     <div class="max-w-screen-2xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
@@ -718,6 +721,7 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
             :y-num-ticks="3"
             :curve-type="chartConfig.curveType"
             :legend-position="LegendPosition.Bottom"
+            :tooltip-title-formatter="(d) => d.date + '123'"
             :x-grid-line="chartConfig.xGridLine"
             :y-grid-line="chartConfig.yGridLine"
             :y-domain-line="chartConfig.yDomainLine"

@@ -143,8 +143,8 @@ const colors = computed(() => {
       <slot v-else-if="slotValue" name="fallback">
         <Tooltip
           :data="slotValue"
+          :title-formatter="props.tooltipTitleFormatter"
           :categories="categories"
-          :toolTipTitle="getFirstPropertyValue(slotValue) ?? ''"
         />
       </slot>
     </div>

@@ -1,4 +1,10 @@
-import { axisFormatter, CrosshairConfig, LegendPosition, MarkerConfig, AxisConfig } from "../../types";
+import {
+  axisFormatter,
+  CrosshairConfig,
+  LegendPosition,
+  MarkerConfig,
+  AxisConfig,
+} from "../../types";
 import type { BulletLegendItemInterface, CurveType } from "@unovis/ts";
 
 export interface AreaChartProps<T> {
@@ -41,13 +47,23 @@ export interface AreaChartProps<T> {
    */
   markerConfig?: Record<string, MarkerConfig>;
   /**
-   * A function that formats the x-axis tick labels.
+   * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
+   * @param {number} i - The index of the tick in the `ticks` array.
+   * @param {(number[]|Date[])} ticks - An array of all tick values for the x-axis.
+   * @returns {string} The formatted string representation of the tick.
    */
   xFormatter?: axisFormatter;
   /**
-   * A function that formats the y-axis tick labels.
+   * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the y-axis.
+   * @param {number} i - The index of the tick in the `ticks` array.
+   * @param {(number[]|Date[])} ticks - An array of all tick values for the y-axis.
+   * @returns {string} The formatted string representation of the tick.
    */
   yFormatter?: axisFormatter;
+  /**
+   * Use custom formatter for tooltip titles
+   */
+  tooltipTitleFormatter?: (data: T) => string | number;
   /**
    * The type of curve to use for the area chart lines.
    * See `CurveType` for available options.
