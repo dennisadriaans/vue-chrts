@@ -2,6 +2,9 @@
 import { Donut } from "@unovis/ts";
 import { ref, useSlots, useTemplateRef, computed } from "vue";
 import { type DonutChartProps, DonutType } from "./types";
+import { getFirstPropertyValue } from "../../utils";
+
+import Tooltip from "../Tooltip.vue";
 
 import {
   VisBulletLegend,
@@ -28,11 +31,15 @@ const value = (d: number) => d;
 const isHalf = props.type === DonutType.Half;
 
 function onCrosshairUpdate(d: T): string {
-  hoverValues.value = d;
-  return generateTooltipContent(d);
+  const keyName = Object.values(props.categories)[(d as any).index].name;
+  hoverValues.value = {
+    label: keyName,
+    [keyName]: (d as any).data,
+  };
+  return generateTooltipContent();
 }
 
-function generateTooltipContent(d: T): string {
+function generateTooltipContent(): string {
   if (typeof window === "undefined") {
     return "";
   }
@@ -50,9 +57,12 @@ const legendAlignment = computed(() => {
   return "center";
 });
 
-const normalizeColor = (color: string | string[] | undefined, fallback = '#ccc'): string => {
+const normalizeColor = (
+  color: string | string[] | undefined,
+  fallback = "#ccc"
+): string => {
   if (!color) return fallback;
-  return Array.isArray(color) ? (color[0] || fallback) : color;
+  return Array.isArray(color) ? color[0] || fallback : color;
 };
 
 const categoriesArray = computed(() => Object.values(props.categories));
@@ -91,12 +101,14 @@ const colors = (_: number, i: number) => {
         :pad-angle="props.padAngle || 0"
       />
 
-      <div :style="{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)'
-      }">
+      <div
+        :style="{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }"
+      >
         <slot />
       </div>
     </VisSingleContainer>
@@ -125,18 +137,11 @@ const colors = (_: number, i: number) => {
     <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
-        <div style="display: flex; align-items: center; padding: 10px 15px">
-          <div
-            :style="{
-              width: '0.5rem',
-              height: '0.5rem',
-              borderRadius: '9999px',
-              marginRight: '0.5rem',
-              backgroundColor: normalizeColor(categoriesArray[hoverValues.index]?.color),
-            }"
-          ></div>
-          <div>{{ hoverValues.data }}</div>
-        </div>
+        <Tooltip
+          :data="hoverValues"
+          :categories="categories"
+          :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
+        />
       </slot>
     </div>
   </div>
