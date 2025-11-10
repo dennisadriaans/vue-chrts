@@ -16,7 +16,7 @@ interface ChartConfig {
   xDomainLine: boolean;
   minMaxTicksOnly: boolean;
   hideLegend: boolean;
-  markerConfig?: Record<string, MarkerConfig>;
+  markerConfig?: MarkerConfig;
 }
 
 // Array of all chart configurations
