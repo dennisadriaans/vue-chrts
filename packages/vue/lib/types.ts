@@ -84,13 +84,18 @@ export interface AxisConfig {
   tickValues?: readonly number[] | readonly Date[];
 }
 
-export interface MarkerConfig {
-  type?: "circle" | "square" | "triangle" | "diamond";
-  size?: number;
-  strokeWidth?: number;
-  color?: string;
-  strokeColor?: string;
-}
+export type MarkerConfig = {
+  id: string,
+  config: {
+    [key: string]: {
+    type?: "circle" | "square" | "triangle" | "diamond";
+    size?: number;
+    strokeWidth?: number;
+    color?: string;
+    strokeColor?: string;
+  };
+  }
+};
 
 export interface CrosshairConfig {
   color?: string;

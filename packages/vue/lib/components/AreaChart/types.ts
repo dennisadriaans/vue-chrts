@@ -45,7 +45,7 @@ export interface AreaChartProps<T> {
   /**
    * A record mapping marker keys to show custom patterns.
    */
-  markerConfig?: Record<string, MarkerConfig>;
+  markerConfig?: MarkerConfig;
   /**
    * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
    * @param {number} i - The index of the tick in the `ticks` array.

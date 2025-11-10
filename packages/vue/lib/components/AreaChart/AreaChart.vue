@@ -55,7 +55,7 @@ const colors = computed(() => {
 });
 
 const markersSvgDefs = computed(() => {
-  if (!props.markerConfig) return "";
+  if (!props.markerConfig?.config) return "";
   return createMarkers(props.markerConfig);
 });
 
@@ -137,7 +137,7 @@ function onCrosshairUpdate(d: T): string {
       flexDirection: isLegendTop ? 'column-reverse' : 'column',
       gap: 'var(--vis-legend-spacing)',
     }"
-    :class="{ markers: !!props.markerConfig }"
+    :id="markerConfig?.id"
     @click="emit('click', $event, hoverValues)"
   >
     <VisXYContainer
