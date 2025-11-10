@@ -76,15 +76,15 @@ export const markerShape = (
   }
 };
 
-export function createMarkers(markerConfig: Record<string, MarkerConfig>) {
-  return Object.entries(markerConfig)
+export function createMarkers(markerConfig: MarkerConfig) {
+  return Object.entries(markerConfig.config)
     .map(([key, cfg]) => {
       const type = cfg.type || "circle";
       const size = cfg.size || 10;
       const strokeWidth = cfg.strokeWidth || 2;
       const color = cfg.color || "#000";
       const strokeColor = cfg.strokeColor || cfg.color || "#000";
-      return `<marker id="circle-marker-${key}" viewBox="0 0 ${size} ${size}" refX="${
+      return `<marker id="${markerConfig.id}-${key}" viewBox="0 0 ${size} ${size}" refX="${
         size / 2
       }" refY="${size / 2}" markerWidth="${size / 2}" markerHeight="${
         size / 2

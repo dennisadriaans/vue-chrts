@@ -39,7 +39,7 @@ export interface AreaChartProps<T> {
   /**
    * A record mapping marker keys to show custom patterns.
    */
-  markerConfig?: Record<string, MarkerConfig>;
+  markerConfig?: MarkerConfig;
   /**
    * A function that formats the x-axis tick labels.
    */
