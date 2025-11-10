@@ -49,6 +49,11 @@ export interface GanttChartProps<T> {
    * @returns {string} The type/category identifier.
    */
   type: (d: T) => string;
+  
+  /**
+   * Use custom formatter for tooltip titles
+   */
+  tooltipTitleFormatter?: (data: T) => string | number;
   /**
    * Optional custom tooltip text generator function.
    * @param {string} label - The label of the item.
@@ -102,13 +107,17 @@ export interface GanttChartProps<T> {
    * If `true`, displays tick lines on the x-axis.
    */
   xTickLine?: boolean;
-  xTickFormat?: (tick: number | Date, i?: number, ticks?: number[] | Date[]) => string;
+  xTickFormat?: (
+    tick: number | Date,
+    i?: number,
+    ticks?: number[] | Date[]
+  ) => string;
   xMinMaxTicksOnly?: boolean;
   xTickValues?: number[] | Date[];
   xGridLine?: boolean;
   xDomainLine?: boolean;
 
-    /**
+  /**
    * Axis configuration object for customizing the appearance of the axes.
    */
   xAxisConfig?: AxisConfig;

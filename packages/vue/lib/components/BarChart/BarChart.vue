@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="T extends {}">
 import { computed, ref, useSlots, useTemplateRef } from "vue";
 import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
-import { getFirstPropertyValue } from "../../utils";
 import { useStackedGrouped } from "./stackedGroupedUtils";
 
 import {
@@ -261,7 +260,7 @@ const labelX = (d: LabelDatum) => {
         <Tooltip
           :data="hoverValues"
           :categories="props.categories"
-          :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
+          :title-formatter="props.tooltipTitleFormatter"
           :yFormatter="
             props.orientation === Orientation.Horizontal
               ? props.xFormatter

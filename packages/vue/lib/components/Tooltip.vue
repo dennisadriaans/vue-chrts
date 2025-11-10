@@ -1,13 +1,16 @@
 <script lang="ts" setup generic="T">
 import { computed } from "vue";
 import { axisFormatter, BulletLegendItemInterface } from "../types";
+import { getFirstPropertyValue } from "../utils";
 
 const props = defineProps<{
   data: T;
   categories: Record<string, BulletLegendItemInterface>;
-  toolTipTitle: (data: T) => string | number;
+  titleFormatter?: (data: T) => string | number;
   yFormatter?: axisFormatter;
 }>();
+
+const titleFormat = computed(() => props.titleFormatter ? props.titleFormatter(props.data) : (getFirstPropertyValue(props.data)));
 
 const keyBlockList = ["_index", "_stacked", "_ending"];
 
@@ -30,7 +33,7 @@ const visibleEntries = computed(() => {
         paddingBottom: '0.25rem',
       }"
     >
-      {{ typeof toolTipTitle === 'function' ? toolTipTitle(props.data) : toolTipTitle }}
+      {{ titleFormat }}
     </div>
     <div
       v-for="([key, value], index) in visibleEntries"

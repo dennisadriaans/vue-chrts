@@ -100,6 +100,10 @@ export interface BubbleChartProps<T> {
    */
   yFormatter?: axisFormatter;
   /**
+   * Use custom formatter for tooltip titles
+   */
+  tooltipTitleFormatter?: (data: T) => string | number;
+  /**
    * Optional position for the legend, if applicable.
    * See `LegendPosition` for available options.
    */

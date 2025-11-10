@@ -125,9 +125,10 @@ const barChartExamples: BarChartExample[] = [
       color: "red",
     },
     xAxis: "month",
-    yAxis: ["desktop", "mobile", "tablet"],
+    yAxis: ["desktop", "mobile"],
     groupPadding: 0,
     barPadding: 0.2,
+    tooltipTitleFormatter: (data: DataProps) => data.month + '123',
     xFormatter: (tick: number, i?: number) =>
       `${RevenueData[typeof i !== "undefined" ? i : tick]?.month}`,
     yFormatter: (tick: number, i?: number) =>

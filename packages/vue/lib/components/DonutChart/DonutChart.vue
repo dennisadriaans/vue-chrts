@@ -18,7 +18,7 @@ const emit = defineEmits<{
   (e: "click", event: MouseEvent, values?: any): void;
 }>();
 
-const props = withDefaults(defineProps<DonutChartProps>(), {
+const props = withDefaults(defineProps<DonutChartProps<T>>(), {
   legendPosition: LegendPosition.BottomCenter,
 });
 
@@ -139,8 +139,8 @@ const colors = (_: number, i: number) => {
       <slot v-else-if="hoverValues" name="fallback">
         <Tooltip
           :data="hoverValues"
-          :categories="categories"
-          :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
+          :categories="props.categories"
+          :title-formatter="props.tooltipTitleFormatter"
         />
       </slot>
     </div>

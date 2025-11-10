@@ -52,6 +52,10 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
           @click="handleChartClick"
         >
           <div class="pt-16">1231231231231231231234</div>
+
+          <template #tooltip="{values}">
+            {{ values.label }}
+          </template>
         </DonutChart>
       </Card>
     </div>

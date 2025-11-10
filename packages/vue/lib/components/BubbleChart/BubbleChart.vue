@@ -190,7 +190,7 @@ const legendAlignment = computed(() => {
         <Tooltip
           :data="hoverValues"
           :categories="props.categories || {}"
-          :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
+          :title-formatter="props.tooltipTitleFormatter"
           :yFormatter="props.yFormatter"
         />
       </slot>
