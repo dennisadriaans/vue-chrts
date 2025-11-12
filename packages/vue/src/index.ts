@@ -44,6 +44,11 @@ const router = createRouter({
       name: "Timeline",
       component: () => import("./TimelinePage.vue"),
     },
+    {
+      path: "/maps",
+      name: "Maps",
+      component: () => import("./MapsPage.vue"),
+    },
   ],
   history: createWebHistory(),
 });
