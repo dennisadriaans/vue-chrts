@@ -59,13 +59,13 @@ const labelStyle = {
   fontWeight: "var(--vis-tooltip-label-font-weight, 400)" as CSSProperties["fontWeight"],
   fontSize: "var(--vis-tooltip-label-font-size, 0.875rem)",
   marginRight: "var(--vis-tooltip-label-margin-right, 1rem)",
-  color: "var(--vis-tooltip-label-color, #6b7280)",
+  color: "var(--vis-tooltip-label-color)",
 } as CSSProperties;
 
 const valueStyle = {
   fontSize: "var(--vis-tooltip-value-font-size, 0.875rem)",
   fontWeight: "var(--vis-tooltip-value-font-weight, 600)" as CSSProperties["fontWeight"],
-  color: "var(--vis-tooltip-value-color, #000)",
+  color: "var(--vis-tooltip-value-color)",
 } as CSSProperties;
 </script>
 
