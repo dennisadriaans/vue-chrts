@@ -721,7 +721,7 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
             :y-num-ticks="3"
             :curve-type="chartConfig.curveType"
             :legend-position="LegendPosition.Bottom"
-            :tooltip-title-formatter="(d) => d.date + '123'"
+            :tooltip-title-formatter="(d) => d.date"
             :x-grid-line="chartConfig.xGridLine"
             :y-grid-line="chartConfig.yGridLine"
             :y-domain-line="chartConfig.yDomainLine"
