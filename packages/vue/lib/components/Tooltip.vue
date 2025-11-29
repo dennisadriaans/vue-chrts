@@ -44,8 +44,7 @@ const entryStyle = {
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  paddingRight: "var(--vis-tooltip-entry-padding-right, 1rem)",
-  paddingLeft: "var(--vis-tooltip-entry-padding-left, 1rem)",
+  padding: "var(--vis-tooltip-entry-padding-top, 0.25rem) var(--vis-tooltip-entry-padding-right, 0.25rem) var(--vis-tooltip-entry-padding-bottom, 0.5rem) var(--vis-tooltip-entry-padding-left, 0.25rem)",
 } as CSSProperties;
 
 const dotStyleBase = {
