@@ -22,28 +22,25 @@
   /* Tooltip - Title */
   --vis-tooltip-title-color: #000 !important;
   --vis-tooltip-title-text-transform: capitalize !important;
-  --vis-tooltip-title-border-bottom: 1px solid var(--ui-border) !important;
-  --vis-tooltip-title-margin-bottom: 0.25rem !important;
-  --vis-tooltip-title-padding-bottom: 0.25rem !important;
-  --vis-tooltip-title-padding: 0.75rem !important;
+  --vis-tooltip-title-border-bottom: 1px solid var(--color-border) !important;
+  --vis-tooltip-title-margin: 0 0 0.25rem 0 !important;
+  --vis-tooltip-title-padding: 0.75rem 0.75rem 0.5rem 0.75rem !important;
   --vis-tooltip-title-font-size: 0.875rem !important;
   --vis-tooltip-title-line-height: 100% !important;
   --vis-tooltip-title-font-weight: 600 !important;
 
-  /* Tooltip - Entry */
-  --vis-tooltip-entry-padding-right: 1rem !important;
-  --vis-tooltip-entry-padding-left: 1rem !important;
+  /* Tooltip - Content */
+  --vis-tooltip-content-padding: 0 0.75rem !important;
 
   /* Tooltip - Dot */
-  --vis-tooltip-dot-width: 8px !important;
-  --vis-tooltip-dot-height: 8px !important;
+  --vis-tooltip-dot-size: 8px 8px !important;
   --vis-tooltip-dot-border-radius: 4px !important;
-  --vis-tooltip-dot-margin-right: 8px !important;
+  --vis-tooltip-dot-margin: 0 0 0 0 !important;
 
   /* Tooltip - Label */
   --vis-tooltip-label-font-weight: 400 !important;
   --vis-tooltip-label-font-size: 0.875rem !important;
-  --vis-tooltip-label-margin-right: 1rem !important;
+  --vis-tooltip-label-margin: 0 1rem 0 0 !important;
   --vis-tooltip-label-color: #6b7280 !important;
 
   /* Tooltip - Value */
@@ -52,7 +49,7 @@
   --vis-tooltip-value-color: #000 !important;
 
   /* Tooltip - Container */
-  --vis-tooltip-padding: 0 0 .5rem 0 !important;
+  --vis-tooltip-padding: 0 0 0.5rem 0 !important;
   --vis-tooltip-box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
   --vis-tooltip-border-radius: 8px !important;
   --vis-tooltip-border-color: #e5e7eb !important;
@@ -60,8 +57,7 @@
   --vis-tooltip-text-color: #000 !important;
 
   /* Legend */
-  --vis-legend-item-spacing: 8px !important;
-  --vis-legend-spacing: 16px !important;
+  --vis-legend-spacing: 16px 8px !important;
   --vis-legend-label-color: #374151 !important;
 
   /* Axis */
@@ -77,80 +73,36 @@
   --vis-timeline-row-odd-fill-color: transparent !important;
   --vis-timeline-label-color: #6b7280 !important;
 }
-
 
 @utility heading-2 {
   @apply dark:text-white font-bold;
 }
 
 .dark {
-    color: white;
+  color: white;
   --color-background: oklch(0.205 0 0);
   --color-card: oklch(0.225 0 0);
   --color-border: oklch(0.269 0 0);
 
-  /* Chart Colors */
-  --vis-color0: oklch(0.63 0.1363 157.86) !important;
-  --vis-color1: oklch(0.76 0.1782 153.61) !important;
-  --vis-color2: oklch(0.70 0.15 270) !important;
-  --vis-color3: oklch(0.75 0.15 60) !important;
-  --vis-color4: oklch(0.68 0.15 330) !important;
-
-  /* Tooltip - Title */
-  --vis-tooltip-title-color: #000 !important;
-  --vis-tooltip-title-text-transform: capitalize !important;
+  /* Tooltip - Colors only */
+  --vis-tooltip-title-color: #fff !important;
   --vis-tooltip-title-border-bottom: 1px solid var(--color-border) !important;
-  --vis-tooltip-title-margin-bottom: 0.25rem !important;
-  --vis-tooltip-title-padding-bottom: 0.25rem !important;
-  --vis-tooltip-title-padding: 0.75rem !important;
-  --vis-tooltip-title-font-size: 0.875rem !important;
-  --vis-tooltip-title-line-height: 100% !important;
-  --vis-tooltip-title-font-weight: 600 !important;
-
-  /* Tooltip - Entry */
-  --vis-tooltip-entry-padding-right: 1rem !important;
-  --vis-tooltip-entry-padding-left: 1rem !important;
-
-  /* Tooltip - Dot */
-  --vis-tooltip-dot-width: 8px !important;
-  --vis-tooltip-dot-height: 8px !important;
-  --vis-tooltip-dot-border-radius: 4px !important;
-  --vis-tooltip-dot-margin-right: 8px !important;
-
-  /* Tooltip - Label */
-  --vis-tooltip-label-font-weight: 400 !important;
-  --vis-tooltip-label-font-size: 0.875rem !important;
-  --vis-tooltip-label-margin-right: 1rem !important;
-  --vis-tooltip-label-color: var(--text-muted) !important;
-
-  /* Tooltip - Value */
-  --vis-tooltip-value-font-size: 0.875rem !important;
-  --vis-tooltip-value-font-weight: 600 !important;
-  --vis-tooltip-value-color: var(--text-muted) !important;
-
-  /* Tooltip - Container */
-  --vis-tooltip-padding: 0 0 .5rem 0 !important;
-  --vis-tooltip-box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
-  --vis-tooltip-border-radius: 8px !important;
-  --vis-tooltip-border-color: var(--ui-border) !important;
+  --vis-tooltip-label-color: #9ca3af !important;
+  --vis-tooltip-value-color: #fff !important;
+  --vis-tooltip-border-color: var(--color-border) !important;
   --vis-tooltip-background-color: var(--color-background) !important;
-  --vis-tooltip-text-color: #000 !important;
+  --vis-tooltip-text-color: #fff !important;
 
-  /* Legend */
-  --vis-legend-item-spacing: 8px !important;
-  --vis-legend-spacing: 16px !important;
-  --vis-legend-label-color: #374151 !important;
+  /* Legend - Colors only */
+  --vis-legend-label-color: #9ca3af !important;
 
-  /* Axis */
-  --vis-axis-grid-color: rgba(0, 0, 0, 0.1) !important;
-  --vis-axis-tick-label-color: #6b7280 !important;
-  --vis-axis-label-color: #374151 !important;
-  --vis-axis-tick-color: #e5e7eb !important;
-  --vis-axis-domain-line-dasharray: none !important;
-  --vis-axis-tick-label-weight: 400 !important;
+  /* Axis - Colors only */
+  --vis-axis-grid-color: rgba(255, 255, 255, 0.1) !important;
+  --vis-axis-tick-label-color: #9ca3af !important;
+  --vis-axis-label-color: #d1d5db !important;
+  --vis-axis-tick-color: var(--color-border) !important;
 
-  /* Timeline */
-  --vis-timeline-row-even-fill-color: #f9fafb !important;
-  --vis-timeline-row-odd-fill-color: transparent !important;
-  --vis-timeline-label-color: #6b7280 !important;
+  /* Timeline - Colors only */
+  --vis-timeline-row-even-fill-color: rgba(255, 255, 255, 0.05) !important;
+  --vis-timeline-label-color: #9ca3af !important;
 }
