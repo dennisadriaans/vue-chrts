@@ -170,4 +170,9 @@ export interface AreaChartProps<T> {
    * The domain for the x-axis, specified as a tuple of two values.
    */
   xDomain?: [number | undefined, number | undefined];
+  /**
+   * If `true`, creates a stacked area chart where areas are stacked on top of each other.
+   * When false (default), areas are overlaid on top of each other.
+   */
+  stacked?: boolean;
 }

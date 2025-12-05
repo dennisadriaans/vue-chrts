@@ -114,6 +114,33 @@ function getAccessors(id: string): {
   };
 }
 
+// Stacked area accessors - returns an array of y accessors for all categories
+const stackedYAccessors = computed(() => {
+  return Object.keys(props.categories).map(
+    (categoryId) => (d: T) => Number(d[categoryId as keyof T])
+  );
+});
+
+// Stacked line accessors - returns cumulative values for proper line positioning
+const stackedLineYAccessors = computed(() => {
+  const categoryKeys = Object.keys(props.categories);
+  return categoryKeys.map((_, index) => {
+    return (d: T) => {
+      // Sum all values from index 0 to current index (cumulative)
+      let sum = 0;
+      for (let i = 0; i <= index; i++) {
+        sum += Number(d[categoryKeys[i] as keyof T]) || 0;
+      }
+      return sum;
+    };
+  });
+});
+
+// Stacked color accessor - returns color based on index
+const stackedColorAccessor = computed(() => {
+  return (_d: T, i: number) => colors.value[i] ?? DEFAULT_COLOR;
+});
+
 function generateTooltipContent(d: T): string {
   if (typeof window === "undefined") {
     return "";
@@ -137,6 +164,7 @@ function onCrosshairUpdate(d: T): string {
       flexDirection: isLegendTop ? 'column-reverse' : 'column',
       gap: 'var(--vis-legend-spacing)',
     }"
+    :class="{ 'stacked-area-chart': stacked }"
     :id="markerConfig?.id"
     @click="emit('click', $event, hoverValues)"
   >
@@ -154,25 +182,46 @@ function onCrosshairUpdate(d: T): string {
         :vertical-placement="Position.Top"
       />
 
-      <template
-        v-for="(categoryId, index) in Object.keys(props.categories)"
-        :key="categoryId"
-      >
+      <!-- Stacked Area Mode: Single VisArea with array of y accessors -->
+      <template v-if="stacked">
         <VisArea
           :x="(_: T, i: number) => i"
-          v-bind="getAccessors(categoryId)"
-          :color="`url(#gradient${index}-${colors[index]})`"
+          :y="stackedYAccessors"
+          :color="stackedColorAccessor"
           :opacity="hideArea ? 0 : DEFAULT_OPACITY"
           :curve-type="curveType ?? CurveType.MonotoneX"
         />
         <VisLine
           :x="(_: T, i: number) => i"
-          :y="(d: T) => d[categoryId as keyof T]"
-          :color="colors[index]"
+          :y="stackedLineYAccessors"
+          :color="stackedColorAccessor"
           :curve-type="curveType ?? CurveType.MonotoneX"
           :line-width="lineWidth"
-          :lineDashArray="lineDashArray ? lineDashArray[index] : undefined"
         />
+      </template>
+
+      <!-- Non-Stacked Mode: Overlapping areas (original behavior) -->
+      <template v-else>
+        <template
+          v-for="(categoryId, index) in Object.keys(props.categories)"
+          :key="categoryId"
+        >
+          <VisArea
+            :x="(_: T, i: number) => i"
+            v-bind="getAccessors(categoryId)"
+            :color="`url(#gradient${index}-${colors[index]})`"
+            :opacity="hideArea ? 0 : DEFAULT_OPACITY"
+            :curve-type="curveType ?? CurveType.MonotoneX"
+          />
+          <VisLine
+            :x="(_: T, i: number) => i"
+            :y="(d: T) => d[categoryId as keyof T]"
+            :color="colors[index]"
+            :curve-type="curveType ?? CurveType.MonotoneX"
+            :line-width="lineWidth"
+            :lineDashArray="lineDashArray ? lineDashArray[index] : undefined"
+          />
+        </template>
       </template>
 
       <VisAxis
@@ -243,3 +292,4 @@ function onCrosshairUpdate(d: T): string {
     </div>
   </div>
 </template>
+

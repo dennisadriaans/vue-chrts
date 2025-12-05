@@ -4,7 +4,7 @@ import Card from "./elements/Card.vue";
 import { AreaChart } from "./../lib";
 import { CurveType, LegendPosition, MarkerConfig } from "./../lib/types";
 
-import { AreaChartData1, categories1 } from "./data/AreaChartData";
+import { AreaChartData1, categories1, foodExportData, foodExportCategories } from "./data/AreaChartData";
 
 interface ChartConfig {
   id: number;
@@ -692,6 +692,49 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
   >
    <template #tooltip="{ values }">{{  values }}</template>
   </AreaChart>
+
+    <!-- Stacked Area Chart Example - Food Exports Data -->
+    <div class="max-w-screen-2xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+      <Card>
+        <div class="mb-4 flex items-center justify-between">
+          <div>
+            <h2 class="heading-2">Stacked Area Chart - Food Exports</h2>
+            <p class="text-sm text-neutral-400 mt-1">
+              Food Export Trends (% of Total Merchandise Exports) - Data source: 
+              <a href="https://data.worldbank.org/indicator/TX.VAL.FOOD.ZS.UN" target="_blank" class="text-blue-400 hover:underline">World Bank Open Data</a>
+            </p>
+          </div>
+          <Button
+            color="white"
+            class="!bg-neutral-900"
+            icon="i-heroicons:arrow-right-20-solid"
+            :trailing="true"
+            type="outline"
+            size="sm"
+          >
+            View code
+          </Button>
+        </div>
+        <AreaChart
+          :data="foodExportData"
+          :height="350"
+          :categories="foodExportCategories"
+          :stacked="true"
+          :curve-type="CurveType.MonotoneX"
+          :x-grid-line="false"
+          :y-grid-line="true"
+          :y-domain-line="false"
+          :x-domain-line="true"
+          :x-num-ticks="8"
+          :y-num-ticks="8"
+          :x-formatter="(tick: number) => foodExportData[tick]?.year?.toString() ?? ''"
+          x-label="Year"
+          y-label="Food Exports (% of merchandise exports)"
+          :legend-position="LegendPosition.TopCenter"
+          @click="handleChartClick"
+        />
+      </Card>
+    </div>
 
     <!-- Use a container div for the grid to apply potential flex properties -->
     <div class="max-w-screen-2xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
