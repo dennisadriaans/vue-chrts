@@ -819,26 +819,18 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
 /* Stroke maps to color key in categories */
 /* The color should match the color defined in categories */
 :deep(#marker-demo *[stroke="#156F36"]) {
-  marker-start: var(--vis-marker-desktop);
-  marker-mid: var(--vis-marker-desktop);
-  marker-end: var(--vis-marker-desktop);
+  marker: var(--vis-marker-desktop);
 }
 
 :deep(#marker-demo *[stroke="#4ade80"]) {
-  marker-start: var(--vis-marker-mobile);
-  marker-mid: var(--vis-marker-mobile);
-  marker-end: var(--vis-marker-mobile);
+  marker: var(--vis-marker-mobile);
 }
 
 :deep(#marker-demo-grid *[stroke="#156F36"]) {
-  marker-start: var(--vis-marker-desktop);
-  marker-mid: var(--vis-marker-desktop);
-  marker-end: var(--vis-marker-desktop);
+    marker: var(--vis-marker-desktop);
 }
 
 :deep(#marker-demo-grid *[stroke="#4ade80"]) {
-  marker-start: var(--vis-marker-mobile);
-  marker-mid: var(--vis-marker-mobile);
-  marker-end: var(--vis-marker-mobile);
+  marker: var(--vis-marker-mobile);
 }
 </style>

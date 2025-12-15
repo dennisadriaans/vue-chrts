@@ -9,10 +9,10 @@ import {
     LegendPosition,
     CurveType,
     Orientation,
-    type BulletLegendItemInterface,
     MarkerConfig,
     CrosshairConfig,
-    DonutType
+    DonutType,
+    type BulletLegendItemInterface,
 } from "./types";
 
 export {
