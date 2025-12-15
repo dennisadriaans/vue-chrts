@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
-import { computed, ref, useSlots, useTemplateRef } from "vue";
+import { computed, getCurrentInstance, ref, useSlots, useTemplateRef } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
-import { createMarkers, getFirstPropertyValue } from "../../utils";
+import { createScopedMarkers, getFirstPropertyValue } from "../../utils";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -45,6 +45,8 @@ const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
 
+const markerScopeId = `area-${getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2)}`;
+
 const colors = computed(() => {
   const defaultColors = Object.values(props.categories).map(
     (_, index) => `var(--vis-color${index})`
@@ -56,7 +58,19 @@ const colors = computed(() => {
 
 const markersSvgDefs = computed(() => {
   if (!props.markerConfig?.config) return "";
-  return createMarkers(props.markerConfig);
+  return createScopedMarkers(props.markerConfig, markerScopeId, {
+    includeLegacy: true,
+  });
+});
+
+const markerCssVars = computed<Record<string, string>>(() => {
+  if (!props.markerConfig?.config) return {};
+
+  const vars: Record<string, string> = {};
+  for (const key of Object.keys(props.markerConfig.config)) {
+    vars[`--vis-marker-${key}`] = `url(\"#${props.markerConfig.id}--${markerScopeId}--${key}\")`;
+  }
+  return vars;
 });
 
 const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
@@ -163,6 +177,7 @@ function onCrosshairUpdate(d: T): string {
       display: 'flex',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',
       gap: 'var(--vis-legend-spacing)',
+      ...markerCssVars,
     }"
     :class="{ 'stacked-area-chart': stacked }"
     :id="markerConfig?.id"

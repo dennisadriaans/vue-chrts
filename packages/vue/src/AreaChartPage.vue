@@ -31,12 +31,28 @@ const chartConfigs: ChartConfig[] = [
     xDomainLine: true,
     minMaxTicksOnly: false,
     hideLegend: false,
+    markerConfig: {
+      id: 'marker-demo',
+      config: {
+        desktop: {
+        type: "circle",
+        size: 16,
+        strokeWidth: 15,
+        color: "#156F36",
+      },
+        mobile: {
+        type: "circle",
+        size: 16,
+        strokeWidth: 15,
+        color: "#4ade80",
+      },
+      }
+    },
   },
   {
     id: 1,
     title: "Spline Legend",
     curveType: CurveType.Natural,
-
     xGridLine: false,
     yGridLine: true,
     yDomainLine: true,
@@ -55,12 +71,21 @@ const chartConfigs: ChartConfig[] = [
     minMaxTicksOnly: false,
     hideLegend: false,
     markerConfig: {
-      desktop: {
+      id: 'marker-demo-grid',
+      config: {
+        desktop: {
         type: "circle",
         size: 6,
         strokeWidth: 5,
         color: "#156F36",
       },
+        mobile: {
+        type: "circle",
+        size: 6,
+        strokeWidth: 5,
+        color: "#4ade80",
+      },
+      }
     },
   },
   {
@@ -676,11 +701,21 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
     :min-max-ticks-only="false"
     :hide-legend="false"
     :marker-config="{
-      desktop: {
+      id: 'marker-demo',
+      config: {
+        desktop: {
         type: 'circle',
         size: 6,
         strokeWidth: 5,
         color: '#156F36',
+      }
+      ,
+        mobile: {
+        type: 'circle',
+        size: 6,
+        strokeWidth: 5,
+        color: '#4ade80',
+      }
       }
     }"
     :crosshair-config="{
@@ -763,7 +798,7 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
             :x-formatter="(i: number) => AreaChartData1[i].date"
             :y-num-ticks="3"
             :curve-type="chartConfig.curveType"
-            :legend-position="LegendPosition.Bottom"
+            :legend-position="LegendPosition.BottomCenter"
             :tooltip-title-formatter="(d) => d.date"
             :x-grid-line="chartConfig.xGridLine"
             :y-grid-line="chartConfig.yGridLine"
@@ -783,10 +818,27 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
 <style scoped>
 /* Stroke maps to color key in categories */
 /* The color should match the color defined in categories */
-.markers:deep(*[stroke="#156F36"]) {
-  marker: url("#circle-marker-desktop");
+:deep(#marker-demo *[stroke="#156F36"]) {
+  marker-start: var(--vis-marker-desktop);
+  marker-mid: var(--vis-marker-desktop);
+  marker-end: var(--vis-marker-desktop);
 }
-.markers:deep(*[stroke="#4ade80"]) {
-  marker: url("#circle-marker-mobile");
+
+:deep(#marker-demo *[stroke="#4ade80"]) {
+  marker-start: var(--vis-marker-mobile);
+  marker-mid: var(--vis-marker-mobile);
+  marker-end: var(--vis-marker-mobile);
+}
+
+:deep(#marker-demo-grid *[stroke="#156F36"]) {
+  marker-start: var(--vis-marker-desktop);
+  marker-mid: var(--vis-marker-desktop);
+  marker-end: var(--vis-marker-desktop);
+}
+
+:deep(#marker-demo-grid *[stroke="#4ade80"]) {
+  marker-start: var(--vis-marker-mobile);
+  marker-mid: var(--vis-marker-mobile);
+  marker-end: var(--vis-marker-mobile);
 }
 </style>
