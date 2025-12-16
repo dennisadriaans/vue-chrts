@@ -1,9 +1,10 @@
 {
-  "name": "lib",
-  "version": "0.0.1",
+  "name": "ngx-chrts",
+  "version": "2.0.0",
   "peerDependencies": {
     "@angular/common": "^20.3.0",
-    "@angular/core": "^20.3.0"
+    "@angular/core": "^20.3.0",
+    "@unovis/ts": "^1.6.2"
   },
   "dependencies": {
     "tslib": "^2.3.0"

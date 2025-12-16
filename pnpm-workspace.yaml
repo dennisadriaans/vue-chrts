@@ -1,4 +1,4 @@
 packages:
-  - 'packages/cli'
   - 'packages/vue'
   - 'packages/nuxt'
+  - 'packages/angular'

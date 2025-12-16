@@ -1,12 +1,15 @@
 {
-  "name": "angular",
+  "name": "@vue-chrts/angular-workspace",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "start": "ng serve example-app",
+    "build": "ng build lib",
+    "build:example": "ng build example-app",
+    "test:lib": "ng test lib",
+    "test:example": "ng test example-app",
+    "watch": "ng build lib --watch --configuration development",
+    "test": "ng test lib"
   },
   "prettier": {
     "printWidth": 100,
@@ -28,6 +31,7 @@
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
+    "@unovis/ts": "^1.6.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

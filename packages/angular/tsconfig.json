@@ -7,8 +7,8 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "paths": {
-      "lib": [
-        "./dist/lib"
+      "ngx-chrts": [
+        "./projects/lib/src/public-api.ts"
       ]
     },
     "noImplicitReturns": true,
