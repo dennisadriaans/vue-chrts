@@ -3,6 +3,7 @@ import {
   Orientation,
   LegendPosition,
   axisFormatter,
+  AxisConfig,
 } from "../../types";
 
 type BarChartPropsBase<T> = {
@@ -57,6 +58,10 @@ type BarChartPropsBase<T> = {
    * @returns {string} The formatted string representation of the tick.
    */
   yFormatter?: axisFormatter;
+  /**
+   * Use custom formatter for tooltip titles
+   */
+  tooltipTitleFormatter?: (data: T) => string | number;
   /**
    * The desired number of ticks on the y-axis.
    */
@@ -149,6 +154,15 @@ type BarChartPropsBase<T> = {
    * Only applicable if `stackAndGrouped` is `true`.
    */
   stackedGroupedSpacing?: number;
+
+  /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  xAxisConfig?: AxisConfig;
+  /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  yAxisConfig?: AxisConfig;
 };
 
 export type BarChartProps<T> = BarChartPropsBase<T> & {

@@ -18,21 +18,45 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
         </p>
       </div>
     </div>
-    <div class="grid grid-cols-2 gap-4 max-w-4xl mx-auto py-4">
+    <div class="grid grid-cols-2 gap-4 max-w-screen-2xl mx-auto py-4">
+      <DonutChart
+        :data="DonutChartData"
+        :height="800"
+        :categories="DonutCategories"
+        :radius="80"
+        :pad-angle="0.5"
+        :arc-width="40"
+        :legend-position="LegendPosition.Bottom"
+        @click="handleChartClick"
+      >
+        <div class="text-center">
+          <div class="font-semibold">La123123123123bel</div>
+          <div class="text-muted">2 seconds ago</div>
+        </div>
+        
+        </DonutChart
+      >
+
       <Card>
         <template #header>
-          <h2 class="heading-2">Donut Chart Example</h2>
+          <h2 class="heading-2">Half Donut Chart Example</h2>
         </template>
         <DonutChart
           :data="DonutChartData"
-          :height="220"
-          :labels="DonutCategories"
-          :radius="80"
-          :pad-angle="0.5"
+          :height="140"
+          :categories="DonutCategories"
+          :radius="0"
           :arc-width="40"
           :legend-position="LegendPosition.Bottom"
+          :type="'half'"
           @click="handleChartClick"
-        />
+        >
+          <div class="pt-16">1231231231231231231234</div>
+
+          <template #tooltip="{values}">
+            {{ values.label }}
+          </template>
+        </DonutChart>
       </Card>
     </div>
   </div>

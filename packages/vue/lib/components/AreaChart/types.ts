@@ -1,5 +1,11 @@
-import { axisFormatter, CrosshairConfig, LegendPosition, MarkerConfig } from "../../types";
-import type { BulletLegendItemInterface, Crosshair, CurveType } from "@unovis/ts";
+import {
+  axisFormatter,
+  CrosshairConfig,
+  LegendPosition,
+  MarkerConfig,
+  AxisConfig,
+} from "../../types";
+import type { BulletLegendItemInterface, CurveType } from "@unovis/ts";
 
 export interface AreaChartProps<T> {
   /**
@@ -39,7 +45,7 @@ export interface AreaChartProps<T> {
   /**
    * A record mapping marker keys to show custom patterns.
    */
-  markerConfig?: Record<string, MarkerConfig>;
+  markerConfig?: MarkerConfig;
   /**
    * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
    * @param {number} i - The index of the tick in the `ticks` array.
@@ -55,10 +61,22 @@ export interface AreaChartProps<T> {
    */
   yFormatter?: axisFormatter;
   /**
+   * Use custom formatter for tooltip titles
+   */
+  tooltipTitleFormatter?: (data: T) => string | number;
+  /**
    * The type of curve to use for the area chart lines.
    * See `CurveType` for available options.
    */
   curveType?: CurveType;
+  /**
+   * If `true`, hides the area fill, displaying only the line.
+   */
+  hideArea?: boolean;
+  /**
+   * Edit the gradient stops for the area fill.
+   */
+  gradientStops?: Array<{ offset: string; stopOpacity: number }>;
   /**
    * The width of the line in pixels. Default is 2px.
    */
@@ -137,6 +155,14 @@ export interface AreaChartProps<T> {
    */
   crosshairConfig?: CrosshairConfig;
   /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  xAxisConfig?: AxisConfig;
+  /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  yAxisConfig?: AxisConfig;
+  /**
    * The domain for the y-axis, specified as a tuple of two values.
    */
   yDomain?: [number | undefined, number | undefined];
@@ -144,5 +170,9 @@ export interface AreaChartProps<T> {
    * The domain for the x-axis, specified as a tuple of two values.
    */
   xDomain?: [number | undefined, number | undefined];
-
+  /**
+   * If `true`, creates a stacked area chart where areas are stacked on top of each other.
+   * When false (default), areas are overlaid on top of each other.
+   */
+  stacked?: boolean;
 }

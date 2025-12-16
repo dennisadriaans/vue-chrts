@@ -4,7 +4,7 @@ import Card from "./elements/Card.vue";
 import { AreaChart } from "./../lib";
 import { CurveType, LegendPosition, MarkerConfig } from "./../lib/types";
 
-import { AreaChartData1, categories1 } from "./data/AreaChartData";
+import { AreaChartData1, categories1, foodExportData, foodExportCategories } from "./data/AreaChartData";
 
 interface ChartConfig {
   id: number;
@@ -16,7 +16,7 @@ interface ChartConfig {
   xDomainLine: boolean;
   minMaxTicksOnly: boolean;
   hideLegend: boolean;
-  markerConfig?: Record<string, MarkerConfig>;
+  markerConfig?: MarkerConfig;
 }
 
 // Array of all chart configurations
@@ -31,12 +31,28 @@ const chartConfigs: ChartConfig[] = [
     xDomainLine: true,
     minMaxTicksOnly: false,
     hideLegend: false,
+    markerConfig: {
+      id: 'marker-demo',
+      config: {
+        desktop: {
+        type: "circle",
+        size: 16,
+        strokeWidth: 15,
+        color: "#156F36",
+      },
+        mobile: {
+        type: "circle",
+        size: 16,
+        strokeWidth: 15,
+        color: "#4ade80",
+      },
+      }
+    },
   },
   {
     id: 1,
     title: "Spline Legend",
     curveType: CurveType.Natural,
-
     xGridLine: false,
     yGridLine: true,
     yDomainLine: true,
@@ -55,12 +71,21 @@ const chartConfigs: ChartConfig[] = [
     minMaxTicksOnly: false,
     hideLegend: false,
     markerConfig: {
-      desktop: {
+      id: 'marker-demo-grid',
+      config: {
+        desktop: {
         type: "circle",
         size: 6,
         strokeWidth: 5,
         color: "#156F36",
       },
+        mobile: {
+        type: "circle",
+        size: 6,
+        strokeWidth: 5,
+        color: "#4ade80",
+      },
+      }
     },
   },
   {
@@ -676,19 +701,75 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
     :min-max-ticks-only="false"
     :hide-legend="false"
     :marker-config="{
-      desktop: {
+      id: 'marker-demo',
+      config: {
+        desktop: {
         type: 'circle',
         size: 6,
         strokeWidth: 5,
         color: '#156F36',
+      }
+      ,
+        mobile: {
+        type: 'circle',
+        size: 6,
+        strokeWidth: 5,
+        color: '#4ade80',
+      }
       }
     }"
     :crosshair-config="{
       color: 'red',
       strokeColor: 'blue',
     }"
+    :title-formatter="data => `${new Date(data.date).getFullYear()}`"
     @click="handleChartClick"
-  />
+  >
+   <template #tooltip="{ values }">{{  values }}</template>
+  </AreaChart>
+
+    <!-- Stacked Area Chart Example - Food Exports Data -->
+    <div class="max-w-screen-2xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+      <Card>
+        <div class="mb-4 flex items-center justify-between">
+          <div>
+            <h2 class="heading-2">Stacked Area Chart - Food Exports</h2>
+            <p class="text-sm text-neutral-400 mt-1">
+              Food Export Trends (% of Total Merchandise Exports) - Data source: 
+              <a href="https://data.worldbank.org/indicator/TX.VAL.FOOD.ZS.UN" target="_blank" class="text-blue-400 hover:underline">World Bank Open Data</a>
+            </p>
+          </div>
+          <Button
+            color="white"
+            class="!bg-neutral-900"
+            icon="i-heroicons:arrow-right-20-solid"
+            :trailing="true"
+            type="outline"
+            size="sm"
+          >
+            View code
+          </Button>
+        </div>
+        <AreaChart
+          :data="foodExportData"
+          :height="350"
+          :categories="foodExportCategories"
+          :stacked="true"
+          :curve-type="CurveType.MonotoneX"
+          :x-grid-line="false"
+          :y-grid-line="true"
+          :y-domain-line="false"
+          :x-domain-line="true"
+          :x-num-ticks="8"
+          :y-num-ticks="8"
+          :x-formatter="(tick: number) => foodExportData[tick]?.year?.toString() ?? ''"
+          x-label="Year"
+          y-label="Food Exports (% of merchandise exports)"
+          :legend-position="LegendPosition.TopCenter"
+          @click="handleChartClick"
+        />
+      </Card>
+    </div>
 
     <!-- Use a container div for the grid to apply potential flex properties -->
     <div class="max-w-screen-2xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
@@ -717,7 +798,8 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
             :x-formatter="(i: number) => AreaChartData1[i].date"
             :y-num-ticks="3"
             :curve-type="chartConfig.curveType"
-            :legend-position="LegendPosition.Bottom"
+            :legend-position="LegendPosition.BottomCenter"
+            :tooltip-title-formatter="(d) => d.date"
             :x-grid-line="chartConfig.xGridLine"
             :y-grid-line="chartConfig.yGridLine"
             :y-domain-line="chartConfig.yDomainLine"
@@ -736,10 +818,19 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
 <style scoped>
 /* Stroke maps to color key in categories */
 /* The color should match the color defined in categories */
-.markers:deep(*[stroke="#156F36"]) {
-  marker: url("#circle-marker-desktop");
+:deep(#marker-demo *[stroke="#156F36"]) {
+  marker: var(--vis-marker-desktop);
 }
-.markers:deep(*[stroke="#4ade80"]) {
-  marker: url("#circle-marker-mobile");
+
+:deep(#marker-demo *[stroke="#4ade80"]) {
+  marker: var(--vis-marker-mobile);
+}
+
+:deep(#marker-demo-grid *[stroke="#156F36"]) {
+    marker: var(--vis-marker-desktop);
+}
+
+:deep(#marker-demo-grid *[stroke="#4ade80"]) {
+  marker: var(--vis-marker-mobile);
 }
 </style>

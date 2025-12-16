@@ -1,8 +1,9 @@
 import { AreaChartProps } from "./components/AreaChart/types";
 import { BarChartProps } from "./components/BarChart/types";
 import { LineChartProps } from "./components/LineChart/types";
-import { DonutChartProps } from "./components/DonutChart/types";
+import { DonutChartProps, DonutType } from "./components/DonutChart/types";
 import { BubbleChartProps } from "./components/BubbleChart/types";
+import { GanttChartProps } from "./components/GanttChart/types";
 
 enum LegendPosition {
   TopLeft = "top-left",
@@ -38,7 +39,6 @@ interface BulletLegendItemInterface {
   name: string | number;
   color?: string | Array<string>;
   className?: string;
-  shape?: any;
   inactive?: boolean;
   hidden?: boolean;
   pointer?: boolean;
@@ -53,38 +53,52 @@ export {
   LegendPosition,
   CurveType,
   Orientation,
+  DonutType,
   type AreaChartProps,
   type BarChartProps,
   type LineChartProps,
   type DonutChartProps,
   type BulletLegendItemInterface,
-  type BubbleChartProps
+  type BubbleChartProps,
+  type GanttChartProps,
 };
 
 export type axisFormatter =
   | ((tick: number, i?: number, ticks?: number[]) => string)
   | ((tick: Date, i?: number, ticks?: Date[]) => string);
 
-export interface MarkerConfig {
-  type?: "circle" | "square" | "triangle" | "diamond";
-  size?: number;
-  strokeWidth?: number;
-  color?: string;
-  strokeColor?: string;
+export interface AxisConfig {
+  tickLine?: boolean;
+  tickTextFontSize?: string;
+  tickTextColor?: string;
+  tickFormat?: axisFormatter;
+  tickTextAlign?: "left" | "right" | "center";
+  tickTextAngle?: number;
+  tickTextWidth?: number;
+  tickTextFitMode?: "wrap" | "trim";
+  tickTextTrimType?: "start" | "middle" | "end";
+  tickTextForceWordBreak?: boolean;
+  tickTextSeparator?: string | readonly string[];
+  minMaxTicksOnly?: boolean;
+  minMaxTicksOnlyShowGridLines?: boolean;
+  tickValues?: readonly number[] | readonly Date[];
 }
 
+export type MarkerConfig = {
+  id: string,
+  config: {
+    [key: string]: {
+    type?: "circle" | "square" | "triangle" | "diamond";
+    size?: number;
+    strokeWidth?: number;
+    color?: string;
+    strokeColor?: string;
+  };
+  }
+};
+
 export interface CrosshairConfig {
-  /**
-   * The color of the crosshair line. Accepts any valid CSS color string.
-   * Example: '#f00', 'rgba(0,0,0,0.5)', 'blue'
-   */
   color?: string;
-  /**
-   * The stroke color of the crosshair line. Accepts any valid CSS color string.
-   */
   strokeColor?: string;
-  /**
-   * The stroke width of the crosshair line in pixels.
-   */
   strokeWidth?: number;
 }

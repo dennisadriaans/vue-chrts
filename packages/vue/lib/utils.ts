@@ -76,21 +76,56 @@ export const markerShape = (
   }
 };
 
-export function createMarkers(markerConfig: Record<string, MarkerConfig>) {
-  return Object.entries(markerConfig)
+export function createMarkers(markerConfig: MarkerConfig) {
+  const makeMarker = (id: string, cfg: (typeof markerConfig.config)[string]) => {
+    const type = cfg.type || "circle";
+    const size = cfg.size || 10;
+    const strokeWidth = cfg.strokeWidth || 2;
+    const color = cfg.color || "#000";
+    const strokeColor = cfg.strokeColor || cfg.color || "#000";
+    return `<marker id="${id}" viewBox="0 0 ${size} ${size}" refX="${size / 2}" refY="${
+      size / 2
+    }" markerWidth="${size / 2}" markerHeight="${size / 2}" orient="auto">
+      ${markerShape(type, size, strokeWidth, color, strokeColor)}
+    </marker>`;
+  };
+
+  return Object.entries(markerConfig.config)
     .map(([key, cfg]) => {
-      const type = cfg.type || "circle";
-      const size = cfg.size || 10;
-      const strokeWidth = cfg.strokeWidth || 2;
-      const color = cfg.color || "#000";
-      const strokeColor = cfg.strokeColor || cfg.color || "#000";
-      return `<marker id="circle-marker-${key}" viewBox="0 0 ${size} ${size}" refX="${
-        size / 2
-      }" refY="${size / 2}" markerWidth="${size / 2}" markerHeight="${
-        size / 2
-      }">
-        ${markerShape(type, size, strokeWidth, color, strokeColor)}
-      </marker>`;
+      const legacyId = `${markerConfig.id}-${key}`;
+      return makeMarker(legacyId, cfg);
+    })
+    .join("\n");
+}
+
+export function createScopedMarkers(
+  markerConfig: MarkerConfig,
+  scopeId: string,
+  options?: { includeLegacy?: boolean }
+) {
+  const includeLegacy = options?.includeLegacy ?? true;
+
+  const makeMarker = (id: string, cfg: (typeof markerConfig.config)[string]) => {
+    const type = cfg.type || "circle";
+    const size = cfg.size || 10;
+    const strokeWidth = cfg.strokeWidth || 2;
+    const color = cfg.color || "#000";
+    const strokeColor = cfg.strokeColor || cfg.color || "#000";
+    return `<marker id="${id}" viewBox="0 0 ${size} ${size}" refX="${size / 2}" refY="${
+      size / 2
+    }" markerWidth="${size / 2}" markerHeight="${size / 2}" orient="auto">
+      ${markerShape(type, size, strokeWidth, color, strokeColor)}
+    </marker>`;
+  };
+
+  return Object.entries(markerConfig.config)
+    .flatMap(([key, cfg]) => {
+      const scopedId = `${markerConfig.id}--${scopeId}--${key}`;
+      const markers = [makeMarker(scopedId, cfg)];
+      if (includeLegacy) {
+        markers.push(makeMarker(`${markerConfig.id}-${key}`, cfg));
+      }
+      return markers;
     })
     .join("\n");
 }
@@ -118,6 +153,7 @@ export const flattenData = (data: any[], xAxis: string) => {
   });
 };
 
+export const dateFormatter = (date: number) => Intl.DateTimeFormat().format(date);
 // A new key to store the user's preference to disable the message permanently.
 const disableLoggingKey = 'nuxt-charts-disable-premium-message';
 // The existing key to check if the message has been shown once.

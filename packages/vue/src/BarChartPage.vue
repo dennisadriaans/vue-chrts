@@ -7,8 +7,8 @@ import { LegendPosition, Orientation } from "./../lib";
 import { ref } from "vue";
 import { BarChartProps } from "../lib/types";
 
-import BarWithLabel from './components/BarWithLabel.vue'
-import TestDomainScale from './components/TestDomainScale.vue'
+import BarWithLabel from "./components/BarWithLabel.vue";
+import TestDomainScale from "./components/TestDomainScale.vue";
 
 type DataProps = {
   month?: string;
@@ -33,12 +33,12 @@ type SocialDealChartData = {
 };
 
 const RevenueData: DataProps[] = [
-  { month: 'january', desktop: 186, mobile: 80, tablet: 40 },
-  { month: 'february', desktop: 305, mobile: 200, tablet: 60 },
-  { month: 'march', desktop: 237, mobile: 120, tablet: 50 },
-  { month: 'april', desktop: 73, mobile: 190, tablet: 30 },
-  { month: 'may', desktop: 209, mobile: 130, tablet: 70 },
-  { month: 'jun', desktop: 214, mobile: 140, tablet: 55 },
+  { month: "january", desktop: 186, mobile: 80, tablet: 40 },
+  { month: "february", desktop: 305, mobile: 200, tablet: 60 },
+  { month: "march", desktop: 237, mobile: 120, tablet: 50 },
+  { month: "april", desktop: 73, mobile: 190, tablet: 30 },
+  { month: "may", desktop: 209, mobile: 130, tablet: 70 },
+  { month: "jun", desktop: 214, mobile: 140, tablet: 55 },
 ];
 
 const RevenueDataLong: DataProps[] = [
@@ -119,18 +119,16 @@ const barChartExamples: BarChartExample[] = [
     categories: RevenueCategoriesMultiple,
     valueLabel: {
       label: (d) => {
-        return '99'
+        return d.y.toString();
       },
       labelSpacing: 25,
-      color: 'red',
-      labelFontSize: 16
+      color: "red",
     },
-    xAxis: 'month',
-    yAxis: ["desktop", "mobile", "tablet"],
-    orientation: undefined,
-    stacked: false,
+    xAxis: "month",
+    yAxis: ["desktop", "mobile"],
     groupPadding: 0,
     barPadding: 0.2,
+    tooltipTitleFormatter: (data: DataProps) => data.month + '123',
     xFormatter: (tick: number, i?: number) =>
       `${RevenueData[typeof i !== "undefined" ? i : tick]?.month}`,
     yFormatter: (tick: number, i?: number) =>
@@ -147,7 +145,7 @@ const barChartExamples: BarChartExample[] = [
         desktop: {
           done: 25,
           pending: 25,
-          tablet: 22
+          tablet: 22,
         },
         mobile: {
           done: 25,
@@ -212,7 +210,7 @@ const barChartExamples: BarChartExample[] = [
       iosPending: { name: "iOS Pending", color: "#D69FFF" },
     },
     xAxis: "month",
-    yAxis: ['desktopDone', 'mobileDone', 'androidDone', 'iosDone'],
+    yAxis: ["desktopDone", "mobileDone", "androidDone", "iosDone"],
     stackAndGrouped: true,
     radius: 4,
     xFormatter: (tick: number, i?: number) => {
@@ -220,7 +218,7 @@ const barChartExamples: BarChartExample[] = [
       return months[typeof i !== "undefined" ? i : tick] || String(tick);
     },
     yFormatter: (tick: number, i?: number) => String(tick),
-    legendPosition: LegendPosition.Top,
+    legendPosition: LegendPosition.TopRight,
     barPadding: 0.8,
     stackedGroupedSpacing: 0.25,
     hideLegend: false,
@@ -348,10 +346,6 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
       </p>
     </div>
 
-    <TestDomainScale></TestDomainScale>
-
-    <BarWithLabel />
-
     <div class="max-w-screen-2xl mx-auto">
       <div
         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-8 items-stretch"
@@ -374,11 +368,7 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
             </Button>
           </div>
           <p class="mb-2 text-sm text-neutral-500">{{ example.description }}</p>
-          <BarChart
-            v-bind="example"
-            :height="200"
-            @click="handleChartClick"
-          />
+          <BarChart v-bind="example" :height="200" @click="handleChartClick" />
         </Card>
       </div>
     </div>

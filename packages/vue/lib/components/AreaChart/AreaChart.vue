@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
-import { computed, onMounted, ref, useSlots, useTemplateRef } from "vue";
+import { computed, getCurrentInstance, onMounted, ref, useSlots, useTemplateRef } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
-import { createMarkers, getFirstPropertyValue, logPremiumUpgradeMessage } from "../../utils";
+import { createScopedMarkers, logPremiumUpgradeMessage } from "../../utils";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -23,20 +23,10 @@ const emit = defineEmits<{
   (e: "click", event: MouseEvent, values?: T): void;
 }>();
 
-const DEFAULT_TICK_COUNT = 24;
-const DEFAULT_TICK_DIVISOR = 4;
 const DEFAULT_OPACITY = 0.5;
 const DEFAULT_COLOR = "#3b82f6";
 const props = withDefaults(defineProps<AreaChartProps<T>>(), {
   padding: () => ({ top: 5, right: 5, bottom: 5, left: 5 }),
-  xNumTicks: (props) =>
-    props.data.length > DEFAULT_TICK_COUNT
-      ? DEFAULT_TICK_COUNT / DEFAULT_TICK_DIVISOR
-      : props.data.length - 1,
-  yNumTicks: (props) =>
-    props.data.length > DEFAULT_TICK_COUNT
-      ? DEFAULT_TICK_COUNT / DEFAULT_TICK_DIVISOR
-      : props.data.length - 1,
   crosshairConfig: () => ({
     color: "#666",
   }),
@@ -44,19 +34,43 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
   legendPosition: LegendPosition.BottomCenter,
   legendStyle: undefined,
   hideLegend: false,
+  hideArea: false,
+  gradientStops: () => [
+    { offset: "0%", stopOpacity: 1 },
+    { offset: "75%", stopOpacity: 0 },
+  ],
 });
 
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
 
-const colors = computed(() =>
-  Object.values(props.categories).map((c) => c.color)
-);
+const markerScopeId = `area-${getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2)}`;
+
+const colors = computed(() => {
+  const defaultColors = Object.values(props.categories).map(
+    (_, index) => `var(--vis-color${index})`
+  );
+  return Object.values(props.categories).map(
+    (c, i) => c.color ?? defaultColors[i]
+  );
+});
 
 const markersSvgDefs = computed(() => {
-  if (!props.markerConfig) return "";
-  return createMarkers(props.markerConfig);
+  if (!props.markerConfig?.config) return "";
+  return createScopedMarkers(props.markerConfig, markerScopeId, {
+    includeLegacy: true,
+  });
+});
+
+const markerCssVars = computed<Record<string, string>>(() => {
+  if (!props.markerConfig?.config) return {};
+
+  const vars: Record<string, string> = {};
+  for (const key of Object.keys(props.markerConfig.config)) {
+    vars[`--vis-marker-${key}`] = `url(\"#${props.markerConfig.id}--${markerScopeId}--${key}\")`;
+  }
+  return vars;
 });
 
 const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
@@ -70,14 +84,29 @@ const legendAlignment = computed(() => {
 const svgDefs = computed(() => {
   const createGradientWithHex = (id: number, color: string | string[]) => `
     <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
-      <stop offset="0%" stop-color="${color}" stop-opacity="1" />
+      ${
+        props.gradientStops
+          ?.map(
+            (stop) =>
+              `<stop offset="${stop.offset}" stop-color="${color}" stop-opacity="${stop.stopOpacity}" />`
+          )
+          .join("") ?? ""
+      }
       <stop offset="100%" stop-color="${color}" stop-opacity="0" />
     </linearGradient>
   `;
   const createGradientWithCssVar = (id: number, color: string | string[]) => `
     <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
-      <stop offset="0%" style="stop-color:var(--vis-color0);stop-opacity:1" />
-      <stop offset="100%" style="stop-color:var(--vis-color0);stop-opacity:0" />
+
+    ${
+      props.gradientStops
+        ?.map(
+          (stop) => `
+      <stop offset="${stop.offset}" style="stop-color:var(${color});stop-opacity:${stop.stopOpacity}" />
+    `
+        )
+        .join("") ?? ""
+    }
     </linearGradient>
   `;
   return colors.value
@@ -89,12 +118,42 @@ const svgDefs = computed(() => {
     .join("");
 });
 
-function getAccessors(id: string): { y: NumericAccessor<T>; color: string | string[] } {
+function getAccessors(id: string): {
+  y: NumericAccessor<T>;
+  color: string | string[];
+} {
   return {
     y: (d: T) => Number(d[id as keyof T]),
     color: props.categories[id]?.color ?? DEFAULT_COLOR,
   };
 }
+
+// Stacked area accessors - returns an array of y accessors for all categories
+const stackedYAccessors = computed(() => {
+  return Object.keys(props.categories).map(
+    (categoryId) => (d: T) => Number(d[categoryId as keyof T])
+  );
+});
+
+// Stacked line accessors - returns cumulative values for proper line positioning
+const stackedLineYAccessors = computed(() => {
+  const categoryKeys = Object.keys(props.categories);
+  return categoryKeys.map((_, index) => {
+    return (d: T) => {
+      // Sum all values from index 0 to current index (cumulative)
+      let sum = 0;
+      for (let i = 0; i <= index; i++) {
+        sum += Number(d[categoryKeys[i] as keyof T]) || 0;
+      }
+      return sum;
+    };
+  });
+});
+
+// Stacked color accessor - returns color based on index
+const stackedColorAccessor = computed(() => {
+  return (_d: T, i: number) => colors.value[i] ?? DEFAULT_COLOR;
+});
 
 function generateTooltipContent(d: T): string {
   if (typeof window === "undefined") {
@@ -121,9 +180,11 @@ onMounted(() => {
     :style="{
       display: 'flex',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',
-      gap: 'var(--vis-legend-spacing)'
+      gap: 'var(--vis-legend-spacing)',
+      ...markerCssVars,
     }"
-    :class="{ markers: !!props.markerConfig }"
+    :class="{ 'stacked-area-chart': stacked }"
+    :id="markerConfig?.id"
     @click="emit('click', $event, hoverValues)"
   >
     <VisXYContainer
@@ -140,25 +201,46 @@ onMounted(() => {
         :vertical-placement="Position.Top"
       />
 
-      <template
-        v-for="(categoryId, index) in Object.keys(props.categories)"
-        :key="categoryId"
-      >
+      <!-- Stacked Area Mode: Single VisArea with array of y accessors -->
+      <template v-if="stacked">
         <VisArea
           :x="(_: T, i: number) => i"
-          v-bind="getAccessors(categoryId)"
-          :color="`url(#gradient${index}-${colors[index]})`"
-          :opacity="DEFAULT_OPACITY"
+          :y="stackedYAccessors"
+          :color="stackedColorAccessor"
+          :opacity="hideArea ? 0 : DEFAULT_OPACITY"
           :curve-type="curveType ?? CurveType.MonotoneX"
         />
         <VisLine
           :x="(_: T, i: number) => i"
-          :y="(d: T) => d[categoryId as keyof T]"
-          :color="colors[index]"
+          :y="stackedLineYAccessors"
+          :color="stackedColorAccessor"
           :curve-type="curveType ?? CurveType.MonotoneX"
           :line-width="lineWidth"
-          :lineDashArray="lineDashArray ? lineDashArray[index] : undefined"
         />
+      </template>
+
+      <!-- Non-Stacked Mode: Overlapping areas (original behavior) -->
+      <template v-else>
+        <template
+          v-for="(categoryId, index) in Object.keys(props.categories)"
+          :key="categoryId"
+        >
+          <VisArea
+            :x="(_: T, i: number) => i"
+            v-bind="getAccessors(categoryId)"
+            :color="`url(#gradient${index}-${colors[index]})`"
+            :opacity="hideArea ? 0 : DEFAULT_OPACITY"
+            :curve-type="curveType ?? CurveType.MonotoneX"
+          />
+          <VisLine
+            :x="(_: T, i: number) => i"
+            :y="(d: T) => d[categoryId as keyof T]"
+            :color="colors[index]"
+            :curve-type="curveType ?? CurveType.MonotoneX"
+            :line-width="lineWidth"
+            :lineDashArray="lineDashArray ? lineDashArray[index] : undefined"
+          />
+        </template>
       </template>
 
       <VisAxis
@@ -173,6 +255,7 @@ onMounted(() => {
         :domain-line="xDomainLine"
         :tick-line="xTickLine"
         :min-max-ticks-only="minMaxTicksOnly"
+        v-bind="xAxisConfig"
       />
 
       <VisAxis
@@ -184,6 +267,7 @@ onMounted(() => {
         :grid-line="yGridLine"
         :domain-line="yDomainLine"
         :tick-line="yTickLine"
+        v-bind="yAxisConfig"
       />
 
       <VisCrosshair
@@ -205,20 +289,26 @@ onMounted(() => {
           props.legendStyle,
           'display: flex; gap: var(--vis-legend-spacing);',
         ]"
-        :items="Object.values(props.categories)"
+        :items="
+          Object.values(props.categories).map((item) => ({
+            ...item,
+            color: Array.isArray(item.color) ? item.color[0] : item.color,
+          }))
+        "
       />
     </div>
 
-    <div ref="slotWrapper" style="display: none;">
+    <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
         <Tooltip
           :data="hoverValues"
           :categories="categories"
-          :toolTipTitle="getFirstPropertyValue(hoverValues) ?? ''"
+          :title-formatter="props.tooltipTitleFormatter"
           :yFormatter="props.yFormatter"
         />
       </slot>
     </div>
   </div>
 </template>
+

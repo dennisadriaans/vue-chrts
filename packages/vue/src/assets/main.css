@@ -12,19 +12,67 @@
 }
 
 :root {
-  --vis-color0: green !important;
-  --vis-color1: blue !important;
-  --vis-color2: red !important;
-  --vis-color3: yellow !important;
-  --vis-color4: purple !important;
+  /* Chart Colors */
+  --vis-color0: oklch(0.63 0.1363 157.86) !important;
+  --vis-color1: oklch(0.76 0.1782 153.61) !important;
+  --vis-color2: oklch(0.70 0.15 270) !important;
+  --vis-color3: oklch(0.75 0.15 60) !important;
+  --vis-color4: oklch(0.68 0.15 330) !important;
 
-  --vis-tooltip-padding: 0 !important;
+  /* Tooltip - Title */
+  --vis-tooltip-title-color: #000 !important;
+  --vis-tooltip-title-text-transform: capitalize !important;
+  --vis-tooltip-title-border-bottom: 1px solid var(--color-border) !important;
+  --vis-tooltip-title-margin: 0 0 0.25rem 0 !important;
+  --vis-tooltip-title-padding: 0.75rem 0.75rem 0.5rem 0.75rem !important;
+  --vis-tooltip-title-font-size: 0.875rem !important;
+  --vis-tooltip-title-line-height: 100% !important;
+  --vis-tooltip-title-font-weight: 600 !important;
 
-  --vis-legend-item-spacing: 0px !important;
-  --vis-legend-spacing: 24px !important;
+  /* Tooltip - Content */
+  --vis-tooltip-content-padding: 0 0.75rem !important;
 
+  /* Tooltip - Dot */
+  --vis-tooltip-dot-size: 8px 8px !important;
+  --vis-tooltip-dot-border-radius: 4px !important;
+  --vis-tooltip-dot-margin: 0 0 0 0 !important;
+
+  /* Tooltip - Label */
+  --vis-tooltip-label-font-weight: 400 !important;
+  --vis-tooltip-label-font-size: 0.875rem !important;
+  --vis-tooltip-label-margin: 0 1rem 0 0 !important;
+  --vis-tooltip-label-color: #6b7280 !important;
+
+  /* Tooltip - Value */
+  --vis-tooltip-value-font-size: 0.875rem !important;
+  --vis-tooltip-value-font-weight: 600 !important;
+  --vis-tooltip-value-color: #000 !important;
+
+  /* Tooltip - Container */
+  --vis-tooltip-padding: 0 0 0.5rem 0 !important;
+  --vis-tooltip-box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+  --vis-tooltip-border-radius: 8px !important;
+  --vis-tooltip-border-color: #e5e7eb !important;
+  --vis-tooltip-background-color: #ffffff !important;
+  --vis-tooltip-text-color: #000 !important;
+
+  /* Legend */
+  --vis-legend-spacing: 16px 8px !important;
+  --vis-legend-label-color: #374151 !important;
+
+  /* Axis */
+  --vis-axis-grid-color: rgba(0, 0, 0, 0.1) !important;
+  --vis-axis-tick-label-color: #6b7280 !important;
+  --vis-axis-label-color: #374151 !important;
+  --vis-axis-tick-color: #e5e7eb !important;
+  --vis-axis-domain-line-dasharray: none !important;
+  --vis-axis-tick-label-weight: 400 !important;
+
+  /* Timeline */
+  --vis-timeline-row-even-fill-color: #f9fafb !important;
+  --vis-timeline-row-odd-fill-color: transparent !important;
+  --vis-timeline-label-color: #6b7280 !important;
 }
-
 
 @utility heading-2 {
   @apply dark:text-white font-bold;
@@ -36,24 +84,25 @@
   --color-card: oklch(0.225 0 0);
   --color-border: oklch(0.269 0 0);
 
-  --tooltip-label-color: rgba(255, 255, 255, 0.5);
-  --tooltip-value-color: rgba(255, 255, 255, 1);
+  /* Tooltip - Colors only */
+  --vis-tooltip-title-color: #fff !important;
+  --vis-tooltip-title-border-bottom: 1px solid var(--color-border) !important;
+  --vis-tooltip-label-color: #9ca3af !important;
+  --vis-tooltip-value-color: #fff !important;
+  --vis-tooltip-border-color: var(--color-border) !important;
+  --vis-tooltip-background-color: var(--color-background) !important;
+  --vis-tooltip-text-color: #fff !important;
 
+  /* Legend - Colors only */
+  --vis-legend-label-color: #9ca3af !important;
+
+  /* Axis - Colors only */
   --vis-axis-grid-color: rgba(255, 255, 255, 0.1) !important;
-  --vis-tooltip-background-color: #121212 !important;
-  --vis-tooltip-border-color: none !important;
-  --vis-tooltip-text-color: rgba(255, 255, 255, 0.5) !important;
+  --vis-axis-tick-label-color: #9ca3af !important;
+  --vis-axis-label-color: #d1d5db !important;
+  --vis-axis-tick-color: var(--color-border) !important;
 
-  --vis-axis-tick-label-color: rgba(255, 255, 255, 0.5) !important;
-
-  --vis-legend-label-color: rgba(255, 255, 255, 0.75) !important;
-
-  --vis-axis-label-color: rgba(255, 255, 255, 0.5) !important;
-  --vis-legend-label-color: rgba(255, 255, 255, 0.5) !important;
-
-  --vis-axis-tick-color: oklch(0.39 0 0) !important;
-
-  /* --vis-axis-grid-line-width: 5px !important; */
-  --vis-axis-domain-line-dasharray: 'none' !important;
-  --vis-axis-tick-label-weight: 900 !important;
+  /* Timeline - Colors only */
+  --vis-timeline-row-even-fill-color: rgba(255, 255, 255, 0.05) !important;
+  --vis-timeline-label-color: #9ca3af !important;
 }

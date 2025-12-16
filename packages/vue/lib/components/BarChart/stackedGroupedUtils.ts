@@ -1,9 +1,10 @@
 import { computed, ComputedRef } from "vue";
 import { flattenData } from "../../utils";
+import { BulletLegendItemInterface } from "../../types";
 
 export interface StackedGroupedConfig<T> {
   data: T[];
-  categories: Record<string, { color?: string | Array<string> }>;
+  categories: Record<string, BulletLegendItemInterface>;
   stackAndGrouped: boolean;
   xAxis?: keyof T;
   spacing?: number;
@@ -48,7 +49,7 @@ export function useStackedGrouped<T extends {}>(
 }
 
 function extractStates(
-  categories:  Record<string, { color?: string | Array<string> }>
+  categories: Record<string, BulletLegendItemInterface>
 ): string[] {
   const states = new Set<string>();
   const categoryKeys = Object.keys(categories);
@@ -64,7 +65,7 @@ function extractStates(
 }
 
 function groupCategoriesByState(
-  categories:  Record<string, { color?: string | Array<string> }>,
+  categories: Record<string, BulletLegendItemInterface>,
   states: string[]
 ): Record<string, string[]> {
   const grouped: Record<string, string[]> = {};
@@ -80,7 +81,7 @@ function groupCategoriesByState(
 
 function generateColors(
   groupedByState: Record<string, string[]>,
-  categories:  Record<string, { color?: string | Array<string> }>
+  categories: Record<string, BulletLegendItemInterface>
 ): Record<string, string[]> {
   const colorsByState: Record<string, string[]> = {};
 

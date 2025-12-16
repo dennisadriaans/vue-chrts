@@ -1,11 +1,11 @@
-import { LegendPosition } from "../../types";
+import { BulletLegendItemInterface, LegendPosition } from "../../types";
 
-export type DonutChartProps = {
+export type DonutChartProps<T> = {
   /**
    * The type of donut chart to render.
    * See `DonutType` for available options.
    */
-  type?: string;
+  type?: DonutType;
   /**
    * The data to be displayed in the donut chart.
    * Each number in the array represents a segment value.
@@ -15,7 +15,7 @@ export type DonutChartProps = {
    * The arc width of the chart in pixels.
    */
   arcWidth?: number;
-    /**
+  /**
    * The height of the chart in pixels.
    */
   height: number;
@@ -27,7 +27,7 @@ export type DonutChartProps = {
    * If `true`, hides the chart legend.
    */
   hideLegend?: boolean;
-    /**
+  /**
    * Optional position for the legend, if applicable.
    * See `LegendPosition` for available options.
    */
@@ -37,17 +37,19 @@ export type DonutChartProps = {
    */
   legendStyle?: string | Record<string, string>;
   /**
-   * An array of label objects defining the name and color for each segment.
+   * A record mapping category keys to `BulletLegendItemInterface` objects.
+   * This defines the visual representation and labels for each category in the chart's legend.
    */
-  labels: {
-    name: string;
-    color: string;
-  }[];
+  categories: Record<string, BulletLegendItemInterface>;
 
   /**
    * Pad angle. Default: 0
    */
-  padAngle?: number
+  padAngle?: number;
+  /**
+   * Use custom formatter for tooltip titles
+   */
+  tooltipTitleFormatter?: (data: T) => string | number;
 };
 
 enum DonutType {

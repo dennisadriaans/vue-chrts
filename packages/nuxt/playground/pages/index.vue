@@ -1,46 +1,57 @@
-<script lang="ts" setup>
-interface AreaChartItem {
-  date: string;
-  desktop: number;
-  mobile: number;
+<script setup lang="ts">
+interface SpendingData {
+  month: number
+  amount: number
 }
 
-const categories: ComputedRef<Record<string, BulletLegendItemInterface>> =
-  computed(() => ({
-    desktop: {
-      name: "Desktop",
-      color: "#3b82f6",
-    },
-    mobile: {
-      name: "Mobile",
-      color: "#22c55e",
-    },
-  }));
+const chartData = ref<SpendingData[]>([
+  { month: 1, amount: 2500 },
+  { month: 2, amount: 1500 },
+  { month: 3, amount: 3000 },
+  { month: 4, amount: 4000 },
+  { month: 5, amount: 4500 },
+  { month: 6, amount: 2800 },
+  { month: 7, amount: 3500 },
+  { month: 8, amount: 3800 },
+  { month: 9, amount: 2000 },
+  { month: 10, amount: 4200 },
+  { month: 11, amount: 2200 },
+  { month: 12, amount: 1800 },
+])
 
-const AreaChartData: AreaChartItem[] = [
-  { date: "2024-04-01", desktop: 222, mobile: 150 },
-  { date: "2024-04-02", desktop: 180, mobile: 97 },
-  { date: "2024-04-03", desktop: 167, mobile: 120 },
-  { date: "2024-04-04", desktop: 260, mobile: 240 },
-  { date: "2024-04-05", desktop: 240, mobile: 290 },
-];
+const categories: Record<string, BulletLegendItemInterface> = {
+  amount: { name: 'Monthly Spending', color: '#22c55e' },
+}
 
-const xFormatter = (tick: number): string => {
-  return `${AreaChartData[tick]?.date}`;
-};
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value)
+}
 </script>
 
 <template>
-  <div>
+ 
       <AreaChart
-        :data="AreaChartData"
+        :data="chartData"
         :height="300"
         :categories="categories"
+        :y-axis="['amount']"
+        :y-num-ticks="2"
         :y-grid-line="true"
-        :x-formatter="xFormatter"
-        :curve-type="CurveType.MonotoneX"
-        :legend-position="LegendPosition.Top"
-        :hide-legend="false"
+        :legend-position="LegendPosition.Bottom"
+        :x-formatter="
+          (i) =>
+            new Date(`2025-${chartData[i]?.month}-02`).toLocaleDateString(
+              'en-US',
+              {
+                month: 'short',
+              },
+            )
+        "
+        :y-formatter="formatCurrency"
       />
-  </div>
 </template>
