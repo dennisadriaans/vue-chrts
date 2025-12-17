@@ -16,7 +16,7 @@ The `DualChart` component combines bar and line charts to display multiple data 
 
 ```vue
 <script setup lang="ts">
-import { DualChart, LegendPosition } from 'vue-chrts';
+import { DualChart, LegendPosition } from 'vue-charts';
 
 type DataItem = {
   month: string;
@@ -218,8 +218,8 @@ You can provide a custom tooltip template using the `tooltip` slot:
 The component is fully typed with generics for type-safe data access:
 
 ```typescript
-import { DualChart } from 'vue-chrts';
-import type { DualChartProps } from 'vue-chrts';
+import { DualChart } from 'vue-charts';
+import type { DualChartProps } from 'vue-charts';
 
 type MyDataType = {
   month: string;

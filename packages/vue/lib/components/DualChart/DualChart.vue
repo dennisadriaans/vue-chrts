@@ -45,12 +45,15 @@ const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
 
+// Validate required props
 if (!props.barYAxis || props.barYAxis.length === 0) {
-  throw new Error("barYAxis is required");
+  console.error('[DualChart] barYAxis prop is required and must contain at least one field key');
+  throw new Error("DualChart: 'barYAxis' is required and must contain at least one field key. Provide an array of property keys from your data type (e.g., ['revenue', 'costs'])");
 }
 
 if (!props.lineYAxis || props.lineYAxis.length === 0) {
-  throw new Error("lineYAxis is required");
+  console.error('[DualChart] lineYAxis prop is required and must contain at least one field key');
+  throw new Error("DualChart: 'lineYAxis' is required and must contain at least one field key. Provide an array of property keys from your data type (e.g., ['profit', 'target'])");
 }
 
 // Bar chart accessors
