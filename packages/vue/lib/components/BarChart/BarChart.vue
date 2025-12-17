@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends {}">
-import { computed, ref, useSlots, useTemplateRef } from "vue";
+import { computed, onMounted, ref, useSlots, useTemplateRef } from "vue";
 import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
+import { logPremiumUpgradeMessage } from "../../utils";
 import { useStackedGrouped } from "./stackedGroupedUtils";
 
 import {
@@ -136,6 +137,10 @@ const labelX = (d: LabelDatum) => {
 
   return d.x + offsetFromCenter;
 };
+
+onMounted(() => {
+  logPremiumUpgradeMessage();
+})
 </script>
 
 <template>
