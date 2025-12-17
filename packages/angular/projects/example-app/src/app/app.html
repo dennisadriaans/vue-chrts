@@ -1,2 +1,75 @@
-<h1>My App</h1>
-<ngx-line-chart [data]="data" xKey="month" yKey="value"></ngx-line-chart>
+<div style="padding: 2rem; background-color: #f5f5f5;">
+  <h1 style="margin-bottom: 2rem;">Angular Charts Demo</h1>
+  
+  <div style="background: white; padding: 1.5rem; margin-bottom: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <h2 style="margin-bottom: 1rem;">Line Chart</h2>
+    <ngx-line-chart [data]="data" xKey="month" yKey="value"></ngx-line-chart>
+  </div>
+
+  <div style="background: white; padding: 1.5rem; margin-bottom: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <h2 style="margin-bottom: 1rem;">Area Chart - Overlapping</h2>
+    <ngx-area-chart 
+      [data]="data" 
+      [categories]="areaCategories"
+      [height]="300"
+      xKey="month"
+      xLabel="Month"
+      yLabel="Value"
+      [curveType]="CurveType.MonotoneX"
+      [xGridLine]="true"
+      [yGridLine]="true"
+      (chartClick)="handleChartClick($event)"
+    ></ngx-area-chart>
+  </div>
+
+  <div style="background: white; padding: 1.5rem; margin-bottom: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <h2 style="margin-bottom: 1rem;">Area Chart - Stacked</h2>
+    <ngx-area-chart 
+      [data]="stackedData" 
+      [categories]="areaCategories"
+      [height]="300"
+      xKey="month"
+      xLabel="Month"
+      yLabel="Total Value"
+      [stacked]="true"
+      [curveType]="CurveType.MonotoneX"
+      [xGridLine]="false"
+      [yGridLine]="true"
+      (chartClick)="handleChartClick($event)"
+    ></ngx-area-chart>
+  </div>
+
+  <div style="background: white; padding: 1.5rem; margin-bottom: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <h2 style="margin-bottom: 1rem;">Area Chart - Line Only (hideArea)</h2>
+    <ngx-area-chart 
+      [data]="data" 
+      [categories]="areaCategories"
+      [height]="300"
+      xKey="month"
+      xLabel="Month"
+      yLabel="Value"
+      [hideArea]="true"
+      [curveType]="CurveType.Linear"
+      [lineWidth]="3"
+      [xGridLine]="true"
+      [yGridLine]="false"
+    ></ngx-area-chart>
+  </div>
+
+  <div style="background: white; padding: 1.5rem; margin-bottom: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+    <h2 style="margin-bottom: 1rem;">Area Chart - Custom Styling</h2>
+    <ngx-area-chart 
+      [data]="data" 
+      [categories]="areaCategories"
+      [height]="300"
+      xKey="month"
+      [curveType]="CurveType.Step"
+      [lineWidth]="2"
+      [xGridLine]="false"
+      [yGridLine]="false"
+      [xDomainLine]="true"
+      [yDomainLine]="true"
+      [minMaxTicksOnly]="true"
+    ></ngx-area-chart>
+  </div>
+</div>
