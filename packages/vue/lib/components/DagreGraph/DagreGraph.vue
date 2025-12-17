@@ -9,7 +9,6 @@ import {
 import { GraphLayoutType } from "@unovis/ts";
 import type { DagreGraphProps, GraphNodeDatum, GraphLinkDatum } from "./types";
 import { LegendPosition } from "../../types";
-import Tooltip from "../Tooltip.vue";
 
 const props = withDefaults(defineProps<DagreGraphProps<N, L>>(), {
   height: 600,
@@ -148,16 +147,6 @@ const legendAlignment = computed(() => {
   if (props.legendPosition.includes("right")) return "flex-end";
   return "center";
 });
-
-function generateTooltipContent(node: N): string {
-  if (typeof window === "undefined") {
-    return "";
-  }
-  if (slotWrapperRef.value) {
-    return slotWrapperRef.value.innerHTML;
-  }
-  return "";
-}
 
 function onNodeHover(node: N): void {
   hoverNode.value = node;

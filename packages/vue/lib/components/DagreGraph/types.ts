@@ -1,4 +1,4 @@
-import type { BulletLegendItemInterface } from "@unovis/ts";
+import type { BulletLegendItemInterface } from "../../types";
 import { LegendPosition } from "../../types";
 
 /**
