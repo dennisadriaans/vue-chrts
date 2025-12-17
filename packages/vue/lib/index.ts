@@ -4,6 +4,7 @@ import BarChart from "./components/BarChart/BarChart.vue";
 import DonutChart from "./components/DonutChart/DonutChart.vue";
 import BubbleChart from "./components/BubbleChart/BubbleChart.vue";
 import GanttChart from "./components/GanttChart/GanttChart.vue";
+import DagreGraph from "./components/DagreGraph/DagreGraph.vue";
 
 import {
     LegendPosition,
@@ -22,6 +23,7 @@ export {
     DonutChart,
     BubbleChart,
     GanttChart,
+    DagreGraph,
     Orientation,
     CurveType,
     LegendPosition,
