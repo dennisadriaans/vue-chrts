@@ -43,9 +43,12 @@ const props = withDefaults(defineProps<DagreGraphProps<N, L>>(), {
 });
 
 const emit = defineEmits<{
-  (e: "click", event: MouseEvent, node?: N): void;
-  (e: "nodeClick", node: N): void;
-  (e: "linkClick", link: L): void;
+  (e: "nodeClick", node: N, event?: MouseEvent): void;
+  (e: "nodeMouseover", node: N, event?: MouseEvent): void;
+  (e: "nodeMouseout", node: N, event?: MouseEvent): void;
+  (e: "linkClick", link: L, event?: MouseEvent): void;
+  (e: "linkMouseover", link: L, event?: MouseEvent): void;
+  (e: "linkMouseout", link: L, event?: MouseEvent): void;
 }>();
 
 const slots = useSlots();
@@ -150,25 +153,28 @@ const legendAlignment = computed(() => {
 
 const events = {
   [Graph.selectors.node]: {
-      click: (d: N) => {
-        emit('nodeClick', d)
-          // Set the selected node id here, e.g.: config.selectedNodeId = d.id
-          // and trigger the component update if required by your UI framework
-       }
+    click: (d: N, event: MouseEvent) => {
+      emit('nodeClick', d, event)
+    },
+    mouseover: (d: N, event: MouseEvent) => {
+      hoverNode.value = d;
+      emit('nodeMouseover', d, event)
+    },
+    mouseout: (d: N, event: MouseEvent) => {
+      emit('nodeMouseout', d, event)
+    }
   },
-}
-
-function onNodeHover(node: N): void {
-  hoverNode.value = node;
-}
-
-function onNodeClick(node: N, event: MouseEvent): void {
-  emit("nodeClick", node);
-  emit("click", event, node);
-}
-
-function onLinkClick(link: L): void {
-  emit("linkClick", link);
+  [Graph.selectors.link]: {
+    click: (d: L, event: MouseEvent) => {
+      emit('linkClick', d, event)
+    },
+    mouseover: (d: L, event: MouseEvent) => {
+      emit('linkMouseover', d, event)
+    },
+    mouseout: (d: L, event: MouseEvent) => {
+      emit('linkMouseout', d, event)
+    }
+  }
 }
 </script>
 

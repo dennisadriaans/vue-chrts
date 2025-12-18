@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { ref } from "vue";
 import { DagreGraph, LegendPosition } from "../lib";
 import Card from "./elements/Card.vue";
 import {
@@ -8,6 +9,35 @@ import {
   systemArchitectureData,
   decisionTreeData,
 } from "./data/DagreGraphData";
+
+// Event logging
+const lastEvent = ref<string>("");
+
+const handleNodeClick = (node: any, event?: MouseEvent) => {
+  lastEvent.value = `Node clicked: ${node.label || node.id}`;
+  console.log('Node clicked:', node, event);
+};
+
+const handleNodeMouseover = (node: any, event?: MouseEvent) => {
+  console.log('Node mouseover:', node, event);
+};
+
+const handleNodeMouseout = (node: any, event?: MouseEvent) => {
+  console.log('Node mouseout:', node, event);
+};
+
+const handleLinkClick = (link: any, event?: MouseEvent) => {
+  lastEvent.value = `Link clicked: ${link.source} → ${link.target}`;
+  console.log('Link clicked:', link, event);
+};
+
+const handleLinkMouseover = (link: any, event?: MouseEvent) => {
+  console.log('Link mouseover:', link, event);
+};
+
+const handleLinkMouseout = (link: any, event?: MouseEvent) => {
+  console.log('Link mouseout:', link, event);
+};
 
 // Color schemes
 const organizationColors = {
@@ -89,10 +119,13 @@ const systemLegendItems = [
       <!-- Organization Chart -->
       <Card>
         <div>
-          <h2 class="heading-2 mb-0 text-xl">Organization Chart</h2>
+          <h2 class="heading-2 mb-0 text-xl">Organization Chart (Interactive)</h2>
           <p class="text-neutral-400 text-sm">
-            Hierarchical organizational structure with automatic top-to-bottom layout.
+            Hierarchical organizational structure with automatic top-to-bottom layout. Click on nodes or links to see events in action.
           </p>
+          <div v-if="lastEvent" class="mt-2 p-2 bg-blue-50 dark:bg-blue-900 rounded text-sm">
+            <strong>Last Event:</strong> {{ lastEvent }}
+          </div>
         </div>
         <div class="mt-4">
           <DagreGraph
@@ -108,6 +141,12 @@ const systemLegendItems = [
             :node-stroke="'#ffffff'"
             :node-stroke-width="3"
             :link-arrow="'end'"
+            @node-click="handleNodeClick"
+            @node-mouseover="handleNodeMouseover"
+            @node-mouseout="handleNodeMouseout"
+            @link-click="handleLinkClick"
+            @link-mouseover="handleLinkMouseover"
+            @link-mouseout="handleLinkMouseout"
           />
         </div>
       </Card>
