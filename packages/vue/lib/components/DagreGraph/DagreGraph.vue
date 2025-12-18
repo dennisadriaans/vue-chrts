@@ -6,7 +6,7 @@ import {
   VisBulletLegend,
   VisTooltip,
 } from "@unovis/vue";
-import { GraphLayoutType } from "@unovis/ts";
+import { Graph, GraphLayoutType } from "@unovis/ts";
 import type { DagreGraphProps, GraphNodeDatum, GraphLinkDatum } from "./types";
 import { LegendPosition } from "../../types";
 
@@ -148,6 +148,16 @@ const legendAlignment = computed(() => {
   return "center";
 });
 
+const events = {
+  [Graph.selectors.node]: {
+      click: (d: N) => {
+        emit('nodeClick', d)
+          // Set the selected node id here, e.g.: config.selectedNodeId = d.id
+          // and trigger the component update if required by your UI framework
+       }
+  },
+}
+
 function onNodeHover(node: N): void {
   hoverNode.value = node;
 }
@@ -196,10 +206,7 @@ function onLinkClick(link: L): void {
         :zoomScaleExtent="zoomScaleExtent"
         :disableZoom="!zoomEnabled"
         :disableDrag="!nodeDraggingEnabled"
-        :duration="duration"
-        @nodeMouseOver="onNodeHover"
-        @nodeClick="onNodeClick"
-        @linkClick="onLinkClick"
+        :events="events"
       />
     </VisSingleContainer>
 
