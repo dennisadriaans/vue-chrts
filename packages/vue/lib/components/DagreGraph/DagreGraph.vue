@@ -240,35 +240,3 @@ function onLinkClick(link: L): void {
   </div>
 </template>
 
-<style scoped>
-.dagre-graph-container {
-  position: relative;
-}
-
-.dagre-tooltip {
-  padding: 0.5rem;
-  background: white;
-  border-radius: 0.375rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-:deep(.vis-graph-node) {
-  transition: all 0.2s ease;
-}
-
-:deep(.vis-graph-node:hover) {
-  cursor: pointer;
-  filter: brightness(1.1);
-}
-
-:deep(.vis-graph-link) {
-  transition: stroke 0.2s ease;
-}
-
-:deep(.vis-graph-label) {
-  font-size: 12px;
-  font-weight: 500;
-  pointer-events: none;
-  user-select: none;
-}
-</style>
