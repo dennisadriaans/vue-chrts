@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import { DagreGraph, LegendPosition } from "../lib";
+import { DagreGraph, LegendPosition, type GraphNodeDatum, type GraphLinkDatum } from "../lib";
 import Card from "./elements/Card.vue";
 import {
   organizationData,
@@ -13,29 +13,29 @@ import {
 // Event logging
 const lastEvent = ref<string>("");
 
-const handleNodeClick = (node: any, event?: MouseEvent) => {
+const handleNodeClick = (node: GraphNodeDatum, event?: MouseEvent) => {
   lastEvent.value = `Node clicked: ${node.label || node.id}`;
   console.log('Node clicked:', node, event);
 };
 
-const handleNodeMouseover = (node: any, event?: MouseEvent) => {
+const handleNodeMouseover = (node: GraphNodeDatum, event?: MouseEvent) => {
   console.log('Node mouseover:', node, event);
 };
 
-const handleNodeMouseout = (node: any, event?: MouseEvent) => {
+const handleNodeMouseout = (node: GraphNodeDatum, event?: MouseEvent) => {
   console.log('Node mouseout:', node, event);
 };
 
-const handleLinkClick = (link: any, event?: MouseEvent) => {
+const handleLinkClick = (link: GraphLinkDatum, event?: MouseEvent) => {
   lastEvent.value = `Link clicked: ${link.source} → ${link.target}`;
   console.log('Link clicked:', link, event);
 };
 
-const handleLinkMouseover = (link: any, event?: MouseEvent) => {
+const handleLinkMouseover = (link: GraphLinkDatum, event?: MouseEvent) => {
   console.log('Link mouseover:', link, event);
 };
 
-const handleLinkMouseout = (link: any, event?: MouseEvent) => {
+const handleLinkMouseout = (link: GraphLinkDatum, event?: MouseEvent) => {
   console.log('Link mouseout:', link, event);
 };
 

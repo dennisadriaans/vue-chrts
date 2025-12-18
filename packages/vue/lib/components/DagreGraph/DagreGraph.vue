@@ -161,6 +161,7 @@ const events = {
       emit('nodeMouseover', d, event)
     },
     mouseout: (d: N, event: MouseEvent) => {
+      hoverNode.value = undefined;
       emit('nodeMouseout', d, event)
     }
   },
