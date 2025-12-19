@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends {}">
-import { computed, ref, useSlots, useTemplateRef } from "vue";
+import { computed, getCurrentInstance, ref, useSlots, useTemplateRef } from "vue";
 import { GroupedBar, StackedBar, Orientation, CurveType, Position } from "@unovis/ts";
+import { createScopedMarkers } from "../../utils";
 
 import {
   VisAxis,
@@ -8,6 +9,7 @@ import {
   VisGroupedBar,
   VisStackedBar,
   VisLine,
+  VisArea,
   VisTooltip,
   VisXYContainer,
   VisCrosshair,
@@ -22,6 +24,8 @@ const emit = defineEmits<{
   (e: "click", event: MouseEvent, values?: T): void;
 }>();
 
+const DEFAULT_OPACITY = 0.5;
+const DEFAULT_COLOR = "#3b82f6";
 const props = withDefaults(defineProps<DualChartProps<T>>(), {
   orientation: Orientation.Vertical,
   legendPosition: LegendPosition.BottomCenter,
@@ -39,6 +43,11 @@ const props = withDefaults(defineProps<DualChartProps<T>>(), {
   hideTooltip: false,
   lineWidth: 2,
   curveType: CurveType.MonotoneX,
+  hideArea: false,
+  gradientStops: () => [
+    { offset: "0%", stopOpacity: 1 },
+    { offset: "75%", stopOpacity: 0 },
+  ],
 });
 
 const slots = useSlots();
@@ -51,9 +60,9 @@ if (!props.barYAxis || props.barYAxis.length === 0) {
   throw new Error("DualChart: 'barYAxis' is required and must contain at least one field key. Provide an array of property keys from your data type (e.g., ['revenue', 'costs'])");
 }
 
-if (!props.lineYAxis || props.lineYAxis.length === 0) {
-  console.error('[DualChart] lineYAxis prop is required and must contain at least one field key');
-  throw new Error("DualChart: 'lineYAxis' is required and must contain at least one field key. Provide an array of property keys from your data type (e.g., ['profit', 'target'])");
+if ((!props.lineYAxis || props.lineYAxis.length === 0) && (!props.areaYAxis || props.areaYAxis.length === 0)) {
+  console.error('[DualChart] Either lineYAxis or areaYAxis prop is required and must contain at least one field key');
+  throw new Error("DualChart: Either 'lineYAxis' or 'areaYAxis' is required and must contain at least one field key. Provide an array of property keys from your data type (e.g., ['profit', 'target'])");
 }
 
 // Bar chart accessors
@@ -65,21 +74,104 @@ const barYAxisAccessors = computed(() => {
 
 // Line chart accessors
 const lineYAxisAccessors = computed(() => {
-  return props.lineYAxis.map((key) => (d: T) => {
+  return props.lineYAxis?.map((key) => (d: T) => {
     return d[key];
-  });
+  }) || [];
+});
+
+// Area chart accessors
+const areaYAxisAccessors = computed(() => {
+  return props.areaYAxis?.map((key) => (d: T) => {
+    return d[key];
+  }) || [];
 });
 
 // Bar color accessor
 const barColor = (_: T, i: number) => Object.values(props.barCategories)[i]?.color;
 
 // Line color accessor
-const lineColor = (_: T, i: number) => Object.values(props.lineCategories)[i]?.color;
+const lineColor = (_: T, i: number) => Object.values(props.lineCategories || {})[i]?.color;
+
+// Area color accessor
+const areaColor = (_: T, i: number) => Object.values(props.areaCategories || {})[i]?.color || DEFAULT_COLOR;
+
+// Marker scope for area charts
+const markerScopeId = `dual-area-${getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2)}`;
+
+// Area colors for gradients
+const areaColors = computed(() => {
+  if (!props.areaCategories) return [];
+  const defaultColors = Object.values(props.areaCategories).map(
+    (_, index) => `var(--vis-color${index})`
+  );
+  return Object.values(props.areaCategories).map(
+    (c, i) => c.color ?? defaultColors[i]
+  );
+});
+
+// Marker SVG definitions
+const markersSvgDefs = computed(() => {
+  if (!props.markerConfig?.config) return "";
+  return createScopedMarkers(props.markerConfig, markerScopeId, {
+    includeLegacy: true,
+  });
+});
+
+// Marker CSS variables
+const markerCssVars = computed<Record<string, string>>(() => {
+  if (!props.markerConfig?.config) return {};
+
+  const vars: Record<string, string> = {};
+  for (const key of Object.keys(props.markerConfig.config)) {
+    vars[`--vis-marker-${key}`] = `url("#${props.markerConfig.id}--${markerScopeId}--${key}")`;
+  }
+  return vars;
+});
+
+// SVG gradient definitions for area charts
+const svgDefs = computed(() => {
+  if (!props.areaCategories) return "";
+  
+  const createGradientWithHex = (id: number, color: string | string[]) => `
+    <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
+      ${
+        props.gradientStops
+          ?.map(
+            (stop) =>
+              `<stop offset="${stop.offset}" stop-color="${color}" stop-opacity="${stop.stopOpacity}" />`
+          )
+          .join("") ?? ""
+      }
+      <stop offset="100%" stop-color="${color}" stop-opacity="0" />
+    </linearGradient>
+  `;
+  const createGradientWithCssVar = (id: number, color: string | string[]) => `
+    <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
+    ${
+      props.gradientStops
+        ?.map(
+          (stop) => `
+      <stop offset="${stop.offset}" style="stop-color:var(${color});stop-opacity:${stop.stopOpacity}" />
+    `
+        )
+        .join("") ?? ""
+    }
+    </linearGradient>
+  `;
+  return areaColors.value
+    .map((color, index) =>
+      color?.includes("#")
+        ? createGradientWithHex(index, color)
+        : createGradientWithCssVar(index, color ?? DEFAULT_COLOR)
+    )
+    .join("");
+});
 
 // Combined categories for legend
 const allCategories = computed(() => ({
   ...props.barCategories,
-  ...props.lineCategories,
+  ...(props.lineCategories || {}),
+  ...(props.areaCategories || {}),
 }));
 
 const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
@@ -116,10 +208,17 @@ function onCrosshairUpdateWithContent(d: T): string {
       display: 'flex',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',
       gap: 'var(--vis-legend-spacing)',
+      ...markerCssVars,
     }"
+    :id="markerConfig?.id"
     @click="emit('click', $event, hoverValues)"
   >
-    <VisXYContainer :padding="padding" :height="height" :data="data">
+    <VisXYContainer 
+      :padding="padding" 
+      :height="height" 
+      :data="data"
+      :svg-defs="svgDefs + markersSvgDefs"
+    >
       <VisTooltip
         v-if="!hideTooltip"
         :triggers="{
@@ -167,10 +266,36 @@ function onCrosshairUpdateWithContent(d: T): string {
         :data="data"
         :x="(_: T, i: number) => i"
         :y="lineAccessor"
-        :color="Object.values(props.lineCategories)[index]?.color"
+        :color="Object.values(props.lineCategories || {})[index]?.color"
         :curve-type="curveType ?? CurveType.MonotoneX"
         :line-width="lineWidth"
       />
+
+      <!-- Area Chart Component(s) -->
+      <template v-if="areaYAxis && areaYAxis.length > 0">
+        <template
+          v-for="(areaAccessor, index) in areaYAxisAccessors"
+          :key="`area-${index}`"
+        >
+          <VisArea
+            :data="data"
+            :x="(_: T, i: number) => i"
+            :y="areaAccessor"
+            :color="`url(#gradient${index}-${areaColors[index]})`"
+            :opacity="hideArea ? 0 : DEFAULT_OPACITY"
+            :curve-type="curveType ?? CurveType.MonotoneX"
+          />
+          <VisLine
+            :data="data"
+            :x="(_: T, i: number) => i"
+            :y="areaAccessor"
+            :color="areaColors[index]"
+            :curve-type="curveType ?? CurveType.MonotoneX"
+            :line-width="lineWidth"
+            :lineDashArray="lineDashArray ? lineDashArray[index] : undefined"
+          />
+        </template>
+      </template>
 
       <VisAxis
         v-if="!hideXAxis"
