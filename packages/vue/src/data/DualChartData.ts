@@ -29,6 +29,10 @@ export const DualChartLineCategories = {
   profit: { name: "Profit", color: "#22c55e" },
 };
 
+export const DualChartAreaCategories = {
+  profit: { name: "Profit", color: "#22c55e" },
+};
+
 // Example 2: Sales and Target
 export type SalesTargetDataItem = {
   quarter: string;

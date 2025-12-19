@@ -36,12 +36,12 @@ export interface DualChartProps<T> {
   /**
    * An array of property keys from the data object type 'T' to be used for the line y-axis values.
    */
-  lineYAxis: (keyof T)[];
+  lineYAxis?: (keyof T)[];
 
   /**
    * A record mapping line category keys to `BulletLegendItemInterface` objects.
    */
-  lineCategories: Record<string, BulletLegendItemInterface>;
+  lineCategories?: Record<string, BulletLegendItemInterface>;
 
   /**
    * An array of property keys from the data object type 'T' to be used for the area y-axis values.

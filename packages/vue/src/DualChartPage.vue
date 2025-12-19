@@ -6,6 +6,7 @@ import {
   DualChartData,
   DualChartBarCategories,
   DualChartLineCategories,
+  DualChartAreaCategories,
   SalesTargetData,
   SalesTargetBarCategories,
   SalesTargetLineCategories,
@@ -161,6 +162,39 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
             :tooltip-title-formatter="(data: DualChartDataItem) => data.month"
             :curve-type="CurveType.MonotoneX"
             :line-width="2"
+            y-label="Amount ($)"
+            @click="handleChartClick"
+          />
+        </Card>
+
+        <!-- Example 5: Bar with Area Chart -->
+        <Card>
+          <div class="flex items-center justify-between">
+            <h2 class="heading-2">Revenue & Costs with Profit Area</h2>
+            <Button
+              color="white"
+              class="!bg-neutral-900"
+              icon="i-heroicons:arrow-right-20-solid"
+              :trailing="true"
+              type="outline"
+              size="sm"
+            >
+              View code
+            </Button>
+          </div>
+          <p class="mb-2 text-sm text-neutral-500">
+            Bar chart showing revenue and costs with profit as an area chart
+          </p>
+          <DualChart
+            :data="DualChartData"
+            :bar-categories="DualChartBarCategories"
+            :area-categories="DualChartAreaCategories"
+            :bar-y-axis="['revenue', 'costs']"
+            :area-y-axis="['profit']"
+            :height="300"
+            :x-formatter="(tick: number): string => DualChartData[tick]?.month || ''"
+            :tooltip-title-formatter="(data: DualChartDataItem) => data.month"
+            :legend-position="LegendPosition.TopRight"
             y-label="Amount ($)"
             @click="handleChartClick"
           />
