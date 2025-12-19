@@ -4,6 +4,7 @@ import { LineChartProps } from "./components/LineChart/types";
 import { DonutChartProps, DonutType } from "./components/DonutChart/types";
 import { BubbleChartProps } from "./components/BubbleChart/types";
 import { GanttChartProps } from "./components/GanttChart/types";
+import { SankeyChartProps } from "./components/SankeyChart/types";
 
 enum LegendPosition {
   TopLeft = "top-left",
@@ -61,6 +62,7 @@ export {
   type BulletLegendItemInterface,
   type BubbleChartProps,
   type GanttChartProps,
+  type SankeyChartProps,
 };
 
 export type axisFormatter =
