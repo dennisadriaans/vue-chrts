@@ -145,11 +145,6 @@ const markerCssVars = computed<Record<string, string>>(() => {
 const svgDefs = computed(() => {
   if (!props.areaCategories) return "";
   
-  const sanitizeColorForId = (color: string | string[]) => {
-    const colorStr = Array.isArray(color) ? color[0] : color;
-    return colorStr.replace(/[^a-zA-Z0-9-]/g, '');
-  };
-  
   const createGradientWithHex = (id: number, color: string | string[]) => {
     const sanitizedId = sanitizeColorForId(color);
     return `
@@ -316,7 +311,7 @@ function onCrosshairUpdateWithContent(d: T): string {
             :color="areaColors[index]"
             :curve-type="curveType ?? CurveType.MonotoneX"
             :line-width="lineWidth"
-            :lineDashArray="lineDashArray ? lineDashArray[index] : undefined"
+            :lineDashArray="lineDashArray && lineDashArray[index] ? lineDashArray[index] : undefined"
           />
         </template>
       </template>
