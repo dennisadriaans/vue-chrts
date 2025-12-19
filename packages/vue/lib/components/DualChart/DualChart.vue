@@ -109,6 +109,19 @@ const areaColors = computed(() => {
   );
 });
 
+// Helper function to sanitize color strings for use in IDs
+const sanitizeColorForId = (color: string | string[]) => {
+  const colorStr = Array.isArray(color) ? color[0] : color;
+  return colorStr.replace(/[^a-zA-Z0-9-]/g, '');
+};
+
+// Sanitized color IDs for gradient references
+const areaGradientIds = computed(() => {
+  return areaColors.value.map((color, index) => 
+    `gradient${index}-${sanitizeColorForId(color)}`
+  );
+});
+
 // Marker SVG definitions
 const markersSvgDefs = computed(() => {
   if (!props.markerConfig?.config) return "";
@@ -132,8 +145,15 @@ const markerCssVars = computed<Record<string, string>>(() => {
 const svgDefs = computed(() => {
   if (!props.areaCategories) return "";
   
-  const createGradientWithHex = (id: number, color: string | string[]) => `
-    <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
+  const sanitizeColorForId = (color: string | string[]) => {
+    const colorStr = Array.isArray(color) ? color[0] : color;
+    return colorStr.replace(/[^a-zA-Z0-9-]/g, '');
+  };
+  
+  const createGradientWithHex = (id: number, color: string | string[]) => {
+    const sanitizedId = sanitizeColorForId(color);
+    return `
+    <linearGradient id="gradient${id}-${sanitizedId}" gradientTransform="rotate(90)">
       ${
         props.gradientStops
           ?.map(
@@ -145,8 +165,11 @@ const svgDefs = computed(() => {
       <stop offset="100%" stop-color="${color}" stop-opacity="0" />
     </linearGradient>
   `;
-  const createGradientWithCssVar = (id: number, color: string | string[]) => `
-    <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
+  };
+  const createGradientWithCssVar = (id: number, color: string | string[]) => {
+    const sanitizedId = sanitizeColorForId(color);
+    return `
+    <linearGradient id="gradient${id}-${sanitizedId}" gradientTransform="rotate(90)">
     ${
       props.gradientStops
         ?.map(
@@ -158,6 +181,7 @@ const svgDefs = computed(() => {
     }
     </linearGradient>
   `;
+  };
   return areaColors.value
     .map((color, index) =>
       color?.includes("#")
@@ -281,7 +305,7 @@ function onCrosshairUpdateWithContent(d: T): string {
             :data="data"
             :x="(_: T, i: number) => i"
             :y="areaAccessor"
-            :color="`url(#gradient${index}-${areaColors[index]})`"
+            :color="`url(#${areaGradientIds[index]})`"
             :opacity="hideArea ? 0 : DEFAULT_OPACITY"
             :curve-type="curveType ?? CurveType.MonotoneX"
           />
