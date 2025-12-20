@@ -5,6 +5,7 @@ import DonutChart from "./components/DonutChart/DonutChart.vue";
 import BubbleChart from "./components/BubbleChart/BubbleChart.vue";
 import GanttChart from "./components/GanttChart/GanttChart.vue";
 import DualChart from "./components/DualChart/DualChart.vue";
+import SankeyChart from "./components/SankeyChart/SankeyChart.vue";
 
 import {
     LegendPosition,
@@ -24,6 +25,7 @@ export {
     BubbleChart,
     GanttChart,
     DualChart,
+    SankeyChart,
     Orientation,
     CurveType,
     LegendPosition,

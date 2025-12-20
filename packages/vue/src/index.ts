@@ -45,6 +45,11 @@ const router = createRouter({
       component: () => import("./DonutChartPage.vue"),
     },
     {
+      path: "/sankey-charts",
+      name: "SankeyCharts",
+      component: () => import("./SankeyChartPage.vue"),
+    },
+    {
       path: "/timeline",
       name: "Timeline",
       component: () => import("./TimelinePage.vue"),
