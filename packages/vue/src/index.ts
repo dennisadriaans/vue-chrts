@@ -45,9 +45,19 @@ const router = createRouter({
       component: () => import("./DonutChartPage.vue"),
     },
     {
+      path: "/sankey-charts",
+      name: "SankeyCharts",
+      component: () => import("./SankeyChartPage.vue"),
+    },
+    {
       path: "/timeline",
       name: "Timeline",
       component: () => import("./TimelinePage.vue"),
+    },
+    {
+      path: "/dagre-graph",
+      name: "DagreGraph",
+      component: () => import("./DagreGraphPage.vue"),
     },
   ],
   history: createWebHistory(),
