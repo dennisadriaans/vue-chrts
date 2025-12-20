@@ -2,7 +2,6 @@ import {
   axisFormatter,
   CrosshairConfig,
   LegendPosition,
-  MarkerConfig,
   AxisConfig,
   BulletLegendItemInterface,
   Orientation,
