@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import { ref } from "vue";
 import { SankeyChart } from "./../lib";
-import Card from "./elements/Card.vue";
-import { SankeyInputNode, SankeyInputLink, SankeyNodeAlign } from "@unovis/ts";
+import { SankeyNodeAlign } from "../lib/types";
+import { SankeyInputLink, SankeyInputNode } from "../lib/components/SankeyChart/types";
 
 type EnergyNode = SankeyInputNode & {
   id: string;
@@ -149,67 +148,11 @@ const userJourneyData = {
   ] as (EnergyLink & { color?: string })[],
 };
 
-const steps = ref(5);
 </script>
 
 <template>
   <div class="pt-4">
-    <div class="py-2">
-      <h2 class="font-bold text-2xl">Sankey Charts</h2>
-    </div>
-    <div class="gap-4 md:grid md:grid-cols-2">
-      <Card>
-        <template #header>
-          <h2>Energy Flow Diagram</h2>
-        </template>
-        <SankeyChart
-          :data="energyFlowData"
-          :height="400"
-          :label="(d: EnergyNode) => d.label || d.id"
-          :nodeColor="
-            (d: EnergyNode) => {
-              if (d.id.includes('Coal')) return '#64748b';
-              if (d.id.includes('Natural Gas')) return '#f97316';
-              if (d.id.includes('Solar')) return '#fbbf24';
-              if (d.id.includes('Wind')) return '#06b6d4';
-              if (d.id.includes('Electricity')) return '#3b82f6';
-              if (d.id.includes('Heating')) return '#ef4444';
-              return '#8b5cf6';
-            }
-          "
-          :linkValue="(d: EnergyLink) => d.value"
-          :nodeWidth="1"
-          :nodePadding="100"
-          :highlightSubtreeOnHover="true"
-        />
-      </Card>
-
-      <Card>
-        <template #header>
-          <h2>Workflow Process</h2>
-        </template>
-        <SankeyChart
-          :data="workflowData"
-          :height="400"
-          :label="(d: EnergyNode) => d.label || d.id"
-          :nodeColor="
-            (d: EnergyNode) => {
-              if (d.id === 'Start') return '#10b981';
-              if (d.id === 'Success') return '#22c55e';
-              if (d.id === 'Failed') return '#ef4444';
-              return '#3b82f6';
-            }
-          "
-          :linkValue="(d: EnergyLink) => d.value"
-          :nodeWidth="15"
-          :nodePadding="20"
-          :highlightSubtreeOnHover="true"
-        />
-      </Card>
-
-      <Card class="md:col-span-2 !bg-default">
-
-        <SankeyChart
+    <SankeyChart
           :data="userJourneyData"
           :height="500"
           :nodeWidth="16"
@@ -219,7 +162,6 @@ const steps = ref(5);
           :labelFontSize="9"
           :labelColor="() => '#64748b'"
           :labelMaxWidth="140"
-          :labelPadding="8"
           :nodeColor="(d: any) => {
             if (d.id.includes('red')) return '#991b1b';
             if (d.id.includes('green') || d.id.includes('self-host')) return '#065f46';
@@ -242,11 +184,5 @@ const steps = ref(5);
           }"
           :highlightSubtreeOnHover="true"
         />
-        
-        <template #footer>
-          <p class="text-[11px] text-slate-600">Shows the most common paths users take through your application</p>
-        </template>
-      </Card>
     </div>
-  </div>
 </template>

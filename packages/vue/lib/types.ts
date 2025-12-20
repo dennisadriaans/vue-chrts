@@ -16,7 +16,9 @@ import {
   NodeShape,
   LinkArrowPosition,
 } from "./components/DagreGraph/types";
+
 import { SankeyChartProps } from "./components/SankeyChart/types";
+import { SankeyNodeAlign } from "@unovis/ts/components/sankey/types";
 
 enum LegendPosition {
   TopLeft = "top-left",
@@ -67,6 +69,7 @@ export {
   CurveType,
   Orientation,
   DonutType,
+  SankeyNodeAlign,
   type AreaChartProps,
   type BarChartProps,
   type LineChartProps,

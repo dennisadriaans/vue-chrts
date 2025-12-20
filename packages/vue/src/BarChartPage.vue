@@ -368,7 +368,15 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
             </Button>
           </div>
           <p class="mb-2 text-sm text-neutral-500">{{ example.description }}</p>
-          <BarChart v-bind="example" :height="200" @click="handleChartClick" />
+          <BarChart
+            v-bind="{
+              ...example,
+              data: example.data ?? [],
+              categories: example.categories ?? {}
+            }"
+            :height="200"
+            @click="handleChartClick"
+          />
         </Card>
       </div>
     </div>

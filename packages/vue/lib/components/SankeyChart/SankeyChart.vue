@@ -1,11 +1,6 @@
 <script setup lang="ts" generic="N extends SankeyInputNode, L extends SankeyInputLink">
 import { computed, ref, useSlots, useTemplateRef } from "vue";
-import {
-  SankeyInputNode,
-  SankeyInputLink,
-  SankeyNodeAlign,
-  Sankey,
-} from "@unovis/ts";
+
 
 import {
   VisSingleContainer,
@@ -16,8 +11,9 @@ import {
 
 import Tooltip from "../Tooltip.vue";
 
-import { LegendPosition } from "../../types";
+import { Sankey, SankeyNodeAlign, Sizing } from "@unovis/ts";
 import { SankeyChartProps } from "./types";
+import { LegendPosition } from "../../types";
 
 const emit = defineEmits<{
   (e: "click", event: MouseEvent): void;
@@ -33,6 +29,7 @@ const props = withDefaults(defineProps<SankeyChartProps<N, L>>(), {
     bottom: 5,
     left: 5,
   }),
+  sizing: Sizing.Fit,
   nodeWidth: 10,
   nodeAlign: SankeyNodeAlign.Justify,
   nodePadding: 10,
@@ -67,7 +64,12 @@ function onNodeHover(d: any) {
     }"
     @click="emit('click', $event)"
   >
-    <VisSingleContainer :padding="padding" :height="height">
+    <VisSingleContainer
+      :padding="padding"
+      :height="height"
+      :width="width"
+      :sizing="sizing"
+    >
       <VisTooltip
         :triggers="{
           [Sankey.selectors.node]: (d: any) => {
@@ -86,6 +88,9 @@ function onNodeHover(d: any) {
         :nodeWidth="nodeWidth"
         :nodeAlign="nodeAlign"
         :nodePadding="nodePadding"
+        :nodeHorizontalSpacing="nodeHorizontalSpacing"
+        :nodeMinHeight="nodeMinHeight"
+        :nodeMaxHeight="nodeMaxHeight"
         :nodeSort="nodeSort"
         :linkSort="linkSort"
         :iterations="iterations"
