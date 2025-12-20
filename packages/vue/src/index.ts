@@ -54,6 +54,11 @@ const router = createRouter({
       name: "Timeline",
       component: () => import("./TimelinePage.vue"),
     },
+    {
+      path: "/dagre-graph",
+      name: "DagreGraph",
+      component: () => import("./DagreGraphPage.vue"),
+    },
   ],
   history: createWebHistory(),
 });
