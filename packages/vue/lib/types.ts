@@ -16,6 +16,7 @@ import {
   NodeShape,
   LinkArrowPosition,
 } from "./components/DagreGraph/types";
+import { SankeyChartProps } from "./components/SankeyChart/types";
 
 enum LegendPosition {
   TopLeft = "top-left",
@@ -83,6 +84,7 @@ export {
   type DagreRanker,
   type NodeShape,
   type LinkArrowPosition,
+  type SankeyChartProps,
 };
 
 export type axisFormatter =

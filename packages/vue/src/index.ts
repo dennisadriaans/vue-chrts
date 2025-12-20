@@ -30,6 +30,11 @@ const router = createRouter({
       component: () => import("./BarChartPage.vue"),
     },
     {
+      path: "/dual-charts",
+      name: "DualCharts",
+      component: () => import("./DualChartPage.vue"),
+    },
+    {
       path: "/bubble-charts",
       name: "BubbleCharts",
       component: () => import("./BubbleChartPage.vue"),
@@ -38,6 +43,11 @@ const router = createRouter({
       path: "/donut-charts",
       name: "DonutCharts",
       component: () => import("./DonutChartPage.vue"),
+    },
+    {
+      path: "/sankey-charts",
+      name: "SankeyCharts",
+      component: () => import("./SankeyChartPage.vue"),
     },
     {
       path: "/timeline",
