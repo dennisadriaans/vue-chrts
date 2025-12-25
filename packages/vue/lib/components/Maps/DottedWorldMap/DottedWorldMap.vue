@@ -71,12 +71,10 @@ const y = (d: { x: number; y: number }) => maxY.value - d.y;
 </script>
 
 <template>
-  <div class="dotted-map" :style="{ backgroundColor: props.backgroundColor }">
-    <VisXYContainer
+  <VisXYContainer
       :data="data"
       :height="height"
       :padding="{ top: 10, bottom: 10, left: 10, right: 10 }"
-      :scaleByDomain="true"
     >
       <VisScatter
         :x="x"
@@ -85,5 +83,4 @@ const y = (d: { x: number; y: number }) => maxY.value - d.y;
         :color="color"
       />
     </VisXYContainer>
-  </div>
 </template>
