@@ -1,4 +1,3 @@
-import type { GeoProjection } from 'd3-geo'
 import type { ColorAccessor, NumericAccessor, StringAccessor } from '@unovis/ts/types/accessor'
 
 export enum MapPointLabelPosition {
@@ -19,7 +18,7 @@ export type MapsData<T extends Record<string, any>, AreaDatum = any, PointDatum 
   topojson: any
 
   // Projection and zoom
-  projection?: GeoProjection
+  projection?: any // GeoProjection from d3-geo
   zoomFactor?: number
   disableZoom?: boolean
   zoomExtent?: number[]
