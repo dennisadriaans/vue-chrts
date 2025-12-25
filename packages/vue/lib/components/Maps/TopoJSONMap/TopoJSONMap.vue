@@ -4,7 +4,6 @@ import { VisSingleContainer, VisTopoJSONMap, VisTooltip } from "@unovis/vue";
 import { MapsData } from "./types";
 import { TopoJSONMap } from "@unovis/ts";
 
-import * as d3 from "d3";
 
 const props = defineProps<MapsData<T>>();
 
