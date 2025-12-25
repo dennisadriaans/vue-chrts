@@ -2,11 +2,11 @@
 import { computed, ref } from "vue";
 import { DottedWorldMap, TopoJSONMap, GeoJSONGridMap } from "../lib";
 import { WorldMapTopoJSON, FranceTopoJSON } from "@unovis/ts/maps";
+import europeGeoJSON from "./data/europe.geojson";
 
 // European country ISO codes - comprehensive list for accurate Europe map
 const EUROPE_COUNTRIES = [
   'ALB', // Albania
-  'AND', // Andorra
   'AUT', // Austria
   'BLR', // Belarus
   'BEL', // Belgium
@@ -25,22 +25,18 @@ const EUROPE_COUNTRIES = [
   'ISL', // Iceland
   'IRL', // Ireland
   'ITA', // Italy
-  'XKX', // Kosovo
   'LVA', // Latvia
-  'LIE', // Liechtenstein
   'LTU', // Lithuania
   'LUX', // Luxembourg
-  'MKD', // North Macedonia
+  'MKD', // Macedonia
   'MLT', // Malta
   'MDA', // Moldova
-  'MCO', // Monaco
   'MNE', // Montenegro
   'NLD', // Netherlands
   'NOR', // Norway
   'POL', // Poland
   'PRT', // Portugal
   'ROU', // Romania
-  'SMR', // San Marino
   'SRB', // Serbia
   'SVK', // Slovakia
   'SVN', // Slovenia
@@ -49,7 +45,6 @@ const EUROPE_COUNTRIES = [
   'CHE', // Switzerland
   'UKR', // Ukraine
   'GBR', // United Kingdom
-  'VAT', // Vatican City
 ];
 
 const hoveredArea = ref<string | null>(null);
@@ -113,6 +108,7 @@ const franceData = computed(() => ({
         </p>
         <div class="border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900">
           <GeoJSONGridMap
+            :geo-json="europeGeoJSON"
             height="600px"
             :dot-size="2"
             color="#10b981"
@@ -130,6 +126,7 @@ const franceData = computed(() => ({
         </p>
         <div class="border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900">
           <GeoJSONGridMap
+            :geo-json="europeGeoJSON"
             height="600px"
             :dot-size="2"
             color="#f59e0b"

@@ -26,6 +26,7 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.15",
     "@tanstack/vue-table": "^8.21.2",
+    "@types/d3-geo": "^3.1.0",
     "@types/node": "^22.13.11",
     "@types/rollup": "^0.54.0",
     "@unovis/ts": "^1.6.1",
