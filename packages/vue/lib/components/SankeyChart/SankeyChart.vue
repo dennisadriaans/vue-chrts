@@ -11,7 +11,7 @@ import {
 
 import Tooltip from "../Tooltip.vue";
 
-import { Sankey, SankeyNodeAlign, Sizing } from "@unovis/ts";
+import { Sankey, SankeyInputLink, SankeyInputNode, SankeyNodeAlign, Sizing } from "@unovis/ts";
 import { SankeyChartProps } from "./types";
 import { LegendPosition } from "../../types";
 
