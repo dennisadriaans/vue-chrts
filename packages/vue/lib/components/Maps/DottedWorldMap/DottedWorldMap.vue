@@ -5,24 +5,47 @@ import DottedMapPkg from "dotted-map";
 
 const DottedMap = (DottedMapPkg as any).default || DottedMapPkg;
 
+type DottedMapRegion = {
+  lat: { min: number; max: number };
+  lng: { min: number; max: number };
+};
+
 const props = withDefaults(defineProps<{
   height?: string | number;
   dotSize?: number;
   color?: string;
   mapHeight?: number;
+  mapWidth?: number;
   backgroundColor?: string;
+  countries?: string[];
+  region?: DottedMapRegion;
+  grid?: "vertical" | "diagonal";
+  avoidOuterPins?: boolean;
 }>(), {
   height: "600px",
   dotSize: 0.5,
   color: "#ffffff",
   mapHeight: 100,
-  backgroundColor: "#0f172a",
+  backgroundColor: "transparent",
+  grid: "vertical",
+  avoidOuterPins: false,
 });
 
 // Initialize the dotted map
 const mapPoints = computed<Array<{ x: number; y: number }>>(() => {
   try {
-    const map = new DottedMap({ height: props.mapHeight, grid: "vertical" });
+    const sizeParams =
+      typeof props.mapWidth === "number"
+        ? { width: props.mapWidth }
+        : { height: props.mapHeight };
+
+    const map = new DottedMap({
+      ...sizeParams,
+      grid: props.grid,
+      countries: props.countries,
+      region: props.region,
+      avoidOuterPins: props.avoidOuterPins,
+    });
     return map.getPoints();
   } catch (e) {
     console.error("Error initializing DottedMap:", e);
@@ -48,7 +71,8 @@ const y = (d: { x: number; y: number }) => maxY.value - d.y;
 </script>
 
 <template>
-   <VisXYContainer
+  <div class="dotted-map" :style="{ backgroundColor: props.backgroundColor }">
+    <VisXYContainer
       :data="data"
       :height="height"
       :padding="{ top: 10, bottom: 10, left: 10, right: 10 }"
@@ -61,5 +85,5 @@ const y = (d: { x: number; y: number }) => maxY.value - d.y;
         :color="color"
       />
     </VisXYContainer>
+  </div>
 </template>
-
