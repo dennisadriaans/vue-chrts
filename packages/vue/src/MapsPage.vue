@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { TopoJSONMap, DottedWorldMap } from "../lib";
 import { WorldMapTopoJSON } from "@unovis/ts/maps";
-import type { Topology, GeometryCollection } from "topojson-specification";
 import netherlandsRaw from "./data/netherlands.topo.json";
 type NetherlandsProvince = {
   GID_1: string;
@@ -16,22 +15,31 @@ type NetherlandsProvince = {
   HASC_1: string;
   ISO_1: string;
 };
-const netherlands: Topology<{
-  netherlands: GeometryCollection<NetherlandsProvince>;
-}> = {
+
+const netherlandsTopo = netherlandsRaw as any;
+const netherlands = {
   type: "Topology",
-  arcs: netherlandsRaw.arcs,
+  bbox: (netherlandsTopo as any).bbox as [number, number, number, number],
+  arcs: netherlandsTopo.arcs,
   objects: {
     netherlands: {
       type: "GeometryCollection",
-      geometries: netherlandsRaw.objects.netherlands.geometries.map((g) => ({
-        type: "MultiPolygon",
-        arcs: g.arcs,
-        properties: g.properties,
-      })),
+      geometries: netherlandsTopo.objects.netherlands.geometries.map((g: any) => {
+        const props = (g as any).properties as Partial<NetherlandsProvince> | undefined;
+        return {
+          ...(g as any),
+          id: props?.ISO_1 ?? props?.HASC_1 ?? props?.GID_1,
+          properties: {
+            ...(props as any),
+            name: props?.NL_NAME_1 && props.NL_NAME_1 !== "NA"
+              ? props.NL_NAME_1
+              : props?.NAME_1,
+          },
+        };
+      }) as any,
     },
   },
-};
+} as const;
 </script>
 
 <template>
@@ -43,9 +51,14 @@ const netherlands: Topology<{
         <code>VisScatter</code>.
       </p>
 
-      <div>
+      <!-- <div>
         <h2 class="text-2xl font-bold mb-4">TopoJSON Map</h2>
         <TopoJSONMap :data="WorldMapTopoJSON" map-feature-key="countries" />
+      </div> -->
+
+      <div>
+        <h2 class="text-2xl font-bold mb-4">TopoJSON Map</h2>
+        <TopoJSONMap :data="netherlands" map-feature-key="netherlands" />
       </div>
 
       <div>

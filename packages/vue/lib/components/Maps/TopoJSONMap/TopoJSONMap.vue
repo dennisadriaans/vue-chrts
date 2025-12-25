@@ -4,7 +4,6 @@ import { VisSingleContainer, VisTopoJSONMap, VisTooltip } from "@unovis/vue";
 import { MapsData } from "./types";
 import { TopoJSONMap } from "@unovis/ts";
 
-
 const props = defineProps<MapsData<T>>();
 
 const tooltipTriggers = {
