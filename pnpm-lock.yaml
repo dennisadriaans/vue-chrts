@@ -63,6 +63,12 @@ importers:
 
   packages/vue:
     dependencies:
+      d3-geo:
+        specifier: ^3.1.1
+        version: 3.1.1
+      d3-geo-projection:
+        specifier: ^4.0.0
+        version: 4.0.0
       vue:
         specifier: ^3.5.13
         version: 3.5.26(typescript@5.7.3)
@@ -4086,7 +4092,7 @@ packages:
       vue: ^3
     dependencies:
       '@unovis/ts': 1.6.2
-      vue: 3.5.26(typescript@5.9.3)
+      vue: 3.5.26(typescript@5.7.3)
 
   /@unrs/resolver-binding-android-arm-eabi@1.11.1:
     resolution: {integrity: sha512-ppLRUgHVaGRWUx0R0Ut06Mjo9gBaBkg3v/8AxusGLhsIotbBLuRk51rAzqLC8gq6NyyAojEXglNjzf6R948DNw==}
