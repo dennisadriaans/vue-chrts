@@ -34,11 +34,10 @@ export default defineConfig({
       fileName: 'index.js',
     },
     rollupOptions: {
-      external: ['vue', '@unovis/vue', '@unovis/ts', 'vue-router', 'tailwindcss', 'd3-geo', 'd3-geo-projection'],
+      external: ['vue', '@unovis/vue', '@unovis/ts', 'vue-router', 'tailwindcss'],
       output: [outputDefault('es', 'js')],
     },
     assetsInlineLimit: 0, // Don't inline assets
   },
-  assetsInclude: ['**/*.geojson'],
   plugins: [vue(), dts(), tailwindcss()]
 })

@@ -70,6 +70,7 @@ const mapsData = computed(() => props.data)
       :data="mapsData.areas"
       :point-data="mapsData.points"
       :topojson="props.topojson"
+      :projection="props.projection"
       :zoom-factor="props.zoomFactor"
       :pointRadius="pointRadius"
       :point-label="(d: any) => d.label"

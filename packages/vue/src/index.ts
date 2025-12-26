@@ -49,6 +49,11 @@ const router = createRouter({
       name: "Maps",
       component: () => import("./MapsPage.vue"),
     },
+    {
+      path: "/maps-dotted",
+      name: "MapsDotted",
+      component: () => import("./DottedMapPage.vue"),
+    },
   ],
   history: createWebHistory(),
 });

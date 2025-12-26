@@ -6,7 +6,7 @@ import BubbleChart from "./components/BubbleChart/BubbleChart.vue";
 import GanttChart from "./components/GanttChart/GanttChart.vue";
 import TopoJSONMap from "./components/Maps/TopoJSONMap/TopoJSONMap.vue";
 import DottedWorldMap from "./components/Maps/DottedWorldMap/DottedWorldMap.vue";
-import GeoJSONGridMap from "./components/Maps/GeoJSONGridMap/GeoJSONGridMap.vue";
+export * from "./components/Maps/DottedWorldMap/types";
 
 import {
     LegendPosition,
@@ -27,7 +27,6 @@ export {
     GanttChart,
     TopoJSONMap,
     DottedWorldMap,
-    GeoJSONGridMap,
     Orientation,
     CurveType,
     LegendPosition,

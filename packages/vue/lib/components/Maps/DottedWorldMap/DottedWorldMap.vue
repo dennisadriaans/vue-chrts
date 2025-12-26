@@ -1,86 +1,124 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, useSlots } from "vue";
 import { VisXYContainer, VisScatter } from "@unovis/vue";
 import DottedMapPkg from "dotted-map";
+import type { DottedWorldMapProps } from "./types";
 
 const DottedMap = (DottedMapPkg as any).default || DottedMapPkg;
 
-type DottedMapRegion = {
-  lat: { min: number; max: number };
-  lng: { min: number; max: number };
-};
-
-const props = withDefaults(defineProps<{
-  height?: string | number;
-  dotSize?: number;
-  color?: string;
-  mapHeight?: number;
-  mapWidth?: number;
-  backgroundColor?: string;
-  countries?: string[];
-  region?: DottedMapRegion;
-  grid?: "vertical" | "diagonal";
-  avoidOuterPins?: boolean;
-}>(), {
-  height: "600px",
-  dotSize: 0.5,
-  color: "#ffffff",
-  mapHeight: 100,
-  backgroundColor: "transparent",
+const props = withDefaults(defineProps<DottedWorldMapProps>(), {
   grid: "vertical",
   avoidOuterPins: false,
+  color: "#ffffff",
+  dotSize: 0.5,
+  shape: "circle",
+  height: "600px",
+  useRawSvg: false,
 });
 
-// Initialize the dotted map
-const mapPoints = computed<Array<{ x: number; y: number }>>(() => {
-  try {
-    const sizeParams =
-      typeof props.mapWidth === "number"
-        ? { width: props.mapWidth }
-        : { height: props.mapHeight };
+const slots = useSlots();
 
-    const map = new DottedMap({
-      ...sizeParams,
-      grid: props.grid,
+// Create the map instance
+const mapInstance = computed(() => {
+  let map;
+  if (props.precomputedMap) {
+    const mapData =
+      typeof props.precomputedMap === "string"
+        ? JSON.parse(props.precomputedMap)
+        : props.precomputedMap;
+    map = new DottedMap({ map: mapData });
+  } else {
+    map = new DottedMap({
+      height: props.mapHeight,
+      width: props.mapWidth,
       countries: props.countries,
       region: props.region,
+      grid: props.grid,
       avoidOuterPins: props.avoidOuterPins,
     });
-    return map.getPoints();
-  } catch (e) {
-    console.error("Error initializing DottedMap:", e);
-    return [];
   }
+
+  // Add pins if provided
+  if (props.pins && props.pins.length > 0) {
+    props.pins.forEach((pin) => {
+      map.addPin(pin);
+    });
+  }
+
+  return map;
 });
 
-// Unovis Scatter data
-const data = computed(() => mapPoints.value);
+// Generate points for rendering
+const data = computed(() => {
+  const map = mapInstance.value;
+  const points = map.getPoints();
 
-const maxY = computed(() => {
-  let currentMax = 0;
-  for (const point of data.value) {
-    if (point.y > currentMax) currentMax = point.y;
-  }
-  return currentMax;
+  if (points.length === 0) return [];
+
+  // DottedMap uses SVG coordinates (Y increases downwards)
+  // We flip it for standard XY container if needed, but Unovis can handle it.
+  // However, to keep it consistent with how maps are usually viewed:
+  const maxY = Math.max(...points.map((p) => p.y));
+  const minY = Math.min(...points.map((p) => p.y));
+
+  return points.map((p) => ({
+    ...p,
+    // Flip Y axis to match geographical orientation in XY container
+    y: maxY + minY - p.y,
+  }));
 });
 
-const x = (d: { x: number; y: number }) => d.x;
-// dotted-map's coordinates follow SVG convention (y grows downward). Unovis charts
-// assume y grows upward, so invert y to keep the map visually correct.
-const y = (d: { x: number; y: number }) => maxY.value - d.y;
+// SVG content for raw rendering if needed
+const svgContent = computed(() => {
+  return mapInstance.value.getSVG({
+    shape: props.shape,
+    backgroundColor: props.backgroundColor,
+    color: props.color,
+    radius: props.dotSize,
+  });
+});
 </script>
 
 <template>
-  <VisXYContainer
-      :data="data"
-      :height="height"
-      :padding="{ top: 10, bottom: 10, left: 10, right: 10 }"
-    >
-      <VisScatter
-        :x="x"
-        :y="y"
-        :size="dotSize"
-        :color="color"
-      />
-    </VisXYContainer>
+  <div
+    class="dotted-world-map-container"
+    :style="{
+      backgroundColor: backgroundColor,
+      height: typeof height === 'number' ? height + 'px' : height,
+      width: '100%',
+      position: 'relative',
+    }"
+  >
+    <!-- Slot for custom rendering or overlay -->
+    <slot :points="data" :map="mapInstance" :svg="svgContent">
+      <div
+        v-if="useRawSvg"
+        v-html="svgContent"
+        class="raw-svg-container"
+        style="width: 100%; height: 100%"
+      ></div>
+      <!-- Default rendering using Unovis for performance and interactivity -->
+      <VisXYContainer v-else :data="data" :height="'100%'">
+        <VisScatter
+          :x="(d: any) => d.x"
+          :y="(d: any) => d.y"
+          :size="(d: any) => d.svgOptions?.radius || dotSize"
+          :color="(d: any) => d.svgOptions?.color || color"
+          :cursor="'pointer'"
+        />
+      </VisXYContainer>
+    </slot>
+  </div>
 </template>
+
+<style scoped>
+.dotted-world-map-container {
+  overflow: hidden;
+}
+
+.raw-svg-container :deep(svg) {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+</style>
