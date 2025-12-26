@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
-import { TopoJSONMap } from "../lib";
-import { 
-  WorldMapTopoJSON, 
+import { TopoJSONMap, GeoJSONGridMap, DottedWorldMap } from "../lib";
+import {
+  WorldMapTopoJSON,
   FranceTopoJSON,
   USATopoJSON,
   GermanyTopoJSON,
@@ -11,6 +11,50 @@ import {
   IndiaTopoJSON,
   USCountiesTopoJSON,
 } from "@unovis/ts/maps";
+import NetherlandsTopoJSON from "./data/NetherlandsTopoJSON.json";
+
+// European country ISO codes - comprehensive list for accurate Europe map
+const EUROPE_COUNTRIES = [
+  "ALB", // Albania
+  "AUT", // Austria
+  "BLR", // Belarus
+  "BEL", // Belgium
+  "BIH", // Bosnia and Herzegovina
+  "BGR", // Bulgaria
+  "HRV", // Croatia
+  "CYP", // Cyprus
+  "CZE", // Czech Republic
+  "DNK", // Denmark
+  "EST", // Estonia
+  "FIN", // Finland
+  "FRA", // France
+  "DEU", // Germany
+  "GRC", // Greece
+  "HUN", // Hungary
+  "ISL", // Iceland
+  "IRL", // Ireland
+  "ITA", // Italy
+  "LVA", // Latvia
+  "LTU", // Lithuania
+  "LUX", // Luxembourg
+  "MKD", // Macedonia
+  "MLT", // Malta
+  "MDA", // Moldova
+  "MNE", // Montenegro
+  "NLD", // Netherlands
+  "NOR", // Norway
+  "POL", // Poland
+  "PRT", // Portugal
+  "ROU", // Romania
+  "SRB", // Serbia
+  "SVK", // Slovakia
+  "SVN", // Slovenia
+  "ESP", // Spain
+  "SWE", // Sweden
+  "CHE", // Switzerland
+  "UKR", // Ukraine
+  "GBR", // United Kingdom
+];
 
 const hoveredArea = ref<string | null>(null);
 
@@ -32,7 +76,7 @@ const worldData = computed(() => ({
     {
       id: "nyc",
       latitude: 40.7128,
-      longitude: -74.0060,
+      longitude: -74.006,
       label: "New York",
       color: "#10b981",
     },
@@ -44,30 +88,47 @@ const worldData = computed(() => ({
       color: "#f59e0b",
     },
   ],
-}))
+}));
 
 // France Map
 const franceData = computed(() => ({
   areas: [],
   points: [],
-}))
+}));
+
+const netherlandsData = computed(() => ({
+  areas: [],
+  points: [],
+}));
+
+// NetherlandsTopoJSON doesn't use the same object key as Unovis' FranceTopoJSON.
+// Unovis France uses "regions"; this dataset uses a different key under `topojson.objects`.
+const netherlandsMapFeatureKey = computed(() => {
+  const objects = (NetherlandsTopoJSON as any)?.objects as
+    | Record<string, unknown>
+    | undefined;
+  if (!objects) return "regions";
+  if ("regions" in objects) return "regions";
+  const [firstKey] = Object.keys(objects);
+  return firstKey ?? "regions";
+});
 
 // USA Map with highlighted states
 const usaData = computed(() => ({
   areas: [
-    { id: "6", color: "#3b82f6" },   // California
-    { id: "48", color: "#10b981" },  // Texas
-    { id: "12", color: "#f59e0b" },  // Florida
-    { id: "36", color: "#ef4444" },  // New York
+    { id: "6", color: "#3b82f6" }, // California
+    { id: "48", color: "#10b981" }, // Texas
+    { id: "12", color: "#f59e0b" }, // Florida
+    { id: "36", color: "#ef4444" }, // New York
   ],
   points: [],
-}))
+}));
 
 // USA Counties Map
 const usaCountiesData = computed(() => ({
   areas: [],
   points: [],
-}))
+}));
 
 // Germany Map
 const germanyData = computed(() => ({
@@ -76,54 +137,96 @@ const germanyData = computed(() => ({
     { id: "DE-NW", color: "#10b981" },
   ],
   points: [],
-}))
+}));
 
 // UK Map
 const ukData = computed(() => ({
   areas: [],
   points: [],
-}))
+}));
 
 // India Map
 const indiaData = computed(() => ({
   areas: [],
   points: [],
-}))
+}));
 
 // China Map
 const chinaData = computed(() => ({
   areas: [],
   points: [],
-}))
-
+}));
 </script>
 
 <template>
   <div class="p-8 space-y-12 bg-gray-50 min-h-screen">
     <!-- Header -->
     <section>
-      <h1 class="text-4xl font-bold mb-2">TopoJSON Maps Gallery</h1>
-      <p class="text-gray-600 mb-4">
-        Interactive maps using Unovis TopoJSON components with all available map data from <code class="bg-gray-200 px-1 rounded">@unovis/ts/maps</code>
-      </p>
-    </section>
+      <h1 class="text-3xl font-bold mb-6">Map Examples</h1>
 
-    <!-- World Map -->
-    <section class="bg-white p-6 rounded-lg shadow-lg">
-      <h2 class="text-2xl font-bold mb-2">World Map</h2>
-      <p class="text-gray-600 mb-4">
-        Interactive world map with countries. Hover over the USA to highlight it. Points show major cities.
-      </p>
-      <TopoJSONMap
-        class="w-full h-[500px] border border-gray-200 rounded"
-        :data="worldData"
-        :topojson="WorldMapTopoJSON"
-        map-feature-key="countries"
-        @mouseenter="(d: any) => (hoveredArea = d.id)"
-        @mouseleave="() => (hoveredArea = null)"
-      />
-      <div class="mt-2 text-sm text-gray-500">
-        Hovered area: <span class="font-mono font-semibold">{{ hoveredArea || 'none' }}</span>
+      <!-- World Dotted Map Example -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold mb-4">World Dotted Map</h2>
+        <p class="text-gray-600 mb-4">
+          A perfectly clipped map of World using <code>dotted-map</code> with
+          exact country codes. This map excludes sea areas and neighboring parts
+          of Asia/Africa.
+        </p>
+        <div
+          class=""
+        >
+          <DottedWorldMap
+            height="600px"
+            :dot-size="2"
+            color="#4f46e5"
+            :map-height="100"
+            :countries="WORLD_COUNTRIES"
+            grid="diagonal"
+          />
+        </div>
+      </div>
+
+
+      <!-- Europe Dotted Map Example -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold mb-4">Europe Dotted Map</h2>
+        <p class="text-gray-600 mb-4">
+          A perfectly clipped map of Europe using <code>dotted-map</code> with
+          exact country codes. This map excludes sea areas and neighboring parts
+          of Asia/Africa.
+        </p>
+        <div
+          class="border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900"
+        >
+          <DottedWorldMap
+            height="900px"
+            :dot-size="1.5"
+            color="#4f46e5"
+            :map-height="100"
+            :countries="EUROPE_COUNTRIES"
+            grid="diagonal"
+          />
+        </div>
+      </div>
+
+      <!-- TopoJSON World Map -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold mb-4">TopoJSON World Map</h2>
+        <p class="text-gray-600 mb-4">
+          Interactive world map using TopoJSON data from Unovis.
+        </p>
+        <div
+          class="border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900"
+        >
+          <TopoJSONMap
+            class="w-full h-[550px] relative"
+            :data="worldData"
+            :topojson="WorldMapTopoJSON"
+            map-feature-key="countries"
+            @mouseenter="(d: any) => (hoveredArea = d.id)"
+            @mouseleave="() => (hoveredArea = null)"
+          />
+        </div>
       </div>
     </section>
 
@@ -145,7 +248,8 @@ const chinaData = computed(() => ({
     <section class="bg-white p-6 rounded-lg shadow-lg">
       <h2 class="text-2xl font-bold mb-2">USA States</h2>
       <p class="text-gray-600 mb-4">
-        Map of the United States with highlighted states (California, Texas, Florida, New York).
+        Map of the United States with highlighted states (California, Texas,
+        Florida, New York).
       </p>
       <TopoJSONMap
         class="w-full h-[500px] border border-gray-200 rounded"
@@ -159,7 +263,8 @@ const chinaData = computed(() => ({
     <section class="bg-white p-6 rounded-lg shadow-lg">
       <h2 class="text-2xl font-bold mb-2">USA Counties</h2>
       <p class="text-gray-600 mb-4">
-        Detailed map of the United States showing all counties. Zoom in to see county boundaries.
+        Detailed map of the United States showing all counties. Zoom in to see
+        county boundaries.
       </p>
       <TopoJSONMap
         class="w-full h-[500px] border border-gray-200 rounded"
@@ -173,7 +278,8 @@ const chinaData = computed(() => ({
     <section class="bg-white p-6 rounded-lg shadow-lg">
       <h2 class="text-2xl font-bold mb-2">Germany Regions</h2>
       <p class="text-gray-600 mb-4">
-        Map of Germany with highlighted regions (Bavaria, North Rhine-Westphalia).
+        Map of Germany with highlighted regions (Bavaria, North
+        Rhine-Westphalia).
       </p>
       <TopoJSONMap
         class="w-full h-[500px] border border-gray-200 rounded"
@@ -214,9 +320,7 @@ const chinaData = computed(() => ({
     <!-- China Map -->
     <section class="bg-white p-6 rounded-lg shadow-lg">
       <h2 class="text-2xl font-bold mb-2">China Provinces</h2>
-      <p class="text-gray-600 mb-4">
-        Map of China showing all provinces.
-      </p>
+      <p class="text-gray-600 mb-4">Map of China showing all provinces.</p>
       <TopoJSONMap
         class="w-full h-[500px] border border-gray-200 rounded"
         :data="chinaData"
@@ -230,7 +334,9 @@ const chinaData = computed(() => ({
       <h2 class="text-2xl font-bold mb-4">Available Maps</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <h3 class="text-lg font-semibold mb-2">✓ Built-in Maps from @unovis/ts/maps</h3>
+          <h3 class="text-lg font-semibold mb-2">
+            ✓ Built-in Maps from @unovis/ts/maps
+          </h3>
           <ul class="list-disc list-inside text-gray-600 space-y-1">
             <li>WorldMapTopoJSON - World countries</li>
             <li>WorldMap110mAlphaTopoJSON - World (simplified)</li>
@@ -264,6 +370,47 @@ const chinaData = computed(() => ({
           </ul>
         </div>
       </div>
+
+      <!-- TopoJSON Netherlands Map -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold mb-4">
+          TopoJSON Netherlands Regions Map
+        </h2>
+        <p class="text-gray-600 mb-4">
+          Detailed regional map of Netherlands using TopoJSON data.
+        </p>
+        <div
+          class="border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900"
+        >
+          <TopoJSONMap
+            class="w-full h-[550px] relative"
+            :data="netherlandsData"
+            :topojson="NetherlandsTopoJSON"
+            :map-feature-key="netherlandsMapFeatureKey"
+          />
+        </div>
+      </div>
+
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold mb-4">TopoJSON World Map</h2>
+        <p class="text-gray-600 mb-4">
+          Interactive world map using TopoJSON data from Unovis.
+        </p>
+        <div
+          class="border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900"
+        >
+          <TopoJSONMap
+            class="w-full h-[550px] relative"
+            :data="worldData"
+            :topojson="WorldMapTopoJSON"
+            map-feature-key="countries"
+            @mouseenter="(d: any) => (hoveredArea = d.id)"
+            @mouseleave="() => (hoveredArea = null)"
+          />
+        </div>
+      </div>
+
+      
     </section>
   </div>
 </template>

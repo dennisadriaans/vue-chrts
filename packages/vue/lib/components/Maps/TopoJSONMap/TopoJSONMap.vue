@@ -17,7 +17,10 @@ const emit = defineEmits<{
 }>();
 
 const tooltipTriggers = {
-  [TopoJSONMap.selectors.feature]: (d: T) => `${d.properties.name}`,
+  [TopoJSONMap.selectors.feature]: (d: T) => {
+    const props = (d as any)?.properties ?? {};
+    return `${props.name ?? props.statnaam ?? props.NAAM ?? (d as any)?.id ?? ''}`;
+  },
 };
 
 // The VisTopoJSONMap exposes a component property with the TopoJSONMap instance
