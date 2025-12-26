@@ -45,6 +45,15 @@ const EUROPE_COUNTRIES = [
   "BLR", // Belarus
 ];
 
+const EUROPEAN_PINS = [
+  { lat: 48.8566, lng: 2.3522, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "Paris" } },
+  { lat: 52.5200, lng: 13.4050, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "Berlin" } },
+  { lat: 51.5074, lng: -0.1278, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "London" } },
+  { lat: 41.9028, lng: 12.4964, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "Rome" } },
+  { lat: 40.4168, lng: -3.7038, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "Madrid" } },
+  { lat: 52.3676, lng: 4.9041, svgOptions: { color: "#10b981", radius: 0.15 }, data: { city: "Amsterdam" } },
+];
+
 const ASIA_COUNTRIES = [
   "CHN", // China
   "IND", // India
@@ -57,28 +66,27 @@ const ASIA_COUNTRIES = [
   "IRN", // Iran
 ]
 
-const EUROPEAN_PINS = [
-  { lat: 48.8566, lng: 2.3522, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "Paris" } },
-  { lat: 52.5200, lng: 13.4050, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "Berlin" } },
-  { lat: 51.5074, lng: -0.1278, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "London" } },
-  { lat: 41.9028, lng: 12.4964, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "Rome" } },
-  { lat: 40.4168, lng: -3.7038, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "Madrid" } },
-  { lat: 52.3676, lng: 4.9041, svgOptions: { color: "#10b981", radius: 0.15 }, data: { city: "Amsterdam" } },
-];
+// USA country ISO code - dotted-map requires 3-letter ISO codes
+const USA_COUNTRIES = ["USA"];
 
-const usaRegion = {
+// USA Region coordinates for focusing the map
+const USA_REGION = {
   lat: { min: 24, max: 50 },
   lng: { min: -125, max: -66 }
 };
 
-const techHubs = [
-  { lat: 37.7749, lng: -122.4194, svgOptions: { color: "#6366f1", radius: 1.5 }, data: { city: "San Francisco" } },
-  { lat: 34.0522, lng: -118.2437, svgOptions: { color: "#6366f1", radius: 1.2 }, data: { city: "Los Angeles" } },
-  { lat: 47.6062, lng: -122.3321, svgOptions: { color: "#6366f1", radius: 1.2 }, data: { city: "Seattle" } },
-  { lat: 40.7128, lng: -74.0060, svgOptions: { color: "#f59e0b", radius: 1.5 }, data: { city: "New York" } },
-  { lat: 42.3601, lng: -71.0589, svgOptions: { color: "#f59e0b", radius: 1.2 }, data: { city: "Boston" } },
-  { lat: 25.7617, lng: -80.1918, svgOptions: { color: "#ec4899", radius: 1.2 }, data: { city: "Miami" } },
-  { lat: 30.2672, lng: -97.7431, svgOptions: { color: "#10b981", radius: 1.2 }, data: { city: "Austin" } },
+const USA_PINS = [
+  { lat: 37.7749, lng: -122.4194, svgOptions: { color: "#6366f1", radius: 0.3 }, data: { city: "San Francisco" } },
+  { lat: 34.0522, lng: -118.2437, svgOptions: { color: "#6366f1", radius: 0.3 }, data: { city: "Los Angeles" } },
+  { lat: 47.6062, lng: -122.3321, svgOptions: { color: "#6366f1", radius: 0.3 }, data: { city: "Seattle" } },
+  { lat: 40.7128, lng: -74.0060, svgOptions: { color: "#f59e0b", radius: 0.3 }, data: { city: "New York" } },
+  { lat: 42.3601, lng: -71.0589, svgOptions: { color: "#f59e0b", radius: 0.3 }, data: { city: "Boston" } },
+  { lat: 25.7617, lng: -80.1918, svgOptions: { color: "#ec4899", radius: 0.3 }, data: { city: "Miami" } },
+  { lat: 30.2672, lng: -97.7431, svgOptions: { color: "#10b981", radius: 0.3 }, data: { city: "Austin" } },
+];
+
+const MOSCOW_PIN = [
+  { lat: 55.7558, lng: 37.6173, svgOptions: { color: "#f43f5e", radius: 0.2 }, data: { city: "Moscow" } },
 ];
 </script>
 
@@ -135,12 +143,13 @@ const techHubs = [
           </p>
           <div class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm">
             <DottedWorldMap
-              :map-width="100"
-              :dot-size="0.5"
+              :map-width="75"
+              :dot-size="0.3"
               height="400px"
               color="#1e293b"
-              :region="usaRegion"
-              :pins="techHubs"
+              :countries="USA_COUNTRIES"
+              :region="USA_REGION"
+              :pins="USA_PINS"
               :use-raw-svg="true"
             />
           </div>
@@ -160,6 +169,7 @@ const techHubs = [
               color="#818cf8"
               shape="hexagon"
               grid="diagonal"
+              :pins="MOSCOW_PIN"
               :use-raw-svg="true"
             />
           </div>
@@ -211,10 +221,10 @@ const techHubs = [
           </p>
           <div class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm">
             <DottedWorldMap
-              :map-height="100"
+              :map-height="60"
               :dot-size="0.5"
               height="400px"
-              color="#38bdf8"
+              color="#e2e8f0"
               :countries="['FRA']"
               :use-raw-svg="true"
             />
