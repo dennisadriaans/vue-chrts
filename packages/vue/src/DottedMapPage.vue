@@ -46,12 +46,42 @@ const EUROPE_COUNTRIES = [
 ];
 
 const EUROPEAN_PINS = [
-  { lat: 48.8566, lng: 2.3522, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "Paris" } },
-  { lat: 52.5200, lng: 13.4050, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "Berlin" } },
-  { lat: 51.5074, lng: -0.1278, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "London" } },
-  { lat: 41.9028, lng: 12.4964, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "Rome" } },
-  { lat: 40.4168, lng: -3.7038, svgOptions: { color: "#ef4444", radius: 0.15 }, data: { city: "Madrid" } },
-  { lat: 52.3676, lng: 4.9041, svgOptions: { color: "#10b981", radius: 0.15 }, data: { city: "Amsterdam" } },
+  {
+    lat: 48.8566,
+    lng: 2.3522,
+    svgOptions: { color: "#ef4444", radius: 0.15 },
+    data: { city: "Paris" },
+  },
+  {
+    lat: 52.52,
+    lng: 13.405,
+    svgOptions: { color: "#ef4444", radius: 0.15 },
+    data: { city: "Berlin" },
+  },
+  {
+    lat: 51.5074,
+    lng: -0.1278,
+    svgOptions: { color: "#ef4444", radius: 0.15 },
+    data: { city: "London" },
+  },
+  {
+    lat: 41.9028,
+    lng: 12.4964,
+    svgOptions: { color: "#ef4444", radius: 0.15 },
+    data: { city: "Rome" },
+  },
+  {
+    lat: 40.4168,
+    lng: -3.7038,
+    svgOptions: { color: "#ef4444", radius: 0.15 },
+    data: { city: "Madrid" },
+  },
+  {
+    lat: 52.3676,
+    lng: 4.9041,
+    svgOptions: { color: "#10b981", radius: 0.15 },
+    data: { city: "Amsterdam" },
+  },
 ];
 
 const ASIA_COUNTRIES = [
@@ -64,7 +94,7 @@ const ASIA_COUNTRIES = [
   "BGD", // Bangladesh
   "SAU", // Saudi Arabia
   "IRN", // Iran
-]
+];
 
 // USA country ISO code - dotted-map requires 3-letter ISO codes
 const USA_COUNTRIES = ["USA"];
@@ -72,44 +102,89 @@ const USA_COUNTRIES = ["USA"];
 // USA Region coordinates for focusing the map
 const USA_REGION = {
   lat: { min: 24, max: 50 },
-  lng: { min: -125, max: -66 }
+  lng: { min: -125, max: -66 },
 };
 
 const USA_PINS = [
-  { lat: 37.7749, lng: -122.4194, svgOptions: { color: "#6366f1", radius: 0.3 }, data: { city: "San Francisco" } },
-  { lat: 34.0522, lng: -118.2437, svgOptions: { color: "#6366f1", radius: 0.3 }, data: { city: "Los Angeles" } },
-  { lat: 47.6062, lng: -122.3321, svgOptions: { color: "#6366f1", radius: 0.3 }, data: { city: "Seattle" } },
-  { lat: 40.7128, lng: -74.0060, svgOptions: { color: "#f59e0b", radius: 0.3 }, data: { city: "New York" } },
-  { lat: 42.3601, lng: -71.0589, svgOptions: { color: "#f59e0b", radius: 0.3 }, data: { city: "Boston" } },
-  { lat: 25.7617, lng: -80.1918, svgOptions: { color: "#ec4899", radius: 0.3 }, data: { city: "Miami" } },
-  { lat: 30.2672, lng: -97.7431, svgOptions: { color: "#10b981", radius: 0.3 }, data: { city: "Austin" } },
+  {
+    lat: 37.7749,
+    lng: -122.4194,
+    svgOptions: { color: "#6366f1", radius: 0.3 },
+    data: { city: "San Francisco" },
+  },
+  {
+    lat: 34.0522,
+    lng: -118.2437,
+    svgOptions: { color: "#6366f1", radius: 0.3 },
+    data: { city: "Los Angeles" },
+  },
+  {
+    lat: 47.6062,
+    lng: -122.3321,
+    svgOptions: { color: "#6366f1", radius: 0.3 },
+    data: { city: "Seattle" },
+  },
+  {
+    lat: 40.7128,
+    lng: -74.006,
+    svgOptions: { color: "#f59e0b", radius: 0.3 },
+    data: { city: "New York" },
+  },
+  {
+    lat: 42.3601,
+    lng: -71.0589,
+    svgOptions: { color: "#f59e0b", radius: 0.3 },
+    data: { city: "Boston" },
+  },
+  {
+    lat: 25.7617,
+    lng: -80.1918,
+    svgOptions: { color: "#ec4899", radius: 0.3 },
+    data: { city: "Miami" },
+  },
+  {
+    lat: 30.2672,
+    lng: -97.7431,
+    svgOptions: { color: "#10b981", radius: 0.3 },
+    data: { city: "Austin" },
+  },
 ];
 
 const MOSCOW_PIN = [
-  { lat: 55.7558, lng: 37.6173, svgOptions: { color: "#f43f5e", radius: 0.2 }, data: { city: "Moscow" } },
+  {
+    lat: 55.7558,
+    lng: 37.6173,
+    svgOptions: { color: "#f43f5e", radius: 0.2 },
+    data: { city: "Moscow" },
+  },
 ];
 </script>
 
 <template>
   <div class="p-8 space-y-12 bg-gray-50 min-h-screen">
+    
+
     <section>
       <h1 class="text-3xl font-bold mb-6">Dotted Map Examples</h1>
-      
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+      <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
         <!-- World Map - High Performance -->
         <div class="mb-12">
           <h2 class="text-2xl font-semibold mb-4">World Map (Raw SVG)</h2>
           <p class="text-gray-600 mb-4">
-            Using <code>useRawSvg</code> for maximum rendering performance. Ideal for static backgrounds or large maps.
+            Using <code>useRawSvg</code> for maximum rendering performance.
+            Ideal for static backgrounds or large maps.
           </p>
-          <div class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm">
+          <div
+            class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
+          >
             <DottedWorldMap
-              height="400px"
+              height="800px"
               :map-height="60"
               :dot-size="0.5"
               color="#94a3b8"
               grid="vertical"
-              :use-raw-svg="true"
+              
             />
           </div>
         </div>
@@ -120,17 +195,19 @@ const MOSCOW_PIN = [
           <p class="text-gray-600 mb-4">
             Filtered to European countries with custom pins for major cities.
           </p>
-          <div class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm">
+          <div
+            class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
+          >
             <DottedWorldMap
               :map-height="80"
               :dot-size="0.15"
-              height="400px"
+              height="1000px"
               color="#334155"
               :countries="EUROPE_COUNTRIES"
               :pins="EUROPEAN_PINS"
               grid="diagonal"
-              shape="hexagon" 
-              :use-raw-svg="true"
+              shape="hexagon"
+              
             />
           </div>
         </div>
@@ -139,18 +216,21 @@ const MOSCOW_PIN = [
         <div class="mb-12">
           <h2 class="text-2xl font-semibold mb-4">USA Regional Focus</h2>
           <p class="text-gray-600 mb-4">
-            Using <code>region</code> prop to focus on North America with tech hub pins.
+            Using <code>region</code> prop to focus on North America with tech
+            hub pins.
           </p>
-          <div class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm">
+          <div
+            class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
+          >
             <DottedWorldMap
               :map-width="75"
               :dot-size="0.3"
-              height="400px"
+              height="800px"
               color="#1e293b"
               :countries="USA_COUNTRIES"
               :region="USA_REGION"
               :pins="USA_PINS"
-              :use-raw-svg="true"
+              
             />
           </div>
         </div>
@@ -159,37 +239,43 @@ const MOSCOW_PIN = [
         <div class="mb-12">
           <h2 class="text-2xl font-semibold mb-4">Stylized Hexagons</h2>
           <p class="text-gray-600 mb-4">
-            Using <code>shape="hexagon"</code> and <code>grid="diagonal"</code> for a modern look.
+            Using <code>shape="hexagon"</code> and
+            <code>grid="diagonal"</code> for a modern look.
           </p>
-          <div class="border border-gray-200 rounded-xl p-6 bg-indigo-950 shadow-sm">
+          <div
+            class="border border-gray-200 rounded-xl p-6 bg-indigo-950 shadow-sm"
+          >
             <DottedWorldMap
               :map-height="75"
               :dot-size="0.1"
-              height="400px"
+              height="800px"
               color="#818cf8"
               shape="hexagon"
               grid="diagonal"
               :pins="MOSCOW_PIN"
-              :use-raw-svg="true"
+              
             />
           </div>
         </div>
 
-         <!-- Asia Map - High Performance -->
+        <!-- Asia Map - High Performance -->
         <div class="mb-12">
           <h2 class="text-2xl font-semibold mb-4">Asia (Raw SVG)</h2>
           <p class="text-gray-600 mb-4">
-            Using <code>useRawSvg</code> for maximum rendering performance. Ideal for static backgrounds or large maps.
+            Using <code>useRawSvg</code> for maximum rendering performance.
+            Ideal for static backgrounds or large maps.
           </p>
-          <div class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm">
+          <div
+            class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
+          >
             <DottedWorldMap
-              height="400px"
+              height="800px"
               :map-height="60"
               :dot-size="0.5"
               color="#94a3b8"
               :countries="ASIA_COUNTRIES"
               grid="vertical"
-              :use-raw-svg="true"
+              
             />
           </div>
         </div>
@@ -198,35 +284,61 @@ const MOSCOW_PIN = [
         <div class="mb-12">
           <h2 class="text-2xl font-semibold mb-4">Minimalist Background</h2>
           <p class="text-gray-600 mb-4">
-            Low density map with <code>avoidOuterPins</code> and custom background.
+            Low density map with <code>avoidOuterPins</code> and custom
+            background.
           </p>
           <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
             <DottedWorldMap
               :map-height="40"
               :dot-size="0.4"
-              height="400px"
+              height="800px"
               color="#e2e8f0"
               background-color="#f8fafc"
               :avoid-outer-pins="true"
-              :use-raw-svg="true"
+              
+              @point-mouse-over="console.log(123)"
             />
           </div>
         </div>
 
         <!-- High Density Focus (France) -->
         <div class="mb-12">
-          <h2 class="text-2xl font-semibold mb-4">High Density Focus (France)</h2>
+          <h2 class="text-2xl font-semibold mb-4">
+            High Density Focus (France)
+          </h2>
           <p class="text-gray-600 mb-4">
             Single country focus with high dot density.
           </p>
-          <div class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm">
+          <div
+            class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
+          >
             <DottedWorldMap
               :map-height="60"
               :dot-size="0.5"
-              height="400px"
+              height="800px"
               color="#e2e8f0"
               :countries="['FRA']"
-              :use-raw-svg="true"
+              
+            />
+          </div>
+        </div>
+
+        <!-- High Density Focus (Germany) -->
+        <div class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">
+            High Density Focus (Germany)
+          </h2>
+          <p class="text-gray-600 mb-4">
+            Single country focus with high dot density.
+          </p>
+          <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
+            <DottedWorldMap
+              :map-height="60"
+              :dot-size="0.5"
+              height="800px"
+              color="#e2e8f0"
+              :countries="['DEU']"
+              
             />
           </div>
         </div>

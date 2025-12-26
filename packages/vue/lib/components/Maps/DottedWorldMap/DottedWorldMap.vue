@@ -13,7 +13,6 @@ const props = withDefaults(defineProps<DottedWorldMapProps>(), {
   dotSize: 0.5,
   shape: "circle",
   height: "600px",
-  useRawSvg: false,
 });
 
 const slots = useSlots();
@@ -92,21 +91,10 @@ const svgContent = computed(() => {
     <!-- Slot for custom rendering or overlay -->
     <slot :points="data" :map="mapInstance" :svg="svgContent">
       <div
-        v-if="useRawSvg"
         v-html="svgContent"
         class="raw-svg-container"
         style="width: 100%; height: 100%"
       ></div>
-      <!-- Default rendering using Unovis for performance and interactivity -->
-      <VisXYContainer v-else :data="data" :height="'100%'">
-        <VisScatter
-          :x="(d: any) => d.x"
-          :y="(d: any) => d.y"
-          :size="(d: any) => d.svgOptions?.radius || dotSize"
-          :color="(d: any) => d.svgOptions?.color || color"
-          :cursor="'pointer'"
-        />
-      </VisXYContainer>
     </slot>
   </div>
 </template>
