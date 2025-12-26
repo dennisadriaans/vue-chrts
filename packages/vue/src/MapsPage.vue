@@ -2,7 +2,11 @@
 import { computed, ref } from "vue";
 import { DottedWorldMap, TopoJSONMap, GeoJSONGridMap } from "../lib";
 import { WorldMapTopoJSON, FranceTopoJSON } from "@unovis/ts/maps";
-import europeGeoJSON from "./data/europe.geojson";
+
+import NetherlandsTopoJSON from './data/NetherlandsTopoJSON.json';
+
+console.log(FranceTopoJSON, 'FranceTopoJSON')
+console.log(NetherlandsTopoJSON, 'NetherlandsTopoJSON')
 
 // European country ISO codes - comprehensive list for accurate Europe map
 const EUROPE_COUNTRIES = [
@@ -72,6 +76,21 @@ const franceData = computed(() => ({
   points: [],
 }))
 
+const netherlandsData = computed(() => ({
+  areas: [],
+  points: [],
+}))
+
+// NetherlandsTopoJSON doesn't use the same object key as Unovis' FranceTopoJSON.
+// Unovis France uses "regions"; this dataset uses a different key under `topojson.objects`.
+const netherlandsMapFeatureKey = computed(() => {
+  const objects = (NetherlandsTopoJSON as any)?.objects as Record<string, unknown> | undefined
+  if (!objects) return 'regions'
+  if ('regions' in objects) return 'regions'
+  const [firstKey] = Object.keys(objects)
+  return firstKey ?? 'regions'
+})
+
 
 </script>
 
@@ -129,6 +148,22 @@ const franceData = computed(() => ({
             :data="franceData"
             :topojson="FranceTopoJSON"
             map-feature-key="regions"
+          />
+        </div>
+      </div>
+
+      <!-- TopoJSON Netherlands Map -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold mb-4">TopoJSON Netherlands Regions Map</h2>
+        <p class="text-gray-600 mb-4">
+          Detailed regional map of Netherlands using TopoJSON data.
+        </p>
+        <div class="border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900">
+          <TopoJSONMap
+            class="w-full h-[550px] relative"
+            :data="netherlandsData"
+            :topojson="NetherlandsTopoJSON"
+            :map-feature-key="netherlandsMapFeatureKey"
           />
         </div>
       </div>
