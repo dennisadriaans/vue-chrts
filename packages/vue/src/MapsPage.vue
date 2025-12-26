@@ -89,49 +89,12 @@ const franceData = computed(() => ({
         </p>
         <div class="border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900">
           <DottedWorldMap
-            height="600px"
+            height="900px"
             :dot-size="1.5"
             color="#4f46e5"
             :map-height="100"
             :countries="EUROPE_COUNTRIES"
             grid="diagonal"
-          />
-        </div>
-      </div>
-
-      <!-- Europe GeoJSON Grid Map -->
-      <div class="mb-12">
-        <h2 class="text-2xl font-bold mb-4">Europe GeoJSON Grid Map (Square Grid)</h2>
-        <p class="text-gray-600 mb-4">
-          Using d3-geo projection with a standard GeoJSON file of Europe, converted to a square grid of points.
-          This provides more standard data visualization and control over the grid appearance.
-        </p>
-        <div class="border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900">
-          <GeoJSONGridMap
-            :geo-json="europeGeoJSON"
-            height="600px"
-            :dot-size="2"
-            color="#10b981"
-            :grid-size="80"
-            grid-type="square"
-          />
-        </div>
-      </div>
-
-      <!-- Europe GeoJSON Grid Map - Hex -->
-      <div class="mb-12">
-        <h2 class="text-2xl font-bold mb-4">Europe GeoJSON Grid Map (Hexagonal Grid)</h2>
-        <p class="text-gray-600 mb-4">
-          Same GeoJSON data with a hexagonal grid pattern for a different visual style.
-        </p>
-        <div class="border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900">
-          <GeoJSONGridMap
-            :geo-json="europeGeoJSON"
-            height="600px"
-            :dot-size="2"
-            color="#f59e0b"
-            :grid-size="80"
-            grid-type="hex"
           />
         </div>
       </div>
