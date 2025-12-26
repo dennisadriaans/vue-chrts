@@ -158,6 +158,32 @@ const MOSCOW_PIN = [
     data: { city: "Moscow" },
   },
 ];
+
+/**
+ * PRECOMPUTED MAP EXAMPLE
+ * 
+ * The `precomputedMap` property allows you to pass a pre-calculated map object.
+ * This is highly beneficial for:
+ * 1. Performance: Skips the expensive dot-calculation algorithm on every render.
+ * 2. Load Time: The map displays instantly without waiting for CPU-intensive processing.
+ * 3. Consistency: Ensures the grid is exactly as you want it.
+ * 
+ * You can generate this data using `dottedMap.getMap()` and saving it as JSON.
+ */
+const PRECOMPUTED_EUROPE = {
+  height: 100,
+  width: 400,
+  grid: "diagonal", // Benefit: Save the grid alignment
+  color: 'red',
+  points: [
+    { x: 18, y: 8, lat: 52.52, lng: 13.405, svgOptions: { color: "#10b981", radius: 0.6 } }, // Highlighted Berlin
+    { x: 15, y: 10, lat: 48.8566, lng: 2.3522 },
+    { x: 14, y: 7, lat: 51.5074, lng: -0.1278 },
+    { x: 19, y: 12, lat: 41.9028, lng: 12.4964, svgOptions: { color: "#f43f5e", radius: 0.3 } }, // Smaller Rome
+    { x: 12, y: 13, lat: 40.4168, lng: -3.7038 },
+    { x: 16, y: 7, lat: 52.3676, lng: 4.9041 },
+  ],
+};
 </script>
 
 <template>
@@ -184,7 +210,6 @@ const MOSCOW_PIN = [
               :dot-size="0.5"
               color="#94a3b8"
               grid="vertical"
-              
             />
           </div>
         </div>
@@ -339,6 +364,27 @@ const MOSCOW_PIN = [
               color="#e2e8f0"
               :countries="['DEU']"
               
+            />
+          </div>
+        </div>
+
+        <!-- Precomputed Map Example -->
+        <div class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Precomputed Map</h2>
+          <p class="text-gray-600 mb-4">
+            Using the <code>precomputedMap</code> prop to load a pre-calculated
+            grid. This is the most performant way to render complex maps as it
+            skips the dot-calculation phase entirely.
+          </p>
+          <div
+            class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
+          >
+            <DottedWorldMap
+              height="800px"
+              color="#38bdf8"
+              :dot-size="0.2"
+              grid="diagonal"
+              :precomputed-map="PRECOMPUTED_EUROPE"
             />
           </div>
         </div>

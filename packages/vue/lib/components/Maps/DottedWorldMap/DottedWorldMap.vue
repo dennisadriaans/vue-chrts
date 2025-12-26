@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { computed, useSlots } from "vue";
-import { VisXYContainer, VisScatter } from "@unovis/vue";
+import { computed, ref, useSlots, useTemplateRef } from "vue";
 import DottedMapPkg from "dotted-map";
 import type { DottedWorldMapProps } from "./types";
 
@@ -13,9 +12,21 @@ const props = withDefaults(defineProps<DottedWorldMapProps>(), {
   dotSize: 0.5,
   shape: "circle",
   height: "600px",
+  mapHeight: 60,
+  useRawSvg: false,
 });
 
-const slots = useSlots();
+interface MapPoint {
+  x: number;
+  y: number;
+  lat: number;
+  lng: number;
+  data?: any;
+  svgOptions?: {
+    color?: string;
+    radius?: number;
+  };
+}
 
 // Create the map instance
 const mapInstance = computed(() => {
@@ -25,7 +36,10 @@ const mapInstance = computed(() => {
       typeof props.precomputedMap === "string"
         ? JSON.parse(props.precomputedMap)
         : props.precomputedMap;
-    map = new DottedMap({ map: mapData });
+    map = new DottedMap({
+      ...mapData,
+      map: mapData,
+    });
   } else {
     map = new DottedMap({
       height: props.mapHeight,
@@ -50,17 +64,17 @@ const mapInstance = computed(() => {
 // Generate points for rendering
 const data = computed(() => {
   const map = mapInstance.value;
-  const points = map.getPoints();
+  const points: MapPoint[] = map.getPoints();
 
   if (points.length === 0) return [];
 
   // DottedMap uses SVG coordinates (Y increases downwards)
   // We flip it for standard XY container if needed, but Unovis can handle it.
   // However, to keep it consistent with how maps are usually viewed:
-  const maxY = Math.max(...points.map((p) => p.y));
-  const minY = Math.min(...points.map((p) => p.y));
+  const maxY = Math.max(...points.map((p: MapPoint) => p.y));
+  const minY = Math.min(...points.map((p: MapPoint) => p.y));
 
-  return points.map((p) => ({
+  return points.map((p: MapPoint) => ({
     ...p,
     // Flip Y axis to match geographical orientation in XY container
     y: maxY + minY - p.y,
