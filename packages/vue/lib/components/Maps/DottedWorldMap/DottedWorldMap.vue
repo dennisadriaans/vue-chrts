@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, useSlots } from "vue";
-import { VisXYContainer, VisScatter } from "@unovis/vue";
 import DottedMapPkg from "dotted-map";
 import type { DottedWorldMapProps } from "./types";
 
@@ -14,8 +13,6 @@ const props = withDefaults(defineProps<DottedWorldMapProps>(), {
   shape: "circle",
   height: "600px",
 });
-
-const slots = useSlots();
 
 // Create the map instance
 const mapInstance = computed(() => {

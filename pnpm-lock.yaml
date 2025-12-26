@@ -63,12 +63,6 @@ importers:
 
   packages/vue:
     dependencies:
-      d3-geo:
-        specifier: ^3.1.1
-        version: 3.1.1
-      d3-geo-projection:
-        specifier: ^4.0.0
-        version: 4.0.0
       vue:
         specifier: ^3.5.13
         version: 3.5.26(typescript@5.7.3)
@@ -79,9 +73,6 @@ importers:
       '@tanstack/vue-table':
         specifier: ^8.21.2
         version: 8.21.3(vue@3.5.26)
-      '@types/d3-geo':
-        specifier: ^3.1.0
-        version: 3.1.0
       '@types/node':
         specifier: ^22.13.11
         version: 22.19.3
@@ -106,6 +97,9 @@ importers:
       commit-and-tag-version:
         specifier: ^12.5.1
         version: 12.6.1
+      d3-geo:
+        specifier: ^3.1.1
+        version: 3.1.1
       dotted-map:
         specifier: ^2.2.3
         version: 2.2.3
@@ -4095,7 +4089,7 @@ packages:
       vue: ^3
     dependencies:
       '@unovis/ts': 1.6.2
-      vue: 3.5.26(typescript@5.9.3)
+      vue: 3.5.26(typescript@5.7.3)
 
   /@unrs/resolver-binding-android-arm-eabi@1.11.1:
     resolution: {integrity: sha512-ppLRUgHVaGRWUx0R0Ut06Mjo9gBaBkg3v/8AxusGLhsIotbBLuRk51rAzqLC8gq6NyyAojEXglNjzf6R948DNw==}

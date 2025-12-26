@@ -167,6 +167,27 @@ const MOSCOW_PIN = [
     <section>
       <h1 class="text-3xl font-bold mb-6">Dotted Map Examples</h1>
 
+
+        <div class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Minimalist Background</h2>
+          <p class="text-gray-600 mb-4">
+            Low density map with <code>avoidOuterPins</code> and custom
+            background.
+          </p>
+          <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
+            <DottedWorldMap
+              :map-height="40"
+              :dot-size="0.4"
+              height="800px"
+              color="#e2e8f0"
+              background-color="#f8fafc"
+              :avoid-outer-pins="true"
+              :pins="[]"
+              @pin-click="(pin) => console.log('handle pin click: ', pin)"
+            />
+          </div>
+        </div>
+
       <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
         <!-- World Map - High Performance -->
         <div class="mb-12">
@@ -253,7 +274,6 @@ const MOSCOW_PIN = [
               shape="hexagon"
               grid="diagonal"
               :pins="MOSCOW_PIN"
-              
             />
           </div>
         </div>
