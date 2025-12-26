@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { ref } from "vue";
 import { DottedWorldMap } from "../lib";
 
 // European country ISO codes - comprehensive list for accurate Europe map
@@ -84,6 +85,32 @@ const EUROPEAN_PINS = [
   },
 ];
 
+const AMSTERDAM_PIN = ref([
+  {
+    lat: 52.3676,
+    lng: 4.9041,
+    svgOptions: { color: "#10b981", radius: 0.15 },
+    data: { city: "Amsterdam" },
+  },
+]);
+
+const handlePointClick = (event: MouseEvent, point: any) => {
+  const index = AMSTERDAM_PIN.value.findIndex(
+    (p) =>
+      Math.abs(p.lat - point.lat) < 0.0001 && Math.abs(p.lng - point.lng) < 0.0001
+  );
+  if (index > -1) {
+    AMSTERDAM_PIN.value.splice(index, 1);
+  } else {
+    AMSTERDAM_PIN.value.push({
+      lat: point.lat,
+      lng: point.lng,
+      svgOptions: { color: "#10b981", radius: 0.15 },
+      data: { city: "Custom Pin" },
+    });
+  }
+};
+
 const ASIA_COUNTRIES = [
   "CHN", // China
   "IND", // India
@@ -162,31 +189,30 @@ const MOSCOW_PIN = [
 
 <template>
   <div class="p-8 space-y-12 bg-gray-50 min-h-screen">
-    
-
     <section>
       <h1 class="text-3xl font-bold mb-6">Dotted Map Examples</h1>
 
-
-        <div class="mb-12">
-          <h2 class="text-2xl font-semibold mb-4">Minimalist Background</h2>
-          <p class="text-gray-600 mb-4">
-            Low density map with <code>avoidOuterPins</code> and custom
-            background.
-          </p>
-          <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
-            <DottedWorldMap
-              :map-height="40"
-              :dot-size="0.4"
-              height="800px"
-              color="#e2e8f0"
-              background-color="#f8fafc"
-              :avoid-outer-pins="true"
-              :pins="[]"
-              @pin-click="(pin) => console.log('handle pin click: ', pin)"
-            />
-          </div>
+      <div class="mb-12 text-red-500">
+          {{ AMSTERDAM_PIN }} 12123
+        <h2 class="text-2xl font-semibold mb-4">Minimalist Background</h2>
+        <p class="text-gray-600 mb-4">
+          Low density map with <code>avoidOuterPins</code> and custom
+          background.
+        </p>
+        <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
+          <DottedWorldMap
+            :map-height="40"
+            :dot-size="0.4"
+            height="800px"
+            color="#e2e8f0"
+            background-color="#f8fafc"
+            :avoid-outer-pins="false"
+            :pins="AMSTERDAM_PIN"
+            @pin-click="(pin) => console.log('handle pin click: ', pin)"
+            @point-click="handlePointClick"
+          />
         </div>
+      </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
         <!-- World Map - High Performance -->
@@ -205,7 +231,6 @@ const MOSCOW_PIN = [
               :dot-size="0.5"
               color="#94a3b8"
               grid="vertical"
-              
             />
           </div>
         </div>
@@ -228,7 +253,6 @@ const MOSCOW_PIN = [
               :pins="EUROPEAN_PINS"
               grid="diagonal"
               shape="hexagon"
-              
             />
           </div>
         </div>
@@ -251,7 +275,6 @@ const MOSCOW_PIN = [
               :countries="USA_COUNTRIES"
               :region="USA_REGION"
               :pins="USA_PINS"
-              
             />
           </div>
         </div>
@@ -295,7 +318,6 @@ const MOSCOW_PIN = [
               color="#94a3b8"
               :countries="ASIA_COUNTRIES"
               grid="vertical"
-              
             />
           </div>
         </div>
@@ -314,8 +336,7 @@ const MOSCOW_PIN = [
               height="800px"
               color="#e2e8f0"
               background-color="#f8fafc"
-              :avoid-outer-pins="true"
-              
+              :avoid-outer-pins="false"
               @point-mouse-over="console.log(123)"
             />
           </div>
@@ -338,7 +359,6 @@ const MOSCOW_PIN = [
               height="800px"
               color="#e2e8f0"
               :countries="['FRA']"
-              
             />
           </div>
         </div>
@@ -358,7 +378,6 @@ const MOSCOW_PIN = [
               height="800px"
               color="#e2e8f0"
               :countries="['DEU']"
-              
             />
           </div>
         </div>

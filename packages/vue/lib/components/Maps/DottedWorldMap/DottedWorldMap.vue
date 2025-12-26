@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, useSlots } from "vue";
-import DottedMapPkg from "dotted-map";
+import { computed } from "vue";
+import proj4 from "proj4";
 import type { DottedWorldMapProps } from "./types";
-
-const DottedMap = (DottedMapPkg as any).default || DottedMapPkg;
+import { getMap, getPin, DEFAULT_WORLD_REGION } from "./mapUtils";
+import geojsonWorld from "../../../data/countries.geo.json";
 
 const props = withDefaults(defineProps<DottedWorldMapProps>(), {
   grid: "vertical",
@@ -14,30 +14,50 @@ const props = withDefaults(defineProps<DottedWorldMapProps>(), {
   height: "600px",
 });
 
+const emit = defineEmits<{
+  (e: "pin-click", point: any): void;
+  (e: "point-click", event: MouseEvent, point: any): void;
+}>();
+
 // Create the map instance
 const mapInstance = computed(() => {
   let map;
   if (props.precomputedMap) {
-    const mapData =
+    map =
       typeof props.precomputedMap === "string"
         ? JSON.parse(props.precomputedMap)
         : props.precomputedMap;
-    map = new DottedMap({ map: mapData });
   } else {
-    map = new DottedMap({
+    map = getMap({
       height: props.mapHeight,
       width: props.mapWidth,
       countries: props.countries,
       region: props.region,
       grid: props.grid,
-      avoidOuterPins: props.avoidOuterPins,
+      geojsonWorld,
     });
   }
 
   // Add pins if provided
   if (props.pins && props.pins.length > 0) {
     props.pins.forEach((pin) => {
-      map.addPin(pin);
+      if (
+        typeof pin.lat === "number" &&
+        isFinite(pin.lat) &&
+        typeof pin.lng === "number" &&
+        isFinite(pin.lng)
+      ) {
+        const pinPoint = getPin(map, { lat: pin.lat, lng: pin.lng });
+        const key = [pinPoint.x, pinPoint.y].join(";");
+        map.points[key] = {
+          ...pinPoint,
+          data: pin.data,
+          svgOptions: {
+            ...pin.svgOptions,
+            radius: props.dotSize,
+          },
+        };
+      }
     });
   }
 
@@ -47,32 +67,75 @@ const mapInstance = computed(() => {
 // Generate points for rendering
 const data = computed(() => {
   const map = mapInstance.value;
-  const points = map.getPoints();
+  const points = Object.values(map.points);
 
   if (points.length === 0) return [];
 
   // DottedMap uses SVG coordinates (Y increases downwards)
   // We flip it for standard XY container if needed, but Unovis can handle it.
-  // However, to keep it consistent with how maps are usually viewed:
-  const maxY = Math.max(...points.map((p) => p.y));
-  const minY = Math.min(...points.map((p) => p.y));
+  const maxY = Math.max(...points.map((p: any) => p.y));
+  const minY = Math.min(...points.map((p: any) => p.y));
 
-  return points.map((p) => ({
-    ...p,
-    // Flip Y axis to match geographical orientation in XY container
-    y: maxY + minY - p.y,
-  }));
+  return points.map((p: any) => {
+    return {
+      ...p,
+      // Flip Y axis to match geographical orientation in XY container
+      y: maxY + minY - p.y,
+    };
+  });
 });
 
 // SVG content for raw rendering if needed
 const svgContent = computed(() => {
-  return mapInstance.value.getSVG({
-    shape: props.shape,
-    backgroundColor: props.backgroundColor,
-    color: props.color,
-    radius: props.dotSize,
+  const map = mapInstance.value;
+  const { width, height, points } = map;
+  const { shape, backgroundColor, color, dotSize } = props;
+
+  const getPointSvg = (p: any) => {
+    const radius = p.svgOptions?.radius || dotSize;
+    const fillColor = p.svgOptions?.color || color;
+
+    if (shape === "circle") {
+      return `<circle cx="${p.x}" cy="${p.y}" r="${radius}" fill="${fillColor}" />`;
+    } else if (shape === "hexagon") {
+      const sqrt3radius = Math.sqrt(3) * radius;
+      const polyPoints = [
+        [p.x + sqrt3radius, p.y - radius],
+        [p.x + sqrt3radius, p.y + radius],
+        [p.x, p.y + 2 * radius],
+        [p.x - sqrt3radius, p.y + radius],
+        [p.x - sqrt3radius, p.y - radius],
+        [p.x, p.y - 2 * radius],
+      ];
+      return `<polyline points="${polyPoints
+        .map((point) => point.join(","))
+        .join(" ")}" fill="${fillColor}" />`;
+    }
+    return "";
+  };
+
+  const pointsSvg = Object.values(points).map(getPointSvg).join("\n");
+
+  const svg = `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="background-color: ${backgroundColor}">
+    ${pointsSvg}
+  </svg>`;
+
+  // Inject data-index into each dot for event delegation
+  let pointIndex = 0;
+  return svg.replace(/<(circle|polyline)/g, (_: string, type: string) => {
+    return `<${type} data-index="${pointIndex++}" style="cursor: pointer;"`;
   });
 });
+
+
+function handleSvgClick(event: MouseEvent) {
+  const target = event.target as HTMLElement;
+  const index = target.getAttribute("data-index");
+  if (index !== null) {
+    const point = data.value[Number(index)];
+    emit("point-click", event, point);
+  }
+}
 </script>
 
 <template>
@@ -91,6 +154,7 @@ const svgContent = computed(() => {
         v-html="svgContent"
         class="raw-svg-container"
         style="width: 100%; height: 100%"
+        @click="handleSvgClick"
       ></div>
     </slot>
   </div>
