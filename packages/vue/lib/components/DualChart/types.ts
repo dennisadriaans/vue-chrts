@@ -2,14 +2,15 @@ import {
   axisFormatter,
   CrosshairConfig,
   LegendPosition,
-  MarkerConfig,
   AxisConfig,
+  BulletLegendItemInterface,
+  Orientation,
 } from "../../types";
-import type { BulletLegendItemInterface, CurveType } from "@unovis/ts";
+import type { CurveType } from "@unovis/ts";
 
-export interface AreaChartProps<T> {
+export interface DualChartProps<T> {
   /**
-   * The data to be displayed in the area chart.
+   * The data to be displayed in the dual chart.
    * Each element of the array represents a data point.
    * The structure of 'T' should be compatible with the chart's rendering logic.
    */
@@ -23,9 +24,13 @@ export interface AreaChartProps<T> {
    */
   xLabel?: string;
   /**
-   * Optional label for the y-axis.
+   * Optional label for the y-axis (used for both bar and line by default).
    */
   yLabel?: string;
+  /**
+   * Optional label for the secondary y-axis (line chart).
+   */
+  yLabelSecondary?: string;
   /**
    * Optional padding applied to the chart.
    * Allows specifying individual padding values for the top, right, bottom, and left sides.
@@ -37,15 +42,23 @@ export interface AreaChartProps<T> {
     left: number;
   };
   /**
-   * A record mapping category keys to `BulletLegendItemInterface` objects.
-   * This defines the visual representation and labels for each category in the chart's legend.
+   * A record mapping bar category keys to `BulletLegendItemInterface` objects.
+   * This defines the visual representation and labels for bar categories in the chart's legend.
    */
-  categories: Record<string, BulletLegendItemInterface>;
-
+  barCategories: Record<string, BulletLegendItemInterface>;
   /**
-   * A record mapping marker keys to show custom patterns.
+   * A record mapping line category keys to `BulletLegendItemInterface` objects.
+   * This defines the visual representation and labels for line categories in the chart's legend.
    */
-  markerConfig?: MarkerConfig;
+  lineCategories: Record<string, BulletLegendItemInterface>;
+  /**
+   * An array of property keys from the data object type 'T' to be used for the bar chart y-axis values.
+   */
+  barYAxis: (keyof T)[];
+  /**
+   * An array of property keys from the data object type 'T' to be used for the line chart y-axis values.
+   */
+  lineYAxis: (keyof T)[];
   /**
    * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
    * @param {number} i - The index of the tick in the `ticks` array.
@@ -65,26 +78,14 @@ export interface AreaChartProps<T> {
    */
   tooltipTitleFormatter?: (data: T) => string | number;
   /**
-   * The type of curve to use for the area chart lines.
+   * The type of curve to use for the line chart lines.
    * See `CurveType` for available options.
    */
   curveType?: CurveType;
   /**
-   * If `true`, hides the area fill, displaying only the line.
-   */
-  hideArea?: boolean;
-  /**
-   * Edit the gradient stops for the area fill.
-   */
-  gradientStops?: Array<{ offset: string; stopOpacity: number }>;
-  /**
    * The width of the line in pixels. Default is 2px.
    */
   lineWidth?: number;
-  /**
-   * Line dash array, see SVG's stroke-dasharray. Default: `undefined`
-   */
-  lineDashArray?: number[][];
   /**
    * The desired number of ticks on the x-axis.
    */
@@ -171,8 +172,24 @@ export interface AreaChartProps<T> {
    */
   xDomain?: [number | undefined, number | undefined];
   /**
-   * If `true`, creates a stacked area chart where areas are stacked on top of each other.
-   * When false (default), areas are overlaid on top of each other.
+   * If `true`, creates stacked bars.
    */
   stacked?: boolean;
+  /**
+   * The padding between groups of bars in pixels.
+   */
+  groupPadding?: number;
+  /**
+   * Fractional padding between the bars in the range of [0,1). Default: 0.2
+   */
+  barPadding?: number;
+  /**
+   * Rounded corners for top bars. Boolean or number (to set the radius in pixels). Default: 2
+   */
+  radius?: number;
+  /**
+   * The orientation of the bars (vertical or horizontal).
+   * See `Orientation` for available options.
+   */
+  orientation?: Orientation;
 }

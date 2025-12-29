@@ -298,3 +298,30 @@ export const AreaChartData4: AreaChartItem4[] = [
   { month: "July", desktop: 560 },
   { month: "August", desktop: 560 },
 ]
+
+/* Food Export Data - Stacked Area Chart Example */
+/* Data source: World Bank Open Data - https://data.worldbank.org/indicator/TX.VAL.FOOD.ZS.UN */
+
+export const foodExportCategories: Record<string, BulletLegendItemInterface> = {
+  us: { name: 'United States', color: '#3b82f6' },
+  india: { name: 'India', color: '#22c55e' },
+  china: { name: 'China', color: '#f97316' },
+}
+
+export interface FoodExportData {
+  year: number
+  us: number
+  india: number
+  china: number
+}
+
+export const foodExportData: FoodExportData[] = [
+  { year: 1990, us: 11.08, china: 11.35, india: 15.58 },
+  { year: 1995, us: 10.53, china: 8.27, india: 18.68 },
+  { year: 2000, us: 7.31, china: 5.44, india: 12.79 },
+  { year: 2005, us: 7.47, china: 3.23, india: 8.97 },
+  { year: 2010, us: 10.11, china: 2.94, india: 8.26 },
+  { year: 2015, us: 10.30, china: 2.71, india: 11.33 },
+  { year: 2020, us: 11.49, china: 2.69, india: 12.77 },
+  { year: 2023, us: 9.45, china: 2.46, india: 11.01 },
+]
