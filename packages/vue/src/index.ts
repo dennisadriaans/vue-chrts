@@ -64,6 +64,16 @@ const router = createRouter({
       name: "DashboardProto",
       component: () => import("./Proto/Dashboard.vue"),
     },
+    {
+      path: "/maps",
+      name: "Maps",
+      component: () => import("./MapsPage.vue"),
+    },
+    {
+      path: "/maps-dotted",
+      name: "MapsDotted",
+      component: () => import("./DottedMapPage.vue"),
+    },
   ],
   history: createWebHistory(),
 });

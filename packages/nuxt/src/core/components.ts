@@ -11,7 +11,9 @@ export const resolveComponents = (config: ModuleOptions, filePath: string) => {
     "DonutChart",
     'BubbleChart',
     'GanttChart',
-    'DualChart'
+    'DualChart',
+    'TopoJSONMap',
+    'DottedWorldMap'
   ];
 
   allComponents.forEach((component) => {
