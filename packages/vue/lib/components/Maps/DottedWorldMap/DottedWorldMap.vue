@@ -10,6 +10,8 @@ const props = withDefaults(defineProps<DottedWorldMapProps>(), {
   avoidOuterPins: false,
   color: "#ffffff",
   dotSize: 0.5,
+  strokeWidth: 0,
+  strokeOpacity: 1,
   shape: "circle",
   height: "600px",
 });
@@ -53,8 +55,11 @@ const mapInstance = computed(() => {
           ...pinPoint,
           data: pin.data,
           svgOptions: {
-            ...pin.svgOptions,
             radius: props.dotSize,
+            strokeColor: props.strokeColor,
+            strokeWidth: props.strokeWidth,
+            strokeOpacity: props.strokeOpacity,
+            ...pin.svgOptions,
           },
         };
       }
@@ -89,14 +94,19 @@ const data = computed(() => {
 const svgContent = computed(() => {
   const map = mapInstance.value;
   const { width, height, points } = map;
-  const { shape, backgroundColor, color, dotSize } = props;
+  const { shape, backgroundColor, color, dotSize, strokeColor, strokeWidth, strokeOpacity } = props;
 
   const getPointSvg = (p: any) => {
     const radius = p.svgOptions?.radius || dotSize;
     const fillColor = p.svgOptions?.color || color;
+    const sColor = p.svgOptions?.strokeColor || strokeColor || fillColor;
+    const sWidth = p.svgOptions?.strokeWidth ?? strokeWidth;
+    const sOpacity = p.svgOptions?.strokeOpacity ?? strokeOpacity;
+
+    const strokeAttrs = sWidth > 0 ? `stroke="${sColor}" stroke-width="${sWidth}" stroke-opacity="${sOpacity}"` : '';
 
     if (shape === "circle") {
-      return `<circle cx="${p.x}" cy="${p.y}" r="${radius}" fill="${fillColor}" />`;
+      return `<circle cx="${p.x}" cy="${p.y}" r="${radius}" fill="${fillColor}" ${strokeAttrs} />`;
     } else if (shape === "hexagon") {
       const sqrt3radius = Math.sqrt(3) * radius;
       const polyPoints = [
@@ -109,7 +119,7 @@ const svgContent = computed(() => {
       ];
       return `<polyline points="${polyPoints
         .map((point) => point.join(","))
-        .join(" ")}" fill="${fillColor}" />`;
+        .join(" ")}" fill="${fillColor}" ${strokeAttrs} />`;
     }
     return "";
   };

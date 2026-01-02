@@ -89,7 +89,13 @@ const AMSTERDAM_PINS = ref([
   {
     lat: 52.3676,
     lng: 4.9041,
-    svgOptions: { color: "#10b981", radius: 0.15 },
+    svgOptions: {
+      color: "#10b981",
+      radius: 0.32,
+      strokeColor: "#10b981",
+      strokeWidth: 1,
+      strokeOpacity: 0.5,
+    },
     data: { city: "Amsterdam" },
   },
 ]);
@@ -112,7 +118,13 @@ const handlePointClick = (event: MouseEvent, point: any, pins: any[]) => {
     pins.push({
       lat: point.lat,
       lng: point.lng,
-      svgOptions: { color: "#10b981", radius: 0.15 },
+    svgOptions: {
+      color: "#10b981",
+      radius: 0.32,
+      strokeColor: "#10b981",
+      strokeWidth: 1,
+      strokeOpacity: 0.5,
+    },
       data: { city: "Custom Pin" },
     });
   }
@@ -424,6 +436,30 @@ const PRECOMPUTED_EUROPE = {
               :countries="['DEU']"
               :pins="GERMANY_PINS"
               @point-click="(event, point) => handlePointClick(event, point, GERMANY_PINS)"
+            />
+          </div>
+        </div>
+
+        <!-- Border Options -->
+        <div class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Border Options</h2>
+          <p class="text-gray-600 mb-4">
+            Using <code>strokeWidth</code>, <code>strokeColor</code> and
+            <code>strokeOpacity</code> to add borders to dots.
+          </p>
+          <div
+            class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
+          >
+            <DottedWorldMap
+              :map-height="60"
+              :dot-size="0.5"
+              height="800px"
+              color="#334155"
+              :stroke-width="2"
+              :stroke-opacity="0.5"
+              :countries="['NLD']"
+              :pins="AMSTERDAM_PINS"
+              @point-click="(event, point) => handlePointClick(event, point, AMSTERDAM_PINS)"
             />
           </div>
         </div>

@@ -9,6 +9,9 @@ export interface DottedMapPin {
   svgOptions?: {
     color?: string;
     radius?: number;
+    strokeColor?: string;
+    strokeWidth?: number;
+    strokeOpacity?: number;
   };
   data?: any;
 }
@@ -62,6 +65,18 @@ export interface DottedWorldMapProps {
    * @default 0.5
    */
   dotSize?: number;
+  /**
+   * Stroke color of the dots.
+   */
+  strokeColor?: string;
+  /**
+   * Stroke width of the dots.
+   */
+  strokeWidth?: number;
+  /**
+   * Stroke opacity of the dots.
+   */
+  strokeOpacity?: number;
   /**
    * Shape of the dots.
    * @default 'circle'

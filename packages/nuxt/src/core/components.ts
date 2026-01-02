@@ -13,7 +13,7 @@ export const resolveComponents = (config: ModuleOptions, filePath: string) => {
     'GanttChart',
     'DualChart',
     'TopoJSONMap',
-    'DottedWorldMap'
+    'DottedWorldMap',
   ];
 
   allComponents.forEach((component) => {

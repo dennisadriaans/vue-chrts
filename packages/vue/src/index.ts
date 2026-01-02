@@ -74,6 +74,11 @@ const router = createRouter({
       name: "MapsDotted",
       component: () => import("./DottedMapPage.vue"),
     },
+    {
+      path: "/maps-dotted-fullscreen",
+      name: "MapsDottedFullscreen",
+      component: () => import("./DottedMapShowcasePage.vue"),
+    },
   ],
   history: createWebHistory(),
 });
