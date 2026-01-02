@@ -15,14 +15,14 @@ importers:
   packages/nuxt:
     dependencies:
       '@unovis/ts':
-        specifier: ^1.5.2
+        specifier: ^1.6.2
         version: 1.6.2
       '@unovis/vue':
-        specifier: ^1.5.2
+        specifier: ^1.6.2
         version: 1.6.2(@unovis/ts@1.6.2)(vue@3.5.26)
       vue-chrts:
-        specifier: 1.0.0
-        version: 1.0.0(vue@3.5.26)
+        specifier: workspace:*
+        version: link:../vue
     devDependencies:
       '@nuxt/eslint':
         specifier: ^1.7.1
@@ -63,12 +63,9 @@ importers:
 
   packages/vue:
     dependencies:
-      d3-geo:
-        specifier: ^3.1.1
-        version: 3.1.1
-      d3-geo-projection:
-        specifier: ^4.0.0
-        version: 4.0.0
+      '@turf/boolean-point-in-polygon':
+        specifier: ^7.3.1
+        version: 7.3.1
       vue:
         specifier: ^3.5.13
         version: 3.5.26(typescript@5.7.3)
@@ -79,20 +76,20 @@ importers:
       '@tanstack/vue-table':
         specifier: ^8.21.2
         version: 8.21.3(vue@3.5.26)
-      '@types/d3-geo':
-        specifier: ^3.1.0
-        version: 3.1.0
       '@types/node':
         specifier: ^22.13.11
         version: 22.19.3
+      '@types/proj4':
+        specifier: ^2.19.0
+        version: 2.19.0
       '@types/rollup':
         specifier: ^0.54.0
         version: 0.54.0
       '@unovis/ts':
-        specifier: ^1.6.1
+        specifier: ^1.6.2
         version: 1.6.2
       '@unovis/vue':
-        specifier: ^1.6.1
+        specifier: ^1.6.2
         version: 1.6.2(@unovis/ts@1.6.2)(vue@3.5.26)
       '@vitejs/plugin-vue':
         specifier: ^5.2.1
@@ -106,9 +103,12 @@ importers:
       commit-and-tag-version:
         specifier: ^12.5.1
         version: 12.6.1
-      dotted-map:
-        specifier: ^2.2.3
-        version: 2.2.3
+      d3-geo:
+        specifier: ^3.1.1
+        version: 3.1.1
+      proj4:
+        specifier: ^2.20.2
+        version: 2.20.2
       rollup:
         specifier: ^4.46.2
         version: 4.54.0
@@ -2137,7 +2137,7 @@ packages:
     dependencies:
       '@nuxt/devalue': 2.0.2
       '@nuxt/kit': 4.2.2(magicast@0.5.1)
-      '@unhead/vue': 2.1.1(vue@3.5.26)
+      '@unhead/vue': 2.1.0(vue@3.5.26)
       '@vue/shared': 3.5.26
       consola: 3.4.2
       defu: 6.1.4
@@ -3565,22 +3565,30 @@ packages:
       vue: 3.5.26(typescript@5.7.3)
     dev: true
 
-  /@turf/boolean-point-in-polygon@6.5.0:
-    resolution: {integrity: sha512-DtSuVFB26SI+hj0SjrvXowGTUCHlgevPAIsukssW6BG5MlNSBQAo70wpICBNJL6RjukXg8d2eXaAWuD/CqL00A==}
+  /@turf/boolean-point-in-polygon@7.3.1:
+    resolution: {integrity: sha512-BUPW63vE43LctwkgannjmEFTX1KFR/18SS7WzFahJWK1ZoP0s1jrfxGX+pi0BH/3Dd9mA71hkGKDDnj1Ndcz0g==}
     dependencies:
-      '@turf/helpers': 6.5.0
-      '@turf/invariant': 6.5.0
-    dev: true
+      '@turf/helpers': 7.3.1
+      '@turf/invariant': 7.3.1
+      '@types/geojson': 7946.0.16
+      point-in-polygon-hao: 1.2.4
+      tslib: 2.8.1
+    dev: false
 
-  /@turf/helpers@6.5.0:
-    resolution: {integrity: sha512-VbI1dV5bLFzohYYdgqwikdMVpe7pJ9X3E+dlr425wa2/sMJqYDhTO++ec38/pcPvPE6oD9WEEeU3Xu3gza+VPw==}
-    dev: true
-
-  /@turf/invariant@6.5.0:
-    resolution: {integrity: sha512-Wv8PRNCtPD31UVbdJE/KVAWKe7l6US+lJItRR/HOEW3eh+U/JwRCSUl/KZ7bmjM/C+zLNoreM2TU6OoLACs4eg==}
+  /@turf/helpers@7.3.1:
+    resolution: {integrity: sha512-zkL34JVhi5XhsuMEO0MUTIIFEJ8yiW1InMu4hu/oRqamlY4mMoZql0viEmH6Dafh/p+zOl8OYvMJ3Vm3rFshgg==}
     dependencies:
-      '@turf/helpers': 6.5.0
-    dev: true
+      '@types/geojson': 7946.0.16
+      tslib: 2.8.1
+    dev: false
+
+  /@turf/invariant@7.3.1:
+    resolution: {integrity: sha512-IdZJfDjIDCLH+Gu2yLFoSM7H23sdetIo5t4ET1/25X8gi3GE2XSqbZwaGjuZgNh02nisBewLqNiJs2bo+hrqZA==}
+    dependencies:
+      '@turf/helpers': 7.3.1
+      '@types/geojson': 7946.0.16
+      tslib: 2.8.1
+    dev: false
 
   /@tybys/wasm-util@0.10.1:
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
@@ -3831,6 +3839,13 @@ packages:
   /@types/pbf@3.0.5:
     resolution: {integrity: sha512-j3pOPiEcWZ34R6a6mN07mUkM4o4Lwf6hPNt8eilOeZhTFbxFXmKhvXl9Y28jotFPaI1bpPDJsbCprUoNke6OrA==}
 
+  /@types/proj4@2.19.0:
+    resolution: {integrity: sha512-mirdnXu5sW9+IphQ4r+ZVii2JVLDbXgMp1lxqbiCppdgL22EwMwL4Dy/cyHVaJ2y/mi7LUQHghpILd3w3j2bnA==}
+    deprecated: This is a stub types definition. proj4 provides its own type definitions, so you do not need this installed.
+    dependencies:
+      proj4: 2.20.2
+    dev: true
+
   /@types/resolve@1.20.2:
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
     dev: true
@@ -4029,13 +4044,13 @@ packages:
       eslint-visitor-keys: 4.2.1
     dev: true
 
-  /@unhead/vue@2.1.1(vue@3.5.26):
-    resolution: {integrity: sha512-WYa8ORhfv7lWDSoNpkMKhbW1Dbsux/3HqMcVkZS3xZ2/c/VrcChLj+IMadpCd1WNR0srITfRJhBYZ1i9hON5Qw==}
+  /@unhead/vue@2.1.0(vue@3.5.26):
+    resolution: {integrity: sha512-kWOyjU+2Bga6vrzvwqqyAP8Qyw9qu0ahxgdmP/bp8beYZQjJS2RvZ8CSu9ynPMvDcMOaETvuvTudnp8mDpCR0Q==}
     peerDependencies:
       vue: '>=3.5.18'
     dependencies:
       hookable: 5.5.3
-      unhead: 2.1.1
+      unhead: 2.1.0
       vue: 3.5.26(typescript@5.9.3)
     dev: true
 
@@ -4095,7 +4110,7 @@ packages:
       vue: ^3
     dependencies:
       '@unovis/ts': 1.6.2
-      vue: 3.5.26(typescript@5.9.3)
+      vue: 3.5.26(typescript@5.7.3)
 
   /@unrs/resolver-binding-android-arm-eabi@1.11.1:
     resolution: {integrity: sha512-ppLRUgHVaGRWUx0R0Ut06Mjo9gBaBkg3v/8AxusGLhsIotbBLuRk51rAzqLC8gq6NyyAojEXglNjzf6R948DNw==}
@@ -6166,13 +6181,6 @@ packages:
     dependencies:
       find-up: 3.0.0
       minimatch: 3.1.2
-    dev: true
-
-  /dotted-map@2.2.3:
-    resolution: {integrity: sha512-8hyOOHHLLVCcCisM3yb9hqp+3bJ7TSMcr1SfrUw8Wxp5UMqih35jIvUyagweCooJbz/EH1nC9GGuPysh7+YlAg==}
-    dependencies:
-      '@turf/boolean-point-in-polygon': 6.5.0
-      proj4: 2.20.2
     dev: true
 
   /duplexer@0.1.2:
@@ -8492,7 +8500,7 @@ packages:
       '@nuxt/telemetry': 2.6.6
       '@nuxt/vite-builder': 4.2.2(@types/node@20.19.27)(eslint@9.39.2)(nuxt@4.2.2)(rollup@3.29.5)(typescript@5.9.3)(vue@3.5.26)
       '@types/node': 20.19.27
-      '@unhead/vue': 2.1.1(vue@3.5.26)
+      '@unhead/vue': 2.1.0(vue@3.5.26)
       '@vue/shared': 3.5.26
       c12: 3.3.3(magicast@0.5.1)
       chokidar: 5.0.0
@@ -9019,6 +9027,12 @@ packages:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
     dev: true
+
+  /point-in-polygon-hao@1.2.4:
+    resolution: {integrity: sha512-x2pcvXeqhRHlNRdhLs/tgFapAbSSe86wa/eqmj1G6pWftbEs5aVRJhRGM6FYSUERKu0PjekJzMq0gsI2XyiclQ==}
+    dependencies:
+      robust-predicates: 3.0.2
+    dev: false
 
   /postcss-calc@10.1.1(postcss@8.5.6):
     resolution: {integrity: sha512-NYEsLHh8DgG/PRH2+G9BTuUdtf9ViS+vdoQ0YA5OQdGsfN4ztiwtDWNtBl9EKeqNMFnIu8IKZ0cLxEQ5r5KVMw==}
@@ -10479,6 +10493,7 @@ packages:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
     hasBin: true
+    dev: true
 
   /ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
@@ -10559,8 +10574,8 @@ packages:
       pathe: 2.0.3
     dev: true
 
-  /unhead@2.1.1:
-    resolution: {integrity: sha512-NOt8n2KybAOxSLfNXegAVai4SGU8bPKqWnqCzNAvnRH2i8mW+0bbFjN/L75LBgCSTiOjJSpANe5w2V34Grr7Cw==}
+  /unhead@2.1.0:
+    resolution: {integrity: sha512-f8uSpy9zIkfQ4AtZg69jijuGYr6AIK6+bbJd0AQJicuf+OvAASkSxtqlhBU5VtbnTz8StlQ8LRR1TqRmNCpLvg==}
     dependencies:
       hookable: 5.5.3
     dev: true
@@ -11262,14 +11277,6 @@ packages:
       ufo: 1.6.1
     dev: true
 
-  /vue-chrts@1.0.0(vue@3.5.26):
-    resolution: {integrity: sha512-wu65O97XWzj6D2hcykn9tgvgKHDzSj9h9lUOO99GHyT9kRv3KD/kF6NMAq4eiV6Y6j9FPrIt8r4l2hqYnVgwVQ==}
-    peerDependencies:
-      vue: ^3.5.13
-    dependencies:
-      vue: 3.5.26(typescript@5.9.3)
-    dev: false
-
   /vue-devtools-stub@0.1.0:
     resolution: {integrity: sha512-RutnB7X8c5hjq39NceArgXg28WZtZpGc3+J16ljMiYnFhKvd8hITxSWQSQ5bvldxMDU6gG5mkxl1MTQLXckVSQ==}
     dev: true
@@ -11340,6 +11347,7 @@ packages:
       '@vue/server-renderer': 3.5.26(vue@3.5.26)
       '@vue/shared': 3.5.26
       typescript: 5.9.3
+    dev: true
 
   /webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}

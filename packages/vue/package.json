@@ -18,7 +18,7 @@
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "release": "commit-and-tag-version"
+    "release": "pnpm run build && commit-and-tag-version && pnpm publish"
   },
   "peerDependencies": {
     "vue": "^3.5.13"
@@ -27,21 +27,26 @@
     "@tailwindcss/vite": "^4.0.15",
     "@tanstack/vue-table": "^8.21.2",
     "@types/node": "^22.13.11",
+    "@types/proj4": "^2.19.0",
     "@types/rollup": "^0.54.0",
-    "@unovis/ts": "^1.6.1",
-    "@unovis/vue": "^1.6.1",
+    "@unovis/ts": "^1.6.2",
+    "@unovis/vue": "^1.6.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
     "@vueuse/core": "^13.0.0",
     "commit-and-tag-version": "^12.5.1",
+    "d3-geo": "^3.1.1",
+    "proj4": "^2.20.2",
     "rollup": "^4.46.2",
     "tailwindcss": "^4.0.15",
     "typescript": "~5.7.2",
     "vite": "^6.2.0",
     "vite-plugin-dts": "^4.5.3",
     "vue-router": "^4.5.0",
-    "dotted-map": "^2.2.3",
     "vue-tsc": "^2.2.4"
   },
-  "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2"
+  "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2",
+  "dependencies": {
+    "@turf/boolean-point-in-polygon": "^7.3.1"
+  }
 }

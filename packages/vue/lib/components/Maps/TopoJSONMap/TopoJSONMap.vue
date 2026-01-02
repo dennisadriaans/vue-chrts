@@ -30,8 +30,6 @@ const pointRadius = (d: any) => 25;
 
 const clickedPoint = ref<any>(null);
 
-
-
 // Handler for clicking on map features (countries, areas, etc.)
 const handleFeatureClick = (d: any, event: MouseEvent) => {
   console.log("Clicked Feature", d);

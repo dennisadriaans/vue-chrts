@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { ref } from "vue";
 import { DottedWorldMap } from "../lib";
 
 // European country ISO codes - comprehensive list for accurate Europe map
@@ -45,7 +46,7 @@ const EUROPE_COUNTRIES = [
   "BLR", // Belarus
 ];
 
-const EUROPEAN_PINS = [
+const EUROPEAN_PINS = ref([
   {
     lat: 48.8566,
     lng: 2.3522,
@@ -82,7 +83,40 @@ const EUROPEAN_PINS = [
     svgOptions: { color: "#10b981", radius: 0.15 },
     data: { city: "Amsterdam" },
   },
-];
+]);
+
+const AMSTERDAM_PINS = ref([
+  {
+    lat: 52.3676,
+    lng: 4.9041,
+    svgOptions: { color: "#10b981", radius: 0.15 },
+    data: { city: "Amsterdam" },
+  },
+]);
+
+const WORLD_PINS = ref([]);
+const ASIA_PINS = ref([]);
+const MINIMALIST_PINS = ref([]);
+const FRANCE_PINS = ref([]);
+const GERMANY_PINS = ref([]);
+
+const handlePointClick = (event: MouseEvent, point: any, pins: any[]) => {
+  console.log("Point clicked:", point);
+  const index = pins.findIndex(
+    (p: any) =>
+      Math.abs(p.lat - point.lat) < 0.0001 && Math.abs(p.lng - point.lng) < 0.0001
+  );
+  if (index > -1) {
+    pins.splice(index, 1);
+  } else {
+    pins.push({
+      lat: point.lat,
+      lng: point.lng,
+      svgOptions: { color: "#10b981", radius: 0.15 },
+      data: { city: "Custom Pin" },
+    });
+  }
+};
 
 const ASIA_COUNTRIES = [
   "CHN", // China
@@ -105,7 +139,7 @@ const USA_REGION = {
   lng: { min: -125, max: -66 },
 };
 
-const USA_PINS = [
+const USA_PINS = ref([
   {
     lat: 37.7749,
     lng: -122.4194,
@@ -148,16 +182,16 @@ const USA_PINS = [
     svgOptions: { color: "#10b981", radius: 0.3 },
     data: { city: "Austin" },
   },
-];
+]);
 
-const MOSCOW_PIN = [
+const MOSCOW_PINS = ref([
   {
     lat: 55.7558,
     lng: 37.6173,
     svgOptions: { color: "#f43f5e", radius: 0.2 },
     data: { city: "Moscow" },
   },
-];
+]);
 
 /**
  * PRECOMPUTED MAP EXAMPLE
@@ -188,10 +222,30 @@ const PRECOMPUTED_EUROPE = {
 
 <template>
   <div class="p-8 space-y-12 bg-gray-50 min-h-screen">
-    
-
     <section>
       <h1 class="text-3xl font-bold mb-6">Dotted Map Examples</h1>
+
+      <div class="mb-12 text-red-500">
+          {{ AMSTERDAM_PINS }} 12123
+        <h2 class="text-2xl font-semibold mb-4">Minimalist Background</h2>
+        <p class="text-gray-600 mb-4">
+          Low density map with <code>avoidOuterPins</code> and custom
+          background.
+        </p>
+        <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
+          <DottedWorldMap
+            :map-height="40"
+            :dot-size="0.4"
+            height="800px"
+            color="#e2e8f0"
+            background-color="#f8fafc"
+            :avoid-outer-pins="false"
+            :pins="AMSTERDAM_PINS"
+            @pin-click="(pin) => console.log('handle pin click: ', pin)"
+            @point-click="(event, point) => handlePointClick(event, point, AMSTERDAM_PINS)"
+          />
+        </div>
+      </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
         <!-- World Map - High Performance -->
@@ -210,6 +264,8 @@ const PRECOMPUTED_EUROPE = {
               :dot-size="0.5"
               color="#94a3b8"
               grid="vertical"
+              :pins="WORLD_PINS"
+              @point-click="(event, point) => handlePointClick(event, point, WORLD_PINS)"
             />
           </div>
         </div>
@@ -232,7 +288,7 @@ const PRECOMPUTED_EUROPE = {
               :pins="EUROPEAN_PINS"
               grid="diagonal"
               shape="hexagon"
-              
+              @point-click="(event, point) => handlePointClick(event, point, EUROPEAN_PINS)"
             />
           </div>
         </div>
@@ -255,7 +311,7 @@ const PRECOMPUTED_EUROPE = {
               :countries="USA_COUNTRIES"
               :region="USA_REGION"
               :pins="USA_PINS"
-              
+              @point-click="(event, point) => handlePointClick(event, point, USA_PINS)"
             />
           </div>
         </div>
@@ -277,8 +333,8 @@ const PRECOMPUTED_EUROPE = {
               color="#818cf8"
               shape="hexagon"
               grid="diagonal"
-              :pins="MOSCOW_PIN"
-              
+              :pins="MOSCOW_PINS"
+              @point-click="(event, point) => handlePointClick(event, point, MOSCOW_PINS)"
             />
           </div>
         </div>
@@ -300,7 +356,8 @@ const PRECOMPUTED_EUROPE = {
               color="#94a3b8"
               :countries="ASIA_COUNTRIES"
               grid="vertical"
-              
+              :pins="ASIA_PINS"
+              @point-click="(event, point) => handlePointClick(event, point, ASIA_PINS)"
             />
           </div>
         </div>
@@ -319,8 +376,9 @@ const PRECOMPUTED_EUROPE = {
               height="800px"
               color="#e2e8f0"
               background-color="#f8fafc"
-              :avoid-outer-pins="true"
-              
+              :avoid-outer-pins="false"
+              :pins="MINIMALIST_PINS"
+              @point-click="(event, point) => handlePointClick(event, point, MINIMALIST_PINS)"
               @point-mouse-over="console.log(123)"
             />
           </div>
@@ -343,7 +401,8 @@ const PRECOMPUTED_EUROPE = {
               height="800px"
               color="#e2e8f0"
               :countries="['FRA']"
-              
+              :pins="FRANCE_PINS"
+              @point-click="(event, point) => handlePointClick(event, point, FRANCE_PINS)"
             />
           </div>
         </div>
@@ -363,31 +422,12 @@ const PRECOMPUTED_EUROPE = {
               height="800px"
               color="#e2e8f0"
               :countries="['DEU']"
-              
+              :pins="GERMANY_PINS"
+              @point-click="(event, point) => handlePointClick(event, point, GERMANY_PINS)"
             />
           </div>
         </div>
 
-        <!-- Precomputed Map Example -->
-        <div class="mb-12">
-          <h2 class="text-2xl font-semibold mb-4">Precomputed Map</h2>
-          <p class="text-gray-600 mb-4">
-            Using the <code>precomputedMap</code> prop to load a pre-calculated
-            grid. This is the most performant way to render complex maps as it
-            skips the dot-calculation phase entirely.
-          </p>
-          <div
-            class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
-          >
-            <DottedWorldMap
-              height="800px"
-              color="#38bdf8"
-              :dot-size="0.2"
-              grid="diagonal"
-              :precomputed-map="PRECOMPUTED_EUROPE"
-            />
-          </div>
-        </div>
       </div>
     </section>
   </div>
