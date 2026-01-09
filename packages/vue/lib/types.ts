@@ -17,6 +17,26 @@ import {
   LinkArrowPosition,
 } from "./components/DagreGraph/types";
 import { SankeyChartProps } from "./components/SankeyChart/types";
+import { DualChartProps } from "./components/DualChart/types";
+import {
+  DottedMapProps,
+  DottedMapPin,
+  DottedMapRegion,
+  MapPin,
+  MapRegion,
+  MapRegionName,
+  MapLegendItem,
+  ZoomConfig,
+  MapVariant,
+} from "./components/Maps/DottedMap/types";
+import {
+  TopoJSONMapProps,
+  MapPoint,
+  MapLink,
+  MapArea,
+  MapData,
+} from "./components/Maps/types";
+import { MapsData } from "./components/Maps/TopoJSONMap/types";
 
 enum LegendPosition {
   TopLeft = "top-left",
@@ -85,6 +105,22 @@ export {
   type NodeShape,
   type LinkArrowPosition,
   type SankeyChartProps,
+  type DualChartProps,
+  type DottedMapProps,
+  type DottedMapPin,
+  type DottedMapRegion,
+  type MapPin,
+  type MapRegion,
+  type MapRegionName,
+  type MapLegendItem,
+  type ZoomConfig,
+  type MapVariant,
+  type TopoJSONMapProps,
+  type MapPoint,
+  type MapLink,
+  type MapArea,
+  type MapData,
+  type MapsData,
 };
 
 export type axisFormatter =
