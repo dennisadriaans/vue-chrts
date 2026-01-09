@@ -277,6 +277,7 @@ const PRECOMPUTED_EUROPE = {
               :dot-size="0.33"
               color="#94a3b8"
               grid="vertical"
+              :countries="EUROPE_COUNTRIES"
               :pins="WORLD_PINS"
               @point-click="(event, point) => handlePointClick(event, point, WORLD_PINS)"
             />
@@ -285,7 +286,7 @@ const PRECOMPUTED_EUROPE = {
 
         <!-- Europe Map - Performance Focused -->
         <div class="mb-12">
-          <h2 class="text-2xl font-semibold mb-4">Europe with Pins</h2>
+          <h2 class="text-2xl font-semibold mb-4">Europe with Pins 123</h2>
           <p class="text-gray-600 mb-4">
             Filtered to European countries with custom pins for major cities.
           </p>
@@ -297,6 +298,7 @@ const PRECOMPUTED_EUROPE = {
               max-height="600px"
               :dot-size="0.15"
               color="#334155"
+              :default-zoom="1.5"
               :countries="EUROPE_COUNTRIES"
               :pins="EUROPEAN_PINS"
               grid="diagonal"

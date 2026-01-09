@@ -5,15 +5,16 @@ export const resolveComponents = (config: ModuleOptions, filePath: string) => {
   const { prefix } = config;
   const allComponents = [
     "AreaChart",
-    "AreaStackedChart",
     "LineChart",
     "BarChart",
     "DonutChart",
-    'BubbleChart',
-    'GanttChart',
-    'DualChart',
-    'TopoJSONMap',
-    'DottedWorldMap',
+    "BubbleChart",
+    "GanttChart",
+    "DagreGraph",
+    "DualChart",
+    "SankeyChart",
+    "TopoJSONMap",
+    "DottedMap",
   ];
 
   allComponents.forEach((component) => {

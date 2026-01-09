@@ -8,12 +8,9 @@ import DagreGraph from "./components/DagreGraph/DagreGraph.vue";
 import DualChart from "./components/DualChart/DualChart.vue";
 import SankeyChart from "./components/SankeyChart/SankeyChart.vue";
 import TopoJSONMap from "./components/Maps/TopoJSONMap/TopoJSONMap.vue";
-import DottedMap from "./components/Maps/DottedMap/index.vue";
-import DottedMapCore from "./components/Maps/DottedMap/core.vue";
-// Backwards compatibility alias
-import DottedWorldMap from "./components/Maps/DottedMap/core.vue";
-export * from "./components/Maps/DottedMap/types";
-export { getMap, getPin, DEFAULT_WORLD_REGION } from "./components/Maps/DottedMap/mapUtils";
+import DottedMap from "./components/Maps/DottedMap/DottedMap.vue";
+
+export { getMap, getPin } from "./components/Maps/DottedMap/mapUtils";
 
 import {
     LegendPosition,
@@ -37,8 +34,6 @@ export {
     SankeyChart,
     TopoJSONMap,
     DottedMap,
-    DottedMapCore,
-    DottedWorldMap,
     Orientation,
     CurveType,
     LegendPosition,
