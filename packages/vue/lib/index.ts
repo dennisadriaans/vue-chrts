@@ -10,7 +10,23 @@ import SankeyChart from "./components/SankeyChart/SankeyChart.vue";
 import TopoJSONMap from "./components/Maps/TopoJSONMap/TopoJSONMap.vue";
 import DottedMap from "./components/Maps/DottedMap/DottedMap.vue";
 
+// Export map utility functions
 export { getMap, getPin } from "./components/Maps/DottedMap/mapUtils";
+
+// Export map constants and helpers
+export {
+    REGIONS,
+    COUNTRIES,
+    DEFAULT_ZOOM,
+} from "./components/Maps/DottedMap/regions";
+
+export {
+    DEFAULT_PIN_OPTIONS,
+    createPin,
+    WORLD_PINS,
+    USA_PINS,
+    filterPinsByRegion,
+} from "./components/Maps/DottedMap/pins";
 
 import {
     LegendPosition,
