@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import proj4 from "proj4";
-import type { DottedWorldMapProps } from "./types";
-import { getMap, getPin, DEFAULT_WORLD_REGION } from "./mapUtils";
+import type { DottedMapProps } from "./types";
+import { getMap, getPin } from "./mapUtils";
 import geojsonWorld from "../../../data/countries.geo.json";
 
-const props = withDefaults(defineProps<DottedWorldMapProps>(), {
+const props = withDefaults(defineProps<DottedMapProps>(), {
   grid: "vertical",
   avoidOuterPins: false,
   color: "#ffffff",
@@ -153,7 +152,6 @@ function handleSvgClick(event: MouseEvent) {
     class="dotted-world-map-container"
     :style="{
       backgroundColor: backgroundColor,
-      height: typeof height === 'number' ? height + 'px' : height,
       width: '100%',
       position: 'relative',
     }"

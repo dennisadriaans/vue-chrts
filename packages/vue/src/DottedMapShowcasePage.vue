@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { DottedWorldMap, type DottedMapPin, type DottedMapRegion } from "../lib";
+import { DottedMap, type DottedMapPin, type DottedMapRegion } from "../lib";
 
 type ThemePreset = {
   id: string;
@@ -459,8 +459,9 @@ function randomize() {
     </div>
 
     <div class="w-full mt-24 max-h-[960px] max-w-screen-2xl mx-auto">
-      <DottedWorldMap
+      <DottedMap
         height="100%"
+        max-height="100%"
         :map-height="selectedMap.mapHeight"
         :map-width="selectedMap.mapWidth"
         :dot-size="selectedMap.dotSize"

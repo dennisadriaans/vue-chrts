@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
-import { TopoJSONMap, DottedWorldMap } from "../lib";
+import { TopoJSONMap, DottedMap } from "../lib";
 import { geoAlbersUsa } from "d3-geo";
 import {
   WorldMapTopoJSON,
@@ -136,10 +136,9 @@ const chinaData = computed(() => ({
         <div
           class="border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900"
         >
-          <DottedWorldMap 
-            :map-height="60" 
-            color="#3b82f6" 
+          <DottedMap 
             :dot-size="0.5"
+            color="#3b82f6" 
             :pins="[
               { lat: 40.73061, lng: -73.935242, svgOptions: { color: '#ef4444', radius: 0.8 } },
               { lat: 48.8534, lng: 2.3488, svgOptions: { color: '#10b981', radius: 0.8 } }

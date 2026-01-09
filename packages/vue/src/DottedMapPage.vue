@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import { DottedWorldMap } from "../lib";
+import { DottedMap } from "../lib";
 
 // European country ISO codes - comprehensive list for accurate Europe map
 const EUROPE_COUNTRIES = [
@@ -237,24 +237,25 @@ const PRECOMPUTED_EUROPE = {
     <section>
       <h1 class="text-3xl font-bold mb-6">Dotted Map Examples</h1>
 
-      <div class="mb-12 text-red-500">
-          {{ AMSTERDAM_PINS }} 12123
+      <div class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Minimalist Background</h2>
         <p class="text-gray-600 mb-4">
           Low density map with <code>avoidOuterPins</code> and custom
           background.
         </p>
         <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
-          <DottedWorldMap
-            :map-height="40"
+          <DottedMap
+            :map-height="110"
             :dot-size="0.4"
             height="800px"
             color="#e2e8f0"
-            background-color="#f8fafc"
             :avoid-outer-pins="false"
             :pins="AMSTERDAM_PINS"
             @pin-click="(pin) => console.log('handle pin click: ', pin)"
             @point-click="(event, point) => handlePointClick(event, point, AMSTERDAM_PINS)"
+            :legend="[
+              { color: '#10b981', label: 'Custom Pin' }
+            ]"
           />
         </div>
       </div>
@@ -270,10 +271,10 @@ const PRECOMPUTED_EUROPE = {
           <div
             class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
           >
-            <DottedWorldMap
+            <DottedMap
               height="800px"
-              :map-height="60"
-              :dot-size="0.5"
+              :map-height="100"
+              :dot-size="0.33"
               color="#94a3b8"
               grid="vertical"
               :pins="WORLD_PINS"
@@ -291,10 +292,10 @@ const PRECOMPUTED_EUROPE = {
           <div
             class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
           >
-            <DottedWorldMap
-              :map-height="80"
+            <DottedMap
+              :map-height="110"
+              max-height="600px"
               :dot-size="0.15"
-              height="1000px"
               color="#334155"
               :countries="EUROPE_COUNTRIES"
               :pins="EUROPEAN_PINS"
@@ -315,10 +316,11 @@ const PRECOMPUTED_EUROPE = {
           <div
             class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
           >
-            <DottedWorldMap
+            <DottedMap
               :map-width="75"
               :dot-size="0.3"
-              height="800px"
+              width="4000px"
+              height="600px"
               color="#1e293b"
               :countries="USA_COUNTRIES"
               :region="USA_REGION"
@@ -338,7 +340,7 @@ const PRECOMPUTED_EUROPE = {
           <div
             class="border border-gray-200 rounded-xl p-6 bg-indigo-950 shadow-sm"
           >
-            <DottedWorldMap
+            <DottedMap
               :map-height="75"
               :dot-size="0.1"
               height="800px"
@@ -361,7 +363,7 @@ const PRECOMPUTED_EUROPE = {
           <div
             class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
           >
-            <DottedWorldMap
+            <DottedMap
               height="800px"
               :map-height="60"
               :dot-size="0.5"
@@ -382,12 +384,11 @@ const PRECOMPUTED_EUROPE = {
             background.
           </p>
           <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
-            <DottedWorldMap
+            <DottedMap
               :map-height="40"
               :dot-size="0.4"
               height="800px"
               color="#e2e8f0"
-              background-color="#f8fafc"
               :avoid-outer-pins="false"
               :pins="MINIMALIST_PINS"
               @point-click="(event, point) => handlePointClick(event, point, MINIMALIST_PINS)"
@@ -407,7 +408,7 @@ const PRECOMPUTED_EUROPE = {
           <div
             class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
           >
-            <DottedWorldMap
+            <DottedMap
               :map-height="60"
               :dot-size="0.5"
               height="800px"
@@ -428,7 +429,7 @@ const PRECOMPUTED_EUROPE = {
             Single country focus with high dot density.
           </p>
           <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
-            <DottedWorldMap
+            <DottedMap
               :map-height="60"
               :dot-size="0.5"
               height="800px"
@@ -439,31 +440,6 @@ const PRECOMPUTED_EUROPE = {
             />
           </div>
         </div>
-
-        <!-- Border Options -->
-        <div class="mb-12">
-          <h2 class="text-2xl font-semibold mb-4">Border Options</h2>
-          <p class="text-gray-600 mb-4">
-            Using <code>strokeWidth</code>, <code>strokeColor</code> and
-            <code>strokeOpacity</code> to add borders to dots.
-          </p>
-          <div
-            class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
-          >
-            <DottedWorldMap
-              :map-height="60"
-              :dot-size="0.5"
-              height="800px"
-              color="#334155"
-              :stroke-width="2"
-              :stroke-opacity="0.5"
-              :countries="['NLD']"
-              :pins="AMSTERDAM_PINS"
-              @point-click="(event, point) => handlePointClick(event, point, AMSTERDAM_PINS)"
-            />
-          </div>
-        </div>
-
       </div>
     </section>
   </div>
