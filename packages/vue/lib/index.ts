@@ -10,7 +10,23 @@ import SankeyChart from "./components/SankeyChart/SankeyChart.vue";
 import TopoJSONMap from "./components/Maps/TopoJSONMap/TopoJSONMap.vue";
 import DottedMap from "./components/Maps/DottedMap/DottedMap.vue";
 
+// Export map utility functions
 export { getMap, getPin } from "./components/Maps/DottedMap/mapUtils";
+
+// Export map constants and helpers
+export {
+    REGIONS,
+    COUNTRIES,
+    DEFAULT_ZOOM,
+} from "./components/Maps/DottedMap/regions";
+
+export {
+    DEFAULT_PIN_OPTIONS,
+    createPin,
+    WORLD_PINS,
+    USA_PINS,
+    filterPinsByRegion,
+} from "./components/Maps/DottedMap/pins";
 
 import {
     LegendPosition,
@@ -20,6 +36,29 @@ import {
     CrosshairConfig,
     DonutType,
     type BulletLegendItemInterface,
+    type AreaChartProps,
+    type BarChartProps,
+    type LineChartProps,
+    type DonutChartProps,
+    type BubbleChartProps,
+    type GanttChartProps,
+    type DagreGraphProps,
+    type SankeyChartProps,
+    type DualChartProps,
+    type DottedMapProps,
+    type DottedMapPin,
+    type DottedMapRegion,
+    type MapPin,
+    type MapRegion,
+    type MapRegionName,
+    type MapLegendItem,
+    type ZoomConfig,
+    type TopoJSONMapProps,
+    type MapPoint,
+    type MapLink,
+    type MapArea,
+    type MapData,
+    type MapsData,
 } from "./types";
 
 export {
@@ -43,5 +82,28 @@ export {
 export type {
     BulletLegendItemInterface,
     MarkerConfig,
-    CrosshairConfig
+    CrosshairConfig,
+    AreaChartProps,
+    BarChartProps,
+    LineChartProps,
+    DonutChartProps,
+    BubbleChartProps,
+    GanttChartProps,
+    DagreGraphProps,
+    SankeyChartProps,
+    DualChartProps,
+    DottedMapProps,
+    DottedMapPin,
+    DottedMapRegion,
+    MapPin,
+    MapRegion,
+    MapRegionName,
+    MapLegendItem,
+    ZoomConfig,
+    TopoJSONMapProps,
+    MapPoint,
+    MapLink,
+    MapArea,
+    MapData,
+    MapsData,
 }
