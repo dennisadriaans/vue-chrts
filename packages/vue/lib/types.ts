@@ -27,7 +27,6 @@ import {
   MapRegionName,
   MapLegendItem,
   ZoomConfig,
-  MapVariant,
 } from "./components/Maps/DottedMap/types";
 import {
   TopoJSONMapProps,
@@ -114,7 +113,6 @@ export {
   type MapRegionName,
   type MapLegendItem,
   type ZoomConfig,
-  type MapVariant,
   type TopoJSONMapProps,
   type MapPoint,
   type MapLink,
