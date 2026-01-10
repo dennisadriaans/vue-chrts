@@ -11,6 +11,8 @@ export const resolveComponents = (config: ModuleOptions, filePath: string) => {
     "DonutChart",
     'BubbleChart',
     'GanttChart',
+    'SankeyChart',
+    'DagreGraph',
     'DualChart'
   ];
 

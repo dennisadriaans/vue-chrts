@@ -1,12 +1,11 @@
-import {
-  BulletLegendItemInterface,
-  LegendPosition,
-} from "../../types";
-import {
-  SankeyInputNode,
+import { Sizing } from "@unovis/ts";
+import { BulletLegendItemInterface, LegendPosition } from "../../types";
+import { SankeyInputLink, SankeyInputNode } from "@unovis/ts/components/sankey/types";
+
+export {
   SankeyInputLink,
-  SankeyNodeAlign,
-} from "@unovis/ts";
+  SankeyInputNode
+}
 
 export type SankeyChartProps<
   N extends SankeyInputNode,
@@ -24,6 +23,14 @@ export type SankeyChartProps<
    * The height of the chart in pixels.
    */
   height: number;
+  /**
+   * The width of the chart in pixels.
+   */
+  width?: number;
+  /**
+   * Chart sizing option. Default: Sizing.Fit
+   */
+  sizing?: Sizing | string;
   /**
    * Optional padding applied to the chart.
    * Allows specifying individual padding values for the top, right, bottom, and left sides.
@@ -84,6 +91,18 @@ export type SankeyChartProps<
    * Sankey vertical separation between nodes in pixels. Default: 10
    */
   nodePadding?: number;
+  /**
+   * Sankey horizontal separation between nodes in pixels.
+   */
+  nodeHorizontalSpacing?: number;
+  /**
+   * Minimum node height in pixels.
+   */
+  nodeMinHeight?: number;
+  /**
+   * Maximum node height in pixels.
+   */
+  nodeMaxHeight?: number;
   /**
    * Node sorting function.
    */

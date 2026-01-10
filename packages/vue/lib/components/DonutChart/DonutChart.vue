@@ -2,7 +2,6 @@
 import { Donut } from "@unovis/ts";
 import { ref, useSlots, useTemplateRef, computed } from "vue";
 import { type DonutChartProps, DonutType } from "./types";
-import { getFirstPropertyValue } from "../../utils";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -12,6 +11,7 @@ import {
   VisSingleContainer,
   VisTooltip,
 } from "@unovis/vue";
+
 import { LegendPosition } from "../../types";
 
 const emit = defineEmits<{
