@@ -1,14 +1,11 @@
 // Map region bounds (used by both old DottedWorldMap and new DottedMap)
-export interface DottedMapRegion {
+export type MapRegion = {
   lat: { min: number; max: number }
   lng: { min: number; max: number }
 }
 
-// Alias for backwards compatibility
-export type MapRegion = DottedMapRegion
-
 // Map pin types
-export interface DottedMapPin {
+export type MapPin = {
   lat: number
   lng: number
   svgOptions?: {
@@ -20,9 +17,6 @@ export interface DottedMapPin {
   }
   data?: Record<string, unknown>
 }
-
-// Alias for backwards compatibility
-export type MapPin = DottedMapPin
 
 // Props for the core DottedMap component (formerly DottedWorldMap)
 export interface DottedMapProps {
@@ -44,7 +38,7 @@ export interface DottedMapProps {
   /**
    * Specific region to display.
    */
-  region?: DottedMapRegion
+  region?: MapRegion
   /**
    * How points should be aligned.
    * @default 'vertical'
@@ -58,7 +52,7 @@ export interface DottedMapProps {
   /**
    * Array of pins to add to the map.
    */
-  pins?: DottedMapPin[]
+  pins?: MapPin[]
   /**
    * Precomputed map data (JSON string or object).
    * If provided, it will be used instead of computing the map from scratch.
@@ -92,15 +86,13 @@ export interface DottedMapProps {
    */
   shape?: 'circle' | 'hexagon'
   /**
+   * Custom colors for specific countries.
+   */
+  countryColors?: Record<string, string>
+  /**
    * Background color of the map container.
    */
   backgroundColor?: string
-  /**
-   * If true, render the map as a raw SVG string for maximum performance.
-   * Note: This disables Unovis interactivity features.
-   * @default false
-   */
-  useRawSvg?: boolean
 }
 
 // Backwards compatibility alias
@@ -113,6 +105,10 @@ export interface MapVariant {
   dotSize?: number
   grid?: 'vertical' | 'diagonal'
   shape?: 'circle' | 'hexagon'
+  /**
+   * Custom colors for specific countries.
+   */
+  countryColors?: Record<string, string>
   strokeWidth?: number
   strokeOpacity?: number
   countries?: string[]

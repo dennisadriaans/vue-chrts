@@ -1,13 +1,13 @@
 import proj4 from 'proj4';
 import inside from '@turf/boolean-point-in-polygon';
-import type { DottedMapRegion, DottedMapPin } from './types';
+import type { MapRegion } from './types';
 
 // Define the Google Mercator projection if not already defined
 if (!proj4.defs('GOOGLE')) {
   proj4.defs('GOOGLE', '+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs');
 }
 
-export const DEFAULT_WORLD_REGION: DottedMapRegion = {
+export const DEFAULT_WORLD_REGION: MapRegion = {
   lat: { min: -56, max: 71 },
   lng: { min: -179, max: 179 },
 };
@@ -25,7 +25,7 @@ export const geojsonToMultiPolygons = (geojson: any) => {
   return { type: 'Feature', geometry: { type: 'MultiPolygon', coordinates } };
 };
 
-export const computeGeojsonBox = (geojson: any): DottedMapRegion => {
+export const computeGeojsonBox = (geojson: any): MapRegion => {
   const { type, features, geometry, coordinates } = geojson;
   if (type === 'FeatureCollection') {
     const boxes = features.map(computeGeojsonBox);
@@ -67,14 +67,14 @@ export const computeGeojsonBox = (geojson: any): DottedMapRegion => {
 };
 
 export interface MapData {
-  points: Record<string, { x: number; y: number; lat: number; lng: number; data?: any; svgOptions?: any }>;
+  points: Record<string, { x: number; y: number; lat: number; lng: number; countryId?: string; data?: any; svgOptions?: any }>;
   X_MIN: number;
   Y_MIN: number;
   X_MAX: number;
   Y_MAX: number;
   X_RANGE: number;
   Y_RANGE: number;
-  region: DottedMapRegion;
+  region: MapRegion;
   grid: 'vertical' | 'diagonal';
   height: number;
   width: number;
@@ -92,7 +92,7 @@ export const getMap = ({
   height?: number;
   width?: number;
   countries?: string[];
-  region?: DottedMapRegion;
+  region?: MapRegion;
   grid?: 'vertical' | 'diagonal';
   geojsonWorld: any;
 }): MapData => {
@@ -155,9 +155,10 @@ export const getMap = ({
         pointGoogle,
       );
 
-      if (inside(wgs84Point as any, poly as any)) {
+      const countryFeature = geojson.features.find((f: any) => inside(wgs84Point as any, f));
+      if (countryFeature) {
         const [lng, lat] = wgs84Point;
-        points[[x, y].join(';')] = { x: localx, y: localy, lat, lng };
+        points[[x, y].join(";")] = { x: localx, y: localy, lat, lng, countryId: countryFeature.id };
       }
     }
   }

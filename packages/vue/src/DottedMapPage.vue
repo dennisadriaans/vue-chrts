@@ -105,6 +105,34 @@ const ASIA_PINS = ref([]);
 const MINIMALIST_PINS = ref([]);
 const FRANCE_PINS = ref([]);
 const GERMANY_PINS = ref([]);
+const OCEANIA_PINS = ref([
+  {
+    lat: -33.8688,
+    lng: 151.2093,
+    svgOptions: { color: "#ef4444", radius: 0.15 },
+    data: { city: "Sydney" },
+  },
+  {
+    lat: -37.8136,
+    lng: 144.9631,
+    svgOptions: { color: "#ef4444", radius: 0.15 },
+    data: { city: "Melbourne" },
+  },
+  {
+    lat: -41.2865,
+    lng: 174.7762,
+    svgOptions: { color: "#ef4444", radius: 0.15 },
+    data: { city: "Wellington" },
+  },
+  {
+    lat: -36.8485,
+    lng: 174.7633,
+    svgOptions: { color: "#ef4444", radius: 0.15 },
+    data: { city: "Auckland" },
+  },
+]);
+
+const countryColors = { DEU: "#cbd5e1" };
 
 const handlePointClick = (event: MouseEvent, point: any, pins: any[]) => {
   console.log("Point clicked:", point);
@@ -142,6 +170,16 @@ const ASIA_COUNTRIES = [
   "IRN", // Iran
 ];
 
+const OCEANIA_COUNTRIES = [
+  "AUS", // Australia
+  "NZL", // New Zealand
+  "FJI", // Fiji
+  "PNG", // Papua New Guinea
+  "SLB", // Solomon Islands
+  "VUT", // Vanuatu
+  "NCL", // New Caledonia
+];
+
 // USA country ISO code - dotted-map requires 3-letter ISO codes
 const USA_COUNTRIES = ["USA"];
 
@@ -149,6 +187,12 @@ const USA_COUNTRIES = ["USA"];
 const USA_REGION = {
   lat: { min: 24, max: 50 },
   lng: { min: -125, max: -66 },
+};
+
+// Oceania Region coordinates for focusing the map
+const OCEANIA_REGION = {
+  lat: { min: -50, max: 0 },
+  lng: { min: 110, max: 180 },
 };
 
 const USA_PINS = ref([
@@ -251,12 +295,19 @@ const PRECOMPUTED_EUROPE = {
             color="#e2e8f0"
             :avoid-outer-pins="false"
             :pins="AMSTERDAM_PINS"
+            :country-colors="countryColors"
             @pin-click="(pin) => console.log('handle pin click: ', pin)"
             @point-click="(event, point) => handlePointClick(event, point, AMSTERDAM_PINS)"
             :legend="[
               { color: '#10b981', label: 'Custom Pin' }
             ]"
-          />
+          >
+          <template #legend>
+            <div class="bg-red-500">
+              123
+            </div>
+          </template>
+        </DottedMap>
         </div>
       </div>
 
@@ -265,20 +316,18 @@ const PRECOMPUTED_EUROPE = {
         <div class="mb-12">
           <h2 class="text-2xl font-semibold mb-4">World Map (Raw SVG)</h2>
           <p class="text-gray-600 mb-4">
-            Using <code>useRawSvg</code> for maximum rendering performance.
-            Ideal for static backgrounds or large maps.
+     
           </p>
           <div
             class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
           >
             <DottedMap
-              height="800px"
+              max-height="600px"
               :map-height="100"
               :dot-size="0.33"
               color="#94a3b8"
               grid="vertical"
               :countries="EUROPE_COUNTRIES"
-              :pins="WORLD_PINS"
               @point-click="(event, point) => handlePointClick(event, point, WORLD_PINS)"
             />
           </div>
@@ -286,7 +335,7 @@ const PRECOMPUTED_EUROPE = {
 
         <!-- Europe Map - Performance Focused -->
         <div class="mb-12">
-          <h2 class="text-2xl font-semibold mb-4">Europe with Pins 123</h2>
+          <h2 class="text-2xl font-semibold mb-4">Europe with Pins</h2>
           <p class="text-gray-600 mb-4">
             Filtered to European countries with custom pins for major cities.
           </p>
@@ -294,16 +343,39 @@ const PRECOMPUTED_EUROPE = {
             class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
           >
             <DottedMap
-              :map-height="110"
+              :map-height="100"
               max-height="600px"
               :dot-size="0.15"
               color="#334155"
-              :default-zoom="1.5"
               :countries="EUROPE_COUNTRIES"
               :pins="EUROPEAN_PINS"
               grid="diagonal"
               shape="hexagon"
               @point-click="(event, point) => handlePointClick(event, point, EUROPEAN_PINS)"
+            />
+          </div>
+        </div>
+
+        <!-- Oceania Map - Performance Focused -->
+        <div class="mb-12">
+          <h2 class="text-2xl font-semibold mb-4">Oceania with Pins</h2>
+          <p class="text-gray-600 mb-4">
+            Filtered to Oceania countries with custom pins for major cities.
+          </p>
+          <div
+            class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
+          >
+            <DottedMap
+              :region="OCEANIA_REGION"
+              :map-height="100"
+              max-height="600px"
+              :dot-size="0.15"
+              color="#334155"
+              :countries="OCEANIA_COUNTRIES"
+              :pins="OCEANIA_PINS"
+              grid="diagonal"
+              shape="hexagon"
+              @point-click="(event, point) => handlePointClick(event, point, OCEANIA_PINS)"
             />
           </div>
         </div>
@@ -359,8 +431,7 @@ const PRECOMPUTED_EUROPE = {
         <div class="mb-12">
           <h2 class="text-2xl font-semibold mb-4">Asia (Raw SVG)</h2>
           <p class="text-gray-600 mb-4">
-            Using <code>useRawSvg</code> for maximum rendering performance.
-            Ideal for static backgrounds or large maps.
+
           </p>
           <div
             class="border border-gray-200 rounded-xl p-6 bg-slate-900 shadow-sm"
@@ -393,6 +464,7 @@ const PRECOMPUTED_EUROPE = {
               color="#e2e8f0"
               :avoid-outer-pins="false"
               :pins="MINIMALIST_PINS"
+              :country-colors="countryColors"
               @point-click="(event, point) => handlePointClick(event, point, MINIMALIST_PINS)"
               @point-mouse-over="console.log(123)"
             />

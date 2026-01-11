@@ -97,7 +97,8 @@ const svgContent = computed(() => {
 
   const getPointSvg = (p: any) => {
     const radius = p.svgOptions?.radius || dotSize;
-    const fillColor = p.svgOptions?.color || color;
+    const countryColor = (p.countryId && props.countryColors) ? props.countryColors[p.countryId] : null;
+    const fillColor = p.svgOptions?.color || countryColor || color;
     const sColor = p.svgOptions?.strokeColor || strokeColor || fillColor;
     const sWidth = p.svgOptions?.strokeWidth ?? strokeWidth;
     const sOpacity = p.svgOptions?.strokeOpacity ?? strokeOpacity;
@@ -125,7 +126,12 @@ const svgContent = computed(() => {
 
   const pointsSvg = Object.values(points).map(getPointSvg).join("\n");
 
-  const svg = `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="background-color: ${backgroundColor}">
+  const svg = `<svg 
+    viewBox="0 0 ${width} ${height}" 
+    xmlns="http://www.w3.org/2000/svg" 
+    preserveAspectRatio="xMidYMid meet"
+    style="background-color: ${backgroundColor}; width: 100%; height: 100%; display: block;"
+  >
     ${pointsSvg}
   </svg>`;
 
@@ -153,6 +159,7 @@ function handleSvgClick(event: MouseEvent) {
     :style="{
       backgroundColor: backgroundColor,
       width: '100%',
+      height: '100%',
       position: 'relative',
     }"
   >
@@ -160,22 +167,9 @@ function handleSvgClick(event: MouseEvent) {
     <slot :points="data" :map="mapInstance" :svg="svgContent">
       <div
         v-html="svgContent"
-        class="raw-svg-container"
-        style="width: 100%; height: 100%"
+        style="width: 100%; height: 100%; display: block;"
         @click="handleSvgClick"
       ></div>
     </slot>
   </div>
 </template>
-
-<style scoped>
-.dotted-world-map-container {
-  overflow: hidden;
-}
-
-.raw-svg-container :deep(svg) {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-</style>

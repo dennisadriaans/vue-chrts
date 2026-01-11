@@ -79,6 +79,7 @@ const variant = computed<MapVariant>(() => {
     pins: props.pins ?? defaultPins,
     defaultZoom: props.defaultZoom ?? defaultZoom,
     color: props.color,
+    countryColors: props.countryColors,
     dotSize: props.dotSize,
     grid: props.grid,
     mapHeight: props.mapHeight,
@@ -195,10 +196,10 @@ defineExpose({
         :pins="activePins"
         :stroke-width="variant.strokeWidth"
         :stroke-opacity="variant.strokeOpacity"
+        :country-colors="variant.countryColors"
         :avoid-outer-pins="props.avoidOuterPins"
         :precomputed-map="props.precomputedMap"
         :background-color="props.backgroundColor"
-        :use-raw-svg="props.useRawSvg"
         class="w-full h-full object-contain"
         @pin-click="handlePinClick"
         @point-click="handlePointClick"
@@ -217,12 +218,9 @@ defineExpose({
     </div>
     <!-- Legend slot -->
     <div
-      v-if="showLegend && activeLegend && activeLegend.length > 0"
       class="absolute bottom-4 right-4 flex flex-col gap-2"
     >
-      <slot name="legend" :items="activeLegend">
-        <MapLegend :items="activeLegend" />
-      </slot>
+      <slot name="legend"></slot>
     </div>
 
     <!-- Default slot for overlays -->
