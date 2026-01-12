@@ -1,14 +1,22 @@
 import type { GeoProjection } from "d3-geo";
-import { axisFormatter, BulletLegendItemInterface } from "../../../types";
+import { axisFormatter, BulletLegendItemInterface, LegendPosition } from "../../../types";
+import { MapData, MapPoint } from "../types";
 
 export type MapsData<T extends Record<string, any>> = {
   mapFeatureKey: keyof T;
-  data: any;
+  data: MapData;
   topojson: any;
   zoomFactor?: number;
   projection?: GeoProjection;
   areaColor?: string | ((d: any) => string);
   areaCursor?: string | ((d: any) => string);
+  pointColor?: string | ((d: MapPoint) => string);
+  pointSize?: number | ((d: MapPoint) => number);
+  pointLabel?: (d: MapPoint) => string;
+  pointCursor?: string | ((d: MapPoint) => string);
+  linkColor?: string | ((d: any) => string);
+  linkWidth?: number | ((d: any) => number);
+  linkCursor?: string | ((d: any) => string);
   height?: string | number;
   width?: string | number;
   fitView?: boolean;
@@ -17,4 +25,16 @@ export type MapsData<T extends Record<string, any>> = {
   tooltipTitleFormatter?: (data: T) => string | number;
   yFormatter?: axisFormatter;
   categories?: Record<string, BulletLegendItemInterface>;
+  legendPosition?: LegendPosition;
+  legendStyle?: any;
+  hideLegend?: boolean;
+  duration?: number;
+  pointStrokeWidth?: number | ((d: MapPoint) => number);
+  mapFitToPoints?: boolean;
+  padding?: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
 };

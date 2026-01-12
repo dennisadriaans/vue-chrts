@@ -1,3 +1,4 @@
+
 export type MapPoint = {
   id: string;
   latitude: number;
@@ -47,7 +48,7 @@ export interface TopoJSONMapProps {
   pointStrokeWidth?: number | ((d: MapPoint) => number);
   pointCursor?: string | ((d: MapPoint) => string);
   pointLabel?: (d: MapPoint) => string;
-  pointLabelPosition?: 'top' | 'bottom' | 'left' | 'right';
+  pointLabelPosition?: Position | string;
   
   // Link Configuration
   linkColor?: string | ((d: MapLink) => string);
