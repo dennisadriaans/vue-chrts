@@ -70,6 +70,11 @@ const router = createRouter({
       component: () => import("./MapsPage.vue"),
     },
     {
+      path: "/choropleth-map",
+      name: "ChoroplethMap",
+      component: () => import("./ChoroplethMapPage.vue"),
+    },
+    {
       path: "/maps-dotted",
       name: "MapsDotted",
       component: () => import("./DottedMapPage.vue"),

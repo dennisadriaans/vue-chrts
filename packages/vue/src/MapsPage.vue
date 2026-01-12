@@ -38,8 +38,8 @@ const worldData = computed(() => ({
       id: "nyc",
       latitude: 40.7128,
       longitude: -74.006,
-      label: "New York",
-      color: "#10b981",
+      label: "New Y123123ork",
+      color: "red",
     },
     {
       id: "tyo",
@@ -126,7 +126,7 @@ const chinaData = computed(() => ({
       <h1 class="text-3xl font-bold mb-6">Map Examples</h1>
 
       <!-- World Dotted Map Example -->
-      <div class="mb-12">
+      <!-- <div class="mb-12">
         <h2 class="text-2xl font-bold mb-4">World Dotted Map</h2>
         <p class="text-gray-600 mb-4">
           A perfectly clipped map of the world using
@@ -145,7 +145,7 @@ const chinaData = computed(() => ({
             ]"
           />
         </div>
-      </div>
+      </div> -->
 
       <!-- TopoJSON World Map -->
       <div class="mb-12">
@@ -154,10 +154,10 @@ const chinaData = computed(() => ({
           Interactive world map using TopoJSON data from Unovis.
         </p>
         <div
-          class="border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900"
+          class="w-full border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900"
         >
           <TopoJSONMap
-            class="w-full h-[550px] relative"
+            class="relative"
             :data="worldData"
             :topojson="WorldMapTopoJSON"
             map-feature-key="countries"
@@ -168,14 +168,15 @@ const chinaData = computed(() => ({
       </div>
     </section>
 
-    <!-- France Map -->
+    France Map
     <section class="bg-white p-6 rounded-lg shadow-lg">
       <h2 class="text-2xl font-bold mb-2">France Regions</h2>
       <p class="text-gray-600 mb-4">
         Map of France showing all administrative regions.
       </p>
       <TopoJSONMap
-        class="w-full h-[500px] border border-gray-200 rounded"
+        :height="500"
+        class="w-full border border-gray-200 rounded"
         :data="franceData"
         :topojson="FranceTopoJSON"
         map-feature-key="regions"
@@ -190,7 +191,8 @@ const chinaData = computed(() => ({
         county boundaries.
       </p>
       <TopoJSONMap
-        class="w-full h-[500px] border border-gray-200 rounded"
+        :height="500"
+        class="w-full border border-gray-200 rounded"
         :data="usaCountiesData"
         :topojson="USATopoJSON"
         map-feature-key="states"
@@ -206,7 +208,8 @@ const chinaData = computed(() => ({
         county boundaries.
       </p>
       <TopoJSONMap
-        class="w-full h-[500px] border border-gray-200 rounded"
+        :height="500"
+        class="w-full border border-gray-200 rounded"
         :data="usaCountiesData"
         :topojson="USCountiesTopoJSON"
         map-feature-key="counties"
@@ -222,7 +225,8 @@ const chinaData = computed(() => ({
         Rhine-Westphalia).
       </p>
       <TopoJSONMap
-        class="w-full h-[500px] border border-gray-200 rounded"
+        :height="500"
+        class="w-full border border-gray-200 rounded"
         :data="germanyData"
         :topojson="GermanyTopoJSON"
         map-feature-key="regions"
@@ -236,7 +240,8 @@ const chinaData = computed(() => ({
         Map of the United Kingdom showing all regions.
       </p>
       <TopoJSONMap
-        class="w-full h-[500px] border border-gray-200 rounded"
+        :height="500"
+        class="w-full border border-gray-200 rounded"
         :data="ukData"
         :topojson="UKTopoJSON"
         map-feature-key="regions"
@@ -250,7 +255,8 @@ const chinaData = computed(() => ({
         Map of India showing all states and territories.
       </p>
       <TopoJSONMap
-        class="w-full h-[500px] border border-gray-200 rounded"
+        :height="500"
+        class="w-full border border-gray-200 rounded"
         :data="indiaData"
         :topojson="IndiaTopoJSON"
         map-feature-key="regions"
@@ -262,7 +268,8 @@ const chinaData = computed(() => ({
       <h2 class="text-2xl font-bold mb-2">China Provinces</h2>
       <p class="text-gray-600 mb-4">Map of China showing all provinces.</p>
       <TopoJSONMap
-        class="w-full h-[500px] border border-gray-200 rounded"
+        :height="500"
+        class="w-full border border-gray-200 rounded"
         :data="chinaData"
         :topojson="ChinaTopoJSON"
         map-feature-key="provinces"
@@ -323,7 +330,8 @@ const chinaData = computed(() => ({
           class="border border-gray-200 rounded-lg p-4 bg-white dark:bg-gray-900"
         >
           <TopoJSONMap
-            class="w-full h-[550px] relative"
+            :height="550"
+            class="w-full relative"
             :data="netherlandsData"
             :topojson="NetherlandsTopoJSON"
             :map-feature-key="netherlandsMapFeatureKey"
