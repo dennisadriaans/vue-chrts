@@ -48,7 +48,6 @@ export interface TopoJSONMapProps {
   pointStrokeWidth?: number | ((d: MapPoint) => number);
   pointCursor?: string | ((d: MapPoint) => string);
   pointLabel?: (d: MapPoint) => string;
-  pointLabelPosition?: Position | string;
   
   // Link Configuration
   linkColor?: string | ((d: MapLink) => string);
