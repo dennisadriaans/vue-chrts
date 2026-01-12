@@ -200,10 +200,11 @@ function onCrosshairUpdate(d: T): string {
       <!-- Stacked Area Mode: Single VisArea with array of y accessors -->
       <template v-if="stacked">
         <VisArea
+          v-if="!hideArea"
           :x="(_: T, i: number) => i"
           :y="stackedYAccessors"
           :color="stackedColorAccessor"
-          :opacity="hideArea ? 0 : DEFAULT_OPACITY"
+          :opacity="DEFAULT_OPACITY"
           :curve-type="curveType ?? CurveType.MonotoneX"
         />
         <VisLine
@@ -222,10 +223,11 @@ function onCrosshairUpdate(d: T): string {
           :key="categoryId"
         >
           <VisArea
+            v-if="!hideArea"
             :x="(_: T, i: number) => i"
             v-bind="getAccessors(categoryId)"
             :color="`url(#gradient${index}-${colors[index]})`"
-            :opacity="hideArea ? 0 : DEFAULT_OPACITY"
+            :opacity="DEFAULT_OPACITY"
             :curve-type="curveType ?? CurveType.MonotoneX"
           />
           <VisLine
