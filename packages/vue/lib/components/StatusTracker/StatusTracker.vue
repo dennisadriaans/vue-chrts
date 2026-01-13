@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<StatusTrackerProps>(), {
     <div class="flex items-center justify-between p-4">
       <div class="flex items-center gap-2">
         <svg
-          v-if="operationalStatus"
+          v-if="props.operationalStatus"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -59,24 +59,24 @@ const props = withDefaults(defineProps<StatusTrackerProps>(), {
           />
         </svg>
 
-        <span class="font-medium">{{ domain }}</span>
+        <span class="font-medium">{{ props.domain }}</span>
       </div>
-      <span class="text-sm dark:text-gray-400">{{ uptime }}</span>
+      <span class="text-sm dark:text-gray-400">{{ props.uptime }}</span>
     </div>
 
     <div class="p-4">
       <div class="flex items-center justify-between mb-2 text-sm text-gray-500">
-        <span>{{ startLabel }}</span>
-        <span>{{ endLabel }}</span>
+        <span>{{ props.startLabel }}</span>
+        <span>{{ props.endLabel }}</span>
       </div>
       <div class="flex items-center gap-0">
         <div
-          v-for="(item, index) in statusData"
+          v-for="(item, index) in props.statusData"
           :key="index"
           class="h-8 first:rounded-tl first:rounded-bl last:rounded-tr last:rounded-br"
           :style="{
-            width: `${barWidth}px`,
-            marginLeft: index === 0 ? '0' : `${barGap}px`,
+            width: `${props.barWidth}px`,
+            marginLeft: index === 0 ? '0' : `${props.barGap}px`,
             backgroundColor: item.status === 'online' ? 'rgb(34 197 94)' : 'rgb(239 68 68)'
           }"
         ></div>
