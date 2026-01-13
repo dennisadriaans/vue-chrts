@@ -22,7 +22,7 @@ importers:
         version: 20.3.15
       '@angular/core':
         specifier: ^20.3.0
-        version: 20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2)
+        version: 20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2)(zone.js@0.15.0)
       '@angular/forms':
         specifier: ^20.3.0
         version: 20.3.15(@angular/common@20.3.15)(@angular/core@20.3.15)(@angular/platform-browser@20.3.15)(rxjs@7.8.2)
@@ -78,6 +78,9 @@ importers:
       typescript:
         specifier: ~5.9.2
         version: 5.9.2
+      zone.js:
+        specifier: ^0.15.0
+        version: 0.15.0
 
   packages/nuxt:
     dependencies:
@@ -412,7 +415,7 @@ packages:
       '@angular-devkit/architect': 0.2003.13
       '@angular/compiler': 20.3.15
       '@angular/compiler-cli': 20.3.15(@angular/compiler@20.3.15)(typescript@5.9.2)
-      '@angular/core': 20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2)
+      '@angular/core': 20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2)(zone.js@0.15.0)
       '@angular/platform-browser': 20.3.15(@angular/common@20.3.15)(@angular/core@20.3.15)
       '@babel/core': 7.28.3
       '@babel/helper-annotate-as-pure': 7.27.3
@@ -495,7 +498,7 @@ packages:
       '@angular/core': 20.3.15
       rxjs: ^6.5.3 || ^7.4.0
     dependencies:
-      '@angular/core': 20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2)
+      '@angular/core': 20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2)(zone.js@0.15.0)
       rxjs: 7.8.2
       tslib: 2.8.1
 
@@ -530,7 +533,7 @@ packages:
     dependencies:
       tslib: 2.8.1
 
-  /@angular/core@20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2):
+  /@angular/core@20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2)(zone.js@0.15.0):
     resolution: {integrity: sha512-NMbX71SlTZIY9+rh/SPhRYFJU0pMJYW7z/TBD4lqiO+b0DTOIg1k7Pg9ydJGqSjFO1Z4dQaA6TteNuF99TJCNw==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
@@ -546,6 +549,7 @@ packages:
       '@angular/compiler': 20.3.15
       rxjs: 7.8.2
       tslib: 2.8.1
+      zone.js: 0.15.0
 
   /@angular/forms@20.3.15(@angular/common@20.3.15)(@angular/core@20.3.15)(@angular/platform-browser@20.3.15)(rxjs@7.8.2):
     resolution: {integrity: sha512-gS5hQkinq52pm/7mxz4yHPCzEcmRWjtUkOVddPH0V1BW/HMni/p4Y6k2KqKBeGb9p8S5EAp6PDxDVLOPukp3mg==}
@@ -557,7 +561,7 @@ packages:
       rxjs: ^6.5.3 || ^7.4.0
     dependencies:
       '@angular/common': 20.3.15(@angular/core@20.3.15)(rxjs@7.8.2)
-      '@angular/core': 20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2)
+      '@angular/core': 20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2)(zone.js@0.15.0)
       '@angular/platform-browser': 20.3.15(@angular/common@20.3.15)(@angular/core@20.3.15)
       rxjs: 7.8.2
       tslib: 2.8.1
@@ -575,7 +579,7 @@ packages:
         optional: true
     dependencies:
       '@angular/common': 20.3.15(@angular/core@20.3.15)(rxjs@7.8.2)
-      '@angular/core': 20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2)
+      '@angular/core': 20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2)(zone.js@0.15.0)
       tslib: 2.8.1
 
   /@angular/router@20.3.15(@angular/common@20.3.15)(@angular/core@20.3.15)(@angular/platform-browser@20.3.15)(rxjs@7.8.2):
@@ -588,7 +592,7 @@ packages:
       rxjs: ^6.5.3 || ^7.4.0
     dependencies:
       '@angular/common': 20.3.15(@angular/core@20.3.15)(rxjs@7.8.2)
-      '@angular/core': 20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2)
+      '@angular/core': 20.3.15(@angular/compiler@20.3.15)(rxjs@7.8.2)(zone.js@0.15.0)
       '@angular/platform-browser': 20.3.15(@angular/common@20.3.15)(@angular/core@20.3.15)
       rxjs: 7.8.2
       tslib: 2.8.1
@@ -16703,3 +16707,6 @@ packages:
   /zod@4.1.13:
     resolution: {integrity: sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==}
     dev: true
+
+  /zone.js@0.15.0:
+    resolution: {integrity: sha512-9oxn0IIjbCZkJ67L+LkhYWRyAy7axphb3VgE2MBDlOqnmHMPWGYMxJxBYFueFq/JGY2GMwS0rU+UCLunEmy5UA==}
