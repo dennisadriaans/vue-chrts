@@ -7,6 +7,7 @@ import GanttChart from "./components/GanttChart/GanttChart.vue";
 import DagreGraph from "./components/DagreGraph/DagreGraph.vue";
 import DualChart from "./components/DualChart/DualChart.vue";
 import SankeyChart from "./components/SankeyChart/SankeyChart.vue";
+import StatusTracker from "./components/StatusTracker/StatusTracker.vue";
 
 import {
     LegendPosition,
@@ -28,6 +29,7 @@ export {
     DagreGraph,
     DualChart,
     SankeyChart,
+    StatusTracker,
     Orientation,
     CurveType,
     LegendPosition,

@@ -11,7 +11,8 @@ export const resolveComponents = (config: ModuleOptions, filePath: string) => {
     "DonutChart",
     'BubbleChart',
     'GanttChart',
-    'DualChart'
+    'DualChart',
+    'StatusTracker'
   ];
 
   allComponents.forEach((component) => {
