@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<StatusTrackerProps>(), {
 
 <template>
   <div
-    class="ring ring-border divide-y divide-(--ui-border) rounded-xl shadow-sm"
+    class="ring ring-gray-200 divide-y divide-gray-200 rounded-xl shadow-sm dark:ring-gray-800 dark:divide-gray-800"
   >
     <div class="flex items-center justify-between p-4">
       <div class="flex items-center gap-2">
