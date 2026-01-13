@@ -113,6 +113,14 @@ type BarChartPropsBase<T> = {
    */
   legendPosition?: LegendPosition;
   /**
+   * Animation duration in milliseconds for the chart components.
+   */
+  duration?: number;
+  /**
+   * If `true`, the tooltip will follow the cursor.
+   */
+  followCursor?: boolean;
+  /**
    * Optional style object for the legend container. Allows custom CSS styling.
    */
   legendStyle?: string | Record<string, string>;

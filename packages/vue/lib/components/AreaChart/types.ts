@@ -175,4 +175,12 @@ export interface AreaChartProps<T> {
    * When false (default), areas are overlaid on top of each other.
    */
   stacked?: boolean;
+  /**
+   * Animation duration in milliseconds for the chart components.
+   */
+  duration?: number;
+  /**
+   * If `true`, the tooltip will follow the cursor.
+   */
+  followCursor?: boolean;
 }

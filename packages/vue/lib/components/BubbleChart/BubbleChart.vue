@@ -17,6 +17,7 @@ import Tooltip from "../Tooltip.vue";
 import type { NumericAccessor } from "@unovis/ts";
 
 const props = withDefaults(defineProps<BubbleChartProps<T>>(), {
+  duration: 600,
   hideXAxis: false,
   hideYAxis: false,
   xLabel: "",
@@ -35,6 +36,7 @@ const props = withDefaults(defineProps<BubbleChartProps<T>>(), {
   legendPosition: LegendPosition.BottomCenter,
   padding: () => ({ top: 5, right: 5, bottom: 5, left: 5 }),
   hideTooltip: false,
+  followCursor: true,
   crosshairConfig: () => ({
     color: "#666",
   }),
@@ -122,10 +124,11 @@ const legendAlignment = computed(() => {
       :data="props.data"
       :height="props.height || 600"
       :padding="props.padding"
+      :duration="duration"
       :scaleByDomain="true"
       @click="emit('click', $event, hoverValues)"
     >
-      <VisTooltip v-if="!props.hideTooltip" :triggers="triggers" />
+      <VisTooltip v-if="!props.hideTooltip" :triggers="triggers" :followCursor="props.followCursor" />
       <VisScatter
         :x="x"
         :y="y"
@@ -147,6 +150,7 @@ const legendAlignment = computed(() => {
         :numTicks="props.xNumTicks"
         :tickValues="props.xExplicitTicks"
         :minMaxTicksOnly="props.minMaxTicksOnly"
+        :duration="props.duration"
         v-bind="xAxisConfig"
       />
       <VisAxis
@@ -158,6 +162,7 @@ const legendAlignment = computed(() => {
         :domainLine="!!props.yDomainLine"
         :tickLine="props.yTickLine"
         :numTicks="props.yNumTicks"
+        :duration="props.duration"
         v-bind="yAxisConfig"
       />
     </VisXYContainer>

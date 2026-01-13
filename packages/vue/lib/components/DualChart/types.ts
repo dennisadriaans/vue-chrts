@@ -192,4 +192,12 @@ export interface DualChartProps<T> {
    * See `Orientation` for available options.
    */
   orientation?: Orientation;
+  /**
+   * Animation duration in milliseconds for the chart components.
+   */
+  duration?: number;
+  /**
+   * If `true`, the tooltip will follow the cursor.
+   */
+  followCursor?: boolean;
 }

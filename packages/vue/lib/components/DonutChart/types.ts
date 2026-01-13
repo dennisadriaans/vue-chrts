@@ -50,6 +50,18 @@ export type DonutChartProps<T> = {
    * Use custom formatter for tooltip titles
    */
   tooltipTitleFormatter?: (data: T) => string | number;
+  /**
+   * If `true`, hides the chart tooltip.
+   */
+  hideTooltip?: boolean;
+  /**
+   * If `true`, the tooltip will follow the cursor.
+   */
+  followCursor?: boolean;
+  /**
+   * Animation duration in milliseconds.
+   */
+  duration?: number;
 };
 
 enum DonutType {

@@ -23,6 +23,7 @@ const emit = defineEmits<{
 }>();
 
 const props = withDefaults(defineProps<DualChartProps<T>>(), {
+  duration: 600,
   orientation: Orientation.Vertical,
   legendPosition: LegendPosition.BottomCenter,
   legendStyle: undefined,
@@ -37,6 +38,7 @@ const props = withDefaults(defineProps<DualChartProps<T>>(), {
     left: 5,
   }),
   hideTooltip: false,
+  followCursor: true,
   lineWidth: 2,
   curveType: CurveType.MonotoneX,
 });
@@ -119,9 +121,15 @@ function onCrosshairUpdateWithContent(d: T): string {
     }"
     @click="emit('click', $event, hoverValues)"
   >
-    <VisXYContainer :padding="padding" :height="height" :data="data">
+    <VisXYContainer
+      :padding="padding"
+      :height="height"
+      :duration="duration"
+      :data="data"
+    >
       <VisTooltip
         v-if="!hideTooltip"
+        :followCursor="followCursor"
         :triggers="{
           [GroupedBar.selectors.bar]: (d: T) => {
             onCrosshairUpdate(d);
@@ -183,6 +191,7 @@ function onCrosshairUpdateWithContent(d: T): string {
         :num-ticks="xNumTicks"
         :tick-values="xExplicitTicks"
         :minMaxTicksOnly="minMaxTicksOnly"
+        :duration="duration"
         v-bind="xAxisConfig"
       />
       <VisAxis
@@ -194,6 +203,7 @@ function onCrosshairUpdateWithContent(d: T): string {
         :tick-format="yFormatter"
         :num-ticks="yNumTicks"
         :tick-line="yTickLine"
+        :duration="duration"
         v-bind="yAxisConfig"
       />
 

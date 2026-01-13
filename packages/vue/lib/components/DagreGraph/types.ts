@@ -279,6 +279,11 @@ export interface DagreGraphProps<N = GraphNodeDatum, L = GraphLinkDatum> {
   tooltipContentFormatter?: (node: N) => string;
 
   /**
+   * If true, the tooltip will follow the cursor.
+   */
+  followCursor?: boolean;
+
+  /**
    * Animation duration in milliseconds
    * @default 600
    */

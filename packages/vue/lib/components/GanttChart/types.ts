@@ -125,4 +125,12 @@ export interface GanttChartProps<T> {
    * Axis configuration object for customizing the appearance of the axes.
    */
   yAxisConfig?: AxisConfig;
+  /**
+   * Animation duration in milliseconds for the chart components.
+   */
+  duration?: number;
+  /**
+   * If `true`, the tooltip will follow the cursor.
+   */
+  followCursor?: boolean;
 }

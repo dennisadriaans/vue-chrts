@@ -106,6 +106,10 @@ export interface AxisConfig {
   minMaxTicksOnly?: boolean;
   minMaxTicksOnlyShowGridLines?: boolean;
   tickValues?: readonly number[] | readonly Date[];
+  /**
+   * Animation duration in milliseconds.
+   */
+  duration?: number;
 }
 
 export type MarkerConfig = {

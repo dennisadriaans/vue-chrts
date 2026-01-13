@@ -32,6 +32,7 @@ const props = withDefaults(defineProps<DagreGraphProps<N, L>>(), {
   linkCurvature: 0,
   padding: () => ({ top: 20, right: 20, bottom: 20, left: 20 }),
   hideTooltip: false,
+  followCursor: true,
   zoomEnabled: true,
   zoomScaleExtent: () => [0.1, 10],
   nodeDraggingEnabled: false,
@@ -192,9 +193,10 @@ const events = {
       :data="data"
       :height="height"
       :width="width"
+      :duration="duration"
       :padding="padding"
     >
-      <VisTooltip v-if="!hideTooltip" />
+      <VisTooltip v-if="!hideTooltip" :followCursor="followCursor" />
 
       <VisGraph
         :layoutType="GraphLayoutType.Dagre"

@@ -19,7 +19,9 @@ const emit = defineEmits<{
 }>();
 
 const props = withDefaults(defineProps<DonutChartProps<T>>(), {
+  duration: 600,
   legendPosition: LegendPosition.BottomCenter,
+  followCursor: true,
 });
 
 const slots = useSlots();
@@ -83,10 +85,17 @@ const colors = (_: number, i: number) => {
     }"
     @click="emit('click', $event, hoverValues)"
   >
-    <VisSingleContainer :data="data" :height="height" :margin="{}">
+    <VisSingleContainer
+      :data="data"
+      :height="height"
+      :duration="duration"
+      :margin="{}"
+    >
       <VisTooltip
+        v-if="!hideTooltip"
         :horizontal-shift="20"
         :vertical-shift="20"
+        :followCursor="followCursor"
         :triggers="{
           [Donut.selectors.segment]: onCrosshairUpdate,
         }"
