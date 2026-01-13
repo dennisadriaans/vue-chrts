@@ -102,6 +102,7 @@ const xFormatter = (i) => data[i].month;
 - `AreaChart`
 - `AreaStackedChart`
 - `DonutChart`
+- `StatusTracker`
 
 ## Credits
 

@@ -59,6 +59,11 @@ const router = createRouter({
       name: "DagreGraph",
       component: () => import("./DagreGraphPage.vue"),
     },
+    {
+      path: "/status-tracker",
+      name: "StatusTracker",
+      component: () => import("./StatusTrackerPage.vue"),
+    },
   ],
   history: createWebHistory(),
 });
