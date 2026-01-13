@@ -4,6 +4,7 @@ import {
   LegendPosition,
   MarkerConfig,
   AxisConfig,
+  TooltipConfig,
 } from "../../types";
 import type { BulletLegendItemInterface, CurveType } from "@unovis/ts";
 
@@ -180,7 +181,7 @@ export interface AreaChartProps<T> {
    */
   duration?: number;
   /**
-   * If `true`, the tooltip will follow the cursor.
+   * Configuration object for the chart tooltip.
    */
-  followCursor?: boolean;
+  tooltip?: TooltipConfig;
 }

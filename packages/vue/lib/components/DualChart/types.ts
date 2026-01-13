@@ -5,6 +5,7 @@ import {
   AxisConfig,
   BulletLegendItemInterface,
   Orientation,
+  TooltipConfig,
 } from "../../types";
 import type { CurveType } from "@unovis/ts";
 
@@ -197,7 +198,7 @@ export interface DualChartProps<T> {
    */
   duration?: number;
   /**
-   * If `true`, the tooltip will follow the cursor.
+   * Configuration object for the chart tooltip.
    */
-  followCursor?: boolean;
+  tooltip?: TooltipConfig;
 }

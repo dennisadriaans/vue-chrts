@@ -40,7 +40,9 @@ const props = withDefaults(defineProps<SankeyChartProps<N, L>>(), {
   iterations: 32,
   highlightSubtreeOnHover: false,
   labelMaxWidth: 70,
-  followCursor: true,
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const slots = useSlots();
@@ -76,7 +78,9 @@ function onNodeHover(d: any) {
     >
       <VisTooltip
         v-if="!hideTooltip"
-        :followCursor="followCursor"
+        :followCursor="props.tooltip.followCursor"
+        :show-delay="props.tooltip.showDelay"
+        :hide-delay="props.tooltip.hideDelay"
         :triggers="{
           [Sankey.selectors.node]: (d: any) => {
             onNodeHover(d);

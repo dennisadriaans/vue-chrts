@@ -21,7 +21,9 @@ const emit = defineEmits<{
 const props = withDefaults(defineProps<DonutChartProps<T>>(), {
   duration: 600,
   legendPosition: LegendPosition.BottomCenter,
-  followCursor: true,
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const slots = useSlots();
@@ -95,7 +97,9 @@ const colors = (_: number, i: number) => {
         v-if="!hideTooltip"
         :horizontal-shift="20"
         :vertical-shift="20"
-        :followCursor="followCursor"
+        :followCursor="props.tooltip.followCursor"
+        :show-delay="props.tooltip.showDelay"
+        :hide-delay="props.tooltip.hideDelay"
         :triggers="{
           [Donut.selectors.segment]: onCrosshairUpdate,
         }"

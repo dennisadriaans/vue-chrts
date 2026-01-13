@@ -38,9 +38,11 @@ const props = withDefaults(defineProps<DualChartProps<T>>(), {
     left: 5,
   }),
   hideTooltip: false,
-  followCursor: true,
   lineWidth: 2,
   curveType: CurveType.MonotoneX,
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const slots = useSlots();
@@ -129,7 +131,9 @@ function onCrosshairUpdateWithContent(d: T): string {
     >
       <VisTooltip
         v-if="!hideTooltip"
-        :followCursor="followCursor"
+        :followCursor="props.tooltip.followCursor"
+        :show-delay="props.tooltip.showDelay"
+        :hide-delay="props.tooltip.hideDelay"
         :triggers="{
           [GroupedBar.selectors.bar]: (d: T) => {
             onCrosshairUpdate(d);

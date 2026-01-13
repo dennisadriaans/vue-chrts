@@ -3,6 +3,7 @@ import {
   CrosshairConfig,
   LegendPosition,
   AxisConfig,
+  TooltipConfig,
 } from "../../types";
 
 export interface GanttChartProps<T> {
@@ -130,7 +131,7 @@ export interface GanttChartProps<T> {
    */
   duration?: number;
   /**
-   * If `true`, the tooltip will follow the cursor.
+   * Configuration object for the chart tooltip.
    */
-  followCursor?: boolean;
+  tooltip?: TooltipConfig;
 }

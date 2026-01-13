@@ -38,8 +38,10 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
     left: 5,
   }),
   hideTooltip: false,
-  followCursor: true,
   stackedGroupedSpacing: 0.1,
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const slots = useSlots();
@@ -166,7 +168,10 @@ const labelX = (d: LabelDatum) => {
       />
 
       <VisTooltip
-        :followCursor="followCursor"
+        v-if="!hideTooltip"
+        :followCursor="props.tooltip.followCursor"
+        :show-delay="props.tooltip.showDelay"
+        :hide-delay="props.tooltip.hideDelay"
         :triggers="{
           [GroupedBar.selectors.bar]: (d: T) => {
             onCrosshairUpdate(d);

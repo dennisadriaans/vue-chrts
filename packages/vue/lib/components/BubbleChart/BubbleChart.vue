@@ -36,11 +36,13 @@ const props = withDefaults(defineProps<BubbleChartProps<T>>(), {
   legendPosition: LegendPosition.BottomCenter,
   padding: () => ({ top: 5, right: 5, bottom: 5, left: 5 }),
   hideTooltip: false,
-  followCursor: true,
   crosshairConfig: () => ({
     color: "#666",
   }),
   legendStyle: undefined,
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const slots = useSlots();
@@ -128,7 +130,13 @@ const legendAlignment = computed(() => {
       :scaleByDomain="true"
       @click="emit('click', $event, hoverValues)"
     >
-      <VisTooltip v-if="!props.hideTooltip" :triggers="triggers" :followCursor="props.followCursor" />
+      <VisTooltip
+        v-if="!props.hideTooltip"
+        :triggers="triggers"
+        :followCursor="props.tooltip.followCursor"
+        :show-delay="props.tooltip.showDelay"
+        :hide-delay="props.tooltip.hideDelay"
+      />
       <VisScatter
         :x="x"
         :y="y"

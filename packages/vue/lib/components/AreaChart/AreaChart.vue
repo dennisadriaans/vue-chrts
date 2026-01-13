@@ -36,11 +36,13 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
   legendStyle: undefined,
   hideLegend: false,
   hideArea: false,
-  followCursor: true,
   gradientStops: () => [
     { offset: "0%", stopOpacity: 1 },
     { offset: "75%", stopOpacity: 0 },
   ],
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const slots = useSlots();
@@ -198,7 +200,9 @@ function onCrosshairUpdate(d: T): string {
         v-if="!hideTooltip"
         :horizontal-placement="Position.Right"
         :vertical-placement="Position.Top"
-        :follow-cursor="followCursor"
+        :follow-cursor="props.tooltip.followCursor"
+        :show-delay="props.tooltip.showDelay"
+        :hide-delay="props.tooltip.hideDelay"
       />
 
       <!-- Stacked Area Mode: Single VisArea with array of y accessors -->

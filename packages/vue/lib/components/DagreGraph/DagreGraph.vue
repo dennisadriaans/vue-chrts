@@ -32,7 +32,6 @@ const props = withDefaults(defineProps<DagreGraphProps<N, L>>(), {
   linkCurvature: 0,
   padding: () => ({ top: 20, right: 20, bottom: 20, left: 20 }),
   hideTooltip: false,
-  followCursor: true,
   zoomEnabled: true,
   zoomScaleExtent: () => [0.1, 10],
   nodeDraggingEnabled: false,
@@ -41,6 +40,9 @@ const props = withDefaults(defineProps<DagreGraphProps<N, L>>(), {
   legendStyle: undefined,
   legendItems: () => [],
   duration: 600,
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const emit = defineEmits<{
@@ -196,7 +198,12 @@ const events = {
       :duration="duration"
       :padding="padding"
     >
-      <VisTooltip v-if="!hideTooltip" :followCursor="followCursor" />
+      <VisTooltip
+        v-if="!hideTooltip"
+        :followCursor="props.tooltip.followCursor"
+        :show-delay="props.tooltip.showDelay"
+        :hide-delay="props.tooltip.hideDelay"
+      />
 
       <VisGraph
         :layoutType="GraphLayoutType.Dagre"

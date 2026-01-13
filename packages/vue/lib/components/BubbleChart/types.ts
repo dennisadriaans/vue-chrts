@@ -4,6 +4,7 @@ import {
   LegendPosition,
   CrosshairConfig,
   AxisConfig,
+  TooltipConfig,
 } from "../../types";
 
 export interface SizeOptions {
@@ -175,7 +176,7 @@ export interface BubbleChartProps<T> {
    */
   duration?: number;
   /**
-   * If `true`, the tooltip will follow the cursor.
+   * Configuration object for the chart tooltip.
    */
-  followCursor?: boolean;
+  tooltip?: TooltipConfig;
 }

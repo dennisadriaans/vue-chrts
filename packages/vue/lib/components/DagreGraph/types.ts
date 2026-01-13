@@ -1,4 +1,4 @@
-import type { BulletLegendItemInterface } from "../../types";
+import type { BulletLegendItemInterface, TooltipConfig } from "../../types";
 import { LegendPosition } from "../../types";
 
 /**
@@ -279,9 +279,9 @@ export interface DagreGraphProps<N = GraphNodeDatum, L = GraphLinkDatum> {
   tooltipContentFormatter?: (node: N) => string;
 
   /**
-   * If true, the tooltip will follow the cursor.
+   * Configuration object for the chart tooltip.
    */
-  followCursor?: boolean;
+  tooltip?: TooltipConfig;
 
   /**
    * Animation duration in milliseconds

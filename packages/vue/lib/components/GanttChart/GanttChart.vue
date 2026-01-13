@@ -27,8 +27,10 @@ const props = withDefaults(defineProps<GanttChartProps<T>>(), {
   hideTooltip: false,
   lineWidth: 12,
   rowHeight: 24,
-  followCursor: true,
   legendPosition: LegendPosition.TopRight,
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const emit = defineEmits<{
@@ -103,7 +105,9 @@ const colors = computed(() => {
 
       <VisTooltip
         v-if="!hideTooltip"
-        :followCursor="followCursor"
+        :followCursor="props.tooltip.followCursor"
+        :show-delay="props.tooltip.showDelay"
+        :hide-delay="props.tooltip.hideDelay"
         :triggers="{
           [Timeline.selectors.label]: (d: T) => {
             generateLabelTooltip(d);

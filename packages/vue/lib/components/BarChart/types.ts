@@ -4,6 +4,7 @@ import {
   LegendPosition,
   axisFormatter,
   AxisConfig,
+  TooltipConfig,
 } from "../../types";
 
 type BarChartPropsBase<T> = {
@@ -117,9 +118,9 @@ type BarChartPropsBase<T> = {
    */
   duration?: number;
   /**
-   * If `true`, the tooltip will follow the cursor.
+   * Configuration object for the chart tooltip.
    */
-  followCursor?: boolean;
+  tooltip?: TooltipConfig;
   /**
    * Optional style object for the legend container. Allows custom CSS styling.
    */

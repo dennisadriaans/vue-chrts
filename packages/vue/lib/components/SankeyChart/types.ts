@@ -1,6 +1,7 @@
 import {
   BulletLegendItemInterface,
   LegendPosition,
+  TooltipConfig,
 } from "../../types";
 import {
   SankeyInputNode,
@@ -101,9 +102,9 @@ export type SankeyChartProps<
    */
   hideTooltip?: boolean;
   /**
-   * If `true`, the tooltip will follow the cursor.
+   * Configuration object for the chart tooltip.
    */
-  followCursor?: boolean;
+  tooltip?: TooltipConfig;
   /**
    * Highlight the corresponding subtree on node / link hover. Default: false
    */

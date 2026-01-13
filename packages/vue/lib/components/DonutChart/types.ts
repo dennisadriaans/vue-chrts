@@ -1,4 +1,4 @@
-import { BulletLegendItemInterface, LegendPosition } from "../../types";
+import { BulletLegendItemInterface, LegendPosition, TooltipConfig } from "../../types";
 
 export type DonutChartProps<T> = {
   /**
@@ -55,9 +55,9 @@ export type DonutChartProps<T> = {
    */
   hideTooltip?: boolean;
   /**
-   * If `true`, the tooltip will follow the cursor.
+   * Configuration object for the chart tooltip.
    */
-  followCursor?: boolean;
+  tooltip?: TooltipConfig;
   /**
    * Animation duration in milliseconds.
    */
