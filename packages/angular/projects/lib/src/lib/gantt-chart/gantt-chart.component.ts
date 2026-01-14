@@ -22,8 +22,9 @@ import { Timeline } from '@unovis/ts';
 import { LegendPosition, BulletLegendItemInterface } from '../types';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 
-// Default date formatter
-const dateFormatter = (date: number | Date) => Intl.DateTimeFormat().format(typeof date === 'number' ? date : date.getTime());
+// Cached date formatter instance for better performance
+const cachedDateFormatter = new Intl.DateTimeFormat();
+const dateFormatter = (date: number | Date) => cachedDateFormatter.format(typeof date === 'number' ? date : date.getTime());
 
 @Component({
   selector: 'ngx-gantt-chart',

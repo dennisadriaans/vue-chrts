@@ -194,6 +194,8 @@ export class BubbleChartComponent<T extends Record<string, any>> {
     const categoryValue = String(d[catKey as keyof T]);
     let categoryColor = cats[categoryValue]?.color;
 
+    // Special case: when only one category is defined, use the categoryKey
+    // directly as the category lookup key (matching Vue behavior)
     if (Object.keys(cats).length === 1) {
       categoryColor = cats[catKey as keyof typeof cats]?.color;
     }

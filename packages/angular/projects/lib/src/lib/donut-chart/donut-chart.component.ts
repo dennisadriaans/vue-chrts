@@ -112,7 +112,7 @@ export class DonutChartComponent {
   readonly tooltipWrapper = viewChild<ElementRef<HTMLDivElement>>('tooltipWrapper');
   readonly hoverValues = signal<any>(undefined);
 
-  readonly isLegendTop = computed(() => this.legendPosition().includes('top'));
+  readonly isLegendTop = computed(() => this.legendPosition().startsWith('top'));
 
   readonly legendAlignment = computed(() => {
     const pos = this.legendPosition();
