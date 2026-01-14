@@ -13,7 +13,6 @@ interface ChartData {
   selector: 'app-root',
   imports: [LineChartComponent, AreaChartComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
 })
 export class App {
   protected readonly title = signal('example-app');
@@ -48,7 +47,11 @@ export class App {
     { month: 'Jun', value: 30, sales: 70, profit: 35 },
   ];
 
-  handleChartClick(event: { event: MouseEvent; data?: ChartData }): void {
+  handleChartClick(event: { event: MouseEvent; values?: ChartData }): void {
     console.log('Chart clicked:', event);
   }
+
+  formatX = (tick: number, i?: number) => {
+    return this.data[tick]?.month ?? '';
+  };
 }

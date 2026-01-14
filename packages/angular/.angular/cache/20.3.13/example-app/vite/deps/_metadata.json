@@ -1,0 +1,97 @@
+{
+  "hash": "c939d2be",
+  "configHash": "2e0fa40f",
+  "lockfileHash": "cc98e633",
+  "browserHash": "0dbd6fa6",
+  "optimized": {
+    "@angular/common": {
+      "src": "../../../../../../../../node_modules/.pnpm/@angular+common@20.3.15_@angular+core@20.3.15_rxjs@7.8.2/node_modules/@angular/common/fesm2022/common.mjs",
+      "file": "@angular_common.js",
+      "fileHash": "90156b13",
+      "needsInterop": false
+    },
+    "@angular/core": {
+      "src": "../../../../../../../../node_modules/.pnpm/@angular+core@20.3.15_@angular+compiler@20.3.15_rxjs@7.8.2_zone.js@0.15.0/node_modules/@angular/core/fesm2022/core.mjs",
+      "file": "@angular_core.js",
+      "fileHash": "fd2df983",
+      "needsInterop": false
+    },
+    "@angular/platform-browser": {
+      "src": "../../../../../../../../node_modules/.pnpm/@angular+platform-browser@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15/node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
+      "file": "@angular_platform-browser.js",
+      "fileHash": "8642d795",
+      "needsInterop": false
+    },
+    "@angular/router": {
+      "src": "../../../../../../../../node_modules/.pnpm/@angular+router@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15_@angular+platform-browser@20.3.15_rxjs@7.8.2/node_modules/@angular/router/fesm2022/router.mjs",
+      "file": "@angular_router.js",
+      "fileHash": "c0f01894",
+      "needsInterop": false
+    },
+    "@unovis/angular": {
+      "src": "../../../../../../../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/public-api.js",
+      "file": "@unovis_angular.js",
+      "fileHash": "9ed985d2",
+      "needsInterop": false
+    },
+    "@unovis/ts": {
+      "src": "../../../../../../../../node_modules/.pnpm/@unovis+ts@1.6.2/node_modules/@unovis/ts/index.js",
+      "file": "@unovis_ts.js",
+      "fileHash": "f086a154",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "mapboxgl-layer-CD76KLLY": {
+      "file": "mapboxgl-layer-CD76KLLY.js"
+    },
+    "renderer-RBD2DBYM": {
+      "file": "renderer-RBD2DBYM.js"
+    },
+    "dist-SXZRZX6G": {
+      "file": "dist-SXZRZX6G.js"
+    },
+    "dist-MD5T5APL": {
+      "file": "dist-MD5T5APL.js"
+    },
+    "chunk-FNAEINJJ": {
+      "file": "chunk-FNAEINJJ.js"
+    },
+    "src-UFVHI6AQ": {
+      "file": "src-UFVHI6AQ.js"
+    },
+    "elk.bundled-NVVMOIYO": {
+      "file": "elk__bundled-NVVMOIYO.js"
+    },
+    "chunk-FBCDWED4": {
+      "file": "chunk-FBCDWED4.js"
+    },
+    "chunk-SFUQ3DKB": {
+      "file": "chunk-SFUQ3DKB.js"
+    },
+    "chunk-IZMHJU6E": {
+      "file": "chunk-IZMHJU6E.js"
+    },
+    "chunk-QFO5SMYG": {
+      "file": "chunk-QFO5SMYG.js"
+    },
+    "chunk-C7SCZ44F": {
+      "file": "chunk-C7SCZ44F.js"
+    },
+    "chunk-BNMFKIU3": {
+      "file": "chunk-BNMFKIU3.js"
+    },
+    "chunk-BKKYJXF4": {
+      "file": "chunk-BKKYJXF4.js"
+    },
+    "leaflet-src-76UPBNJA": {
+      "file": "leaflet-src-76UPBNJA.js"
+    },
+    "maplibre-gl-Y6M5XX27": {
+      "file": "maplibre-gl-Y6M5XX27.js"
+    },
+    "chunk-7WUTQBRG": {
+      "file": "chunk-7WUTQBRG.js"
+    }
+  }
+}

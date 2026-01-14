@@ -4,6 +4,7 @@
   "peerDependencies": {
     "@angular/common": "^20.3.0",
     "@angular/core": "^20.3.0",
+    "@unovis/angular": "^1.6.2",
     "@unovis/ts": "^1.6.2"
   },
   "dependencies": {

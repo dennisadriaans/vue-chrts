@@ -12,13 +12,13 @@
       [data]="data" 
       [categories]="areaCategories"
       [height]="300"
-      xKey="month"
+      [xFormatter]="formatX"
       xLabel="Month"
       yLabel="Value"
       [curveType]="CurveType.MonotoneX"
       [xGridLine]="true"
       [yGridLine]="true"
-      (chartClick)="handleChartClick($event)"
+      (click)="handleChartClick($event)"
     ></ngx-area-chart>
   </div>
 
@@ -28,14 +28,14 @@
       [data]="stackedData" 
       [categories]="areaCategories"
       [height]="300"
-      xKey="month"
+      [xFormatter]="formatX"
       xLabel="Month"
       yLabel="Total Value"
       [stacked]="true"
       [curveType]="CurveType.MonotoneX"
       [xGridLine]="false"
       [yGridLine]="true"
-      (chartClick)="handleChartClick($event)"
+      (click)="handleChartClick($event)"
     ></ngx-area-chart>
   </div>
 
@@ -45,7 +45,7 @@
       [data]="data" 
       [categories]="areaCategories"
       [height]="300"
-      xKey="month"
+      [xFormatter]="formatX"
       xLabel="Month"
       yLabel="Value"
       [hideArea]="true"
@@ -62,7 +62,7 @@
       [data]="data" 
       [categories]="areaCategories"
       [height]="300"
-      xKey="month"
+      [xFormatter]="formatX"
       [curveType]="CurveType.Step"
       [lineWidth]="2"
       [xGridLine]="false"
