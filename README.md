@@ -105,7 +105,7 @@ const xFormatter = (i) => data[i].month;
 - `DonutChart`
 
 ## Vue charts
-Make better dashboards with with [Vue charts](https:/nuxtcharts.com/vue-charts) This library simplifies the process of integrating beautiful Vue charts into any modern web application or dashboard. 
+Make better dashboards with with [Vue charts](https://nuxtcharts.com/vue-charts) This library simplifies the process of integrating beautiful Vue charts into any modern web application or dashboard. 
 
 ## Credits
 
