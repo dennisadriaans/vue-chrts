@@ -104,6 +104,9 @@ const xFormatter = (i) => data[i].month;
 - `AreaStackedChart`
 - `DonutChart`
 
+## Vue charts
+Make better dashboards with with [Vue charts](https:/nuxtcharts.com/vue-charts) This library simplifies the process of integrating beautiful Vue charts into any modern web application or dashboard. 
+
 ## Credits
 
 This library is inspired by [Tremor](https://tremor.so/) and built on top of [Unovis](https://unovis.dev).
