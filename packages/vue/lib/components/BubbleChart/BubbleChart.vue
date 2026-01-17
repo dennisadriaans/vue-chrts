@@ -17,6 +17,7 @@ import Tooltip from "../Tooltip.vue";
 import type { NumericAccessor } from "@unovis/ts";
 
 const props = withDefaults(defineProps<BubbleChartProps<T>>(), {
+  duration: 600,
   hideXAxis: false,
   hideYAxis: false,
   xLabel: "",
@@ -39,6 +40,9 @@ const props = withDefaults(defineProps<BubbleChartProps<T>>(), {
     color: "#666",
   }),
   legendStyle: undefined,
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const slots = useSlots();
@@ -122,10 +126,17 @@ const legendAlignment = computed(() => {
       :data="props.data"
       :height="props.height || 600"
       :padding="props.padding"
+      :duration="duration"
       :scaleByDomain="true"
       @click="emit('click', $event, hoverValues)"
     >
-      <VisTooltip v-if="!props.hideTooltip" :triggers="triggers" />
+      <VisTooltip
+        v-if="!props.hideTooltip"
+        :triggers="triggers"
+        :followCursor="props.tooltip.followCursor"
+        :show-delay="props.tooltip.showDelay"
+        :hide-delay="props.tooltip.hideDelay"
+      />
       <VisScatter
         :x="x"
         :y="y"
@@ -147,6 +158,7 @@ const legendAlignment = computed(() => {
         :numTicks="props.xNumTicks"
         :tickValues="props.xExplicitTicks"
         :minMaxTicksOnly="props.minMaxTicksOnly"
+        :duration="props.duration"
         v-bind="xAxisConfig"
       />
       <VisAxis
@@ -158,6 +170,7 @@ const legendAlignment = computed(() => {
         :domainLine="!!props.yDomainLine"
         :tickLine="props.yTickLine"
         :numTicks="props.yNumTicks"
+        :duration="props.duration"
         v-bind="yAxisConfig"
       />
     </VisXYContainer>

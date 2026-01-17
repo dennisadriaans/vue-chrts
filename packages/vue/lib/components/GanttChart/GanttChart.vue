@@ -20,6 +20,7 @@ export interface TimelineCategory {
 }
 
 const props = withDefaults(defineProps<GanttChartProps<T>>(), {
+  duration: 600,
   labelWidth: 220,
   title: "",
   showLabels: true,
@@ -27,6 +28,9 @@ const props = withDefaults(defineProps<GanttChartProps<T>>(), {
   lineWidth: 12,
   rowHeight: 24,
   legendPosition: LegendPosition.TopRight,
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const emit = defineEmits<{
@@ -84,6 +88,7 @@ const colors = computed(() => {
     <VisXYContainer
       :data="props.data"
       :height="props.height"
+      :duration="duration"
       @wheel="handleScroll"
     >
       <VisTimeline
@@ -99,6 +104,10 @@ const colors = computed(() => {
       />
 
       <VisTooltip
+        v-if="!hideTooltip"
+        :followCursor="props.tooltip.followCursor"
+        :show-delay="props.tooltip.showDelay"
+        :hide-delay="props.tooltip.hideDelay"
         :triggers="{
           [Timeline.selectors.label]: (d: T) => {
             generateLabelTooltip(d);
@@ -113,6 +122,7 @@ const colors = computed(() => {
         :tick-line="xTickLine"
         :grid-line="xGridLine"
         :domain-line="xDomainLine"
+        :duration="duration"
         v-bind="xAxisConfig"
       />
     </VisXYContainer>

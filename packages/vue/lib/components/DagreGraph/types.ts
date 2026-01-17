@@ -1,4 +1,4 @@
-import type { BulletLegendItemInterface } from "../../types";
+import type { BulletLegendItemInterface, TooltipConfig } from "../../types";
 import { LegendPosition } from "../../types";
 
 /**
@@ -277,6 +277,11 @@ export interface DagreGraphProps<N = GraphNodeDatum, L = GraphLinkDatum> {
    * Custom formatter for tooltip content
    */
   tooltipContentFormatter?: (node: N) => string;
+
+  /**
+   * Configuration object for the chart tooltip.
+   */
+  tooltip?: TooltipConfig;
 
   /**
    * Animation duration in milliseconds
