@@ -33,6 +33,7 @@
     "@angular/router": "^20.3.0",
     "@unovis/angular": "^1.6.2",
     "@unovis/ts": "^1.6.2",
+    "@vue-chrts/shared": "workspace:^",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

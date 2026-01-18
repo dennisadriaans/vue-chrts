@@ -10,7 +10,8 @@ export const resolveComponents = (config: ModuleOptions, filePath: string) => {
     "BarChart",
     "DonutChart",
     'BubbleChart',
-    'GanttChart'
+    'GanttChart',
+    'DualChart'
   ];
 
   allComponents.forEach((component) => {
