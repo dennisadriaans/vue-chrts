@@ -5,14 +5,19 @@ import DonutChart from "./components/DonutChart/DonutChart.vue";
 import BubbleChart from "./components/BubbleChart/BubbleChart.vue";
 import GanttChart from "./components/GanttChart/GanttChart.vue";
 
-import {
-    LegendPosition,
-    CurveType,
-    Orientation,
+import { LegendPosition, CurveType, Orientation, DonutType } from "./types";
+import type {
+    BulletLegendItemInterface,
+    AreaChartProps,
+    BarChartProps,
+    LineChartProps,
+    DonutChartProps,
+    BubbleChartProps,
+    GanttChartProps,
+    axisFormatter,
+    AxisConfig,
     MarkerConfig,
-    CrosshairConfig,
-    DonutType,
-    type BulletLegendItemInterface,
+    CrosshairConfig
 } from "./types";
 
 export {
@@ -30,6 +35,14 @@ export {
 
 export type {
     BulletLegendItemInterface,
+    AreaChartProps,
+    BarChartProps,
+    LineChartProps,
+    DonutChartProps,
+    BubbleChartProps,
+    GanttChartProps,
+    axisFormatter,
+    AxisConfig,
     MarkerConfig,
     CrosshairConfig
 }

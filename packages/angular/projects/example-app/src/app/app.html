@@ -28,6 +28,7 @@
       [curveType]="CurveType.MonotoneX"
       [xGridLine]="true"
       [yGridLine]="true"
+      [legendPosition]="LegendPosition.TopCenter"
       (click)="handleChartClick($event)"
     ></ngx-area-chart>
   </div>
@@ -69,6 +70,7 @@
     <ngx-bar-chart 
       [data]="stackedData" 
       [categories]="areaCategories"
+      [orientation]="Orientation.Horizontal"
       [yAxis]="['sales', 'profit']"
       [height]="300"
       [xFormatter]="formatX"

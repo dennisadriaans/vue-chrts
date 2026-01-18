@@ -7,9 +7,11 @@ import {
   DonutChartComponent,
   BubbleChartComponent,
   GanttChartComponent,
-  DonutType,
+  LegendPosition,
+  CurveType,
+  Orientation,
+  DonutType
 } from 'ngx-chrts';
-import { CurveType, Orientation } from '@unovis/ts';
 
 interface ChartData {
   month: string;
@@ -46,9 +48,11 @@ interface GanttData {
 })
 export class App {
   protected readonly title = signal('example-app');
-  protected readonly CurveType = CurveType;
+    protected readonly CurveType = CurveType;
   protected readonly Orientation = Orientation;
   protected readonly DonutType = DonutType;
+  protected readonly LegendPosition = LegendPosition;
+
 
   protected readonly data: ChartData[] = [
     { month: 'Jan', value: 12, sales: 100, profit: 50 },

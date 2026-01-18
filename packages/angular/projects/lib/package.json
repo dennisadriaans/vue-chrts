@@ -8,6 +8,7 @@
     "@unovis/ts": "^1.6.2"
   },
   "dependencies": {
+    "@vue-chrts/shared": "workspace:^",
     "tslib": "^2.3.0"
   },
   "sideEffects": false
