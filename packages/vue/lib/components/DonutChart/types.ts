@@ -1,1 +1,1 @@
-export type { DonutChartProps } from "@vue-chrts/shared";\nexport { DonutType } from "@vue-chrts/shared";
+export { type DonutChartProps, DonutType } from "@vue-chrts/shared";
