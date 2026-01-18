@@ -1,10 +1,10 @@
 import {
   axisFormatter,
-  CrosshairConfig,
   LegendPosition,
-  AxisConfig,
   BulletLegendItemInterface,
   Orientation,
+  AxisConfig,
+  CrosshairConfig,
 } from "../../types";
 import type { CurveType } from "@unovis/ts";
 

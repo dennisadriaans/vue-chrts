@@ -4,11 +4,11 @@ import {
   Orientation,
   DonutType,
   BulletLegendItemInterface,
-  axisFormatter,
-  AxisConfig,
-  MarkerConfig,
-  CrosshairConfig,
-  AreaChartProps as SharedAreaChartProps
+  AreaChartProps as SharedAreaChartProps,
+  type axisFormatter,
+  type AxisConfig,
+  type MarkerConfig,
+  type CrosshairConfig,
 } from "@vue-chrts/shared";
 
 import { BarChartProps } from "./components/BarChart/types";
@@ -37,6 +37,10 @@ export {
   CurveType,
   Orientation,
   DonutType,
+  axisFormatter,
+  AxisConfig,
+  MarkerConfig,
+  CrosshairConfig,
   type SharedAreaChartProps as AreaChartProps,
   type BarChartProps,
   type LineChartProps,

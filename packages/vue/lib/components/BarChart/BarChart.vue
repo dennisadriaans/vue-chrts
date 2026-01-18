@@ -138,9 +138,6 @@ const labelX = (d: LabelDatum) => {
   return d.x + offsetFromCenter;
 };
 
-onMounted(() => {
-  logPremiumUpgradeMessage();
-})
 </script>
 
 <template>
