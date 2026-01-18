@@ -3,8 +3,5 @@
   "dest": "../../dist/ngx-chrts",
   "lib": {
     "entryFile": "src/public-api.ts"
-  },
-  "allowedNonPeerDependencies": [
-    "@vue-chrts/shared"
-  ]
+  }
 }

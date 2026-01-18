@@ -145,4 +145,28 @@ export interface BubbleChartProps<T> {
    * If `true`, hide the y-axis.
    */
   hideYAxis?: boolean;
+  /**
+   * The desired number of ticks on the x-axis.
+   */
+  xNumTicks?: number;
+  /**
+   * The desired number of ticks on the y-axis.
+   */
+  yNumTicks?: number;
+  /**
+   * If `true`, hides the tooltip.
+   */
+  hideTooltip?: boolean;
+  /**
+   * Crosshair configuration object for customizing the appearance of the crosshair line.
+   */
+  crosshairConfig?: CrosshairConfig;
+  /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  xAxisConfig?: AxisConfig;
+  /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  yAxisConfig?: AxisConfig;
 }

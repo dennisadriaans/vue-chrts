@@ -99,4 +99,30 @@ export interface GanttChartProps<T> {
    * Optional style object for the legend container. Allows custom CSS styling.
    */
   legendStyle?: string | Record<string, string>;
+  /**
+   * If `true`, hides the chart legend.
+   */
+  hideLegend?: boolean;
+  /**
+   * If `true`, displays tick lines on the x-axis.
+   */
+  xTickLine?: boolean;
+  xTickFormat?: (
+    tick: number | Date,
+    i?: number,
+    ticks?: number[] | Date[]
+  ) => string;
+  xMinMaxTicksOnly?: boolean;
+  xTickValues?: number[] | Date[];
+  xGridLine?: boolean;
+  xDomainLine?: boolean;
+
+  /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  xAxisConfig?: AxisConfig;
+  /**
+   * Axis configuration object for customizing the appearance of the axes.
+   */
+  yAxisConfig?: AxisConfig;
 }
