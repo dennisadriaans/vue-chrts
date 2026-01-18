@@ -17,6 +17,21 @@ import { DonutChartProps } from "./components/DonutChart/types";
 import { BubbleChartProps } from "./components/BubbleChart/types";
 import { GanttChartProps } from "./components/GanttChart/types";
 
+import {
+  DagreGraphProps,
+  GraphNodeDatum,
+  GraphLinkDatum,
+  GraphData,
+  DagreLayoutSettings,
+  DagreRankDir,
+  DagreAlign,
+  DagreRanker,
+  NodeShape,
+  LinkArrowPosition,
+} from "./components/DagreGraph/types";
+
+import { SankeyChartProps } from "./components/SankeyChart/types";
+
 export {
   LegendPosition,
   CurveType,
@@ -29,8 +44,15 @@ export {
   type BulletLegendItemInterface,
   type BubbleChartProps,
   type GanttChartProps,
-  type axisFormatter,
-  type AxisConfig,
-  type MarkerConfig,
-  type CrosshairConfig,
+  type DagreGraphProps,
+  type GraphNodeDatum,
+  type GraphLinkDatum,
+  type GraphData,
+  type DagreLayoutSettings,
+  type DagreRankDir,
+  type DagreAlign,
+  type DagreRanker,
+  type NodeShape,
+  type LinkArrowPosition,
+  type SankeyChartProps,
 };

@@ -97,8 +97,8 @@ importers:
         specifier: ^1.6.2
         version: 1.6.2(@unovis/ts@1.6.2)(vue@3.5.25(typescript@5.9.2))
       vue-chrts:
-        specifier: 2.0.0
-        version: 2.0.0(vue@3.5.25(typescript@5.9.2))
+        specifier: workspace:*
+        version: link:../vue
     devDependencies:
       '@nuxt/eslint':
         specifier: ^1.7.1
@@ -8723,11 +8723,6 @@ packages:
 
   vue-bundle-renderer@2.2.0:
     resolution: {integrity: sha512-sz/0WEdYH1KfaOm0XaBmRZOWgYTEvUDt6yPYaUzl4E52qzgWLlknaPPTTZmp6benaPTlQAI/hN1x3tAzZygycg==}
-
-  vue-chrts@2.0.0:
-    resolution: {integrity: sha512-TwjTlULMT4DQfw7XRH1scTNZSqIy/jCKf1+vSZ9+hm61KHrKLhK8+7+UeuK/tP2i4sCaOsRfvd+8ZQvluXyWAg==}
-    peerDependencies:
-      vue: ^3.5.13
 
   vue-devtools-stub@0.1.0:
     resolution: {integrity: sha512-RutnB7X8c5hjq39NceArgXg28WZtZpGc3+J16ljMiYnFhKvd8hITxSWQSQ5bvldxMDU6gG5mkxl1MTQLXckVSQ==}
@@ -18326,10 +18321,6 @@ snapshots:
   vue-bundle-renderer@2.2.0:
     dependencies:
       ufo: 1.6.1
-
-  vue-chrts@2.0.0(vue@3.5.25(typescript@5.9.2)):
-    dependencies:
-      vue: 3.5.25(typescript@5.9.2)
 
   vue-devtools-stub@0.1.0: {}
 
