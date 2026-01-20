@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 import { computed, getCurrentInstance, ref, useSlots, useTemplateRef } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
-import { createScopedMarkers, getFirstPropertyValue } from "../../utils";
+import { createScopedMarkers } from "../../utils";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -306,7 +306,7 @@ function onCrosshairUpdate(d: T): string {
           :yFormatter="props.yFormatter"
         />
       </slot>
-    </div>
+    </div> 
   </div>
 </template>
 

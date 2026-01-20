@@ -40,47 +40,14 @@ const legendAlignment = computed(() => {
   return "center";
 });
 
-function generateTooltipContent(d: any): string | undefined {
+function generateTooltipContent(d: T): string {
   if (typeof window === "undefined") {
     return "";
   }
-
-  const data = hoverValues.value;
-  if (!data) return undefined;
-
-  const title = getTitle(data);
-  if (!title || (typeof title === "string" && title.trim() === "")) {
-    return undefined;
-  }
-
-  if (slots.tooltip && slotWrapperRef.value) {
+  if (slotWrapperRef.value) {
     return slotWrapperRef.value.innerHTML;
   }
-
-  const categories = props.categories ?? {};
-  const entries = Object.entries(data).filter(([key]) => categories[key]);
-  
-  let html = `<div style="display: flex; flex-direction: column;">`;
-  html += `<div style="color: #000; font-weight: 600; border-bottom: 1px solid #e5e7eb; padding: 0.75rem 0.75rem 0.5rem 0.75rem; margin-bottom: 0.25rem; font-size: 0.875rem;">${title}</div>`;
-
-  if (entries.length > 0) {
-    html += `<div style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.25rem 0.5rem; padding: 0 0.75rem 0.5rem 0.75rem;">`;
-    entries.forEach(([key, value], i) => {
-      const cat = categories[key];
-      const color = cat.color ?? `var(--vis-color${i})`;
-      html += `
-        <span style="width: 8px; height: 8px; border-radius: 4px; background-color: ${color}"></span>
-        <span style="font-size: 0.875rem; margin-right: 1rem; white-space: nowrap;">${cat.name}</span>
-        <span style="font-size: 0.875rem; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums;">${
-          props.yFormatter ? props.yFormatter(value as any) : value
-        }</span>
-      `;
-    });
-    html += `</div>`;
-  }
-  html += `</div>`;
-
-  return html;
+  return "";
 }
 
 const tooltipTriggers = {
@@ -242,3 +209,4 @@ const mapsData = computed(() => props.data);
     </div>
   </div>
 </template>
+ 
