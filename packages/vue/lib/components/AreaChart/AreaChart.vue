@@ -56,6 +56,11 @@ const colors = computed(() => {
   );
 });
 
+const yNumTicks = computed(() => {
+  if (props.yNumTicks !== undefined) return props.yNumTicks;
+  return Math.max(2, Object.keys(props.categories ?? {}).length);
+});
+
 const markersSvgDefs = computed(() => {
   if (!props.markerConfig?.config) return "";
   return createScopedMarkers(props.markerConfig, markerScopeId, {
@@ -252,7 +257,8 @@ function onCrosshairUpdate(d: T): string {
         :grid-line="xGridLine"
         :domain-line="xDomainLine"
         :tick-line="xTickLine"
-        :min-max-ticks-only="minMaxTicksOnly"
+        :min-max-ticks-only="xMinMaxTicksOnly ?? minMaxTicksOnly"
+        :min-max-ticks-only-show-grid-lines="xMinMaxTicksOnlyShowGridLines ?? minMaxTicksOnlyShowGridLines"
         v-bind="xAxisConfig"
       />
 
@@ -262,9 +268,12 @@ function onCrosshairUpdate(d: T): string {
         :label="yLabel"
         :num-ticks="yNumTicks"
         :tick-format="yFormatter"
+        :tick-values="yExplicitTicks"
         :grid-line="yGridLine"
         :domain-line="yDomainLine"
         :tick-line="yTickLine"
+        :min-max-ticks-only="yMinMaxTicksOnly"
+        :min-max-ticks-only-show-grid-lines="yMinMaxTicksOnlyShowGridLines"
         v-bind="yAxisConfig"
       />
 
