@@ -12,13 +12,17 @@
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.umd.cjs"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js"
     }
   },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "release": "commit-and-tag-version"
+    "release": "pnpm run build && commit-and-tag-version && pnpm publish"
   },
   "peerDependencies": {
     "vue": "^3.5.13"
@@ -42,5 +46,8 @@
     "vue-router": "^4.5.0",
     "vue-tsc": "^2.2.4"
   },
-  "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2"
+  "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2",
+  "dependencies": {
+    "@vue-chrts/shared": "workspace:^"
+  }
 }

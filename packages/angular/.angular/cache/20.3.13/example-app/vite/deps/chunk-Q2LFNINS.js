@@ -6,7 +6,7 @@ import {
   getDOM,
   parseCookieValue,
   setRootDomAdapter
-} from "./chunk-C7SCZ44F.js";
+} from "./chunk-TRIB627R.js";
 import {
   APP_BOOTSTRAP_LISTENER,
   APP_ID,
@@ -96,7 +96,7 @@ import {
   __spreadValues
 } from "./chunk-7WUTQBRG.js";
 
-// ../../node_modules/.pnpm/@angular+platform-browser@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15/node_modules/@angular/platform-browser/fesm2022/dom_renderer.mjs
+// ../../node_modules/.pnpm/@angular+platform-browser@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15_@angular+comp_u6vdbk2uauwpkucitsp4dba2zu/node_modules/@angular/platform-browser/fesm2022/dom_renderer.mjs
 var EventManagerPlugin = class {
   _doc;
   // TODO: remove (has some usage in G3)
@@ -835,7 +835,7 @@ var EmulatedEncapsulationDomRenderer2 = class extends NoneEncapsulationDomRender
   }
 };
 
-// ../../node_modules/.pnpm/@angular+platform-browser@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15/node_modules/@angular/platform-browser/fesm2022/browser.mjs
+// ../../node_modules/.pnpm/@angular+platform-browser@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15_@angular+comp_u6vdbk2uauwpkucitsp4dba2zu/node_modules/@angular/platform-browser/fesm2022/browser.mjs
 var BrowserDomAdapter = class _BrowserDomAdapter extends DomAdapter {
   supportsDOMEvents = true;
   static makeCurrent() {
@@ -1250,7 +1250,7 @@ var BrowserModule = class _BrowserModule {
   }], () => [], null);
 })();
 
-// ../../node_modules/.pnpm/@angular+common@20.3.15_@angular+core@20.3.15_rxjs@7.8.2/node_modules/@angular/common/fesm2022/module.mjs
+// ../../node_modules/.pnpm/@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_rxjs@7.8.2_zone.js@0.15.0__rxjs@7.8.2/node_modules/@angular/common/fesm2022/module.mjs
 var HttpHandler = class {
 };
 var HttpBackend = class {
@@ -3611,7 +3611,7 @@ var HttpClientJsonpModule = class _HttpClientJsonpModule {
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@angular+common@20.3.15_@angular+core@20.3.15_rxjs@7.8.2/node_modules/@angular/common/fesm2022/http.mjs
+// ../../node_modules/.pnpm/@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_rxjs@7.8.2_zone.js@0.15.0__rxjs@7.8.2/node_modules/@angular/common/fesm2022/http.mjs
 var httpResource = (() => {
   const jsonFn = makeHttpResourceFn("json");
   jsonFn.arrayBuffer = makeHttpResourceFn("arraybuffer");
@@ -3892,7 +3892,7 @@ function appendMissingHeadersDetection(url, headers, headersToInclude) {
   });
 }
 
-// ../../node_modules/.pnpm/@angular+platform-browser@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15/node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs
+// ../../node_modules/.pnpm/@angular+platform-browser@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15_@angular+comp_u6vdbk2uauwpkucitsp4dba2zu/node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs
 var Meta = class _Meta {
   _doc;
   _dom;
@@ -4695,4 +4695,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-QFO5SMYG.js.map
+//# sourceMappingURL=chunk-Q2LFNINS.js.map
