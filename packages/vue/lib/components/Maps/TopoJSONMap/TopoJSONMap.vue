@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { ref, computed, useTemplateRef, useSlots } from "vue";
+import { ref, computed, useTemplateRef, useSlots, type Slots } from "vue";
 import { VisSingleContainer, VisTopoJSONMap, VisTooltip, VisBulletLegend } from "@unovis/vue";
 import { MapsData } from "./types";
 import { TopoJSONMap, Position } from "@unovis/ts";
@@ -28,7 +28,7 @@ const emit = defineEmits<{
   (e: "point-click", d: MapPoint, event: MouseEvent): void;
 }>();
 
-const slots = useSlots();
+const slots: Slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
 

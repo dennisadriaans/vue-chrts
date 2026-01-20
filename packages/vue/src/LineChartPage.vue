@@ -49,7 +49,9 @@ import {
         <LineChart
           :data="chartData"
           :height="200"
+          :y-num-ticks="2"
           :y-grid-line="true"
+          :y-min-max-ticks-only="true"
           y-label="Number of visits"
           :categories="categories3"
           :x-formatter="(tick: number): string => `${chartData[tick].month}`"
