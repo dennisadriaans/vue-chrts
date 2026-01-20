@@ -1,4 +1,27 @@
 import {
+  Component,
+  ContentChild,
+  ContentChildren,
+  Input,
+  NgModule,
+  ViewChild,
+  setClassMetadata,
+  ɵɵNgOnChangesFeature,
+  ɵɵProvidersFeature,
+  ɵɵcontentQuery,
+  ɵɵdefineComponent,
+  ɵɵdefineInjector,
+  ɵɵdefineNgModule,
+  ɵɵelement,
+  ɵɵelementEnd,
+  ɵɵelementStart,
+  ɵɵloadQuery,
+  ɵɵprojection,
+  ɵɵprojectionDef,
+  ɵɵqueryRefresh,
+  ɵɵviewQuery
+} from "./chunk-BNMFKIU3.js";
+import {
   Annotations,
   Area,
   Axis,
@@ -27,48 +50,25 @@ import {
   TopoJSONMap,
   XYContainer,
   XYLabels
-} from "./chunk-FBCDWED4.js";
+} from "./chunk-HLI4DFV6.js";
 import "./chunk-SFUQ3DKB.js";
 import "./chunk-IZMHJU6E.js";
-import {
-  Component,
-  ContentChild,
-  ContentChildren,
-  Input,
-  NgModule,
-  ViewChild,
-  setClassMetadata,
-  ɵɵNgOnChangesFeature,
-  ɵɵProvidersFeature,
-  ɵɵcontentQuery,
-  ɵɵdefineComponent,
-  ɵɵdefineInjector,
-  ɵɵdefineNgModule,
-  ɵɵelement,
-  ɵɵelementEnd,
-  ɵɵelementStart,
-  ɵɵloadQuery,
-  ɵɵprojection,
-  ɵɵprojectionDef,
-  ɵɵqueryRefresh,
-  ɵɵviewQuery
-} from "./chunk-BNMFKIU3.js";
 import "./chunk-BKKYJXF4.js";
 import "./chunk-7WUTQBRG.js";
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/core/generic-component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/core/generic-component.js
 var VisGenericComponent = class {
 };
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/core/core-component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/core/core-component.js
 var VisCoreComponent = class extends VisGenericComponent {
 };
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/core/xy-component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/core/xy-component.js
 var VisXYComponent = class extends VisCoreComponent {
 };
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/tooltip/tooltip.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/tooltip/tooltip.component.js
 var VisTooltipComponent = class {
   ngAfterViewInit() {
     this.component = new Tooltip(this.getConfig());
@@ -203,7 +203,7 @@ VisTooltipComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/annotations/annotations.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/annotations/annotations.component.js
 var VisAnnotationsComponent = class {
   ngAfterViewInit() {
     this.component = new Annotations(this.getConfig());
@@ -284,7 +284,7 @@ VisAnnotationsComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/containers/xy-container/xy-container.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/containers/xy-container/xy-container.component.js
 var _c0 = ["container"];
 var _c1 = ["*"];
 var VisXYContainerComponent = class {
@@ -559,7 +559,7 @@ VisXYContainerComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/containers/xy-container/xy-container.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/containers/xy-container/xy-container.module.js
 var VisXYContainerModule = class {
 };
 VisXYContainerModule.ɵfac = function VisXYContainerModule_Factory(__ngFactoryType__) {
@@ -584,7 +584,7 @@ VisXYContainerModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/containers/single-container/single-container.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/containers/single-container/single-container.component.js
 var _c02 = ["container"];
 var _c12 = ["*"];
 var VisSingleContainerComponent = class {
@@ -749,7 +749,7 @@ VisSingleContainerComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/containers/single-container/single-container.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/containers/single-container/single-container.module.js
 var VisSingleContainerModule = class {
 };
 VisSingleContainerModule.ɵfac = function VisSingleContainerModule_Factory(__ngFactoryType__) {
@@ -774,7 +774,7 @@ VisSingleContainerModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/area/area.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/area/area.component.js
 var VisAreaComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -939,7 +939,7 @@ VisAreaComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/area/area.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/area/area.module.js
 var VisAreaModule = class {
 };
 VisAreaModule.ɵfac = function VisAreaModule_Factory(__ngFactoryType__) {
@@ -964,7 +964,7 @@ VisAreaModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/annotations/annotations.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/annotations/annotations.module.js
 var VisAnnotationsModule = class {
 };
 VisAnnotationsModule.ɵfac = function VisAnnotationsModule_Factory(__ngFactoryType__) {
@@ -989,7 +989,7 @@ VisAnnotationsModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/axis/axis.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/axis/axis.component.js
 var VisAxisComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -1250,7 +1250,7 @@ VisAxisComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/axis/axis.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/axis/axis.module.js
 var VisAxisModule = class {
 };
 VisAxisModule.ɵfac = function VisAxisModule_Factory(__ngFactoryType__) {
@@ -1275,7 +1275,7 @@ VisAxisModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/brush/brush.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/brush/brush.component.js
 var VisBrushComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -1416,7 +1416,7 @@ VisBrushComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/brush/brush.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/brush/brush.module.js
 var VisBrushModule = class {
 };
 VisBrushModule.ɵfac = function VisBrushModule_Factory(__ngFactoryType__) {
@@ -1441,7 +1441,7 @@ VisBrushModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/chord-diagram/chord-diagram.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/chord-diagram/chord-diagram.component.js
 var VisChordDiagramComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -1612,7 +1612,7 @@ VisChordDiagramComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/chord-diagram/chord-diagram.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/chord-diagram/chord-diagram.module.js
 var VisChordDiagramModule = class {
 };
 VisChordDiagramModule.ɵfac = function VisChordDiagramModule_Factory(__ngFactoryType__) {
@@ -1637,7 +1637,7 @@ VisChordDiagramModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/crosshair/crosshair.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/crosshair/crosshair.component.js
 var VisCrosshairComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -1844,7 +1844,7 @@ VisCrosshairComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/crosshair/crosshair.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/crosshair/crosshair.module.js
 var VisCrosshairModule = class {
 };
 VisCrosshairModule.ɵfac = function VisCrosshairModule_Factory(__ngFactoryType__) {
@@ -1869,7 +1869,7 @@ VisCrosshairModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/donut/donut.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/donut/donut.component.js
 var VisDonutComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -2064,7 +2064,7 @@ VisDonutComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/donut/donut.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/donut/donut.module.js
 var VisDonutModule = class {
 };
 VisDonutModule.ɵfac = function VisDonutModule_Factory(__ngFactoryType__) {
@@ -2089,7 +2089,7 @@ VisDonutModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/free-brush/free-brush.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/free-brush/free-brush.component.js
 var VisFreeBrushComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -2230,7 +2230,7 @@ VisFreeBrushComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/free-brush/free-brush.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/free-brush/free-brush.module.js
 var VisFreeBrushModule = class {
 };
 VisFreeBrushModule.ɵfac = function VisFreeBrushModule_Factory(__ngFactoryType__) {
@@ -2255,7 +2255,7 @@ VisFreeBrushModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/graph/graph.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/graph/graph.component.js
 var VisGraphComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -2882,7 +2882,7 @@ VisGraphComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/graph/graph.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/graph/graph.module.js
 var VisGraphModule = class {
 };
 VisGraphModule.ɵfac = function VisGraphModule_Factory(__ngFactoryType__) {
@@ -2907,7 +2907,7 @@ VisGraphModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/grouped-bar/grouped-bar.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/grouped-bar/grouped-bar.component.js
 var VisGroupedBarComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -3090,7 +3090,7 @@ VisGroupedBarComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/grouped-bar/grouped-bar.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/grouped-bar/grouped-bar.module.js
 var VisGroupedBarModule = class {
 };
 VisGroupedBarModule.ɵfac = function VisGroupedBarModule_Factory(__ngFactoryType__) {
@@ -3115,7 +3115,7 @@ VisGroupedBarModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/line/line.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/line/line.component.js
 var VisLineComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -3286,7 +3286,7 @@ VisLineComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/line/line.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/line/line.module.js
 var VisLineModule = class {
 };
 VisLineModule.ɵfac = function VisLineModule_Factory(__ngFactoryType__) {
@@ -3311,7 +3311,7 @@ VisLineModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/nested-donut/nested-donut.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/nested-donut/nested-donut.component.js
 var VisNestedDonutComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -3512,7 +3512,7 @@ VisNestedDonutComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/nested-donut/nested-donut.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/nested-donut/nested-donut.module.js
 var VisNestedDonutModule = class {
 };
 VisNestedDonutModule.ɵfac = function VisNestedDonutModule_Factory(__ngFactoryType__) {
@@ -3537,7 +3537,7 @@ VisNestedDonutModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/plotline/plotline.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/plotline/plotline.component.js
 var VisPlotlineComponent = class {
   ngAfterViewInit() {
     this.component = new Plotline(this.getConfig());
@@ -3678,7 +3678,7 @@ VisPlotlineComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/plotline/plotline.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/plotline/plotline.module.js
 var VisPlotlineModule = class {
 };
 VisPlotlineModule.ɵfac = function VisPlotlineModule_Factory(__ngFactoryType__) {
@@ -3703,7 +3703,7 @@ VisPlotlineModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/sankey/sankey.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/sankey/sankey.component.js
 var VisSankeyComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -4054,7 +4054,7 @@ VisSankeyComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/sankey/sankey.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/sankey/sankey.module.js
 var VisSankeyModule = class {
 };
 VisSankeyModule.ɵfac = function VisSankeyModule_Factory(__ngFactoryType__) {
@@ -4079,7 +4079,7 @@ VisSankeyModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/scatter/scatter.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/scatter/scatter.component.js
 var VisScatterComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -4280,7 +4280,7 @@ VisScatterComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/scatter/scatter.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/scatter/scatter.module.js
 var VisScatterModule = class {
 };
 VisScatterModule.ɵfac = function VisScatterModule_Factory(__ngFactoryType__) {
@@ -4305,7 +4305,7 @@ VisScatterModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/stacked-bar/stacked-bar.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/stacked-bar/stacked-bar.component.js
 var VisStackedBarComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -4488,7 +4488,7 @@ VisStackedBarComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/stacked-bar/stacked-bar.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/stacked-bar/stacked-bar.module.js
 var VisStackedBarModule = class {
 };
 VisStackedBarModule.ɵfac = function VisStackedBarModule_Factory(__ngFactoryType__) {
@@ -4513,7 +4513,7 @@ VisStackedBarModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/timeline/timeline.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/timeline/timeline.component.js
 var VisTimelineComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -4840,7 +4840,7 @@ VisTimelineComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/timeline/timeline.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/timeline/timeline.module.js
 var VisTimelineModule = class {
 };
 VisTimelineModule.ɵfac = function VisTimelineModule_Factory(__ngFactoryType__) {
@@ -4865,7 +4865,7 @@ VisTimelineModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/xy-labels/xy-labels.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/xy-labels/xy-labels.component.js
 var VisXYLabelsComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -5072,7 +5072,7 @@ VisXYLabelsComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/xy-labels/xy-labels.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/xy-labels/xy-labels.module.js
 var VisXYLabelsModule = class {
 };
 VisXYLabelsModule.ɵfac = function VisXYLabelsModule_Factory(__ngFactoryType__) {
@@ -5097,7 +5097,7 @@ VisXYLabelsModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/topojson-map/topojson-map.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/topojson-map/topojson-map.component.js
 var VisTopoJSONMapComponent = class {
   ngAfterViewInit() {
     var _a;
@@ -5364,7 +5364,7 @@ VisTopoJSONMapComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/topojson-map/topojson-map.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/topojson-map/topojson-map.module.js
 var VisTopoJSONMapModule = class {
 };
 VisTopoJSONMapModule.ɵfac = function VisTopoJSONMapModule_Factory(__ngFactoryType__) {
@@ -5389,7 +5389,7 @@ VisTopoJSONMapModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/plotband/plotband.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/plotband/plotband.component.js
 var VisPlotbandComponent = class {
   ngAfterViewInit() {
     this.component = new Plotband(this.getConfig());
@@ -5524,7 +5524,7 @@ VisPlotbandComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/plotband/plotband.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/plotband/plotband.module.js
 var VisPlotbandModule = class {
 };
 VisPlotbandModule.ɵfac = function VisPlotbandModule_Factory(__ngFactoryType__) {
@@ -5549,7 +5549,7 @@ VisPlotbandModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/html-components/leaflet-map/leaflet-map.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/html-components/leaflet-map/leaflet-map.component.js
 var _c03 = ["container"];
 var VisLeafletMapComponent = class {
   ngAfterViewInit() {
@@ -5930,7 +5930,7 @@ VisLeafletMapComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/html-components/leaflet-map/leaflet-map.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/html-components/leaflet-map/leaflet-map.module.js
 var VisLeafletMapModule = class {
 };
 VisLeafletMapModule.ɵfac = function VisLeafletMapModule_Factory(__ngFactoryType__) {
@@ -5955,7 +5955,7 @@ VisLeafletMapModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/html-components/leaflet-flow-map/leaflet-flow-map.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/html-components/leaflet-flow-map/leaflet-flow-map.component.js
 var _c04 = ["container"];
 var VisLeafletFlowMapComponent = class {
   ngAfterViewInit() {
@@ -6414,7 +6414,7 @@ VisLeafletFlowMapComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/html-components/leaflet-flow-map/leaflet-flow-map.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/html-components/leaflet-flow-map/leaflet-flow-map.module.js
 var VisLeafletFlowMapModule = class {
 };
 VisLeafletFlowMapModule.ɵfac = function VisLeafletFlowMapModule_Factory(__ngFactoryType__) {
@@ -6439,7 +6439,7 @@ VisLeafletFlowMapModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/html-components/bullet-legend/bullet-legend.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/html-components/bullet-legend/bullet-legend.component.js
 var _c05 = ["container"];
 var VisBulletLegendComponent = class {
   ngAfterViewInit() {
@@ -6572,7 +6572,7 @@ VisBulletLegendComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/html-components/bullet-legend/bullet-legend.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/html-components/bullet-legend/bullet-legend.module.js
 var VisBulletLegendModule = class {
 };
 VisBulletLegendModule.ɵfac = function VisBulletLegendModule_Factory(__ngFactoryType__) {
@@ -6597,7 +6597,7 @@ VisBulletLegendModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/html-components/rolling-pin-legend/rolling-pin-legend.component.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/html-components/rolling-pin-legend/rolling-pin-legend.component.js
 var _c06 = ["container"];
 var VisRollingPinLegendComponent = class {
   ngAfterViewInit() {
@@ -6704,7 +6704,7 @@ VisRollingPinLegendComponent.ɵcmp = ɵɵdefineComponent({
   });
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/html-components/rolling-pin-legend/rolling-pin-legend.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/html-components/rolling-pin-legend/rolling-pin-legend.module.js
 var VisRollingPinLegendModule = class {
 };
 VisRollingPinLegendModule.ɵfac = function VisRollingPinLegendModule_Factory(__ngFactoryType__) {
@@ -6729,7 +6729,7 @@ VisRollingPinLegendModule.ɵinj = ɵɵdefineInjector({
   }], null, null);
 })();
 
-// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+compiler@20.3.15_@angular+core@20.3.15_@unovis+ts@1.6.2/node_modules/@unovis/angular/dist/lib/esm2015/components/tooltip/tooltip.module.js
+// ../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3.15_sepy7mmya7lpzjbmzw5ichhorm/node_modules/@unovis/angular/dist/lib/esm2015/components/tooltip/tooltip.module.js
 var VisTooltipModule = class {
 };
 VisTooltipModule.ɵfac = function VisTooltipModule_Factory(__ngFactoryType__) {

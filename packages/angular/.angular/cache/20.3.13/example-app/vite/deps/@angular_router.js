@@ -1,6 +1,6 @@
 import {
   Title
-} from "./chunk-QFO5SMYG.js";
+} from "./chunk-Q2LFNINS.js";
 import {
   HashLocationStrategy,
   LOCATION_INITIALIZED,
@@ -8,7 +8,7 @@ import {
   LocationStrategy,
   PathLocationStrategy,
   ViewportScroller
-} from "./chunk-C7SCZ44F.js";
+} from "./chunk-TRIB627R.js";
 import {
   APP_BOOTSTRAP_LISTENER,
   ApplicationRef,
@@ -122,7 +122,7 @@ import {
   __spreadValues
 } from "./chunk-7WUTQBRG.js";
 
-// ../../node_modules/.pnpm/@angular+router@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15_@angular+platform-browser@20.3.15_rxjs@7.8.2/node_modules/@angular/router/fesm2022/router2.mjs
+// ../../node_modules/.pnpm/@angular+router@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3._qxlwpaz4ruhiaqmtem3fho32jq/node_modules/@angular/router/fesm2022/router2.mjs
 var PRIMARY_OUTLET = "primary";
 var RouteTitleKey = Symbol("RouteTitle");
 var ParamsAsMap = class {
@@ -4829,7 +4829,7 @@ function validateCommands(commands) {
   }
 }
 
-// ../../node_modules/.pnpm/@angular+router@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15_@angular+platform-browser@20.3.15_rxjs@7.8.2/node_modules/@angular/router/fesm2022/router_module.mjs
+// ../../node_modules/.pnpm/@angular+router@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3._qxlwpaz4ruhiaqmtem3fho32jq/node_modules/@angular/router/fesm2022/router_module.mjs
 var RouterLink = class _RouterLink {
   router;
   route;
@@ -6022,7 +6022,7 @@ function provideRouterInitializer() {
   ];
 }
 
-// ../../node_modules/.pnpm/@angular+router@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15_@angular+platform-browser@20.3.15_rxjs@7.8.2/node_modules/@angular/router/fesm2022/router.mjs
+// ../../node_modules/.pnpm/@angular+router@20.3.15_@angular+common@20.3.15_@angular+core@20.3.15_@angular+compiler@20.3._qxlwpaz4ruhiaqmtem3fho32jq/node_modules/@angular/router/fesm2022/router.mjs
 function mapToCanMatch(providers) {
   return providers.map((provider) => (...params) => inject(provider).canMatch(...params));
 }

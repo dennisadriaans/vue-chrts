@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
 import { computed, ref, useSlots, useTemplateRef } from "vue";
 import { Timeline } from "@unovis/ts";
-import { dateFormatter, getFirstPropertyValue } from "../../utils";
+import { dateFormatter } from "../../utils";
 import Tooltip from "../Tooltip.vue";
 
 import {
@@ -106,7 +106,7 @@ const colors = computed(() => {
           },
         }"
       />
-      <VisAxis
+    <VisAxis
         type="x"
         :tickFormat="xTickFormat || dateFormatter"
         :numTicks="xNumTicks"
