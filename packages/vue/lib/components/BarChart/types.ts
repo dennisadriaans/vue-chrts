@@ -4,6 +4,7 @@ import {
   LegendPosition,
   axisFormatter,
   AxisConfig,
+  TooltipConfig,
 } from "../../types";
 
 type BarChartPropsBase<T> = {
@@ -112,6 +113,14 @@ type BarChartPropsBase<T> = {
    * See `LegendPosition` for available options.
    */
   legendPosition?: LegendPosition;
+  /**
+   * Animation duration in milliseconds for the chart components.
+   */
+  duration?: number;
+  /**
+   * Configuration object for the chart tooltip.
+   */
+  tooltip?: TooltipConfig;
   /**
    * Optional style object for the legend container. Allows custom CSS styling.
    */

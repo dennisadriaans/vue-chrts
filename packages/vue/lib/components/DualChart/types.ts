@@ -5,6 +5,7 @@ import {
   AxisConfig,
   BulletLegendItemInterface,
   Orientation,
+  TooltipConfig,
 } from "../../types";
 import type { CurveType } from "@unovis/ts";
 
@@ -192,4 +193,12 @@ export interface DualChartProps<T> {
    * See `Orientation` for available options.
    */
   orientation?: Orientation;
+  /**
+   * Animation duration in milliseconds for the chart components.
+   */
+  duration?: number;
+  /**
+   * Configuration object for the chart tooltip.
+   */
+  tooltip?: TooltipConfig;
 }

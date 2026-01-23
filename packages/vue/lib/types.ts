@@ -106,6 +106,10 @@ export interface AxisConfig {
   minMaxTicksOnly?: boolean;
   minMaxTicksOnlyShowGridLines?: boolean;
   tickValues?: readonly number[] | readonly Date[];
+  /**
+   * Animation duration in milliseconds.
+   */
+  duration?: number;
 }
 
 export type MarkerConfig = {
@@ -125,4 +129,19 @@ export interface CrosshairConfig {
   color?: string;
   strokeColor?: string;
   strokeWidth?: number;
+}
+
+export interface TooltipConfig {
+  /**
+   * Hide delay in milliseconds. Default: undefined
+   */
+  hideDelay?: number;
+  /**
+   * Show delay in milliseconds. Default: undefined
+   */
+  showDelay?: number;
+  /**
+   * If `true`, the tooltip will follow the cursor.
+   */
+  followCursor?: boolean;
 }

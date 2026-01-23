@@ -4,6 +4,7 @@ import {
   LegendPosition,
   CrosshairConfig,
   AxisConfig,
+  TooltipConfig,
 } from "../../types";
 
 export interface SizeOptions {
@@ -170,4 +171,12 @@ export interface BubbleChartProps<T> {
    * Axis configuration object for customizing the appearance of the axes.
    */
   yAxisConfig?: AxisConfig;
+  /**
+   * Animation duration in milliseconds for the chart components.
+   */
+  duration?: number;
+  /**
+   * Configuration object for the chart tooltip.
+   */
+  tooltip?: TooltipConfig;
 }
