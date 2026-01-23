@@ -1,0 +1,15 @@
+export const ChoroplethMapData = [
+  { id: "NL", count: 94, name: "Netherlands" },
+  { id: "US", count: 91, name: "United States" },
+  { id: "DE", count: 71, name: "Germany" },
+  { id: "BR", count: 60, name: "Brazil" },
+  { id: "FR", count: 59, name: "France" },
+  { id: "ID", count: 48, name: "Indonesia" },
+  { id: "KE", count: 42, name: "Kenya" },
+  { id: "GB", count: 35, name: "United Kingdom" },
+  { id: "CA", count: 30, name: "Canada" },
+  { id: "AU", count: 25, name: "Australia" },
+  { id: "IN", count: 20, name: "India" },
+  { id: "CN", count: 15, name: "China" },
+  { id: "JP", count: 10, name: "Japan" },
+];

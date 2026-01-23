@@ -7,6 +7,10 @@ import GanttChart from "./components/GanttChart/GanttChart.vue";
 import DagreGraph from "./components/DagreGraph/DagreGraph.vue";
 import DualChart from "./components/DualChart/DualChart.vue";
 import SankeyChart from "./components/SankeyChart/SankeyChart.vue";
+import TopoJSONMap from "./components/Maps/TopoJSONMap/TopoJSONMap.vue";
+import DottedMap from "./components/Maps/DottedMap/DottedMap.vue";
+
+export { getMap, getPin } from "./components/Maps/DottedMap/mapUtils";
 
 import {
     LegendPosition,
@@ -28,6 +32,8 @@ export {
     DagreGraph,
     DualChart,
     SankeyChart,
+    TopoJSONMap,
+    DottedMap,
     Orientation,
     CurveType,
     LegendPosition,

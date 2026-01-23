@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 import { computed, getCurrentInstance, ref, useSlots, useTemplateRef } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
-import { createScopedMarkers, getFirstPropertyValue } from "../../utils";
+import { createScopedMarkers } from "../../utils";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -58,6 +58,11 @@ const colors = computed(() => {
   return Object.values(props.categories).map(
     (c, i) => c.color ?? defaultColors[i]
   );
+});
+
+const yNumTicks = computed(() => {
+  if (props.yNumTicks !== undefined) return props.yNumTicks;
+  return Math.max(2, Object.keys(props.categories ?? {}).length);
 });
 
 const markersSvgDefs = computed(() => {
@@ -208,10 +213,11 @@ function onCrosshairUpdate(d: T): string {
       <!-- Stacked Area Mode: Single VisArea with array of y accessors -->
       <template v-if="stacked">
         <VisArea
+          v-if="!hideArea"
           :x="(_: T, i: number) => i"
           :y="stackedYAccessors"
           :color="stackedColorAccessor"
-          :opacity="hideArea ? 0 : DEFAULT_OPACITY"
+          :opacity="DEFAULT_OPACITY"
           :curve-type="curveType ?? CurveType.MonotoneX"
         />
         <VisLine
@@ -230,10 +236,11 @@ function onCrosshairUpdate(d: T): string {
           :key="categoryId"
         >
           <VisArea
+            v-if="!hideArea"
             :x="(_: T, i: number) => i"
             v-bind="getAccessors(categoryId)"
             :color="`url(#gradient${index}-${colors[index]})`"
-            :opacity="hideArea ? 0 : DEFAULT_OPACITY"
+            :opacity="DEFAULT_OPACITY"
             :curve-type="curveType ?? CurveType.MonotoneX"
           />
           <VisLine
@@ -269,6 +276,7 @@ function onCrosshairUpdate(d: T): string {
         :label="yLabel"
         :num-ticks="yNumTicks"
         :tick-format="yFormatter"
+        :tick-values="yExplicitTicks"
         :grid-line="yGridLine"
         :domain-line="yDomainLine"
         :tick-line="yTickLine"
@@ -315,7 +323,7 @@ function onCrosshairUpdate(d: T): string {
           :yFormatter="props.yFormatter"
         />
       </slot>
-    </div>
+    </div> 
   </div>
 </template>
 

@@ -9,8 +9,9 @@
       "strict": true,
       "skipLibCheck": true,
       "declaration": true,
-      "outDir": "dist"
+      "outDir": "dist",
+      "resolveJsonModule": true
     },
-    "include": ["lib/**/*.ts", "lib/**/*.vue"],
+    "include": ["lib/**/*.ts", "lib/**/*.vue", "lib/**/*.d.ts"],
     "exclude": ["node_modules", "dist"]
   }

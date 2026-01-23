@@ -99,9 +99,33 @@ export interface AreaChartProps<T> {
    */
   minMaxTicksOnly?: boolean;
   /**
+   * Force only first and last ticks on the x-axis.
+   */
+  xMinMaxTicksOnly?: boolean;
+  /**
+   * Force only first and last ticks on the y-axis.
+   */
+  yMinMaxTicksOnly?: boolean;
+  /**
+   * Show grid lines for the min and max axis ticks.
+   */
+  minMaxTicksOnlyShowGridLines?: boolean;
+  /**
+   * Show grid lines for the min and max x-axis ticks.
+   */
+  xMinMaxTicksOnlyShowGridLines?: boolean;
+  /**
+   * Show grid lines for the min and max y-axis ticks.
+   */
+  yMinMaxTicksOnlyShowGridLines?: boolean;
+  /**
    * The desired number of ticks on the y-axis.
    */
   yNumTicks?: number;
+  /**
+   * Force specific ticks on the y-axis.
+   */
+  yExplicitTicks?: (number | string | Date)[];
   /**
    * If `true`, hides the chart legend.
    */
