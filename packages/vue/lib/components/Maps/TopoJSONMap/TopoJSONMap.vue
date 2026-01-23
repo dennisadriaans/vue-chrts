@@ -9,9 +9,11 @@ import { LegendPosition } from "../../../types";
 
 const props = withDefaults(defineProps<MapsData<T>>(), {
   zoomFactor: 1,
+  zoomExtent: () => [0.5, 6],
   pointSize: 5,
   legendPosition: LegendPosition.BottomCenter,
   hideLegend: false,
+  mapFitToPoints: false,
   duration: 600,
   padding: () => ({
     top: 5,
@@ -144,6 +146,7 @@ const mapsData = computed(() => props.data);
         :topojson="props.topojson"
         :projection="props.projection"
         :zoom-factor="props.zoomFactor"
+        :zoom-extent="props.zoomExtent"
         :fitView="props.fitView"
         :fitViewPadding="props.fitViewPadding"
         :pointLabel="pointLabel"

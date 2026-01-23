@@ -7,6 +7,7 @@ export type MapsData<T extends Record<string, any>> = {
   data: MapData;
   topojson: any;
   zoomFactor?: number;
+  zoomExtent?: [number, number];
   projection?: GeoProjection;
   areaColor?: string | ((d: any) => string);
   areaCursor?: string | ((d: any) => string);
