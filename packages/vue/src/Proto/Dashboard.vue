@@ -71,7 +71,7 @@ const worldData = computed(() => ({
           <TopoJSONMap
             class="w-full relative"
             :data="worldData"
-            :topo-json="WorldMapTopoJSON"
+            :topojson="WorldMapTopoJSON"
             map-feature-key="countries"
             @mouseenter="(d: any) => (hoveredArea = d.id)"
             @mouseleave="() => (hoveredArea = null)"

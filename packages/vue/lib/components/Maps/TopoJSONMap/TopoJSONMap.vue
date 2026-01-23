@@ -143,7 +143,7 @@ const mapsData = computed(() => props.data);
         :data="mapsData.areas"
         :point-data="mapsData.points"
         :link-data="mapsData.links"
-        :topojson="props.topojson"
+        :topojson="props.topoJson"
         :projection="props.projection"
         :zoom-factor="props.zoomFactor"
         :zoom-extent="props.zoomExtent"

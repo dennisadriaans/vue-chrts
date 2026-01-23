@@ -90,7 +90,7 @@ const sortedData = [...ChoroplethMapData].sort((a, b) => b.count - a.count);
             <TopoJSONMap
               :height="460"
               :data="worldData"
-              :topo-json="WorldMapTopoJSON"
+              :topojson="WorldMapTopoJSON"
               map-feature-key="countries"
               :area-color="areaColor"
               :zoom-factor="1.2"
