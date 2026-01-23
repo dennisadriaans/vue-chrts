@@ -5,7 +5,11 @@ import { MapData, MapPoint } from "../types";
 export type MapsData<T extends Record<string, any>> = {
   mapFeatureKey: keyof T;
   data: MapData;
-  topojson: any;
+  /**
+   * TopoJSON data for the map.
+   * @see https://github.com/topojson/topojson-specification/
+   */
+  topoJson: any;
   zoomFactor?: number;
   zoomExtent?: [number, number];
   projection?: GeoProjection;

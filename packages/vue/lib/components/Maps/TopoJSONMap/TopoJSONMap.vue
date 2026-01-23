@@ -164,8 +164,6 @@ const mapsData = computed(() => props.data);
         :events="{
           [TopoJSONMap.selectors.feature]: {
             click: handleFeatureClick,
-            mouseover: (d: any) => emit('mouseenter', d),
-            mouseout: (d: any) => emit('mouseleave', d),
           },
           [TopoJSONMap.selectors.point]: {
             click: handlePointClick,

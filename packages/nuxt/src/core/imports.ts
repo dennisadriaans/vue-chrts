@@ -1,7 +1,11 @@
 import { addImportsSources } from "@nuxt/kit";
 import type { ModuleOptions } from "../module";
 
-export const resolveImports = (_: ModuleOptions, filePath: string) => {
+export const resolveImports = (config: ModuleOptions, filePath: string) => {
+    if (!config.autoImports) {
+        return
+    }
+
     const allTypes = ['BulletLegendItemInterface', 'MarkerConfig', 'CrosshairConfig', 'AxisConfig', 'MapRegion', 'MapPin']
     addImportsSources({
         from: filePath,

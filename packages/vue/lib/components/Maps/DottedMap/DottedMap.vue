@@ -11,8 +11,6 @@ import { REGIONS, COUNTRIES, DEFAULT_ZOOM } from "./regions";
 import { WORLD_PINS, USA_PINS } from "./pins";
 import { useMapPanZoom } from "./useMapPanZoom";
 import DottedMapCore from "./core.vue";
-import MapZoomControls from "./MapZoomControls.vue";
-import MapLegend from "./MapLegend.vue";
 
 interface Props extends DottedMapProps {
   /** The region name for quick setup */
@@ -206,16 +204,6 @@ defineExpose({
       />
     </div>
 
-    <!-- Zoom controls slot -->
-    <div v-if="showControls" class="absolute top-0 right-0">
-      <slot name="controls">
-        <MapZoomControls
-          @zoom-in="zoomIn"
-          @zoom-out="zoomOut"
-          @reset="resetView(variant.defaultZoom)"
-        />
-      </slot>
-    </div>
     <!-- Legend slot -->
     <div
       class="absolute bottom-4 right-4 flex flex-col gap-2"

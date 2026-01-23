@@ -164,7 +164,7 @@ const chinaData = computed(() => ({
             class="w-full relative"
             :height="400"
             :data="worldData"
-            :topojson="WorldMapTopoJSON"
+            :topo-json="WorldMapTopoJSON"
             map-feature-key="countries"
             :link-width="8"
             @mouseenter="(d: any) => (hoveredArea = d.id)"
@@ -183,7 +183,7 @@ const chinaData = computed(() => ({
       <TopoJSONMap
         class="w-full h-[500px] border border-gray-200 rounded"
         :data="franceData"
-        :topojson="FranceTopoJSON"
+        :topo-json="FranceTopoJSON"
         map-feature-key="regions"
       />
     </section>
@@ -198,7 +198,7 @@ const chinaData = computed(() => ({
       <TopoJSONMap
         class="w-full h-[500px] border border-gray-200 rounded"
         :data="usaCountiesData"
-        :topojson="USATopoJSON"
+        :topo-json="USATopoJSON"
         map-feature-key="states"
         :projection="usaProjection"
       />
@@ -214,7 +214,7 @@ const chinaData = computed(() => ({
       <TopoJSONMap
         class="w-full h-[500px] border border-gray-200 rounded"
         :data="usaCountiesData"
-        :topojson="USCountiesTopoJSON"
+        :topo-json="USCountiesTopoJSON"
         map-feature-key="counties"
         :projection="usaProjection"
       />
@@ -230,7 +230,7 @@ const chinaData = computed(() => ({
       <TopoJSONMap
         class="w-full h-[500px] border border-gray-200 rounded"
         :data="germanyData"
-        :topojson="GermanyTopoJSON"
+        :topo-json="GermanyTopoJSON"
         map-feature-key="regions"
       />
     </section>
@@ -244,7 +244,7 @@ const chinaData = computed(() => ({
       <TopoJSONMap
         class="w-full h-[500px] border border-gray-200 rounded"
         :data="ukData"
-        :topojson="UKTopoJSON"
+        :topo-json="UKTopoJSON"
         map-feature-key="regions"
       />
     </section>
@@ -258,7 +258,7 @@ const chinaData = computed(() => ({
       <TopoJSONMap
         class="w-full h-[500px] border border-gray-200 rounded"
         :data="indiaData"
-        :topojson="IndiaTopoJSON"
+        :topo-json="IndiaTopoJSON"
         map-feature-key="regions"
       />
     </section>
@@ -270,7 +270,7 @@ const chinaData = computed(() => ({
       <TopoJSONMap
         class="w-full h-[500px] border border-gray-200 rounded"
         :data="chinaData"
-        :topojson="ChinaTopoJSON"
+        :topo-json="ChinaTopoJSON"
         map-feature-key="provinces"
       />
     </section>
@@ -331,7 +331,7 @@ const chinaData = computed(() => ({
           <TopoJSONMap
             class="w-full h-[550px] relative"
             :data="netherlandsData"
-            :topojson="NetherlandsTopoJSON"
+            :topo-json="NetherlandsTopoJSON"
             :map-feature-key="netherlandsMapFeatureKey"
           />
         </div>

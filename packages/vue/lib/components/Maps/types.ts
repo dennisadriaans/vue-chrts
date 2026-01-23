@@ -27,8 +27,6 @@ export type MapData = {
 }
 
 export interface TopoJSONMapProps {
-  // Required Props
-  mapType: 'uk' | 'france' | 'usa';
   data: MapData;
   
   // Optional Configuration Props
