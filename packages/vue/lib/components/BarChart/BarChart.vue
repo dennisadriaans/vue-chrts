@@ -23,6 +23,7 @@ const emit = defineEmits<{
 }>();
 
 const props = withDefaults(defineProps<BarChartProps<T>>(), {
+  duration: 600,
   orientation: Orientation.Vertical,
   legendPosition: LegendPosition.BottomCenter,
   legendStyle: undefined,
@@ -38,6 +39,9 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
   }),
   hideTooltip: false,
   stackedGroupedSpacing: 0.1,
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const slots = useSlots();
@@ -147,7 +151,11 @@ const labelX = (d: LabelDatum) => {
     }"
     @click="emit('click', $event, hoverValues)"
   >
-    <VisXYContainer :padding="padding" :height="height">
+    <VisXYContainer
+      :padding="padding"
+      :height="height"
+      :duration="duration"
+    >
       <VisXYLabels
         v-if="!!valueLabel"
         :data="labelData"
@@ -160,6 +168,10 @@ const labelX = (d: LabelDatum) => {
       />
 
       <VisTooltip
+        v-if="!hideTooltip"
+        :followCursor="props.tooltip.followCursor"
+        :show-delay="props.tooltip.showDelay"
+        :hide-delay="props.tooltip.hideDelay"
         :triggers="{
           [GroupedBar.selectors.bar]: (d: T) => {
             onCrosshairUpdate(d);
@@ -218,6 +230,7 @@ const labelX = (d: LabelDatum) => {
         :num-ticks="xNumTicks"
         :tick-values="xExplicitTicks"
         :minMaxTicksOnly="minMaxTicksOnly"
+        :duration="duration"
         v-bind="xAxisConfig"
       />
       <VisAxis
@@ -229,6 +242,7 @@ const labelX = (d: LabelDatum) => {
         :tick-format="yFormatter"
         :num-ticks="yNumTicks"
         :tick-line="yTickLine"
+        :duration="duration"
         v-bind="yAxisConfig"
       />
     </VisXYContainer>

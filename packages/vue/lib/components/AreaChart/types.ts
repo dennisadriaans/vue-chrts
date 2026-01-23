@@ -4,6 +4,7 @@ import {
   LegendPosition,
   MarkerConfig,
   AxisConfig,
+  TooltipConfig,
 } from "../../types";
 import type { BulletLegendItemInterface, CurveType } from "@unovis/ts";
 
@@ -199,4 +200,12 @@ export interface AreaChartProps<T> {
    * When false (default), areas are overlaid on top of each other.
    */
   stacked?: boolean;
+  /**
+   * Animation duration in milliseconds for the chart components.
+   */
+  duration?: number;
+  /**
+   * Configuration object for the chart tooltip.
+   */
+  tooltip?: TooltipConfig;
 }

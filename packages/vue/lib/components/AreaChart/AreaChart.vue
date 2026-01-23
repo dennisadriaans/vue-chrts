@@ -26,6 +26,7 @@ const emit = defineEmits<{
 const DEFAULT_OPACITY = 0.5;
 const DEFAULT_COLOR = "#3b82f6";
 const props = withDefaults(defineProps<AreaChartProps<T>>(), {
+  duration: 600,
   padding: () => ({ top: 5, right: 5, bottom: 5, left: 5 }),
   crosshairConfig: () => ({
     color: "#666",
@@ -39,6 +40,9 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
     { offset: "0%", stopOpacity: 1 },
     { offset: "75%", stopOpacity: 0 },
   ],
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const slots = useSlots();
@@ -191,6 +195,7 @@ function onCrosshairUpdate(d: T): string {
     <VisXYContainer
       :data="data"
       :height="height"
+      :duration="duration"
       :padding="padding"
       :svg-defs="svgDefs + markersSvgDefs"
       :y-domain="yDomain"
@@ -200,6 +205,9 @@ function onCrosshairUpdate(d: T): string {
         v-if="!hideTooltip"
         :horizontal-placement="Position.Right"
         :vertical-placement="Position.Top"
+        :follow-cursor="props.tooltip.followCursor"
+        :show-delay="props.tooltip.showDelay"
+        :hide-delay="props.tooltip.hideDelay"
       />
 
       <!-- Stacked Area Mode: Single VisArea with array of y accessors -->
@@ -257,8 +265,8 @@ function onCrosshairUpdate(d: T): string {
         :grid-line="xGridLine"
         :domain-line="xDomainLine"
         :tick-line="xTickLine"
-        :min-max-ticks-only="xMinMaxTicksOnly ?? minMaxTicksOnly"
-        :min-max-ticks-only-show-grid-lines="xMinMaxTicksOnlyShowGridLines ?? minMaxTicksOnlyShowGridLines"
+        :min-max-ticks-only="minMaxTicksOnly"
+        :duration="duration"
         v-bind="xAxisConfig"
       />
 
@@ -272,8 +280,7 @@ function onCrosshairUpdate(d: T): string {
         :grid-line="yGridLine"
         :domain-line="yDomainLine"
         :tick-line="yTickLine"
-        :min-max-ticks-only="yMinMaxTicksOnly"
-        :min-max-ticks-only-show-grid-lines="yMinMaxTicksOnlyShowGridLines"
+        :duration="duration"
         v-bind="yAxisConfig"
       />
 
@@ -310,6 +317,7 @@ function onCrosshairUpdate(d: T): string {
       <slot v-else-if="hoverValues" name="fallback">
         <Tooltip
           :data="hoverValues"
+          :followCursor="false"
           :categories="categories"
           :title-formatter="props.tooltipTitleFormatter"
           :yFormatter="props.yFormatter"

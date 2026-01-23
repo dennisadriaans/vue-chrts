@@ -3,6 +3,7 @@ import {
   CrosshairConfig,
   LegendPosition,
   AxisConfig,
+  TooltipConfig,
 } from "../../types";
 
 export interface GanttChartProps<T> {
@@ -125,4 +126,12 @@ export interface GanttChartProps<T> {
    * Axis configuration object for customizing the appearance of the axes.
    */
   yAxisConfig?: AxisConfig;
+  /**
+   * Animation duration in milliseconds for the chart components.
+   */
+  duration?: number;
+  /**
+   * Configuration object for the chart tooltip.
+   */
+  tooltip?: TooltipConfig;
 }
