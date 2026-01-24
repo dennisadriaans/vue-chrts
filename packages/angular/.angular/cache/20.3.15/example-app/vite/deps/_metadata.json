@@ -1,0 +1,97 @@
+{
+  "hash": "72e3aea9",
+  "configHash": "5eccf6bf",
+  "lockfileHash": "465c4eef",
+  "browserHash": "a3d0c9b0",
+  "optimized": {
+    "@angular/common": {
+      "src": "../../../../../../../../node_modules/.pnpm/@angular+common@20.3.16_@angular+core@20.3.16_@angular+compiler@20.3.16_rxjs@7.8.2_zone.js@0.15.1__rxjs@7.8.2/node_modules/@angular/common/fesm2022/common.mjs",
+      "file": "@angular_common.js",
+      "fileHash": "c4f2c5dc",
+      "needsInterop": false
+    },
+    "@angular/core": {
+      "src": "../../../../../../../../node_modules/.pnpm/@angular+core@20.3.16_@angular+compiler@20.3.16_rxjs@7.8.2_zone.js@0.15.1/node_modules/@angular/core/fesm2022/core.mjs",
+      "file": "@angular_core.js",
+      "fileHash": "8d5c371e",
+      "needsInterop": false
+    },
+    "@angular/platform-browser": {
+      "src": "../../../../../../../../node_modules/.pnpm/@angular+platform-browser@20.3.16_@angular+common@20.3.16_@angular+core@20.3.16_@angular+comp_y3qo5pnquzfdroollze5tv73o4/node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
+      "file": "@angular_platform-browser.js",
+      "fileHash": "7accd7f8",
+      "needsInterop": false
+    },
+    "@angular/router": {
+      "src": "../../../../../../../../node_modules/.pnpm/@angular+router@20.3.16_@angular+common@20.3.16_@angular+core@20.3.16_@angular+compiler@20.3._orqbmto2j6hzgyjc6cyh2242ou/node_modules/@angular/router/fesm2022/router.mjs",
+      "file": "@angular_router.js",
+      "fileHash": "23f6db73",
+      "needsInterop": false
+    },
+    "@unovis/angular": {
+      "src": "../../../../../../../../node_modules/.pnpm/@unovis+angular@1.6.2_@angular+common@20.3.16_@angular+core@20.3.16_@angular+compiler@20.3.16_yw6vi2i2zc43msgump5l7fhlly/node_modules/@unovis/angular/dist/lib/esm2015/public-api.js",
+      "file": "@unovis_angular.js",
+      "fileHash": "b71b2fa4",
+      "needsInterop": false
+    },
+    "@unovis/ts": {
+      "src": "../../../../../../../../node_modules/.pnpm/@unovis+ts@1.6.2/node_modules/@unovis/ts/index.js",
+      "file": "@unovis_ts.js",
+      "fileHash": "269eb46f",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "mapboxgl-layer-CD76KLLY": {
+      "file": "mapboxgl-layer-CD76KLLY.js"
+    },
+    "renderer-RBD2DBYM": {
+      "file": "renderer-RBD2DBYM.js"
+    },
+    "dist-SXZRZX6G": {
+      "file": "dist-SXZRZX6G.js"
+    },
+    "dist-MD5T5APL": {
+      "file": "dist-MD5T5APL.js"
+    },
+    "chunk-FNAEINJJ": {
+      "file": "chunk-FNAEINJJ.js"
+    },
+    "src-UFVHI6AQ": {
+      "file": "src-UFVHI6AQ.js"
+    },
+    "elk.bundled-NVVMOIYO": {
+      "file": "elk__bundled-NVVMOIYO.js"
+    },
+    "chunk-H4QKQQHI": {
+      "file": "chunk-H4QKQQHI.js"
+    },
+    "chunk-TN65M5WX": {
+      "file": "chunk-TN65M5WX.js"
+    },
+    "chunk-YE4TX6YG": {
+      "file": "chunk-YE4TX6YG.js"
+    },
+    "chunk-FBCDWED4": {
+      "file": "chunk-FBCDWED4.js"
+    },
+    "chunk-SFUQ3DKB": {
+      "file": "chunk-SFUQ3DKB.js"
+    },
+    "chunk-IZMHJU6E": {
+      "file": "chunk-IZMHJU6E.js"
+    },
+    "chunk-BKKYJXF4": {
+      "file": "chunk-BKKYJXF4.js"
+    },
+    "leaflet-src-76UPBNJA": {
+      "file": "leaflet-src-76UPBNJA.js"
+    },
+    "maplibre-gl-Y6M5XX27": {
+      "file": "maplibre-gl-Y6M5XX27.js"
+    },
+    "chunk-7WUTQBRG": {
+      "file": "chunk-7WUTQBRG.js"
+    }
+  }
+}

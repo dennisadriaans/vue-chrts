@@ -1,0 +1,22 @@
+{
+  "name": "@vue-chrts/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/d3-geo": "^3.1.0",
+    "@unovis/ts": "^1.6.2"
+  }
+}
