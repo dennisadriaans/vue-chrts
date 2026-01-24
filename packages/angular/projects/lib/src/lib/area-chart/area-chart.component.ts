@@ -55,6 +55,7 @@ import { createMarkers } from '../utils';
         [padding]="padding()"
         [yDomain]="yDomain()"
         [xDomain]="xDomain()"
+        [svgDefs]="svgDefs() + markerSvgDefs()"
       >
         @if (!hideTooltip()) {
           <vis-tooltip
@@ -159,6 +160,7 @@ import { createMarkers } from '../utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AreaChartComponent<T extends Record<string, any>> {
+  private readonly uid = Math.random().toString(36).slice(2);
   readonly data = input.required<T[]>();
   readonly height = input<number>(400);
   readonly padding = input<{ top: number; right: number; bottom: number; left: number }>({
@@ -241,18 +243,24 @@ export class AreaChartComponent<T extends Record<string, any>> {
   readonly svgDefs = computed(() => {
     const stops = this.gradientStops();
     const colors = this.colors();
-    
-    return colors.map((color, index) => {
-      const id = `gradient-${index}-${color.replace(/#/g, '')}`;
-      return `
+
+    return colors
+      .map((color, index) => {
+        const id = `gradient-${this.uid}-${index}`;
+        return `
         <linearGradient id="${id}" gradientTransform="rotate(90)">
-          ${stops.map(stop => `
+          ${stops
+            .map(
+              (stop) => `
             <stop offset="${stop.offset}" stop-color="${color}" stop-opacity="${stop.stopOpacity}" />
-          `).join('')}
+          `
+            )
+            .join("")}
           <stop offset="100%" stop-color="${color}" stop-opacity="0" />
         </linearGradient>
       `;
-    }).join('');
+      })
+      .join("");
   });
 
   readonly stackedYAccessors = computed(() => {
@@ -299,9 +307,7 @@ export class AreaChartComponent<T extends Record<string, any>> {
   }
 
   getGradientSelector(index: number): any {
-    const color = this.colors()[index];
-    const id = `gradient-${index}-${color.replace(/#/g, '')}`;
-    return `url(#${id})`;
+    return `url(#gradient-${this.uid}-${index})`;
   }
 
   onCrosshairUpdate = (d: T): string => {
