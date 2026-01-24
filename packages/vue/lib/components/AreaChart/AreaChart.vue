@@ -91,39 +91,24 @@ const legendAlignment = computed(() => {
 });
 
 const svgDefs = computed(() => {
-  const createGradientWithHex = (id: number, color: string | string[]) => `
-    <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
-      ${
+  return colors.value
+    .map((color, index) => {
+      const id = `gradient-${markerScopeId}-${index}`;
+      const stops =
         props.gradientStops
           ?.map(
             (stop) =>
               `<stop offset="${stop.offset}" stop-color="${color}" stop-opacity="${stop.stopOpacity}" />`
           )
-          .join("") ?? ""
-      }
+          .join("") ?? "";
+
+      return `
+    <linearGradient id="${id}" gradientTransform="rotate(90)">
+      ${stops}
       <stop offset="100%" stop-color="${color}" stop-opacity="0" />
     </linearGradient>
   `;
-  const createGradientWithCssVar = (id: number, color: string | string[]) => `
-    <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
-
-    ${
-      props.gradientStops
-        ?.map(
-          (stop) => `
-      <stop offset="${stop.offset}" style="stop-color:var(${color});stop-opacity:${stop.stopOpacity}" />
-    `
-        )
-        .join("") ?? ""
-    }
-    </linearGradient>
-  `;
-  return colors.value
-    .map((color, index) =>
-      color?.includes("#")
-        ? createGradientWithHex(index, color)
-        : createGradientWithCssVar(index, color ?? DEFAULT_COLOR)
-    )
+    })
     .join("");
 });
 
@@ -239,7 +224,7 @@ function onCrosshairUpdate(d: T): string {
             v-if="!hideArea"
             :x="(_: T, i: number) => i"
             v-bind="getAccessors(categoryId)"
-            :color="`url(#gradient${index}-${colors[index]})`"
+            :color="`url(#gradient-${markerScopeId}-${index})`"
             :opacity="DEFAULT_OPACITY"
             :curve-type="curveType ?? CurveType.MonotoneX"
           />
