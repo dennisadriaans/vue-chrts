@@ -303,9 +303,9 @@ export const AreaChartData4: AreaChartItem4[] = [
 /* Data source: World Bank Open Data - https://data.worldbank.org/indicator/TX.VAL.FOOD.ZS.UN */
 
 export const foodExportCategories: Record<string, BulletLegendItemInterface> = {
-  us: { name: 'United States', color: '#3b82f6' },
-  india: { name: 'India', color: '#22c55e' },
-  china: { name: 'China', color: '#f97316' },
+  us: { name: 'United States', color: 'var(--vis-color1)' },
+  india: { name: 'India', color: 'var(--vis-color2)' },
+  china: { name: 'China', color: 'var(--vis-color3)' },
 }
 
 export interface FoodExportData {
