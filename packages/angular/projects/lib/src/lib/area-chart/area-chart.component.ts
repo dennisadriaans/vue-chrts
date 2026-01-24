@@ -243,24 +243,18 @@ export class AreaChartComponent<T extends Record<string, any>> {
   readonly svgDefs = computed(() => {
     const stops = this.gradientStops();
     const colors = this.colors();
-
-    return colors
-      .map((color, index) => {
-        const id = `gradient-${this.uid}-${index}`;
-        return `
+    
+    return colors.map((color, index) => {
+      const id = `gradient-${index}-${color.replace(/#/g, '')}`;
+      return `
         <linearGradient id="${id}" gradientTransform="rotate(90)">
-          ${stops
-            .map(
-              (stop) => `
+          ${stops.map(stop => `
             <stop offset="${stop.offset}" stop-color="${color}" stop-opacity="${stop.stopOpacity}" />
-          `
-            )
-            .join("")}
+          `).join('')}
           <stop offset="100%" stop-color="${color}" stop-opacity="0" />
         </linearGradient>
       `;
-      })
-      .join("");
+    }).join('');
   });
 
   readonly stackedYAccessors = computed(() => {
@@ -307,7 +301,9 @@ export class AreaChartComponent<T extends Record<string, any>> {
   }
 
   getGradientSelector(index: number): any {
-    return `url(#gradient-${this.uid}-${index})`;
+    const color = this.colors()[index];
+    const id = `gradient-${index}-${color.replace(/#/g, '')}`;
+    return `url(#${id})`;
   }
 
   onCrosshairUpdate = (d: T): string => {
