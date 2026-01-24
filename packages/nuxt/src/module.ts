@@ -53,8 +53,8 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.vite.optimizeDeps.include.push(...deps);
 
     // Transpile ESM dependencies
-    nuxt.options.build.transpile = nuxt.options.build.transpile || [];
-    nuxt.options.build.transpile.push(...deps);
+    // nuxt.options.build.transpile = nuxt.options.build.transpile || [];
+    // nuxt.options.build.transpile.push(...deps);
 
     // Force bundle SSR-breaking dependencies to be processed by Vite
     nuxt.options.vite.ssr = nuxt.options.vite.ssr || {};
