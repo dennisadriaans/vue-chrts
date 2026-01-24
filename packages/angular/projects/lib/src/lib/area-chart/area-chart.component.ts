@@ -55,7 +55,6 @@ import { createMarkers } from '../utils';
         [padding]="padding()"
         [yDomain]="yDomain()"
         [xDomain]="xDomain()"
-        [svgDefs]="svgDefs() + markerSvgDefs()"
       >
         @if (!hideTooltip()) {
           <vis-tooltip

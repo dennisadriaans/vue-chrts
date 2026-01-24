@@ -18,6 +18,7 @@ import {
   VisBulletLegendModule,
   VisGroupedBarModule,
   VisStackedBarModule,
+  VisXYLabelsModule,
 } from '@unovis/angular';
 import { GroupedBar, Orientation, StackedBar } from '@unovis/ts';
 import { LegendPosition, BulletLegendItemInterface, AxisConfig } from '../types';
@@ -35,6 +36,7 @@ import { ValueLabel } from './types';
     VisBulletLegendModule,
     VisGroupedBarModule,
     VisStackedBarModule,
+    VisXYLabelsModule,
     TooltipComponent,
   ],
   template: `
@@ -45,15 +47,40 @@ import { ValueLabel } from './types';
       (click)="onClick($event)"
     >
       <vis-xy-container
-        [data]="data()"
         [height]="height()"
         [padding]="padding()"
       >
-        <vis-tooltip
-          [triggers]="tooltipTriggers"
-        ></vis-tooltip>
+        @if (valueLabel()) {
+          <vis-xy-labels
+            [data]="labelData()"
+            [x]="labelX()"
+            [y]="labelY()"
+            [label]="labelAccessor()"
+            [backgroundColor]="valueLabel()?.backgroundColor ?? 'transparent'"
+            [color]="valueLabel()?.color ?? 'red'"
+            [labelFontSize]="valueLabel()?.labelFontSize"
+          ></vis-xy-labels>
+        }
 
-        @if (!stacked()) {
+        @if (!hideTooltip()) {
+          <vis-tooltip
+            [triggers]="tooltipTriggers"
+          ></vis-tooltip>
+        }
+
+        @if (stackAndGrouped()) {
+          @for (state of stackedGroupedData().states; track state) {
+            <vis-stacked-bar
+              [data]="stackedGroupedData().chartData"
+              [x]="getXForState(state)"
+              [y]="stackedGroupedData().bars[state]"
+              [color]="stackedGroupedData().colorFunctions[state]"
+              [roundedCorners]="radius() ?? 0"
+              [barPadding]="barPadding()"
+              [orientation]="orientation()"
+            ></vis-stacked-bar>
+          }
+        } @else if (!stacked()) {
           <vis-grouped-bar
             [data]="data()"
             [x]="_x"
@@ -168,6 +195,9 @@ export class BarChartComponent<T extends Record<string, any>> {
   readonly valueLabel = input<ValueLabel>();
   readonly xAxisConfig = input<AxisConfig>();
   readonly yAxisConfig = input<AxisConfig>();
+  readonly stackAndGrouped = input<boolean>(false);
+  readonly xAxis = input<keyof T>();
+  readonly stackedGroupedSpacing = input<number>(0.1);
 
   readonly click = output<{ event: MouseEvent; values?: T }>();
 
@@ -177,6 +207,69 @@ export class BarChartComponent<T extends Record<string, any>> {
   readonly Orientation = Orientation;
 
   readonly isLegendTop = computed(() => this.legendPosition().startsWith('top'));
+
+  readonly stackedGroupedData = computed(() => {
+    const data = this.data();
+    const categories = this.categories();
+    const stackAndGrouped = this.stackAndGrouped();
+    const xAxis = this.xAxis();
+    const spacing = this.stackedGroupedSpacing() ?? 0.1;
+
+    // Local helper functions matching stackedGroupedUtils.ts
+    const extractStates = (cats: Record<string, BulletLegendItemInterface>): string[] => {
+      const states = new Set<string>();
+      Object.keys(cats).forEach((key) => {
+        const match = key.match(/([A-Z][a-z]+)$/);
+        if (match) states.add(match[1]);
+      });
+      return Array.from(states);
+    };
+
+    const states = extractStates(categories);
+    const groupedByState: Record<string, string[]> = {};
+    states.forEach((state) => {
+      groupedByState[state] = Object.keys(categories).filter((key) => key.endsWith(state));
+    });
+
+    const colorsByState: Record<string, string[]> = {};
+    Object.entries(groupedByState).forEach(([state, keys]) => {
+      colorsByState[state] = keys.map((key) => {
+        const color = categories[key]?.color;
+        return (Array.isArray(color) ? color[0] : color) ?? '#ccc';
+      });
+    });
+
+    const bars: Record<string, ((d: any) => any)[]> = {};
+    Object.entries(groupedByState).forEach(([state, keys]) => {
+      bars[state] = keys.map((key) => {
+        const baseName = key.replace(state, '').toLowerCase();
+        return (d: any) => d[baseName + state];
+      });
+    });
+
+    const colorFunctions: Record<string, (d: unknown, i: number) => string> = {};
+    Object.entries(colorsByState).forEach(([state, stateColors]) => {
+      colorFunctions[state] = (_d: unknown, i: number) => stateColors[i] ?? '#ccc';
+    });
+
+    const positions: Record<string, number> = {};
+    const numStates = states.length;
+    states.forEach((state, index) => {
+      const offset = (index - (numStates - 1) / 2) * spacing;
+      positions[state] = offset;
+    });
+
+    // Simple flattenData logic
+    let chartData = data;
+
+    return {
+      states,
+      bars,
+      colorFunctions,
+      positions,
+      chartData,
+    };
+  });
 
   readonly legendAlignment = computed(() => {
     const pos = this.legendPosition();
@@ -196,12 +289,70 @@ export class BarChartComponent<T extends Record<string, any>> {
     return this.yAxis().map((key) => (d: T) => d[key]);
   });
 
+  readonly labelData = computed(() => {
+    const data = this.data();
+    const keys = this.yAxis();
+    return data.flatMap((item, colIndex) =>
+      keys.map((key, itemIndex) => ({
+        x: colIndex,
+        y: Number(item[key] ?? 0),
+        itemIndex,
+        datum: item,
+      }))
+    );
+  });
+
+  readonly labelX = computed(() => {
+    const isStacked = this.stacked();
+    const numBars = this.yAxis().length;
+    const groupPadding = this.groupPadding();
+    const barPadding = this.barPadding();
+
+    return (d: any) => {
+      // Do not offset for stacked variants
+      if (isStacked) return d.x;
+      if (numBars <= 1) return d.x; // single series, already centered
+
+      // Effective drawable width of the group after outer group padding (heuristic)
+      const groupEffectiveWidth = 1 - groupPadding;
+      const barEffectiveWidth = groupEffectiveWidth / numBars;
+
+      // Start (left) edge of effective group relative to group center (which is at d.x)
+      const leftOffsetFromCenter = -groupEffectiveWidth / 2;
+      const barCenterOffset = barEffectiveWidth * d.itemIndex + barEffectiveWidth / 2;
+      
+      // Bars inside the group usually don't span the full theoretical width due to internal barPadding.
+      const compression = 1 - barPadding; // pull towards center
+      const offsetFromCenter = (leftOffsetFromCenter + barCenterOffset) * compression;
+
+      return d.x + offsetFromCenter;
+    };
+  });
+
+  readonly labelY = computed(() => {
+    const spacing = this.valueLabel()?.labelSpacing ?? 0;
+    return (d: any) => d.y + spacing;
+  });
+
+  readonly labelAccessor = computed(() => {
+    const labelFn = this.valueLabel()?.label;
+    return (d: any, i: number) => {
+      if (!labelFn) return '';
+      const value = labelFn(d, i);
+      return value == null ? '' : String(value);
+    };
+  });
+
   colorAccessor: any = (_: T, i: number) => {
     const cats = Object.values(this.categories());
     return cats[i]?.color;
   };
 
   _x: any = (_: T, i: number) => i;
+
+  getXForState(state: string): any {
+    return (_: T, i: number) => i + this.stackedGroupedData().positions[state];
+  }
 
   xFormatterFn = (tick: number | Date, i: number, ticks: (number | Date)[]) => {
     const formatter = this.xFormatter();

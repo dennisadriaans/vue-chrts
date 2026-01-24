@@ -53,6 +53,12 @@ export class App {
   protected readonly DonutType = DonutType;
   protected readonly LegendPosition = LegendPosition;
 
+  protected readonly barValueLabel = {
+    label: (d: any) => d.y.toString(),
+    labelSpacing: 10,
+    color: '#374151',
+    labelFontSize: 12,
+  };
 
   protected readonly data: ChartData[] = [
     { month: 'Jan', value: 12, sales: 100, profit: 50 },
