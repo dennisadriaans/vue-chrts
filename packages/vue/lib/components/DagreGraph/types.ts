@@ -1,5 +1,5 @@
-import type { BulletLegendItemInterface, TooltipConfig } from "../../types";
-import { LegendPosition } from "../../types";
+import type { BulletLegendItemInterface, TooltipConfig } from "@vue-chrts/shared";
+import { LegendPosition } from "@vue-chrts/shared";
 
 /**
  * Dagre layout direction options

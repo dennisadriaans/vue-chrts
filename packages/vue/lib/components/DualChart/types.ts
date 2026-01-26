@@ -1,12 +1,11 @@
-import {
+import type {
   axisFormatter,
   CrosshairConfig,
-  LegendPosition,
   AxisConfig,
   BulletLegendItemInterface,
-  Orientation,
   TooltipConfig,
-} from "../../types";
+} from "@vue-chrts/shared";
+import { LegendPosition, Orientation } from "@vue-chrts/shared";
 import type { CurveType } from "@unovis/ts";
 
 export interface DualChartProps<T> {

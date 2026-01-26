@@ -6,7 +6,7 @@ export const resolveImports = (config: ModuleOptions, filePath: string) => {
         return
     }
 
-    const allTypes = ['BulletLegendItemInterface', 'MarkerConfig', 'CrosshairConfig', 'AxisConfig', 'MapRegion', 'MapPin']
+    const allTypes = ['BulletLegendItemInterface', 'MarkerConfig', 'CrosshairConfig', 'AxisConfig', 'TooltipConfig', 'MapRegion', 'MapPin']
     addImportsSources({
         from: filePath,
         type: true,

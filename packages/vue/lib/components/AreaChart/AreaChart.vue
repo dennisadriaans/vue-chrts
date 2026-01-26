@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-import { computed, getCurrentInstance, ref, useSlots, useTemplateRef } from "vue";
+import { computed, getCurrentInstance, onMounted, ref, useSlots, useTemplateRef } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
 import { createScopedMarkers } from "../../utils";
 
@@ -16,7 +16,6 @@ import {
 } from "@unovis/vue";
 
 import { LegendPosition } from "../../types";
-
 import type { AreaChartProps } from "./types";
 
 const emit = defineEmits<{

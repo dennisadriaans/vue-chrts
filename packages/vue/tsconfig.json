@@ -2,7 +2,7 @@
     "compilerOptions": {
       "target": "ESNext",
       "module": "ESNext",
-      "moduleResolution": "Node",
+      "moduleResolution": "Bundler",
       "lib": ["ESNext", "DOM"],
       "esModuleInterop": true,
       "forceConsistentCasingInFileNames": true,
@@ -10,7 +10,11 @@
       "skipLibCheck": true,
       "declaration": true,
       "outDir": "dist",
-      "resolveJsonModule": true
+      "resolveJsonModule": true,
+      "paths": {
+        "@vue-chrts/shared": ["../shared/dist/index.d.ts"],
+        "@vue-chrts/shared/*": ["../shared/dist/*"]
+      }
     },
     "include": ["lib/**/*.ts", "lib/**/*.vue", "lib/**/*.d.ts"],
     "exclude": ["node_modules", "dist"]

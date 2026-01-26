@@ -1,9 +1,6 @@
-import {
-  BulletLegendItemInterface,
-  LegendPosition,
-  TooltipConfig,
-} from "../../types";
-import {
+import type { BulletLegendItemInterface, TooltipConfig } from "@vue-chrts/shared";
+import { LegendPosition } from "@vue-chrts/shared";
+import type {
   SankeyInputNode,
   SankeyInputLink,
   SankeyNodeAlign,

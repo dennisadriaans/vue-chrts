@@ -1,8 +1,7 @@
 <script setup lang="ts" generic="T extends {}">
 import { Donut } from "@unovis/ts";
 import { ref, useSlots, useTemplateRef, computed } from "vue";
-import { type DonutChartProps, DonutType } from "./types";
-import { getFirstPropertyValue } from "../../utils";
+import { DonutType, type DonutChartProps } from "./types";
 
 import Tooltip from "../Tooltip.vue";
 

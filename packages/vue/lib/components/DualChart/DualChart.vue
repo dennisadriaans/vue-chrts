@@ -131,9 +131,9 @@ function onCrosshairUpdateWithContent(d: T): string {
     >
       <VisTooltip
         v-if="!hideTooltip"
-        :followCursor="props.tooltip.followCursor"
-        :show-delay="props.tooltip.showDelay"
-        :hide-delay="props.tooltip.hideDelay"
+        :followCursor="props.tooltip?.followCursor"
+        :show-delay="props.tooltip?.showDelay"
+        :hide-delay="props.tooltip?.hideDelay"
         :triggers="{
           [GroupedBar.selectors.bar]: (d: T) => {
             onCrosshairUpdate(d);
@@ -217,7 +217,7 @@ function onCrosshairUpdateWithContent(d: T): string {
         :template="onCrosshairUpdateWithContent"
       />
     </VisXYContainer>
-    
+
     <div
       v-if="!props.hideLegend"
       :style="{
@@ -238,7 +238,7 @@ function onCrosshairUpdateWithContent(d: T): string {
         "
       />
     </div>
-    
+
     <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">

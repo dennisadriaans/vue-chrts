@@ -140,6 +140,7 @@ const labelX = (d: LabelDatum) => {
 
   return d.x + offsetFromCenter;
 };
+
 </script>
 
 <template>

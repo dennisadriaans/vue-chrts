@@ -10,8 +10,13 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.umd.cjs"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js"
     }
   },
   "scripts": {
@@ -48,6 +53,7 @@
   },
   "packageManager": "pnpm@8.15.4+sha256.cea6d0bdf2de3a0549582da3983c70c92ffc577ff4410cbf190817ddc35137c2",
   "dependencies": {
+    "@vue-chrts/shared": "workspace:^",
     "@turf/boolean-point-in-polygon": "^7.3.1"
   }
 }

@@ -28,6 +28,7 @@ const props = withDefaults(defineProps<SankeyChartProps<N, L>>(), {
   legendPosition: LegendPosition.BottomCenter,
   legendStyle: undefined,
   hideLegend: false,
+  hideTooltip: false,
   padding: () => ({
     top: 5,
     right: 5,
@@ -78,9 +79,9 @@ function onNodeHover(d: any) {
     >
       <VisTooltip
         v-if="!hideTooltip"
-        :followCursor="props.tooltip.followCursor"
-        :show-delay="props.tooltip.showDelay"
-        :hide-delay="props.tooltip.hideDelay"
+        :followCursor="props.tooltip?.followCursor"
+        :show-delay="props.tooltip?.showDelay"
+        :hide-delay="props.tooltip?.hideDelay"
         :triggers="{
           [Sankey.selectors.node]: (d: any) => {
             onNodeHover(d);

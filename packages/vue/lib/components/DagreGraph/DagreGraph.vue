@@ -200,9 +200,9 @@ const events = {
     >
       <VisTooltip
         v-if="!hideTooltip"
-        :followCursor="props.tooltip.followCursor"
-        :show-delay="props.tooltip.showDelay"
-        :hide-delay="props.tooltip.hideDelay"
+        :followCursor="props.tooltip?.followCursor"
+        :show-delay="props.tooltip?.showDelay"
+        :hide-delay="props.tooltip?.hideDelay"
       />
 
       <VisGraph
@@ -262,4 +262,3 @@ const events = {
     </div>
   </div>
 </template>
-
