@@ -5,7 +5,7 @@ import { MapsData } from "./types";
 import { TopoJSONMap, Position } from "@unovis/ts";
 import Tooltip from "../../Tooltip.vue";
 import { MapArea, MapLink, MapPoint } from "../types";
-import { LegendPosition } from "../../../types";
+import { LegendPosition } from "../../../enums";
 
 const props = withDefaults(defineProps<MapsData<T>>(), {
   zoomFactor: 1,

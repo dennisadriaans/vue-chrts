@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-import { BarChart, BulletLegendItemInterface } from "./../lib";
+import { BarChart, BulletLegendItemInterface, LegendPosition, Orientation, type BarChartProps } from "./../lib";
 import Card from "./elements/Card.vue";
 import Button from "./elements/Button.vue";
 import { VisitorsData, VisitorsCartegories } from "./data/VisitorsData";
-import { LegendPosition, Orientation } from "./../lib";
 import { ref } from "vue";
-import { BarChartProps } from "../lib/types";
 
 import BarWithLabel from "./components/BarWithLabel.vue";
 import TestDomainScale from "./components/TestDomainScale.vue";

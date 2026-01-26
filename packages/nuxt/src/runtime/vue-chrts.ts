@@ -11,5 +11,3 @@ export {
   TopoJSONMap,
   DottedMap,
 } from "vue-chrts";
-
-export * from "vue-chrts";

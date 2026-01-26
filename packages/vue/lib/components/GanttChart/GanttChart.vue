@@ -12,7 +12,8 @@ import {
   VisAxis,
 } from "@unovis/vue";
 
-import { LegendPosition, GanttChartProps } from "../../types";
+import { LegendPosition } from "../../enums";
+import type { GanttChartProps } from "./GanttChart";
 
 export interface TimelineCategory {
   name: string;

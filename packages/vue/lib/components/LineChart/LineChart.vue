@@ -1,7 +1,7 @@
 
 <script setup lang="ts" generic="T">
 import AreaChart from "../AreaChart/AreaChart.vue";
-import type { LineChartProps } from "./types";
+import type { LineChartProps } from "./LineChart";
 
 const props = defineProps<LineChartProps<T>>();
 

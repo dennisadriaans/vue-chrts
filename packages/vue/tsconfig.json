@@ -11,10 +11,7 @@
       "declaration": true,
       "outDir": "dist",
       "resolveJsonModule": true,
-      "paths": {
-        "@vue-chrts/shared": ["../shared/dist/index.d.ts"],
-        "@vue-chrts/shared/*": ["../shared/dist/*"]
-      }
+      "paths": {}
     },
     "include": ["lib/**/*.ts", "lib/**/*.vue", "lib/**/*.d.ts"],
     "exclude": ["node_modules", "dist"]

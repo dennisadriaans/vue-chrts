@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends {}">
 import { Donut } from "@unovis/ts";
 import { ref, useSlots, useTemplateRef, computed } from "vue";
-import { DonutType, type DonutChartProps } from "./types";
+import { DonutType, type DonutChartProps } from "./DonutChart";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -11,7 +11,7 @@ import {
   VisSingleContainer,
   VisTooltip,
 } from "@unovis/vue";
-import { LegendPosition } from "../../types";
+import { LegendPosition } from "../../enums";
 
 const emit = defineEmits<{
   (e: "click", event: MouseEvent, values?: any): void;

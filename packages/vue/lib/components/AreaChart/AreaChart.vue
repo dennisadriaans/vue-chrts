@@ -15,8 +15,8 @@ import {
   VisXYContainer,
 } from "@unovis/vue";
 
-import { LegendPosition } from "../../types";
-import type { AreaChartProps } from "./types";
+import { LegendPosition } from "../../enums";
+import type { AreaChartProps } from "./AreaChart";
 
 const emit = defineEmits<{
   (e: "click", event: MouseEvent, values?: T): void;

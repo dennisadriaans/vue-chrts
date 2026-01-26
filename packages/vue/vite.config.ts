@@ -34,7 +34,14 @@ export default defineConfig({
       fileName: 'index.js',
     },
     rollupOptions: {
-      external: ['vue', '@unovis/vue', '@unovis/ts', 'vue-router', 'tailwindcss'],
+      external: [
+        'vue',
+        '@unovis/vue',
+        '@unovis/ts',
+        'd3-geo',
+        'proj4',
+        /^@turf\/.*/
+      ],
       output: [outputDefault('es', 'js')],
     },
     assetsInlineLimit: 0, // Don't inline assets

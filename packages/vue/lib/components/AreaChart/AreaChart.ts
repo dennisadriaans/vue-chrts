@@ -1,15 +1,16 @@
 import type {
-  axisFormatter,
-  CrosshairConfig,
   AxisConfig,
+  axisFormatter,
   BulletLegendItemInterface,
+  CrosshairConfig,
+  MarkerConfig,
   TooltipConfig,
 } from "../../types";
-import { LegendPosition, Orientation, CurveType } from "../../enums";
+import { CurveType, LegendPosition } from "../../enums";
 
-export interface DualChartProps<T> {
+export interface AreaChartProps<T> {
   /**
-   * The data to be displayed in the dual chart.
+   * The data to be displayed in the area chart.
    * Each element of the array represents a data point.
    * The structure of 'T' should be compatible with the chart's rendering logic.
    */
@@ -23,13 +24,9 @@ export interface DualChartProps<T> {
    */
   xLabel?: string;
   /**
-   * Optional label for the y-axis (used for both bar and line by default).
+   * Optional label for the y-axis.
    */
   yLabel?: string;
-  /**
-   * Optional label for the secondary y-axis (line chart).
-   */
-  yLabelSecondary?: string;
   /**
    * Optional padding applied to the chart.
    * Allows specifying individual padding values for the top, right, bottom, and left sides.
@@ -41,23 +38,15 @@ export interface DualChartProps<T> {
     left: number;
   };
   /**
-   * A record mapping bar category keys to `BulletLegendItemInterface` objects.
-   * This defines the visual representation and labels for bar categories in the chart's legend.
+   * A record mapping category keys to `BulletLegendItemInterface` objects.
+   * This defines the visual representation and labels for each category in the chart's legend.
    */
-  barCategories: Record<string, BulletLegendItemInterface>;
+  categories: Record<string, BulletLegendItemInterface>;
+
   /**
-   * A record mapping line category keys to `BulletLegendItemInterface` objects.
-   * This defines the visual representation and labels for line categories in the chart's legend.
+   * A record mapping marker keys to show custom patterns.
    */
-  lineCategories: Record<string, BulletLegendItemInterface>;
-  /**
-   * An array of property keys from the data object type 'T' to be used for the bar chart y-axis values.
-   */
-  barYAxis: (keyof T)[];
-  /**
-   * An array of property keys from the data object type 'T' to be used for the line chart y-axis values.
-   */
-  lineYAxis: (keyof T)[];
+  markerConfig?: MarkerConfig;
   /**
    * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
    * @param {number} i - The index of the tick in the `ticks` array.
@@ -77,14 +66,26 @@ export interface DualChartProps<T> {
    */
   tooltipTitleFormatter?: (data: T) => string | number;
   /**
-   * The type of curve to use for the line chart lines.
+   * The type of curve to use for the area chart lines.
    * See `CurveType` for available options.
    */
   curveType?: CurveType;
   /**
+   * If `true`, hides the area fill, displaying only the line.
+   */
+  hideArea?: boolean;
+  /**
+   * Edit the gradient stops for the area fill.
+   */
+  gradientStops?: Array<{ offset: string; stopOpacity: number }>;
+  /**
    * The width of the line in pixels. Default is 2px.
    */
   lineWidth?: number;
+  /**
+   * Line dash array, see SVG's stroke-dasharray. Default: `undefined`
+   */
+  lineDashArray?: number[][];
   /**
    * The desired number of ticks on the x-axis.
    */
@@ -101,6 +102,10 @@ export interface DualChartProps<T> {
    * The desired number of ticks on the y-axis.
    */
   yNumTicks?: number;
+  /**
+   * Force specific ticks on the y-axis.
+   */
+  yExplicitTicks?: (number | string | Date)[];
   /**
    * If `true`, hides the chart legend.
    */
@@ -171,26 +176,10 @@ export interface DualChartProps<T> {
    */
   xDomain?: [number | undefined, number | undefined];
   /**
-   * If `true`, creates stacked bars.
+   * If `true`, creates a stacked area chart where areas are stacked on top of each other.
+   * When false (default), areas are overlaid on top of each other.
    */
   stacked?: boolean;
-  /**
-   * The padding between groups of bars in pixels.
-   */
-  groupPadding?: number;
-  /**
-   * Fractional padding between the bars in the range of [0,1). Default: 0.2
-   */
-  barPadding?: number;
-  /**
-   * Rounded corners for top bars. Boolean or number (to set the radius in pixels). Default: 2
-   */
-  radius?: number;
-  /**
-   * The orientation of the bars (vertical or horizontal).
-   * See `Orientation` for available options.
-   */
-  orientation?: Orientation;
   /**
    * Animation duration in milliseconds for the chart components.
    */

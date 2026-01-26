@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import Button from "./elements/Button.vue";
 import Card from "./elements/Card.vue";
-import { AreaChart } from "./../lib";
-import { CurveType, LegendPosition, MarkerConfig } from "./../lib/types";
+import { AreaChart, CurveType, LegendPosition, type MarkerConfig } from "./../lib";
 
 import { AreaChartData1, categories1, foodExportData, foodExportCategories } from "./data/AreaChartData";
 

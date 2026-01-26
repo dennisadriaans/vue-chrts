@@ -45,16 +45,19 @@ export default defineNuxtModule<ModuleOptions>({
 
   },
   async setup(options, nuxt) {
-    const deps = ["vue-chrts", "@unovis/ts", "@unovis/vue"];
+    const deps = [
+      "vue-chrts",
+      "@unovis/ts",
+      "@unovis/vue",
+      "d3-geo",
+      "proj4",
+      "@turf/boolean-point-in-polygon"
+    ];
 
     // Optimize dependencies for Vite
     nuxt.options.vite.optimizeDeps = nuxt.options.vite.optimizeDeps || {};
     nuxt.options.vite.optimizeDeps.include = nuxt.options.vite.optimizeDeps.include || [];
     nuxt.options.vite.optimizeDeps.include.push(...deps);
-
-    // Transpile ESM dependencies
-    // nuxt.options.build.transpile = nuxt.options.build.transpile || [];
-    // nuxt.options.build.transpile.push(...deps);
 
     // Force bundle SSR-breaking dependencies to be processed by Vite
     nuxt.options.vite.ssr = nuxt.options.vite.ssr || {};

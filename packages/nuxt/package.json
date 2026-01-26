@@ -27,8 +27,6 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@unovis/ts": "^1.6.2",
-    "@unovis/vue": "^1.6.2",
     "vue-chrts": "workspace:*"
   },
   "devDependencies": {

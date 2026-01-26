@@ -16,8 +16,8 @@ import {
 
 import Tooltip from "../Tooltip.vue";
 
-import { LegendPosition } from "../../types";
-import { SankeyChartProps } from "./types";
+import { LegendPosition } from "../../enums";
+import { SankeyChartProps } from "./SankeyChart";
 
 const emit = defineEmits<{
   (e: "click", event: MouseEvent): void;

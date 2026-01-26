@@ -1,6 +1,6 @@
 import { computed, ComputedRef } from "vue";
 import { flattenData } from "../../utils";
-import { BulletLegendItemInterface } from "../../types";
+import type { BulletLegendItemInterface } from "../../types";
 
 export interface StackedGroupedConfig<T> {
   data: T[];

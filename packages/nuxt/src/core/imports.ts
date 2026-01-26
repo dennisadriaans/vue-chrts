@@ -8,14 +8,20 @@ export const resolveImports = (config: ModuleOptions, filePath: string) => {
 
     const allTypes = ['BulletLegendItemInterface', 'MarkerConfig', 'CrosshairConfig', 'AxisConfig', 'TooltipConfig', 'MapRegion', 'MapPin']
     addImportsSources({
-        from: filePath,
+        from: "vue-chrts/types",
         type: true,
         imports: [...allTypes]
     })
 
-    const allImports = ['CurveType', 'LegendPosition', 'Orientation', 'DonutType', 'getMap', 'getPin']
+    const enumImports = ['CurveType', 'LegendPosition', 'Orientation']
     addImportsSources({
-        from: filePath,
-        imports: [...allImports]
+        from: "vue-chrts/enums",
+        imports: [...enumImports]
+    })
+
+    const runtimeImports = ['DonutType', 'getMap', 'getPin']
+    addImportsSources({
+        from: "vue-chrts",
+        imports: [...runtimeImports]
     })
 }

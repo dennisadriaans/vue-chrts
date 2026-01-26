@@ -1,44 +1,65 @@
-// Re-export everything from shared package
-export {
-  LegendPosition,
-  CurveType,
-  Orientation,
-  DonutType,
-} from "@vue-chrts/shared";
 
-export type {
-  BulletLegendItemInterface,
-  axisFormatter,
-  AxisConfig,
-  MarkerConfig,
-  CrosshairConfig,
-  TooltipConfig,
-  AreaChartProps,
-  BarChartProps,
-  BarChartPropsBase,
-  ValueLabel,
-  LineChartProps,
-  DonutChartProps,
-  BubbleChartProps,
-  SizeOptions,
-  GanttChartProps,
-} from "@vue-chrts/shared";
+export interface BulletLegendItemInterface {
+  name: string | number;
+  color?: string | Array<string>;
+  className?: string;
+  inactive?: boolean;
+  hidden?: boolean;
+  pointer?: boolean;
+}
 
-// Vue-specific component types
-export type {
-  DagreGraphProps,
-  GraphNodeDatum,
-  GraphLinkDatum,
-  GraphData,
-  DagreLayoutSettings,
-  DagreRankDir,
-  DagreAlign,
-  DagreRanker,
-  NodeShape,
-  LinkArrowPosition,
-} from "./components/DagreGraph/types";
+export type axisFormatter =
+  | ((tick: number, i?: number, ticks?: number[]) => string)
+  | ((tick: Date, i?: number, ticks?: Date[]) => string);
 
-export type { SankeyChartProps } from "./components/SankeyChart/types";
-export type { DualChartProps } from "./components/DualChart/types";
-export type { MapsData } from "./components/Maps/TopoJSONMap/types";
-export type { DottedMapProps } from "./components/Maps/DottedMap/types";
+export interface AxisConfig {
+  tickLine?: boolean;
+  tickTextFontSize?: string;
+  tickTextColor?: string;
+  tickFormat?: axisFormatter;
+  tickTextAlign?: "left" | "right" | "center";
+  tickTextAngle?: number;
+  tickTextWidth?: number;
+  tickTextFitMode?: "wrap" | "trim";
+  tickTextTrimType?: "start" | "middle" | "end";
+  tickTextForceWordBreak?: boolean;
+  tickTextSeparator?: string | readonly string[];
+  minMaxTicksOnly?: boolean;
+  minMaxTicksOnlyShowGridLines?: boolean;
+  tickValues?: readonly number[] | readonly Date[];
+}
+
+export type MarkerConfig = {
+  id: string,
+  config: {
+    [key: string]: {
+    type?: "circle" | "square" | "triangle" | "diamond";
+    size?: number;
+    strokeWidth?: number;
+    color?: string;
+    strokeColor?: string;
+  };
+  }
+};
+
+export interface CrosshairConfig {
+  color?: string;
+  strokeColor?: string;
+  strokeWidth?: number;
+  template?: (d: any) => string;
+}
+
+export interface TooltipConfig {
+  /**
+   * Hide delay in milliseconds. Default: undefined
+   */
+  hideDelay?: number;
+  /**
+   * Show delay in milliseconds. Default: undefined
+   */
+  showDelay?: number;
+  /**
+   * If `true`, the tooltip will follow the cursor.
+   */
+  followCursor?: boolean;
+}

@@ -15,8 +15,8 @@ import {
 
 import Tooltip from "../Tooltip.vue";
 
-import { LegendPosition } from "../../types";
-import { DualChartProps } from "./types";
+import { LegendPosition } from "../../enums";
+import { DualChartProps } from "./DualChart";
 
 const emit = defineEmits<{
   (e: "click", event: MouseEvent, values?: T): void;

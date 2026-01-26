@@ -7,8 +7,8 @@ import {
   VisTooltip,
 } from "@unovis/vue";
 import { Graph, GraphLayoutType } from "@unovis/ts";
-import type { DagreGraphProps, GraphNodeDatum, GraphLinkDatum } from "./types";
-import { LegendPosition } from "../../types";
+import type { DagreGraphProps, GraphNodeDatum, GraphLinkDatum } from "./DagreGraph";
+import { LegendPosition } from "../../enums";
 
 const props = withDefaults(defineProps<DagreGraphProps<N, L>>(), {
   height: 600,

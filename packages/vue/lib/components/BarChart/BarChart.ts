@@ -1,19 +1,23 @@
+import { Orientation } from "@unovis/ts";
 import type {
   axisFormatter,
-  CrosshairConfig,
   AxisConfig,
-  BulletLegendItemInterface,
   TooltipConfig,
+  BulletLegendItemInterface,
 } from "../../types";
-import { LegendPosition, Orientation, CurveType } from "../../enums";
+import { LegendPosition } from "../../enums";
 
-export interface DualChartProps<T> {
+export type BarChartPropsBase<T> = {
   /**
-   * The data to be displayed in the dual chart.
+   * The data to be displayed in the bar chart.
    * Each element of the array represents a data point.
    * The structure of 'T' should be compatible with the chart's rendering logic.
    */
   data: T[];
+  /**
+   * If `true`, creates a stacked bar chart instead of grouped bars.
+   */
+  stacked?: boolean;
   /**
    * The height of the chart in pixels.
    */
@@ -23,13 +27,9 @@ export interface DualChartProps<T> {
    */
   xLabel?: string;
   /**
-   * Optional label for the y-axis (used for both bar and line by default).
+   * Optional label for the y-axis.
    */
   yLabel?: string;
-  /**
-   * Optional label for the secondary y-axis (line chart).
-   */
-  yLabelSecondary?: string;
   /**
    * Optional padding applied to the chart.
    * Allows specifying individual padding values for the top, right, bottom, and left sides.
@@ -41,23 +41,10 @@ export interface DualChartProps<T> {
     left: number;
   };
   /**
-   * A record mapping bar category keys to `BulletLegendItemInterface` objects.
-   * This defines the visual representation and labels for bar categories in the chart's legend.
+   * A record mapping category keys to `BulletLegendItemInterface` objects.
+   * This defines the visual representation and labels for each category in the chart's legend.
    */
-  barCategories: Record<string, BulletLegendItemInterface>;
-  /**
-   * A record mapping line category keys to `BulletLegendItemInterface` objects.
-   * This defines the visual representation and labels for line categories in the chart's legend.
-   */
-  lineCategories: Record<string, BulletLegendItemInterface>;
-  /**
-   * An array of property keys from the data object type 'T' to be used for the bar chart y-axis values.
-   */
-  barYAxis: (keyof T)[];
-  /**
-   * An array of property keys from the data object type 'T' to be used for the line chart y-axis values.
-   */
-  lineYAxis: (keyof T)[];
+  categories: Record<string, BulletLegendItemInterface>;
   /**
    * @param {number|Date} tick - The value of the tick. This can be a number or a Date object depending on the scale of the x-axis.
    * @param {number} i - The index of the tick in the `ticks` array.
@@ -77,14 +64,13 @@ export interface DualChartProps<T> {
    */
   tooltipTitleFormatter?: (data: T) => string | number;
   /**
-   * The type of curve to use for the line chart lines.
-   * See `CurveType` for available options.
+   * The desired number of ticks on the y-axis.
    */
-  curveType?: CurveType;
+  yNumTicks?: number;
   /**
-   * The width of the line in pixels. Default is 2px.
+   * Force only first and last ticks on the x-axis.
    */
-  lineWidth?: number;
+  minMaxTicksOnly?: boolean;
   /**
    * The desired number of ticks on the x-axis.
    */
@@ -94,13 +80,21 @@ export interface DualChartProps<T> {
    */
   xExplicitTicks?: (number | string | Date)[];
   /**
-   * Force only first and last ticks on the x-axis.
+   * An array of property keys from the data object type 'T' to be used for the y-axis values.
    */
-  minMaxTicksOnly?: boolean;
+  yAxis: (keyof T)[];
   /**
-   * The desired number of ticks on the y-axis.
+   * The padding between groups of bars in pixels.
    */
-  yNumTicks?: number;
+  groupPadding?: number;
+  /**
+   * Fractional padding between the bars in the range of [0,1). Default: 0
+   */
+  barPadding?: number;
+  /**
+   * Rounded corners for top bars. Boolean or number (to set the radius in pixels). Default: 2
+   */
+  radius?: number;
   /**
    * If `true`, hides the chart legend.
    */
@@ -109,6 +103,11 @@ export interface DualChartProps<T> {
    * If `true`, hides the chart tooltip.
    */
   hideTooltip?: boolean;
+  /**
+   * The orientation of the bars (vertical or horizontal).
+   * See `Orientation` for available options.
+   */
+  orientation?: Orientation;
   /**
    * Optional position for the legend, if applicable.
    * See `LegendPosition` for available options.
@@ -150,10 +149,13 @@ export interface DualChartProps<T> {
    * If `true`, hide the y-axis.
    */
   hideYAxis?: boolean;
+
   /**
-   * Crosshair configuration object for customizing the appearance of the crosshair line.
+   * Specific spacing between stacked and grouped bars in pixels.
+   * Only applicable if `stackAndGrouped` is `true`.
    */
-  crosshairConfig?: CrosshairConfig;
+  stackedGroupedSpacing?: number;
+
   /**
    * Axis configuration object for customizing the appearance of the axes.
    */
@@ -163,35 +165,6 @@ export interface DualChartProps<T> {
    */
   yAxisConfig?: AxisConfig;
   /**
-   * The domain for the y-axis, specified as a tuple of two values.
-   */
-  yDomain?: [number | undefined, number | undefined];
-  /**
-   * The domain for the x-axis, specified as a tuple of two values.
-   */
-  xDomain?: [number | undefined, number | undefined];
-  /**
-   * If `true`, creates stacked bars.
-   */
-  stacked?: boolean;
-  /**
-   * The padding between groups of bars in pixels.
-   */
-  groupPadding?: number;
-  /**
-   * Fractional padding between the bars in the range of [0,1). Default: 0.2
-   */
-  barPadding?: number;
-  /**
-   * Rounded corners for top bars. Boolean or number (to set the radius in pixels). Default: 2
-   */
-  radius?: number;
-  /**
-   * The orientation of the bars (vertical or horizontal).
-   * See `Orientation` for available options.
-   */
-  orientation?: Orientation;
-  /**
    * Animation duration in milliseconds for the chart components.
    */
   duration?: number;
@@ -199,4 +172,31 @@ export interface DualChartProps<T> {
    * Configuration object for the chart tooltip.
    */
   tooltip?: TooltipConfig;
-}
+};
+
+export type BarChartProps<T> = BarChartPropsBase<T> & {
+  /**
+   * Whether the bars should be stacked and grouped.
+   * If true, `valueLabel` is optional and `xAxis` is required.
+   */
+  stackAndGrouped?: boolean;
+  /**
+   * Configuration for the value label display.
+   * Required if `stackAndGrouped` is false and `xAxis` is present.
+   * Optional otherwise.
+   */
+  valueLabel?: ValueLabel;
+  /**
+   * The data key for the X-axis.
+   * Required if `stackAndGrouped` is true, or if `stackAndGrouped` is false AND `valueLabel` is present.
+   */
+  xAxis?: keyof T;
+};
+
+export type ValueLabel = {
+  label: (d: any, index: number) => string | number;
+  labelSpacing?: number;
+  backgroundColor?: string;
+  color?: string;
+  labelFontSize?: number;
+};

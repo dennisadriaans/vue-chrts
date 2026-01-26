@@ -1,5 +1,6 @@
 import type { GeoProjection } from "d3-geo";
-import { axisFormatter, BulletLegendItemInterface, LegendPosition } from "../../../types";
+import type { axisFormatter, BulletLegendItemInterface } from "../../../types";
+import { LegendPosition } from "../../../enums";
 import { MapData, MapPoint } from "../types";
 
 export type MapsData<T extends Record<string, any>> = {

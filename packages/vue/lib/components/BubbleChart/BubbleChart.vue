@@ -8,8 +8,8 @@ import {
   VisTooltip,
   VisBulletLegend,
 } from "@unovis/vue";
-import { BubbleChartProps } from "./types";
-import { LegendPosition } from "../../types";
+import { BubbleChartProps } from "./BubbleChart";
+import { LegendPosition } from "../../enums";
 import { getFirstPropertyValue } from "../../utils";
 
 import Tooltip from "../Tooltip.vue";
