@@ -692,6 +692,7 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
   <AreaChart
     :data="AreaChartData1"
     :height="220"
+    :duration="0"
     :categories="categories1"
     :curve-type="CurveType.StepAfter"
     :x-grid-line="false"

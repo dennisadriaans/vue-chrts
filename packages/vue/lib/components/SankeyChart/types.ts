@@ -1,8 +1,6 @@
-import {
-  BulletLegendItemInterface,
-  LegendPosition,
-} from "../../types";
-import {
+import type { BulletLegendItemInterface, TooltipConfig } from "@vue-chrts/shared";
+import { LegendPosition } from "@vue-chrts/shared";
+import type {
   SankeyInputNode,
   SankeyInputLink,
   SankeyNodeAlign,
@@ -97,6 +95,14 @@ export type SankeyChartProps<
    */
   iterations?: number;
   /**
+   * If `true`, hides the chart tooltip.
+   */
+  hideTooltip?: boolean;
+  /**
+   * Configuration object for the chart tooltip.
+   */
+  tooltip?: TooltipConfig;
+  /**
    * Highlight the corresponding subtree on node / link hover. Default: false
    */
   highlightSubtreeOnHover?: boolean;
@@ -112,4 +118,8 @@ export type SankeyChartProps<
    * Maximum label width in pixels. Default: 70
    */
   labelMaxWidth?: number;
+  /**
+   * Animation duration in milliseconds.
+   */
+  duration?: number;
 };

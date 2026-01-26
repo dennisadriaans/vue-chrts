@@ -37,6 +37,7 @@ export default defineConfig({
       external: ['vue', '@unovis/vue', '@unovis/ts', 'vue-router', 'tailwindcss'],
       output: [outputDefault('es', 'js')],
     },
+    assetsInlineLimit: 0, // Don't inline assets
   },
   plugins: [vue(), dts(), tailwindcss()]
 })

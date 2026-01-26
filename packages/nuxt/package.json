@@ -1,6 +1,6 @@
 {
   "name": "nuxt-charts",
-  "version": "2.1.0-beta.1",
+  "version": "2.1.0-beta-7",
   "description": "Nuxt module for vue-chrts",
   "license": "MIT",
   "type": "module",
@@ -34,14 +34,14 @@
   "devDependencies": {
     "@nuxt/eslint": "^1.7.1",
     "@nuxt/eslint-config": "^1.7.1",
-    "@nuxt/kit": "^4.2.0",
+    "@nuxt/kit": "^4.3.0",
     "@nuxt/module-builder": "^0.8.4",
-    "@nuxt/schema": "^4.2.0",
+    "@nuxt/schema": "^4.3.0",
     "@types/node": "^20.19.9",
     "changelogen": "^0.6.2",
     "commit-and-tag-version": "^12.5.1",
     "eslint": "^9.0.0",
-    "nuxt": "^4.2.0",
+    "nuxt": "^4.3.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   },

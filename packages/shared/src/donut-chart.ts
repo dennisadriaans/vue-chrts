@@ -1,4 +1,4 @@
-import { BulletLegendItemInterface, LegendPosition } from "./index";
+import { BulletLegendItemInterface, LegendPosition, TooltipConfig } from "./index";
 
 export enum DonutType {
   Half = "half",
@@ -55,4 +55,16 @@ export type DonutChartProps<T> = {
    * Use custom formatter for tooltip titles
    */
   tooltipTitleFormatter?: (data: T) => string | number;
+  /**
+   * If `true`, hides the chart tooltip.
+   */
+  hideTooltip?: boolean;
+  /**
+   * Configuration object for the chart tooltip.
+   */
+  tooltip?: TooltipConfig;
+  /**
+   * Animation duration in milliseconds.
+   */
+  duration?: number;
 };

@@ -5,7 +5,8 @@ import {
   MarkerConfig,
   AxisConfig,
   CurveType,
-  BulletLegendItemInterface
+  BulletLegendItemInterface,
+  TooltipConfig,
 } from "./index";
 
 export interface AreaChartProps<T> {
@@ -103,6 +104,10 @@ export interface AreaChartProps<T> {
    */
   yNumTicks?: number;
   /**
+   * Force specific ticks on the y-axis.
+   */
+  yExplicitTicks?: (number | string | Date)[];
+  /**
    * If `true`, hides the chart legend.
    */
   hideLegend?: boolean;
@@ -176,4 +181,12 @@ export interface AreaChartProps<T> {
    * When false (default), areas are overlaid on top of each other.
    */
   stacked?: boolean;
+  /**
+   * Animation duration in milliseconds for the chart components.
+   */
+  duration?: number;
+  /**
+   * Configuration object for the chart tooltip.
+   */
+  tooltip?: TooltipConfig;
 }

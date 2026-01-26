@@ -7,48 +7,63 @@ import GanttChart from "./components/GanttChart/GanttChart.vue";
 import DagreGraph from "./components/DagreGraph/DagreGraph.vue";
 import DualChart from "./components/DualChart/DualChart.vue";
 import SankeyChart from "./components/SankeyChart/SankeyChart.vue";
+import TopoJSONMap from "./components/Maps/TopoJSONMap/TopoJSONMap.vue";
+import DottedMap from "./components/Maps/DottedMap/DottedMap.vue";
 
-import { LegendPosition, CurveType, Orientation, DonutType } from "./types";
-import type {
-    BulletLegendItemInterface,
-    AreaChartProps,
-    BarChartProps,
-    LineChartProps,
-    DonutChartProps,
-    BubbleChartProps,
-    GanttChartProps,
-    axisFormatter,
-    AxisConfig,
-    MarkerConfig,
-    CrosshairConfig
+export { getMap, getPin } from "./components/Maps/DottedMap/mapUtils";
+
+// Re-export enums (values)
+export {
+  LegendPosition,
+  CurveType,
+  Orientation,
+  DonutType,
 } from "./types";
 
-export {
-    AreaChart,
-    LineChart,
-    BarChart,
-    DonutChart,
-    BubbleChart,
-    GanttChart,
-    DagreGraph,
-    DualChart,
-    SankeyChart,
-    Orientation,
-    CurveType,
-    LegendPosition,
-    DonutType
-};
-
+// Re-export all types
 export type {
-    BulletLegendItemInterface,
-    AreaChartProps,
-    BarChartProps,
-    LineChartProps,
-    DonutChartProps,
-    BubbleChartProps,
-    GanttChartProps,
-    axisFormatter,
-    AxisConfig,
-    MarkerConfig,
-    CrosshairConfig
-}
+  BulletLegendItemInterface,
+  AreaChartProps,
+  BarChartProps,
+  BarChartPropsBase,
+  ValueLabel,
+  LineChartProps,
+  DonutChartProps,
+  BubbleChartProps,
+  SizeOptions,
+  GanttChartProps,
+  axisFormatter,
+  AxisConfig,
+  MarkerConfig,
+  CrosshairConfig,
+  TooltipConfig,
+  DagreGraphProps,
+  GraphNodeDatum,
+  GraphLinkDatum,
+  GraphData,
+  DagreLayoutSettings,
+  DagreRankDir,
+  DagreAlign,
+  DagreRanker,
+  NodeShape,
+  LinkArrowPosition,
+  SankeyChartProps,
+  DualChartProps,
+  MapsData,
+  DottedMapProps,
+} from "./types";
+
+// Export components
+export {
+  AreaChart,
+  LineChart,
+  BarChart,
+  DonutChart,
+  BubbleChart,
+  GanttChart,
+  DagreGraph,
+  DualChart,
+  SankeyChart,
+  TopoJSONMap,
+  DottedMap,
+};

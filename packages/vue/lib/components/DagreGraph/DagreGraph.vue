@@ -40,6 +40,9 @@ const props = withDefaults(defineProps<DagreGraphProps<N, L>>(), {
   legendStyle: undefined,
   legendItems: () => [],
   duration: 600,
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const emit = defineEmits<{
@@ -192,9 +195,15 @@ const events = {
       :data="data"
       :height="height"
       :width="width"
+      :duration="duration"
       :padding="padding"
     >
-      <VisTooltip v-if="!hideTooltip" />
+      <VisTooltip
+        v-if="!hideTooltip"
+        :followCursor="props.tooltip?.followCursor"
+        :show-delay="props.tooltip?.showDelay"
+        :hide-delay="props.tooltip?.hideDelay"
+      />
 
       <VisGraph
         :layoutType="GraphLayoutType.Dagre"
@@ -253,4 +262,3 @@ const events = {
     </div>
   </div>
 </template>
-

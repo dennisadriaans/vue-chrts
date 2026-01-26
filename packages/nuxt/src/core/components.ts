@@ -2,33 +2,32 @@ import { addComponent } from "@nuxt/kit";
 import type { ModuleOptions } from "../module";
 
 export const resolveComponents = (config: ModuleOptions, filePath: string) => {
-  const { prefix } = config;
+  const { prefix, include, global } = config;
   const allComponents = [
     "AreaChart",
-    "AreaStackedChart",
     "LineChart",
     "BarChart",
     "DonutChart",
-    'BubbleChart',
-    'GanttChart',
-    'DualChart'
+    "BubbleChart",
+    "GanttChart",
+    "DagreGraph",
+    "DualChart",
+    "SankeyChart",
+    "TopoJSONMap",
+    "DottedMap",
   ];
 
-  allComponents.forEach((component) => {
-    if (typeof component === "string") {
-      addComponent({
-        export: component,
-        name: prefix + component,
-        mode: "client",
-        filePath,
-      });
-    } else if (Array.isArray(component)) {
-      addComponent({
-        export: component[0],
-        name: prefix + component[1],
-        mode: "client",
-        filePath,
-      });
-    }
+  const components = include?.length
+    ? allComponents.filter((component) => include.includes(component))
+    : allComponents;
+
+  components.forEach((component) => {
+    addComponent({
+      export: component,
+      name: prefix + component,
+      mode: "client",
+      global,
+      filePath,
+    });
   });
 };

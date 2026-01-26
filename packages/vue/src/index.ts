@@ -59,6 +59,31 @@ const router = createRouter({
       name: "DagreGraph",
       component: () => import("./DagreGraphPage.vue"),
     },
+    {
+      path: "/proto/dashboard",
+      name: "DashboardProto",
+      component: () => import("./Proto/Dashboard.vue"),
+    },
+    {
+      path: "/maps",
+      name: "Maps",
+      component: () => import("./MapsPage.vue"),
+    },
+    {
+      path: "/choropleth-map",
+      name: "ChoroplethMap",
+      component: () => import("./ChoroplethMapPage.vue"),
+    },
+    {
+      path: "/maps-dotted",
+      name: "MapsDotted",
+      component: () => import("./DottedMapPage.vue"),
+    },
+    {
+      path: "/maps-dotted-fullscreen",
+      name: "MapsDottedFullscreen",
+      component: () => import("./DottedMapShowcasePage.vue"),
+    },
   ],
   history: createWebHistory(),
 });

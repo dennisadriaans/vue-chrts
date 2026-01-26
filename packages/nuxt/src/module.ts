@@ -45,23 +45,28 @@ export default defineNuxtModule<ModuleOptions>({
 
   },
   async setup(options, nuxt) {
-    nuxt.options.vite.optimizeDeps = nuxt.options.vite.optimizeDeps || {};
-    nuxt.options.vite.optimizeDeps.include =
-      nuxt.options.vite.optimizeDeps.include || [];
+    const deps = ["vue-chrts", "@unovis/ts", "@unovis/vue"];
 
-    nuxt.options.vite.optimizeDeps.include = [
-      "vue-chrts",
-      ...nuxt.options.vite.optimizeDeps.include,
-    ];
-    nuxt.options.build.transpile = [
-      "vue-chrts",
-      ...nuxt.options.build.transpile,
-    ];
+    // Optimize dependencies for Vite
+    nuxt.options.vite.optimizeDeps = nuxt.options.vite.optimizeDeps || {};
+    nuxt.options.vite.optimizeDeps.include = nuxt.options.vite.optimizeDeps.include || [];
+    nuxt.options.vite.optimizeDeps.include.push(...deps);
+
+    // Transpile ESM dependencies
+    // nuxt.options.build.transpile = nuxt.options.build.transpile || [];
+    // nuxt.options.build.transpile.push(...deps);
+
+    // Force bundle SSR-breaking dependencies to be processed by Vite
+    nuxt.options.vite.ssr = nuxt.options.vite.ssr || {};
+    nuxt.options.vite.ssr.noExternal = nuxt.options.vite.ssr.noExternal || [];
+    if (Array.isArray(nuxt.options.vite.ssr.noExternal)) {
+      nuxt.options.vite.ssr.noExternal.push(...deps);
+    }
 
     const { resolve } = createResolver(import.meta.url);
-
     const runtimePath = resolve("./runtime/vue-chrts");
 
+    // Initialize auto-imports and components
     resolveImports(options, runtimePath);
     resolveComponents(options, runtimePath);
   },

@@ -1,11 +1,11 @@
-import {
+import type {
   axisFormatter,
-  LegendPosition,
-  BulletLegendItemInterface,
-  Orientation,
-  AxisConfig,
   CrosshairConfig,
-} from "../../types";
+  AxisConfig,
+  BulletLegendItemInterface,
+  TooltipConfig,
+} from "@vue-chrts/shared";
+import { LegendPosition, Orientation } from "@vue-chrts/shared";
 import type { CurveType } from "@unovis/ts";
 
 export interface DualChartProps<T> {
@@ -192,4 +192,12 @@ export interface DualChartProps<T> {
    * See `Orientation` for available options.
    */
   orientation?: Orientation;
+  /**
+   * Animation duration in milliseconds for the chart components.
+   */
+  duration?: number;
+  /**
+   * Configuration object for the chart tooltip.
+   */
+  tooltip?: TooltipConfig;
 }

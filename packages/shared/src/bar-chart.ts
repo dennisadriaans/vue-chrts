@@ -4,6 +4,7 @@ import {
   LegendPosition,
   axisFormatter,
   AxisConfig,
+  TooltipConfig,
 } from "./index";
 
 export type BarChartPropsBase<T> = {
@@ -163,6 +164,14 @@ export type BarChartPropsBase<T> = {
    * Axis configuration object for customizing the appearance of the axes.
    */
   yAxisConfig?: AxisConfig;
+  /**
+   * Animation duration in milliseconds for the chart components.
+   */
+  duration?: number;
+  /**
+   * Configuration object for the chart tooltip.
+   */
+  tooltip?: TooltipConfig;
 };
 
 export type BarChartProps<T> = BarChartPropsBase<T> & {

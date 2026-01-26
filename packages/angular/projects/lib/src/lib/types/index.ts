@@ -1,15 +1,17 @@
+// Re-export enums (values) from shared
 export {
   LegendPosition,
   CurveType,
-  Orientation
+  Orientation,
+  DonutType,
 } from "@vue-chrts/shared";
 
+// Re-export types from shared
 export type {
   BulletLegendItemInterface,
   axisFormatter,
   AxisConfig,
   MarkerConfig,
-  CrosshairConfig
+  CrosshairConfig,
+  TooltipConfig,
 } from "@vue-chrts/shared";
-
-export type AreaChartCategory = import("@vue-chrts/shared").BulletLegendItemInterface;

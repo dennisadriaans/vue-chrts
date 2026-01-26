@@ -16,7 +16,6 @@ import {
 } from "@unovis/vue";
 
 import { LegendPosition } from "../../types";
-
 import type { AreaChartProps } from "./types";
 
 const emit = defineEmits<{
@@ -26,6 +25,7 @@ const emit = defineEmits<{
 const DEFAULT_OPACITY = 0.5;
 const DEFAULT_COLOR = "#3b82f6";
 const props = withDefaults(defineProps<AreaChartProps<T>>(), {
+  duration: 600,
   padding: () => ({ top: 5, right: 5, bottom: 5, left: 5 }),
   crosshairConfig: () => ({
     color: "#666",
@@ -39,6 +39,9 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
     { offset: "0%", stopOpacity: 1 },
     { offset: "75%", stopOpacity: 0 },
   ],
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const slots = useSlots();
@@ -54,6 +57,11 @@ const colors = computed(() => {
   return Object.values(props.categories).map(
     (c, i) => c.color ?? defaultColors[i]
   );
+});
+
+const yNumTicks = computed(() => {
+  if (props.yNumTicks !== undefined) return props.yNumTicks;
+  return Math.max(2, Object.keys(props.categories ?? {}).length);
 });
 
 const markersSvgDefs = computed(() => {
@@ -82,39 +90,24 @@ const legendAlignment = computed(() => {
 });
 
 const svgDefs = computed(() => {
-  const createGradientWithHex = (id: number, color: string | string[]) => `
-    <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
-      ${
+  return colors.value
+    .map((color, index) => {
+      const id = `gradient-${markerScopeId}-${index}`;
+      const stops =
         props.gradientStops
           ?.map(
             (stop) =>
               `<stop offset="${stop.offset}" stop-color="${color}" stop-opacity="${stop.stopOpacity}" />`
           )
-          .join("") ?? ""
-      }
+          .join("") ?? "";
+
+      return `
+    <linearGradient id="${id}" gradientTransform="rotate(90)">
+      ${stops}
       <stop offset="100%" stop-color="${color}" stop-opacity="0" />
     </linearGradient>
   `;
-  const createGradientWithCssVar = (id: number, color: string | string[]) => `
-    <linearGradient id="gradient${id}-${color}" gradientTransform="rotate(90)">
-
-    ${
-      props.gradientStops
-        ?.map(
-          (stop) => `
-      <stop offset="${stop.offset}" style="stop-color:var(${color});stop-opacity:${stop.stopOpacity}" />
-    `
-        )
-        .join("") ?? ""
-    }
-    </linearGradient>
-  `;
-  return colors.value
-    .map((color, index) =>
-      color?.includes("#")
-        ? createGradientWithHex(index, color)
-        : createGradientWithCssVar(index, color ?? DEFAULT_COLOR)
-    )
+    })
     .join("");
 });
 
@@ -186,6 +179,7 @@ function onCrosshairUpdate(d: T): string {
     <VisXYContainer
       :data="data"
       :height="height"
+      :duration="duration"
       :padding="padding"
       :svg-defs="svgDefs + markersSvgDefs"
       :y-domain="yDomain"
@@ -195,15 +189,19 @@ function onCrosshairUpdate(d: T): string {
         v-if="!hideTooltip"
         :horizontal-placement="Position.Right"
         :vertical-placement="Position.Top"
+        :follow-cursor="props.tooltip.followCursor"
+        :show-delay="props.tooltip.showDelay"
+        :hide-delay="props.tooltip.hideDelay"
       />
 
       <!-- Stacked Area Mode: Single VisArea with array of y accessors -->
       <template v-if="stacked">
         <VisArea
+          v-if="!hideArea"
           :x="(_: T, i: number) => i"
           :y="stackedYAccessors"
           :color="stackedColorAccessor"
-          :opacity="hideArea ? 0 : DEFAULT_OPACITY"
+          :opacity="DEFAULT_OPACITY"
           :curve-type="curveType ?? CurveType.MonotoneX"
         />
         <VisLine
@@ -222,10 +220,11 @@ function onCrosshairUpdate(d: T): string {
           :key="categoryId"
         >
           <VisArea
+            v-if="!hideArea"
             :x="(_: T, i: number) => i"
             v-bind="getAccessors(categoryId)"
-            :color="`url(#gradient${index}-${colors[index]})`"
-            :opacity="hideArea ? 0 : DEFAULT_OPACITY"
+            :color="`url(#gradient-${markerScopeId}-${index})`"
+            :opacity="DEFAULT_OPACITY"
             :curve-type="curveType ?? CurveType.MonotoneX"
           />
           <VisLine
@@ -251,6 +250,7 @@ function onCrosshairUpdate(d: T): string {
         :domain-line="xDomainLine"
         :tick-line="xTickLine"
         :min-max-ticks-only="minMaxTicksOnly"
+        :duration="duration"
         v-bind="xAxisConfig"
       />
 
@@ -260,9 +260,11 @@ function onCrosshairUpdate(d: T): string {
         :label="yLabel"
         :num-ticks="yNumTicks"
         :tick-format="yFormatter"
+        :tick-values="yExplicitTicks"
         :grid-line="yGridLine"
         :domain-line="yDomainLine"
         :tick-line="yTickLine"
+        :duration="duration"
         v-bind="yAxisConfig"
       />
 
@@ -299,12 +301,13 @@ function onCrosshairUpdate(d: T): string {
       <slot v-else-if="hoverValues" name="fallback">
         <Tooltip
           :data="hoverValues"
+          :followCursor="false"
           :categories="categories"
           :title-formatter="props.tooltipTitleFormatter"
           :yFormatter="props.yFormatter"
         />
       </slot>
-    </div>
+    </div> 
   </div>
 </template>
 

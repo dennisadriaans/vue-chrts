@@ -4,6 +4,7 @@ import {
   LegendPosition,
   CrosshairConfig,
   AxisConfig,
+  TooltipConfig,
 } from "./index";
 import type { NumericAccessor, Position } from "@unovis/ts";
 
@@ -169,4 +170,12 @@ export interface BubbleChartProps<T> {
    * Axis configuration object for customizing the appearance of the axes.
    */
   yAxisConfig?: AxisConfig;
+  /**
+   * Animation duration in milliseconds for the chart components.
+   */
+  duration?: number;
+  /**
+   * Configuration object for the chart tooltip.
+   */
+  tooltip?: TooltipConfig;
 }

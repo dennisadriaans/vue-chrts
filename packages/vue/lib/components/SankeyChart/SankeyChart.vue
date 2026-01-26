@@ -24,9 +24,11 @@ const emit = defineEmits<{
 }>();
 
 const props = withDefaults(defineProps<SankeyChartProps<N, L>>(), {
+  duration: 600,
   legendPosition: LegendPosition.BottomCenter,
   legendStyle: undefined,
   hideLegend: false,
+  hideTooltip: false,
   padding: () => ({
     top: 5,
     right: 5,
@@ -39,6 +41,9 @@ const props = withDefaults(defineProps<SankeyChartProps<N, L>>(), {
   iterations: 32,
   highlightSubtreeOnHover: false,
   labelMaxWidth: 70,
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const slots = useSlots();
@@ -67,8 +72,16 @@ function onNodeHover(d: any) {
     }"
     @click="emit('click', $event)"
   >
-    <VisSingleContainer :padding="padding" :height="height">
+    <VisSingleContainer
+      :padding="padding"
+      :height="height"
+      :duration="duration"
+    >
       <VisTooltip
+        v-if="!hideTooltip"
+        :followCursor="props.tooltip?.followCursor"
+        :show-delay="props.tooltip?.showDelay"
+        :hide-delay="props.tooltip?.hideDelay"
         :triggers="{
           [Sankey.selectors.node]: (d: any) => {
             onNodeHover(d);

@@ -23,6 +23,7 @@ const emit = defineEmits<{
 }>();
 
 const props = withDefaults(defineProps<DualChartProps<T>>(), {
+  duration: 600,
   orientation: Orientation.Vertical,
   legendPosition: LegendPosition.BottomCenter,
   legendStyle: undefined,
@@ -39,6 +40,9 @@ const props = withDefaults(defineProps<DualChartProps<T>>(), {
   hideTooltip: false,
   lineWidth: 2,
   curveType: CurveType.MonotoneX,
+  tooltip: () => ({
+    followCursor: true,
+  }),
 });
 
 const slots = useSlots();
@@ -119,9 +123,17 @@ function onCrosshairUpdateWithContent(d: T): string {
     }"
     @click="emit('click', $event, hoverValues)"
   >
-    <VisXYContainer :padding="padding" :height="height" :data="data">
+    <VisXYContainer
+      :padding="padding"
+      :height="height"
+      :duration="duration"
+      :data="data"
+    >
       <VisTooltip
         v-if="!hideTooltip"
+        :followCursor="props.tooltip?.followCursor"
+        :show-delay="props.tooltip?.showDelay"
+        :hide-delay="props.tooltip?.hideDelay"
         :triggers="{
           [GroupedBar.selectors.bar]: (d: T) => {
             onCrosshairUpdate(d);
@@ -183,6 +195,7 @@ function onCrosshairUpdateWithContent(d: T): string {
         :num-ticks="xNumTicks"
         :tick-values="xExplicitTicks"
         :minMaxTicksOnly="minMaxTicksOnly"
+        :duration="duration"
         v-bind="xAxisConfig"
       />
       <VisAxis
@@ -194,6 +207,7 @@ function onCrosshairUpdateWithContent(d: T): string {
         :tick-format="yFormatter"
         :num-ticks="yNumTicks"
         :tick-line="yTickLine"
+        :duration="duration"
         v-bind="yAxisConfig"
       />
 
@@ -203,7 +217,7 @@ function onCrosshairUpdateWithContent(d: T): string {
         :template="onCrosshairUpdateWithContent"
       />
     </VisXYContainer>
-    
+
     <div
       v-if="!props.hideLegend"
       :style="{
@@ -224,7 +238,7 @@ function onCrosshairUpdateWithContent(d: T): string {
         "
       />
     </div>
-    
+
     <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
