@@ -135,7 +135,8 @@ const colors = (_: number, i: number) => {
       <VisBulletLegend
         :style="[
           props.legendStyle,
-          'display: flex; gap: var(--vis-legend-spacing);',
+          'display: flex; gap: var(--vis-legend-spacing); flex-wrap: wrap; align-items: center; justify-content: ' +
+            legendAlignment,
         ]"
         :items="
           categoriesArray.map((item) => ({
