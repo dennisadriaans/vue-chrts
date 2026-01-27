@@ -1,4 +1,4 @@
-import { defineNuxtModule, createResolver } from "@nuxt/kit";
+import { defineNuxtModule, createResolver, addVitePlugin } from "@nuxt/kit";
 import { resolveComponents, resolveImports } from "./core";
 
 export interface ModuleOptions {
@@ -41,42 +41,56 @@ export default defineNuxtModule<ModuleOptions>({
     autoImports: true,
     include: [],
   },
-  hooks: {
-    "vite:extendConfig": (config, { isClient }) => {
-      if (isClient) {
-        const _config = config as any;
-        // 1. Ensure the SSR flag is explicitly false for the client build
-        // This addresses the "we should not pass ssr in the client config" comment
-        _config.build = _config.build || {};
-        _config.ssr = false;
+  moduleDependencies: {
 
-        // 2. The other half of the PR fix: Force-optimize the problematic CJS deps
-        _config.optimizeDeps = _config.optimizeDeps || {};
-        _config.optimizeDeps.include = _config.optimizeDeps.include || [];
-
-        const cjsDeps = ["to-px", "vue-chrts"];
-
-        for (const dep of cjsDeps) {
-          if (!_config.optimizeDeps.include.includes(dep)) {
-            _config.optimizeDeps.include.push(dep);
-          }
-        }
-      }
-    },
   },
   async setup(options, nuxt) {
-    const deps = ["vue-chrts", "to-px"];
+    const deps = [
+      "vue-chrts",
+      "@unovis/ts",
+      "@unovis/vue",
+      "d3-geo",
+      "proj4",
+      "@turf/boolean-point-in-polygon"
+    ];
 
-    // Transpile ESM dependencies
-    nuxt.options.build.transpile = nuxt.options.build.transpile || [];
-    nuxt.options.build.transpile.push(...deps);
+    // Optimize dependencies for Vite
+    addVitePlugin(() => ({
+      name: "nuxt-charts:config",
+      configEnvironment(name, config) {
+        if (name === "client") {
+          config.optimizeDeps = config.optimizeDeps || {};
+          config.optimizeDeps.include = config.optimizeDeps.include || [];
+          config.optimizeDeps.include.push(...deps);
+        } else if (name === "server") {
+          config.ssr = config.ssr || {};
+          config.ssr.noExternal = config.ssr.noExternal || [];
+          if (Array.isArray(config.ssr.noExternal)) {
+            config.ssr.noExternal.push(...deps);
+          }
+        }
+      },
+      // Fallback for Vite 5/4
+      config(config) {
+        config.optimizeDeps = config.optimizeDeps || {};
+        config.optimizeDeps.include = config.optimizeDeps.include || [];
+        deps.forEach((dep) => {
+          if (!config.optimizeDeps!.include!.includes(dep)) {
+            config.optimizeDeps!.include!.push(dep);
+          }
+        });
 
-    // Force bundle SSR-breaking dependencies to be processed by Vite
-    nuxt.options.vite.ssr = nuxt.options.vite.ssr || {};
-    nuxt.options.vite.ssr.noExternal = nuxt.options.vite.ssr.noExternal || [];
-    if (Array.isArray(nuxt.options.vite.ssr.noExternal)) {
-      nuxt.options.vite.ssr.noExternal.push(...deps);
-    }
+        config.ssr = config.ssr || {};
+        config.ssr.noExternal = config.ssr.noExternal || [];
+        if (Array.isArray(config.ssr.noExternal)) {
+          deps.forEach((dep) => {
+            if (!config.ssr!.noExternal!.includes(dep)) {
+              (config.ssr!.noExternal as string[]).push(dep);
+            }
+          });
+        }
+      },
+    }));
 
     const { resolve } = createResolver(import.meta.url);
     const runtimePath = resolve("./runtime/vue-chrts");
