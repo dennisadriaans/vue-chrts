@@ -24,7 +24,7 @@ export type DonutChartProps<T> = {
   /**
    * The height of the chart in pixels.
    */
-  height: number;
+  height?: number;
   /**
    * The radius of the donut in pixels.
    */
