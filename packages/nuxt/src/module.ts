@@ -41,23 +41,35 @@ export default defineNuxtModule<ModuleOptions>({
     autoImports: true,
     include: [],
   },
-  moduleDependencies: {
+  hooks: {
+    "vite:extendConfig": (config, { isClient }) => {
+      if (isClient) {
+        const _config = config as any;
+        // 1. Ensure the SSR flag is explicitly false for the client build
+        // This addresses the "we should not pass ssr in the client config" comment
+        _config.build = _config.build || {};
+        _config.ssr = false;
 
+        // 2. The other half of the PR fix: Force-optimize the problematic CJS deps
+        _config.optimizeDeps = _config.optimizeDeps || {};
+        _config.optimizeDeps.include = _config.optimizeDeps.include || [];
+
+        const cjsDeps = ["to-px", "vue-chrts"];
+
+        for (const dep of cjsDeps) {
+          if (!_config.optimizeDeps.include.includes(dep)) {
+            _config.optimizeDeps.include.push(dep);
+          }
+        }
+      }
+    },
   },
   async setup(options, nuxt) {
-    const deps = [
-      "vue-chrts",
-      "@unovis/ts",
-      "@unovis/vue",
-      "d3-geo",
-      "proj4",
-      "@turf/boolean-point-in-polygon"
-    ];
+    const deps = ["vue-chrts", "to-px"];
 
-    // Optimize dependencies for Vite
-    nuxt.options.vite.optimizeDeps = nuxt.options.vite.optimizeDeps || {};
-    nuxt.options.vite.optimizeDeps.include = nuxt.options.vite.optimizeDeps.include || [];
-    nuxt.options.vite.optimizeDeps.include.push(...deps);
+    // Transpile ESM dependencies
+    nuxt.options.build.transpile = nuxt.options.build.transpile || [];
+    nuxt.options.build.transpile.push(...deps);
 
     // Force bundle SSR-breaking dependencies to be processed by Vite
     nuxt.options.vite.ssr = nuxt.options.vite.ssr || {};
