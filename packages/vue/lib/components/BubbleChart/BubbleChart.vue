@@ -128,7 +128,6 @@ const legendAlignment = computed(() => {
       flexDirection: isLegendTop ? 'column-reverse' : 'column',
       gap: 'var(--vis-legend-spacing)',
     }"
-    @click="emit('click', $event, hoverValues)"
   >
     <VisXYContainer
       :data="props.data"

@@ -49,13 +49,12 @@ const props = withDefaults(defineProps<SankeyChartProps<N, L>>(), {
 
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
-const hoverValues = ref<N | L>();
+const hoverNode = ref<any>();
 
 const accessibilityAttrs = useChartAccessibility(
   props,
   generateChartLabel("Sankey", props.categories, props.data.nodes.length)
 );
-const hoverNode = ref<any>();
 
 const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
 
