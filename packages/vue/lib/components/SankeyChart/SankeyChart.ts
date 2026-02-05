@@ -5,6 +5,7 @@ import type {
   SankeyInputLink,
   SankeyNodeAlign,
 } from "@unovis/ts";
+import type { ChartAccessibilityProps } from "../../composables/useChartAccessibility";
 
 export type SankeyChartProps<
   N extends SankeyInputNode,
@@ -122,4 +123,20 @@ export type SankeyChartProps<
    * Animation duration in milliseconds.
    */
   duration?: number;
+  /**
+   * Accessible label for the chart. Used by screen readers.
+   */
+  ariaLabel?: string;
+  /**
+   * ID of an element that labels the chart.
+   */
+  ariaLabelledby?: string;
+  /**
+   * ID of an element that describes the chart.
+   */
+  ariaDescribedby?: string;
+  /**
+   * Whether the chart should be focusable via keyboard. Default: true
+   */
+  focusable?: boolean;
 };

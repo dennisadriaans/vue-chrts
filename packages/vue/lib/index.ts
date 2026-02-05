@@ -4,6 +4,9 @@ export type * from "./types";
 // Explicitly export runtime enums to satisfy Rollup chunking
 export * from "./enums";
 
+// Export accessibility composable and utilities
+export * from "./composables/useChartAccessibility";
+
 // Export everything from component barrels
 export * from "./components/AreaChart";
 export * from "./components/LineChart";

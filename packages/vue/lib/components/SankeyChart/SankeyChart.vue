@@ -6,6 +6,7 @@ import {
   SankeyNodeAlign,
   Sankey,
 } from "@unovis/ts";
+import { useChartAccessibility, generateChartLabel } from "../../composables/useChartAccessibility";
 
 import {
   VisSingleContainer,
@@ -48,6 +49,12 @@ const props = withDefaults(defineProps<SankeyChartProps<N, L>>(), {
 
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
+const hoverValues = ref<N | L>();
+
+const accessibilityAttrs = useChartAccessibility(
+  props,
+  generateChartLabel("Sankey", props.categories, props.data.nodes.length)
+);
 const hoverNode = ref<any>();
 
 const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
@@ -65,6 +72,7 @@ function onNodeHover(d: any) {
 
 <template>
   <div
+    v-bind="accessibilityAttrs"
     :style="{
       display: 'flex',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',

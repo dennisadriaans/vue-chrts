@@ -93,6 +93,22 @@ export interface DottedMapProps {
    * Background color of the map container.
    */
   backgroundColor?: string
+  /**
+   * Accessible label for the map. Used by screen readers.
+   */
+  ariaLabel?: string
+  /**
+   * ID of an element that labels the map.
+   */
+  ariaLabelledby?: string
+  /**
+   * ID of an element that describes the map.
+   */
+  ariaDescribedby?: string
+  /**
+   * Whether the map should be focusable via keyboard. Default: true
+   */
+  focusable?: boolean
 }
 
 // Backwards compatibility alias

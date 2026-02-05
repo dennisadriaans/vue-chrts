@@ -2,6 +2,7 @@
 import { Donut } from "@unovis/ts";
 import { ref, useSlots, useTemplateRef, computed } from "vue";
 import { DonutType, type DonutChartProps } from "./DonutChart";
+import { useChartAccessibility, generateChartLabel } from "../../composables/useChartAccessibility";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -32,6 +33,11 @@ const hoverValues = ref();
 const value = (d: number) => d;
 
 const isHalf = props.type === DonutType.Half;
+
+const accessibilityAttrs = useChartAccessibility(
+  props,
+  generateChartLabel("Donut", props.categories, props.data.length)
+);
 
 function onCrosshairUpdate(d: T): string {
   const keyName = Object.values(props.categories)[(d as any).index].name;
@@ -79,6 +85,7 @@ const colors = (_: number, i: number) => {
 
 <template>
   <div
+    v-bind="accessibilityAttrs"
     :style="{
       display: 'flex',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',

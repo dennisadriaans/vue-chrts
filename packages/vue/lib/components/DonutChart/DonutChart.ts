@@ -1,5 +1,6 @@
 import type { BulletLegendItemInterface, TooltipConfig } from "../../types";
 import { LegendPosition } from "../../enums";
+import type { ChartAccessibilityProps } from "../../composables/useChartAccessibility";
 
 export enum DonutType {
   Half = "half",
@@ -68,4 +69,20 @@ export type DonutChartProps<T> = {
    * Animation duration in milliseconds.
    */
   duration?: number;
+  /**
+   * Accessible label for the chart. Used by screen readers.
+   */
+  ariaLabel?: string;
+  /**
+   * ID of an element that labels the chart.
+   */
+  ariaLabelledby?: string;
+  /**
+   * ID of an element that describes the chart.
+   */
+  ariaDescribedby?: string;
+  /**
+   * Whether the chart should be focusable via keyboard. Default: true
+   */
+  focusable?: boolean;
 };

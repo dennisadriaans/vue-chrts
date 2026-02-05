@@ -2,6 +2,7 @@
 import { computed, ref, useSlots, useTemplateRef } from "vue";
 import { Timeline } from "@unovis/ts";
 import { dateFormatter } from "../../utils";
+import { useChartAccessibility, generateChartLabel } from "../../composables/useChartAccessibility";
 import Tooltip from "../Tooltip.vue";
 
 import {
@@ -45,6 +46,11 @@ const slotWrapper = useTemplateRef<HTMLDivElement>("slotWrapper");
 
 const slotValue = ref<T>();
 
+const accessibilityAttrs = useChartAccessibility(
+  props,
+  generateChartLabel("Gantt", props.categories, props.data.length)
+);
+
 const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
 
 const legendAlignment = computed(() => {
@@ -85,6 +91,7 @@ const colors = computed(() => {
       flexDirection: isLegendTop ? 'column-reverse' : 'column',
       gap: 'var(--vis-legend-spacing)',
     }"
+    v-bind="accessibilityAttrs"
   >
     <VisXYContainer
       :data="props.data"
