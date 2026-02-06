@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-import { computed, getCurrentInstance, onMounted, ref, useSlots, useTemplateRef } from "vue";
+import { computed, getCurrentInstance, ref, toRaw, useSlots, useTemplateRef } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
 import { createScopedMarkers } from "../../utils";
 
@@ -12,6 +12,7 @@ import {
   VisCrosshair,
   VisLine,
   VisTooltip,
+  VisXYLabels,
   VisXYContainer,
 } from "@unovis/vue";
 
@@ -25,8 +26,10 @@ const emit = defineEmits<{
 const DEFAULT_OPACITY = 0.5;
 const DEFAULT_COLOR = "#3b82f6";
 const props = withDefaults(defineProps<AreaChartProps<T>>(), {
+  x: (_d: T, i: number) => i,
   duration: 600,
   padding: () => ({ top: 5, right: 5, bottom: 5, left: 5 }),
+  showLabels: false,
   crosshairConfig: () => ({
     color: "#666",
   }),
@@ -44,9 +47,56 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
   }),
 });
 
+const labelConfig = computed(() => {
+  if (!props.showLabels && !props.labelConfig) return undefined;
+
+  const config = props.labelConfig ?? ({} as any);
+
+  // XYLabels calls accessors without passing the index, so we need
+  // an x accessor that can recover the index from the data array itself.
+  // Use toRaw to unwrap Vue proxies for reliable identity-based lookups.
+  const indexMap = new WeakMap<object, number>();
+  const rawData = toRaw(props.data);
+  rawData.forEach((d, i) => indexMap.set(toRaw(d as object), i));
+
+  const labelX = config.x ?? ((d: T) => {
+    const index = indexMap.get(toRaw(d as object)) ?? 0;
+    return typeof props.x === 'function'
+      ? (props.x as (d: T, i: number) => number)(d, index)
+      : index;
+  });
+
+  return {
+    ...config,
+    label: config.label ?? ((d: T, i: number, cat: string) => String((d as any)[cat])),
+    x: labelX,
+    y: (cat: string) => {
+      if (config.y) return (d: T, i: number) => config.y!(d, i, cat);
+      if (props.stacked) {
+        return (d: T, i: number) => {
+          const keys = Object.keys(props.categories);
+          const index = keys.indexOf(cat);
+          let sum = 0;
+          for (let j = 0; j <= index; j++) {
+            sum += Number((d as any)[keys[j]]) || 0;
+          }
+          return sum;
+        };
+      }
+      return (d: T) => Number((d as any)[cat]);
+    },
+    color: config.color ?? ((d: T, i: number, cat: string) => {
+      const index = Object.keys(props.categories).indexOf(cat);
+      return colors.value[index] ?? DEFAULT_COLOR;
+    }),
+  };
+});
+
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
+
+const categoryKeys = computed(() => Object.keys(props.categories));
 
 const markerScopeId = `area-${getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2)}`;
 
@@ -198,14 +248,14 @@ function onCrosshairUpdate(d: T): string {
       <template v-if="stacked">
         <VisArea
           v-if="!hideArea"
-          :x="(_: T, i: number) => i"
+          :x="x"
           :y="stackedYAccessors"
           :color="stackedColorAccessor"
           :opacity="DEFAULT_OPACITY"
           :curve-type="curveType ?? CurveType.MonotoneX"
         />
         <VisLine
-          :x="(_: T, i: number) => i"
+          :x="x"
           :y="stackedLineYAccessors"
           :color="stackedColorAccessor"
           :curve-type="curveType ?? CurveType.MonotoneX"
@@ -221,14 +271,14 @@ function onCrosshairUpdate(d: T): string {
         >
           <VisArea
             v-if="!hideArea"
-            :x="(_: T, i: number) => i"
+            :x="x"
             v-bind="getAccessors(categoryId)"
             :color="`url(#gradient-${markerScopeId}-${index})`"
             :opacity="DEFAULT_OPACITY"
             :curve-type="curveType ?? CurveType.MonotoneX"
           />
           <VisLine
-            :x="(_: T, i: number) => i"
+            :x="x"
             :y="(d: T) => d[categoryId as keyof T]"
             :color="colors[index]"
             :curve-type="curveType ?? CurveType.MonotoneX"
@@ -273,6 +323,29 @@ function onCrosshairUpdate(d: T): string {
         v-bind="crosshairConfig"
         :template="onCrosshairUpdate"
       />
+
+      <template v-if="labelConfig">
+        <VisXYLabels
+          v-for="categoryId in Object.keys(props.categories)"
+          :key="categoryId"
+          :x="labelConfig.x"
+          :y="labelConfig.y(categoryId)"
+          :label="(d: T, i: number) => labelConfig.label!(d, i, categoryId)"
+          :color="(d: T, i: number) => 
+            typeof labelConfig.color === 'function' 
+              ? labelConfig.color(d, i, categoryId) 
+              : labelConfig.color"
+          :label-font-size="typeof labelConfig.fontSize === 'function'
+            ? (d: T, i: number) => (labelConfig.fontSize as Function)(d, i, categoryId)
+            : labelConfig.fontSize"
+          :background-color="labelConfig.backgroundColor"
+          :clustering="labelConfig.clustering ?? false"
+          :cluster-label="labelConfig.clusterLabel"
+          :events="labelConfig.events ?? {}"
+          :attributes="labelConfig.attributes ?? {}"
+        />
+      </template>
+      
     </VisXYContainer>
 
     <div

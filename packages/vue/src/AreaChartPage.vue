@@ -15,6 +15,8 @@ interface ChartConfig {
   xDomainLine: boolean;
   minMaxTicksOnly: boolean;
   hideLegend: boolean;
+  type?: string;
+  showLabels?: boolean;
   markerConfig?: MarkerConfig;
 }
 
@@ -22,7 +24,7 @@ interface ChartConfig {
 const chartConfigs: ChartConfig[] = [
   {
     id: 0,
-    title: "Area Lines",
+    title: "Area Lines with Labels",
     curveType: CurveType.MonotoneX,
     xGridLine: true,
     yGridLine: true,
@@ -30,19 +32,20 @@ const chartConfigs: ChartConfig[] = [
     xDomainLine: true,
     minMaxTicksOnly: false,
     hideLegend: false,
+    showLabels: true,
     markerConfig: {
       id: 'marker-demo',
       config: {
         desktop: {
         type: "circle",
-        size: 16,
-        strokeWidth: 15,
+        size: 8,
+        strokeWidth: 1,
         color: "#156F36",
       },
         mobile: {
         type: "circle",
-        size: 16,
-        strokeWidth: 15,
+        size: 8,
+        strokeWidth: 1,
         color: "#4ade80",
       },
       }
@@ -398,283 +401,27 @@ const chartConfigs: ChartConfig[] = [
     yGridLine: false,
     yDomainLine: false,
     xDomainLine: false,
-    minMaxTicksOnly: false,
+    minMaxTicksOnly: true,
     hideLegend: false,
     type: "stacked100",
   },
   {
     id: 29,
-    title: "Monotone No Grid",
-    curveType: CurveType.MonotoneX,
-
-    xGridLine: false,
-    yGridLine: false,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: true,
-    hideLegend: false,
-  },
-  {
-    id: 30,
-    title: "Natural Stacked Right",
-    curveType: CurveType.Natural,
-
-    xGridLine: true,
-    yGridLine: true,
-    yDomainLine: false,
-    xDomainLine: true,
-    minMaxTicksOnly: false,
-    hideLegend: false,
-  },
-  {
-    id: 31,
-    title: "Step Minimal Hidden",
-    curveType: CurveType.StepAfter,
-
-    xGridLine: true,
-    yGridLine: true,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: true,
-    hideLegend: false,
-  },
-  {
-    id: 32,
-    title: "Linear Grid Markers",
-    curveType: CurveType.Linear,
-
-    xGridLine: true,
-    yGridLine: true,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: false,
-    hideLegend: false,
-  },
-  {
-    id: 33,
-    title: "Monotone Stacked 100%",
-    curveType: CurveType.MonotoneX,
-
-    xGridLine: false,
-    yGridLine: false,
-    yDomainLine: false,
-    xDomainLine: false,
-    minMaxTicksOnly: false,
-    hideLegend: false,
-    type: "stacked100",
-  },
-  {
-    id: 34,
-    title: "Natural No Grid",
-    curveType: CurveType.Natural,
-
-    xGridLine: false,
-    yGridLine: false,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: true,
-    hideLegend: false,
-  },
-  {
-    id: 35,
-    title: "Step Stacked Minimal",
-    curveType: CurveType.Step,
-
-    xGridLine: true,
-    yGridLine: true,
-    yDomainLine: false,
-    xDomainLine: true,
-    minMaxTicksOnly: true,
-    hideLegend: false,
-  },
-  {
-    id: 36,
-    title: "Monotone All Grid",
-    curveType: CurveType.MonotoneY,
-
-    xGridLine: true,
-    yGridLine: true,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: false,
-    hideLegend: false,
-  },
-  {
-    id: 37,
-    title: "Linear Hidden Markers",
-    curveType: CurveType.Linear,
-
-    xGridLine: true,
-    yGridLine: true,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: false,
-    hideLegend: false,
-  },
-  {
-    id: 38,
-    title: "Natural Stacked 100%",
-    curveType: CurveType.Natural,
-
-    xGridLine: true,
-    yGridLine: false,
-    yDomainLine: false,
-    xDomainLine: true,
-    minMaxTicksOnly: false,
-    hideLegend: false,
-    type: "stacked100",
-  },
-  {
-    id: 39,
-    title: "Step Grid Hidden",
-    curveType: CurveType.StepAfter,
-
-    xGridLine: true,
-    yGridLine: true,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: false,
-    hideLegend: false,
-  },
-  {
-    id: 40,
-    title: "Linear Crosshair",
-    curveType: CurveType.Linear,
-
-    xGridLine: false,
-    yGridLine: false,
-    yDomainLine: false,
-    xDomainLine: false,
-    minMaxTicksOnly: true,
-    hideLegend: false,
-  },
-  {
-    id: 41,
-    title: "Monotone Stacked Minimal",
+    title: "Monotone Stacked Grid",
     curveType: CurveType.MonotoneX,
 
     xGridLine: true,
-    yGridLine: false,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: true,
-    hideLegend: false,
-  },
-  {
-    id: 42,
-    title: "Natural Grid Hidden",
-    curveType: CurveType.Natural,
-
-    xGridLine: true,
     yGridLine: true,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: false,
-    hideLegend: false,
-  },
-  {
-    id: 43,
-    title: "Step Stacked 100%",
-    curveType: CurveType.Step,
-
-    xGridLine: true,
-    yGridLine: true,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: false,
-    hideLegend: false,
-    type: "stacked100",
-  },
-  {
-    id: 44,
-    title: "Monotone No Grid",
-    curveType: CurveType.MonotoneY,
-
-    xGridLine: false,
-    yGridLine: false,
     yDomainLine: false,
-    xDomainLine: false,
-    minMaxTicksOnly: true,
-    hideLegend: false,
-  },
-  {
-    id: 45,
-    title: "Linear Stacked Markers",
-    curveType: CurveType.Linear,
-
-    xGridLine: true,
-    yGridLine: true,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: false,
-    hideLegend: false,
-  },
-  {
-    id: 46,
-    title: "Natural Minimal Hidden",
-    curveType: CurveType.Natural,
-
-    xGridLine: true,
-    yGridLine: false,
-    yDomainLine: true,
     xDomainLine: true,
     minMaxTicksOnly: true,
-    hideLegend: false,
-  },
-  {
-    id: 47,
-    title: "Step Grid Crosshair",
-    curveType: CurveType.StepAfter,
-
-    xGridLine: true,
-    yGridLine: true,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: false,
-    hideLegend: false,
-  },
-  {
-    id: 48,
-    title: "Linear Stacked 100%",
-    curveType: CurveType.Linear,
-
-    xGridLine: true,
-    yGridLine: false,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: false,
-    hideLegend: false,
-    type: "stacked100",
-  },
-  {
-    id: 49,
-    title: "Natural No Grid",
-    curveType: CurveType.Natural,
-
-    xGridLine: false,
-    yGridLine: false,
-    yDomainLine: false,
-    xDomainLine: false,
-    minMaxTicksOnly: true,
-    hideLegend: false,
-  },
-  {
-    id: 50,
-    title: "Step Grid Markers",
-    curveType: CurveType.Step,
-
-    xGridLine: true,
-    yGridLine: true,
-    yDomainLine: true,
-    xDomainLine: true,
-    minMaxTicksOnly: false,
     hideLegend: false,
   },
 ];
 
-function handleChartClick(event: MouseEvent, hoverValues: any) {
+const handleChartClick = (event: MouseEvent, hoverValues: any) => {
   console.log("AreaChart clicked", hoverValues);
-}
+};
 </script>
 
 <template>
@@ -722,7 +469,7 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
       color: 'red',
       strokeColor: 'blue',
     }"
-    :title-formatter="data => `${new Date(data.date).getFullYear()}`"
+    :title-formatter="(data: any) => `${new Date(data.date).getFullYear()}`"
     @click="handleChartClick"
   >
    <template #tooltip="{ values }">{{  values }}</template>
@@ -807,6 +554,14 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
             :min-max-ticks-only="chartConfig.minMaxTicksOnly"
             :hide-legend="chartConfig.hideLegend"
             :marker-config="chartConfig.markerConfig"
+            :label-config="chartConfig.showLabels ? {
+              label: (d: any, i: number, cat: string) => String(d[cat]),
+              // y: (d: any, i: number, cat: string) => d[cat],
+              backgroundColor: '#fff',
+              color: '#000',
+              fontSize: 14,
+              clustering: false
+            } : undefined"
             @click="handleChartClick"
           ></AreaChart>
         </Card>
@@ -831,6 +586,6 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
 }
 
 :deep(#marker-demo-grid *[stroke="#4ade80"]) {
-  marker: var(--vis-marker-mobile);
+    marker: var(--vis-marker-mobile);
 }
 </style>
