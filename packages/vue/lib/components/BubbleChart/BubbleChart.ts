@@ -7,6 +7,7 @@ import type {
 } from "../../types";
 import { LegendPosition } from "../../enums";
 import type { NumericAccessor, Position } from "@unovis/ts";
+import type { ChartAccessibilityProps } from "../../composables/useChartAccessibility";
 
 export interface SizeOptions {
   minRadius?: number;
@@ -178,4 +179,20 @@ export interface BubbleChartProps<T> {
    * Configuration object for the chart tooltip.
    */
   tooltip?: TooltipConfig;
+  /**
+   * Accessible label for the chart. Used by screen readers.
+   */
+  ariaLabel?: string;
+  /**
+   * ID of an element that labels the chart.
+   */
+  ariaLabelledby?: string;
+  /**
+   * ID of an element that describes the chart.
+   */
+  ariaDescribedby?: string;
+  /**
+   * Whether the chart should be focusable via keyboard. Default: true
+   */
+  focusable?: boolean;
 }

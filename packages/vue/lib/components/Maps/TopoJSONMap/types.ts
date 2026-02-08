@@ -2,6 +2,7 @@ import type { GeoProjection } from "d3-geo";
 import type { axisFormatter, BulletLegendItemInterface } from "../../../types";
 import { LegendPosition } from "../../../enums";
 import { MapData, MapPoint } from "../types";
+import type { ChartAccessibilityProps } from "../../../composables/useChartAccessibility";
 
 export type MapsData<T extends Record<string, any>> = {
   mapFeatureKey: keyof T;
@@ -43,4 +44,20 @@ export type MapsData<T extends Record<string, any>> = {
     bottom: number;
     left: number;
   };
+  /**
+   * Accessible label for the chart. Used by screen readers.
+   */
+  ariaLabel?: string;
+  /**
+   * ID of an element that labels the chart.
+   */
+  ariaLabelledby?: string;
+  /**
+   * ID of an element that describes the chart.
+   */
+  ariaDescribedby?: string;
+  /**
+   * Whether the chart should be focusable via keyboard. Default: true
+   */
+  focusable?: boolean;
 };

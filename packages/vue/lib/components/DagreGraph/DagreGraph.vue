@@ -9,6 +9,7 @@ import {
 import { Graph, GraphLayoutType } from "@unovis/ts";
 import type { DagreGraphProps, GraphNodeDatum, GraphLinkDatum } from "./DagreGraph";
 import { LegendPosition } from "../../enums";
+import { useChartAccessibility, generateChartLabel } from "../../composables/useChartAccessibility";
 
 const props = withDefaults(defineProps<DagreGraphProps<N, L>>(), {
   height: 600,
@@ -57,6 +58,15 @@ const emit = defineEmits<{
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverNode = ref<N>();
+
+const accessibilityAttrs = useChartAccessibility(
+  props,
+  generateChartLabel("Dagre Graph", props.legendItems && props.legendItems.length > 0 ? 
+    Object.fromEntries(props.legendItems.map((item, i) => [i.toString(), item])) : 
+    undefined, 
+    props.data.nodes.length
+  )
+);
 
 // Compute node size accessor
 const nodeSizeAccessor = computed(() => {
@@ -184,6 +194,7 @@ const events = {
 
 <template>
   <div
+    v-bind="accessibilityAttrs"
     :style="{
       display: 'flex',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',

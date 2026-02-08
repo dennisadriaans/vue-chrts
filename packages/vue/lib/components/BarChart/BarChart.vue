@@ -2,6 +2,7 @@
 import { computed, ref, useSlots, useTemplateRef } from "vue";
 import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
 import { useStackedGrouped } from "./stackedGroupedUtils";
+import { useChartAccessibility, generateChartLabel } from "../../composables/useChartAccessibility";
 
 import {
   VisAxis,
@@ -47,6 +48,11 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
+
+const accessibilityAttrs = useChartAccessibility(
+  props,
+  generateChartLabel("Bar", props.categories, props.data.length)
+);
 
 if (props.valueLabel && !props.xAxis) {
   throw new Error(
@@ -145,6 +151,7 @@ const labelX = (d: LabelDatum) => {
 
 <template>
   <div
+    v-bind="accessibilityAttrs"
     :style="{
       display: 'flex',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',

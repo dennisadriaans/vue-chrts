@@ -6,6 +6,7 @@ import { TopoJSONMap, Position } from "@unovis/ts";
 import Tooltip from "../../Tooltip.vue";
 import { MapArea, MapLink, MapPoint } from "../types";
 import { LegendPosition } from "../../../enums";
+import { useChartAccessibility, generateChartLabel } from "../../../composables/useChartAccessibility";
 
 const props = withDefaults(defineProps<MapsData<T>>(), {
   zoomFactor: 1,
@@ -33,6 +34,11 @@ const emit = defineEmits<{
 const slots: Slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
+
+const accessibilityAttrs = useChartAccessibility(
+  props,
+  generateChartLabel("TopoJSON Map", props.categories, undefined)
+);
 
 const isLegendTop = computed(() => props.legendPosition?.startsWith("top"));
 
@@ -125,6 +131,7 @@ const mapsData = computed(() => props.data);
 
 <template>
   <div
+    v-bind="accessibilityAttrs"
     :style="{
       display: 'flex',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',

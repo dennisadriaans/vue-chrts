@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends {}">
 import { computed, ref, useSlots, useTemplateRef } from "vue";
 import { GroupedBar, StackedBar, Orientation, CurveType, Position } from "@unovis/ts";
+import { useChartAccessibility, generateChartLabel } from "../../composables/useChartAccessibility";
 
 import {
   VisAxis,
@@ -49,6 +50,17 @@ const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
 
+// Combined categories for legend (used both for label and display)
+const allCategories = computed(() => ({
+  ...props.barCategories,
+  ...props.lineCategories,
+}));
+
+const accessibilityAttrs = useChartAccessibility(
+  props,
+  generateChartLabel("Dual", allCategories.value, props.data.length)
+);
+
 // Validate required props
 if (!props.barYAxis || props.barYAxis.length === 0) {
   console.error('[DualChart] barYAxis prop is required and must contain at least one field key');
@@ -80,12 +92,6 @@ const barColor = (_: T, i: number) => Object.values(props.barCategories)[i]?.col
 // Line color accessor
 const lineColor = (_: T, i: number) => Object.values(props.lineCategories)[i]?.color;
 
-// Combined categories for legend
-const allCategories = computed(() => ({
-  ...props.barCategories,
-  ...props.lineCategories,
-}));
-
 const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
 
 const legendAlignment = computed(() => {
@@ -116,6 +122,7 @@ function onCrosshairUpdateWithContent(d: T): string {
 
 <template>
   <div
+    v-bind="accessibilityAttrs"
     :style="{
       display: 'flex',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',

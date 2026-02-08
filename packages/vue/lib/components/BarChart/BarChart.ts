@@ -6,6 +6,7 @@ import type {
   BulletLegendItemInterface,
 } from "../../types";
 import { LegendPosition } from "../../enums";
+import type { ChartAccessibilityProps } from "../../composables/useChartAccessibility";
 
 export type BarChartPropsBase<T> = {
   /**
@@ -191,6 +192,22 @@ export type BarChartProps<T> = BarChartPropsBase<T> & {
    * Required if `stackAndGrouped` is true, or if `stackAndGrouped` is false AND `valueLabel` is present.
    */
   xAxis?: keyof T;
+  /**
+   * Accessible label for the chart. Used by screen readers.
+   */
+  ariaLabel?: string;
+  /**
+   * ID of an element that labels the chart.
+   */
+  ariaLabelledby?: string;
+  /**
+   * ID of an element that describes the chart.
+   */
+  ariaDescribedby?: string;
+  /**
+   * Whether the chart should be focusable via keyboard. Default: true
+   */
+  focusable?: boolean;
 };
 
 export type ValueLabel = {

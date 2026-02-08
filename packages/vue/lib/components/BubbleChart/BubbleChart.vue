@@ -11,6 +11,7 @@ import {
 import { BubbleChartProps } from "./BubbleChart";
 import { LegendPosition } from "../../enums";
 import { getFirstPropertyValue } from "../../utils";
+import { useChartAccessibility, generateChartLabel } from "../../composables/useChartAccessibility";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -48,6 +49,11 @@ const props = withDefaults(defineProps<BubbleChartProps<T>>(), {
 const slots = useSlots();
 const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
+
+const accessibilityAttrs = useChartAccessibility(
+  props,
+  generateChartLabel("Bubble", props.categories, props.data.length)
+);
 
 const x: NumericAccessor<T> = props.xAccessor!;
 const y: NumericAccessor<T> = props.yAccessor!;
@@ -116,6 +122,7 @@ const legendAlignment = computed(() => {
 
 <template>
   <div
+    v-bind="accessibilityAttrs"
     :style="{
       display: 'flex',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',

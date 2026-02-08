@@ -2,6 +2,7 @@
 import { computed, getCurrentInstance, onMounted, ref, useSlots, useTemplateRef } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
 import { createScopedMarkers } from "../../utils";
+import { useChartAccessibility, generateChartLabel } from "../../composables/useChartAccessibility";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -49,6 +50,11 @@ const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
 const hoverValues = ref<T>();
 
 const markerScopeId = `area-${getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2)}`;
+
+const accessibilityAttrs = useChartAccessibility(
+  props,
+  generateChartLabel("Area", props.categories, props.data.length)
+);
 
 const colors = computed(() => {
   const defaultColors = Object.values(props.categories).map(
@@ -166,6 +172,7 @@ function onCrosshairUpdate(d: T): string {
 
 <template>
   <div
+    v-bind="accessibilityAttrs"
     :style="{
       display: 'flex',
       flexDirection: isLegendTop ? 'column-reverse' : 'column',

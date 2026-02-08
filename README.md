@@ -14,6 +14,19 @@ A Vue 3 charts package inspired by [Tremor](https://tremor.so/), built on top of
 - 📱 Responsive design
 - 💡 Simple, intuitive API
 - 🚀 Built with Vue 3 and TypeScript
+- ♿ **WCAG 2.1 AA Accessible** - Built-in accessibility features for all charts
+
+## Accessibility
+
+All charts in vue-chrts meet **WCAG 2.1 AA accessibility standards** out of the box:
+
+- ✅ Screen reader support with descriptive ARIA labels
+- ✅ Keyboard navigation (all charts are focusable)
+- ✅ Proper semantic structure with ARIA roles
+- ✅ Color-blind friendly (information not conveyed by color alone)
+- ✅ Sufficient color contrast for chart elements
+
+[Read the full Accessibility Guide](./docs/ACCESSIBILITY.md)
 
 
 [Check the docs and examples](https://nuxtcharts.com/docs)

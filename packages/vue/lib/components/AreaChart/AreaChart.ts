@@ -7,6 +7,7 @@ import type {
   TooltipConfig,
 } from "../../types";
 import { CurveType, LegendPosition } from "../../enums";
+import type { ChartAccessibilityProps } from "../../composables/useChartAccessibility";
 
 export interface AreaChartProps<T> {
   /**
@@ -188,4 +189,21 @@ export interface AreaChartProps<T> {
    * Configuration object for the chart tooltip.
    */
   tooltip?: TooltipConfig;
+  /**
+   * Accessible label for the chart. Used by screen readers.
+   * Example: "Sales data by quarter"
+   */
+  ariaLabel?: string;
+  /**
+   * ID of an element that labels the chart.
+   */
+  ariaLabelledby?: string;
+  /**
+   * ID of an element that describes the chart.
+   */
+  ariaDescribedby?: string;
+  /**
+   * Whether the chart should be focusable via keyboard. Default: true
+   */
+  focusable?: boolean;
 }

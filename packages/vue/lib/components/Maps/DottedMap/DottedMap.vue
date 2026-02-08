@@ -10,6 +10,7 @@ import type {
 import { REGIONS, COUNTRIES, DEFAULT_ZOOM } from "./regions";
 import { WORLD_PINS, USA_PINS } from "./pins";
 import { useMapPanZoom } from "./useMapPanZoom";
+import { useChartAccessibility } from "../../../composables/useChartAccessibility";
 import DottedMapCore from "./core.vue";
 
 interface Props extends DottedMapProps {
@@ -52,6 +53,11 @@ const {
   onWheel,
   onMouseDown,
 } = useMapPanZoom();
+
+const accessibilityAttrs = useChartAccessibility(
+  props,
+  `Dotted ${props.regionName || 'world'} map`
+);
 
 // Internal reactive pins (allows for add/remove if no external pins provided)
 const internalPins = ref<MapPin[]>([]);
@@ -165,6 +171,7 @@ defineExpose({
 
 <template>
   <div
+    v-bind="accessibilityAttrs"
     class="w-full h-full overflow-hidden relative"
     :style="{
       width: '100%',
