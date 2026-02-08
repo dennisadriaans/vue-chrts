@@ -24,10 +24,18 @@ export interface ChartAccessibilityProps {
    * @default true
    */
   focusable?: boolean;
+
+  /**
+   * Human-readable role description for screen readers.
+   * Useful to distinguish between different types of charts or provide more context than just "img".
+   * @default "chart"
+   */
+  ariaRoledescription?: string;
 }
 
 export interface ChartAccessibilityAttrs {
   role: string;
+  "aria-roledescription"?: string;
   "aria-label"?: string;
   "aria-labelledby"?: string;
   "aria-describedby"?: string;
@@ -44,6 +52,7 @@ export function useChartAccessibility(
   return computed(() => {
     const attrs: ChartAccessibilityAttrs = {
       role: "img",
+      "aria-roledescription": props.ariaRoledescription || "chart",
     };
 
     // Add aria-label or use default
