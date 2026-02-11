@@ -1,20 +1,28 @@
 {
   "name": "vue-chrts",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "type": "module",
   "files": [
     "dist"
   ],
   "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./enums": {
       "types": "./dist/enums.d.ts",
-      "import": "./dist/enums.js"
+      "import": "./dist/enums.js",
+      "default": "./dist/enums.js"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.js",
+      "default": "./dist/utils.js"
     },
     "./types": {
       "types": "./dist/types.d.ts"

@@ -1,5 +1,3 @@
 packages:
   - 'packages/vue'
   - 'packages/nuxt'
-  - 'packages/angular'
-  - 'packages/shared'
