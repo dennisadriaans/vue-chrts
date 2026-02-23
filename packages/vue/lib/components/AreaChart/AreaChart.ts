@@ -16,6 +16,10 @@ export interface AreaChartProps<T> {
    */
   data: T[];
   /**
+   * Optional accessor function for the x-axis. Default is index.
+   */
+  x?: (d: T, i: number) => number | Date;
+  /**
    * The height of the chart in pixels.
    */
   height: number;
@@ -188,4 +192,25 @@ export interface AreaChartProps<T> {
    * Configuration object for the chart tooltip.
    */
   tooltip?: TooltipConfig;
+  /**
+   * If `true`, show data labels using default configuration.
+   */
+  showLabels?: boolean;
+  /**
+   * Configuration for data labels.
+   */
+  labelConfig?: LabelConfig<T>;
 }
+
+export type LabelConfig<T> = {
+  label: (d: T, i: number, category: string) => string | undefined;
+  x?: (d: T, i: number, category: string) => number;
+  y?: (d: T, i: number, category: string) => number;
+  clustering?: boolean;
+  clusterLabel?: (records: T[]) => string;
+  color?: string | ((d: T, i: number, category: string) => string);
+  backgroundColor?: string;
+  fontSize?: number | ((d: T, i: number, category: string) => number);
+  attributes?: Record<string, string | number | boolean>;
+  events?: Record<string, Record<string, (d: any) => void>>;
+};
