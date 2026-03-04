@@ -111,6 +111,9 @@ Make better dashboards with with [Vue charts](https://nuxtcharts.com/vue-charts)
 
 This library is inspired by [Tremor](https://tremor.so/) and built on top of [Unovis](https://unovis.dev).
 
+## Angular
+Looking for the Angular charts variant? Check the [Angular Charts](https://angularcharts.com/) website or the [GitHub](https://github.com/dennisadriaans/angular-chrts) repo here.
+
 ## License
 
 MIT
