@@ -42,8 +42,8 @@ export type MarkerConfig = {
   }
 };
 
-export interface CrosshairConfig {
-  color?: string;
+export interface CrosshairConfig<T> {
+  color?: string | ((d: T, i: number) => string | undefined);
   strokeColor?: string;
   strokeWidth?: number;
   template?: (d: any) => string;
