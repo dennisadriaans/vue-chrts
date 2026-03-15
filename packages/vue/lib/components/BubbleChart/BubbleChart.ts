@@ -161,7 +161,7 @@ export interface BubbleChartProps<T> {
   /**
    * Crosshair configuration object for customizing the appearance of the crosshair line.
    */
-  crosshairConfig?: CrosshairConfig;
+  crosshairConfig?: CrosshairConfig<T>;
   /**
    * Axis configuration object for customizing the appearance of the axes.
    */
