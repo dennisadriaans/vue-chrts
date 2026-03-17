@@ -63,6 +63,28 @@ import {
 
       <Card>
         <template #header>
+          <h2 class="heading-2 capitalize">Line Chart dynamic crosshair</h2>
+        </template>
+        <LineChart
+          :data="chartData"
+          :height="200"
+          :y-num-ticks="2"
+          :y-grid-line="true"
+          :y-min-max-ticks-only="true"
+          y-label="Number of visits"
+          :categories="categories3"
+          :x-formatter="(tick: number): string => `${chartData[tick].month}`"
+          :tooltip-title-formatter="(data) => data.month"
+          :curve-type="CurveType.Linear"
+          :legend-position="LegendPosition.TopRight"
+          :crosshair-config="{
+            color: (_, i) => ['rgb(21, 111, 54)', 'rgb(74, 222, 128)'][i]
+          }"
+        />
+      </Card>
+
+      <Card>
+        <template #header>
           <h2 class="heading-2 capitalize">Line Chart with single line</h2>
         </template>
         <LineChart

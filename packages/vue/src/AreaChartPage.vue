@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Button from "./elements/Button.vue";
 import Card from "./elements/Card.vue";
-import { AreaChart, CurveType, LegendPosition, type MarkerConfig } from "./../lib";
+import { AreaChart, CrosshairConfig, CurveType, LegendPosition, type MarkerConfig } from "./../lib";
 
 import { AreaChartData1, categories1, foodExportData, foodExportCategories } from "./data/AreaChartData";
 
@@ -16,6 +16,7 @@ interface ChartConfig {
   minMaxTicksOnly: boolean;
   hideLegend: boolean;
   markerConfig?: MarkerConfig;
+  crosshairConfig?: CrosshairConfig<any>;
 }
 
 // Array of all chart configurations
@@ -670,6 +671,21 @@ const chartConfigs: ChartConfig[] = [
     minMaxTicksOnly: false,
     hideLegend: false,
   },
+  {
+    id: 51,
+    title: "Dynamic Crosshair Colors",
+    curveType: CurveType.Linear,
+
+    xGridLine: true,
+    yGridLine: true,
+    yDomainLine: true,
+    xDomainLine: true,
+    minMaxTicksOnly: false,
+    hideLegend: false,
+    crosshairConfig: {
+      color: (_, i) => ["rgb(21, 111, 54)", "rgb(74, 222, 128)"][Math.floor(i / 2)],
+    }
+  }
 ];
 
 function handleChartClick(event: MouseEvent, hoverValues: any) {
@@ -807,6 +823,7 @@ function handleChartClick(event: MouseEvent, hoverValues: any) {
             :min-max-ticks-only="chartConfig.minMaxTicksOnly"
             :hide-legend="chartConfig.hideLegend"
             :marker-config="chartConfig.markerConfig"
+            :crosshair-config="chartConfig.crosshairConfig"
             @click="handleChartClick"
           ></AreaChart>
         </Card>
