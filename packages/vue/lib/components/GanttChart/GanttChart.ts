@@ -79,7 +79,7 @@ export interface GanttChartProps<T> {
   /**
    * Crosshair configuration object for customizing the appearance of the crosshair line.
    */
-  crosshairConfig?: CrosshairConfig;
+  crosshairConfig?: CrosshairConfig<T>;
   /**
    * The width of the timeline bars in pixels.
    * Default: 12
