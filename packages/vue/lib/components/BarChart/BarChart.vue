@@ -161,7 +161,10 @@ const labelX = (d: LabelDatum) => {
         v-if="!!valueLabel"
         :data="labelData"
         :x="labelX"
-        :y="(d: any) => d.y + (props.valueLabel?.labelSpacing ?? 0)"
+        :y="
+          (d: any) =>
+            d.y + (props.valueLabel?.labelSpacing ?? 0) * (d.y < 0 ? -1 : 1)
+        "
         :label="props.valueLabel?.label"
         :backgroundColor="props.valueLabel?.backgroundColor ?? 'transparent'"
         :color="props.valueLabel?.color ?? 'red'"
