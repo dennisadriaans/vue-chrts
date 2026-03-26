@@ -33,9 +33,9 @@ type SocialDealChartData = {
 const RevenueData: DataProps[] = [
   { month: "january", desktop: 186, mobile: 80, tablet: 40 },
   { month: "february", desktop: 305, mobile: 200, tablet: 60 },
-  { month: "march", desktop: 237, mobile: 120, tablet: 50 },
-  { month: "april", desktop: 73, mobile: 190, tablet: 30 },
-  { month: "may", desktop: 209, mobile: 130, tablet: 70 },
+  { month: "march", desktop: 100, mobile: 0, tablet: 50 },
+  { month: "april", desktop: -50, mobile: -120, tablet: 30 },
+  { month: "may", desktop: -75, mobile: 130, tablet: 70 },
   { month: "jun", desktop: 214, mobile: 140, tablet: 55 },
 ];
 
