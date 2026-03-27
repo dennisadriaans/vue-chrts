@@ -34,7 +34,7 @@ const RevenueData: DataProps[] = [
   { month: "january", desktop: 186, mobile: 80, tablet: 40 },
   { month: "february", desktop: 305, mobile: 200, tablet: 60 },
   { month: "march", desktop: 100, mobile: 0, tablet: 50 },
-  { month: "april", desktop: -50, mobile: -120, tablet: 30 },
+  { month: "april", desktop: -50, mobile: -200, tablet: 30 },
   { month: "may", desktop: -75, mobile: 130, tablet: 70 },
   { month: "jun", desktop: 214, mobile: 140, tablet: 55 },
 ];
@@ -244,14 +244,13 @@ const barChartExamples: BarChartExample[] = [
     description: "Show mobile revenue per month, horizontal orientation.",
     data: [...RevenueData].reverse(),
     categories: RevenueCategoriesMobile,
-    yAxis: ["desktop"],
+    yAxis: ["mobile", "desktop"],
     orientation: Orientation.Horizontal,
     stacked: false,
     groupPadding: undefined,
     barPadding: 0,
     xNumTicks: 6,
-    xFormatter: (tick: number, i?: number) =>
-      `${typeof i !== "undefined" ? i : tick}`,
+    xFormatter: (tick: number) => `${tick}`,
     yFormatter: (tick: number, i?: number) =>
       `${
         [...RevenueData].reverse()[typeof i !== "undefined" ? i : tick]?.month
@@ -287,8 +286,7 @@ const barChartExamples: BarChartExample[] = [
     groupPadding: 0,
     barPadding: 0.2,
     xNumTicks: 6,
-    xFormatter: (tick: number, i?: number) =>
-      `${typeof i !== "undefined" ? i : tick}`,
+    xFormatter: (tick: number) => `${tick}`,
     yFormatter: (tick: number, i?: number) =>
       `${
         [...RevenueData].reverse()[typeof i !== "undefined" ? i : tick]?.month
