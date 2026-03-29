@@ -141,6 +141,11 @@ const labelX = (d: LabelDatum) => {
   return d.x + offsetFromCenter;
 };
 
+const isHorizontal = (props.orientation ?? Orientation.Vertical) === Orientation.Horizontal;
+
+const labelValue = (d: LabelDatum) =>
+  d.y + (props.valueLabel?.labelSpacing ?? 0) * (d.y < 0 ? -1 : 1);
+
 </script>
 
 <template>
@@ -156,15 +161,14 @@ const labelX = (d: LabelDatum) => {
       :padding="padding"
       :height="height"
       :duration="duration"
+      :xDomain="xDomain"
+      :yDomain="yDomain"
     >
       <VisXYLabels
         v-if="!!valueLabel"
         :data="labelData"
-        :x="labelX"
-        :y="
-          (d: any) =>
-            d.y + (props.valueLabel?.labelSpacing ?? 0) * (d.y < 0 ? -1 : 1)
-        "
+        :x="isHorizontal ? labelValue : labelX"
+        :y="isHorizontal ? labelX : labelValue"
         :label="props.valueLabel?.label"
         :backgroundColor="props.valueLabel?.backgroundColor ?? 'transparent'"
         :color="props.valueLabel?.color ?? 'red'"
@@ -250,7 +254,7 @@ const labelX = (d: LabelDatum) => {
         v-bind="yAxisConfig"
       />
     </VisXYContainer>
-    
+
     <div
       v-if="!props.hideLegend"
       :style="{
@@ -271,7 +275,7 @@ const labelX = (d: LabelDatum) => {
         "
       />
     </div>
-    
+
     <div ref="slotWrapper" style="display: none">
       <slot v-if="slots.tooltip" name="tooltip" :values="hoverValues" />
       <slot v-else-if="hoverValues" name="fallback">
