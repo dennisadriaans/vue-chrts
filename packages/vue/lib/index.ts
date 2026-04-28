@@ -17,3 +17,20 @@ export * from "./components/SankeyChart";
 export * from "./components/Maps";
 
 export { getMap, getPin } from "./components/Maps/DottedMap/mapUtils";
+
+// Re-export d3-geo projections so consumers don't need to install d3-geo
+export { geoMercator } from 'd3-geo';
+
+// Re-export @unovis/ts map topojson data so consumers don't need to install @unovis/ts
+export {
+  ChinaTopoJSON,
+  FranceTopoJSON,
+  GermanyTopoJSON,
+  IndiaTopoJSON,
+  UKTopoJSON,
+  USATopoJSON,
+  USCountiesTopoJSON,
+  WorldMap110mAlphaTopoJSON,
+  WorldMapSimplestTopoJSON,
+  WorldMapTopoJSON,
+} from '@unovis/ts/maps';

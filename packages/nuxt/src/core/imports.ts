@@ -24,4 +24,27 @@ export const resolveImports = (config: ModuleOptions, filePath: string) => {
         from: "vue-chrts",
         imports: [...runtimeImports]
     })
+
+    const geoImports = ['geoMercator']
+    addImportsSources({
+        from: "vue-chrts",
+        imports: [...geoImports]
+    })
+
+    const topoJsonImports = [
+        'ChinaTopoJSON',
+        'FranceTopoJSON',
+        'GermanyTopoJSON',
+        'IndiaTopoJSON',
+        'UKTopoJSON',
+        'USATopoJSON',
+        'USCountiesTopoJSON',
+        'WorldMap110mAlphaTopoJSON',
+        'WorldMapSimplestTopoJSON',
+        'WorldMapTopoJSON',
+    ]
+    addImportsSources({
+        from: "vue-chrts",
+        imports: [...topoJsonImports]
+    })
 }
