@@ -12,9 +12,12 @@ type DataProps = {
   month?: string;
   desktop?: number;
   mobile?: number;
+  tablet?: number;
   date?: string;
   value?: number;
   visitors?: number;
+  score?: number;
+  label?: string;
 };
 
 // SocialDeal chart data type (flattened)
@@ -325,6 +328,34 @@ const barChartExamples: BarChartExample[] = [
       `${RevenueData[typeof i !== "undefined" ? i : tick]?.month}`,
     yFormatter: (tick: number, i?: number) =>
       `${typeof i !== "undefined" ? i : tick}`,
+  },
+  {
+    id: 9,
+    title: "Horizontal Bar Chart with xDomain",
+    description: "Horizontal bar chart with custom xDomain [0, 100] and custom category color.",
+    data: [
+      { label: "Item A", score: 85 },
+      { label: "Item B", score: 72 },
+      { label: "Item C", score: 93 },
+      { label: "Item D", score: 45 },
+      { label: "Item E", score: 68 },
+    ],
+    categories: { score: { name: "Score", color: "green" } },
+    yAxis: ["score"],
+    height: 300,
+    orientation: Orientation.Horizontal,
+    xDomain: [0, 50],
+    xFormatter: (tick: number) => `${tick}`,
+    yFormatter: (tick: number, i?: number) =>
+      `${
+        [
+          { label: "Item A", score: 85 },
+          { label: "Item B", score: 72 },
+          { label: "Item C", score: 93 },
+          { label: "Item D", score: 45 },
+          { label: "Item E", score: 68 },
+        ][typeof i !== "undefined" ? i : tick]?.label
+      }`,
   },
 ];
 
