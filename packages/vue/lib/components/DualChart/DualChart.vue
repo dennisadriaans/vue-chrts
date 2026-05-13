@@ -128,6 +128,8 @@ function onCrosshairUpdateWithContent(d: T): string {
       :height="height"
       :duration="duration"
       :data="data"
+      :x-domain="xDomain"
+      :y-domain="yDomain"
     >
       <VisTooltip
         v-if="!hideTooltip"
