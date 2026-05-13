@@ -134,4 +134,12 @@ export interface GanttChartProps<T> {
    * Configuration object for the chart tooltip.
    */
   tooltip?: TooltipConfig;
+  /**
+   * Fixed X scale domain as [min, max].
+   */
+  xDomain?: [number | undefined, number | undefined];
+  /**
+   * Fixed Y scale domain as [min, max].
+   */
+  yDomain?: [number | undefined, number | undefined];
 }
