@@ -1,3 +1,4 @@
 packages:
   - 'packages/vue'
   - 'packages/nuxt'
+  - 'packages/nuxt-next'
