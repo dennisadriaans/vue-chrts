@@ -9,19 +9,19 @@ export interface SeriesDescriptor {
   dataKey: string;
   /** Display name shown in legend / tooltip. */
   name: string;
-  /** Resolved colour, or `undefined` to let `vccs` pick a default. */
-  color: string | undefined;
+  /** Resolved colour. Falls back to `var(--chart-color-N)` for CSS-var theming. */
+  color: string;
   /** Whether the series is hidden. */
   hidden: boolean;
 }
 
 /**
- * Normalise a `BulletLegendItemInterface` colour (which may be a string or, for
- * v2 compatibility, an array) into a single colour string.
+ * Normalise a `BulletLegendItemInterface` colour into a single colour string.
+ * Falls back to `var(--chart-color-N)` so callers can theme all charts via CSS.
  */
-function resolveColor(color: BulletLegendItemInterface["color"]): string | undefined {
-  if (Array.isArray(color)) return color[0];
-  return color;
+function resolveColor(color: BulletLegendItemInterface["color"], index: number): string {
+  if (Array.isArray(color)) return color[0] ?? `var(--chart-color-${index})`;
+  return color ?? `var(--chart-color-${index})`;
 }
 
 /**
@@ -32,10 +32,10 @@ function resolveColor(color: BulletLegendItemInterface["color"]): string | undef
 export function categoriesToSeries(
   categories: Record<string, BulletLegendItemInterface>,
 ): SeriesDescriptor[] {
-  return Object.entries(categories).map(([dataKey, item]) => ({
+  return Object.entries(categories).map(([dataKey, item], index) => ({
     dataKey,
     name: String(item.name ?? dataKey),
-    color: resolveColor(item.color),
+    color: resolveColor(item.color, index),
     hidden: item.hidden ?? false,
   }));
 }

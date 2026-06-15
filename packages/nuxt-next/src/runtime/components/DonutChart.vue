@@ -3,12 +3,13 @@
  * Donut chart adapter (maps onto the `vccs` Pie chart).
  *
  * Accepts the `nuxt-charts` v2 `DonutChartProps` config API: a `number[]` of
- * segment values plus a `categories` record for labels / colours. These are
- * zipped into `[{ name, value }]` objects for `<Pie>`, with one `<Cell>` per
- * segment carrying its colour. `DonutType.Half` renders a semicircle gauge.
+ * segment values plus a `categories` record for labels / colours. Colours are
+ * passed as `fill` on each data entry — vccs reads fill from data, not Cell
+ * children (Pie does not use extractCellProps unlike Bar).
+ * `DonutType.Half` renders a semicircle gauge.
  */
 import { computed } from "vue";
-import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "vccs";
+import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "vccs";
 import type { DonutChartProps } from "../types/charts";
 import { DonutType } from "../enums";
 import { categoriesToSeries } from "../utils/categories";
@@ -23,7 +24,8 @@ const segments = computed(() => {
   return props.data.map((value, i) => ({
     name: cats[i]?.name ?? String(i),
     value,
-    color: cats[i]?.color,
+    // vccs reads `fill` directly from the data entry to color each sector
+    fill: cats[i]?.color ?? `var(--chart-color-${i})`,
   }));
 });
 
@@ -55,9 +57,7 @@ const legendWrapperStyle = computed(() => toCssProperties(props.legendStyle));
         :end-angle="angles.endAngle"
         :padding-angle="padAngle ?? 0"
         :is-animation-active="duration !== 0"
-      >
-        <Cell v-for="seg in segments" :key="seg.name" :fill="seg.color" />
-      </Pie>
+      />
       <Tooltip v-if="!hideTooltip" />
       <Legend
         v-if="!hideLegend"
