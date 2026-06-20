@@ -1,15 +1,31 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
+    "transit": {
+      "dependsOn": ["^transit"]
+    },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".nuxt/**"]
+      "outputs": ["dist/**", ".nuxt/**", ".output/**", ".nitro/**"]
+    },
+    "generate": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".output/**"]
     },
     "test": {
-      "dependsOn": ["build"]
+      "dependsOn": ["^build"]
+    },
+    "lint": {
+      "dependsOn": ["transit"],
+      "outputs": []
+    },
+    "typecheck": {
+      "dependsOn": ["transit"],
+      "outputs": []
     },
     "dev": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
     "version": {
       "cache": false
@@ -17,6 +33,11 @@
     "publish": {
       "dependsOn": ["build", "test"],
       "cache": false
+    },
+    "release": {
+      "dependsOn": ["typecheck", "build"],
+      "cache": false,
+      "interactive": true
     }
   }
 }

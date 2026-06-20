@@ -31,6 +31,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
+    "typecheck": "vue-tsc --noEmit",
     "preview": "vite preview",
     "release": "pnpm run build && commit-and-tag-version && pnpm publish"
   },

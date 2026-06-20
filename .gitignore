@@ -27,3 +27,5 @@ dist-ssr
 *.sw?
 
 .turbo/*
+
+packages/website/.data

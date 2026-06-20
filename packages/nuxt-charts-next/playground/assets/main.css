@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@source "../app.vue";
+@source "../pages";
+@source "../../src";
+
+:root {
+  --chart-color-0: oklch(0.63 0.1363 157.86);
+  --chart-color-1: oklch(0.76 0.1782 153.61);
+  --chart-color-2: oklch(0.70 0.15 270);
+  --chart-color-3: oklch(0.75 0.15 60);
+  --chart-color-4: oklch(0.68 0.15 330);
+  --chart-color-5: oklch(0.72 0.14 200);
+  --chart-color-6: oklch(0.65 0.17 30);
+  --chart-color-7: oklch(0.78 0.12 300);
+}
+
+body {
+  margin: 0;
+}
