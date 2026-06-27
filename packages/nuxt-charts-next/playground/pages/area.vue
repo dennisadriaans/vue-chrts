@@ -79,5 +79,28 @@ const categories: Record<string, BulletLegendItemInterface> = {
         { offset: '100%', stopOpacity: 0 },
       ]"
     />
+
+    <h2>Zoomable Area Chart</h2>
+    <p style="font-size: 0.85rem; color: #666; margin: 0 0 0.5rem">
+      Scroll / pinch to zoom. Drag to pan. Y-axis rescales to visible range.
+    </p>
+    <ZoomableAreaChart
+      :data="monthly"
+      :categories="categories"
+      :height="320"
+      x-key="month"
+      :curve-type="CurveType.MonotoneX"
+    />
+
+    <h2>Zoomable Area Chart — line only</h2>
+    <ZoomableAreaChart
+      :data="monthly"
+      :categories="categories"
+      :height="320"
+      x-key="month"
+      :curve-type="CurveType.MonotoneX"
+      hide-area
+      :fill-opacity="0"
+    />
   </main>
 </template>

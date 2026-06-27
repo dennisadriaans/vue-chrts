@@ -37,6 +37,12 @@ export const resolveImports = (config: ModuleOptions, resolverUrl: string) => {
       "TooltipConfig",
       "ValueLabel",
       "ReferenceLineConfig",
+      // v2 parity: these auto-imported in nuxt-charts v2. The types still exist
+      // (MarkerConfig drives line/area dot rendering; CrosshairConfig is inert
+      // but kept so old templates type-check), so keep them auto-importable.
+      "MarkerConfig",
+      "CrosshairConfig",
+      "ZoomableAreaChartProps",
     ],
   });
 };

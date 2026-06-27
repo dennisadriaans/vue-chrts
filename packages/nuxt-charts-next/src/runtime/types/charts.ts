@@ -343,6 +343,66 @@ export interface FunnelChartProps<T = unknown> {
   duration?: number;
 }
 
+/**
+ * Props for the zoomable area chart — a self-owned SVG with D3 scroll-zoom,
+ * dynamic y-axis that rescales to the visible window, and multi-series support.
+ *
+ * Unlike `AreaChart` (Recharts-based), this component owns its SVG and handles
+ * zoom/pan via d3-zoom. No `vccs` / Recharts dependency.
+ */
+export interface ZoomableAreaChartProps<T extends Record<string, unknown>> {
+  /** The data to render. Each element is one data point. */
+  data: T[];
+  /** Chart height in pixels. Default 300. */
+  height?: number;
+  /**
+   * Maps each category key to its legend representation (label, colour).
+   * Keys are the data properties plotted as series.
+   */
+  categories: Record<string, BulletLegendItemInterface>;
+  /** Data key used for x-axis labels and tooltip titles. */
+  xKey?: keyof T;
+  /** Formats x-axis tick labels. Receives row index. */
+  xFormatter?: (index: number) => string;
+  /** Formats y-axis tick labels and tooltip values. Receives the numeric value. */
+  yFormatter?: (value: number) => string;
+  /** Custom formatter for tooltip titles. */
+  tooltipTitleFormatter?: (row: T) => string | number;
+  /** Optional x-axis label. */
+  xLabel?: string;
+  /** Optional y-axis label. */
+  yLabel?: string;
+  /** Per-side chart padding in pixels. */
+  padding?: ChartPadding;
+  /** Desired number of y-axis ticks. Default 5. */
+  yNumTicks?: number;
+  /** Hide the area fill, showing only the line. Default false. */
+  hideArea?: boolean;
+  /** Area fill opacity. Default 0.15. */
+  fillOpacity?: number;
+  /** Line stroke width in pixels. Default 2. */
+  lineWidth?: number;
+  /** Curve interpolation. Only CatmullRom, MonotoneX, Step, and Linear are supported. Default Linear. */
+  curveType?: CurveType;
+  /** Hide x-axis. Default false. */
+  hideXAxis?: boolean;
+  /** Hide y-axis. Default false. */
+  hideYAxis?: boolean;
+  /** Hide legend. Default false. */
+  hideLegend?: boolean;
+  /** Hide tooltip. Default false. */
+  hideTooltip?: boolean;
+  /** Minimum zoom scale (1 = no zoom out). Default 1. */
+  minZoom?: number;
+  /** Maximum zoom scale. Default 8. */
+  maxZoom?: number;
+  /**
+   * Fraction of the visible value span added as breathing room above and below
+   * the y-axis domain. Default 0.08 (8%).
+   */
+  yPaddingFactor?: number;
+}
+
 export interface StatusTrackerDatum {
   status: string;
   label?: string;

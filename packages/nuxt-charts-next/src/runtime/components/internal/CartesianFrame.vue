@@ -43,16 +43,65 @@ const legend = computed(() => legendPositionToLegendProps(props.legendPosition))
 const showXGrid = computed(() => props.xGridLine ?? true);
 const showYGrid = computed(() => props.yGridLine ?? true);
 
-const xTickFormatter = computed(() =>
-  toTickFormatter(props.xFormatter ?? props.xAxisConfig?.tickFormat),
-);
-const yTickFormatter = computed(() =>
-  toTickFormatter(props.yFormatter ?? props.yAxisConfig?.tickFormat),
-);
+/**
+ * Map a category value back to its row index in `data`.
+ *
+ * `vccs` calls a *category* axis tick formatter with the category value (the
+ * `dataKey` field, e.g. "Jan"), whereas a value / index axis is called with a
+ * number. The v2 (Unovis) `BarChart` plotted bars on an index x-scale, so its
+ * `xFormatter` received the row index as the first argument — and the existing
+ * ecosystem relies on `(i) => data[i].field`. To preserve that contract on the
+ * category axis we translate the value back to its index before calling the
+ * user formatter (matching how `LineChart` / `AreaChart`, which have no
+ * `dataKey`, are already called with the index).
+ */
+const categoryIndexByValue = computed(() => {
+  const map = new Map<unknown, number>();
+  if (props.xAxisKey === undefined) return map;
+  props.data.forEach((row, i) => {
+    map.set((row as Record<string, unknown>)[props.xAxisKey as string], i);
+  });
+  return map;
+});
+
+/**
+ * Wrap the category-axis formatter so it receives the row index (v2 parity).
+ * Only applies when an `xAxisKey` exists (bar charts); index-based charts
+ * already get a numeric tick from `vccs`.
+ */
+function withCategoryIndex(fn: ReturnType<typeof toTickFormatter>) {
+  if (!fn || props.xAxisKey === undefined) return fn;
+  return (value: unknown, index: number) => {
+    const i = categoryIndexByValue.value.get(value);
+    return fn(i ?? value, i ?? index);
+  };
+}
 
 /** vccs container layout: 'vertical' swaps the value/category axes for horizontal bars. */
 const layout = computed<"horizontal" | "vertical">(() =>
   props.orientation === "horizontal" ? "vertical" : "horizontal",
+);
+
+const rawXFormatter = computed(() =>
+  toTickFormatter(props.xFormatter ?? props.xAxisConfig?.tickFormat),
+);
+const rawYFormatter = computed(() =>
+  toTickFormatter(props.yFormatter ?? props.yAxisConfig?.tickFormat),
+);
+
+/**
+ * Resolve which user formatter feeds the category axis vs the value axis,
+ * matching v2 semantics: with vertical bars the x-axis is the category axis
+ * (so `xFormatter` formats categories); with horizontal bars the category axis
+ * is the y-axis, so `yFormatter` formats categories. The category-axis
+ * formatter is wrapped with the index translation; the value-axis formatter is
+ * passed through untouched.
+ */
+const categoryFormatter = computed(() =>
+  withCategoryIndex(layout.value === "vertical" ? rawYFormatter.value : rawXFormatter.value),
+);
+const valueFormatter = computed(() =>
+  layout.value === "vertical" ? rawXFormatter.value : rawYFormatter.value,
 );
 
 const xAxisDomain = computed(() => toAxisDomain(props.xDomain));
@@ -101,7 +150,7 @@ const referenceLines = computed(() => props.referenceLines ?? []);
         :tick-line="showXTickLine"
         :axis-line="xDomainLine ?? true"
         :tick-count="layout === 'vertical' ? yNumTicks : xNumTicks"
-        :tick-formatter="layout === 'vertical' ? yTickFormatter : xTickFormatter"
+        :tick-formatter="layout === 'vertical' ? valueFormatter : categoryFormatter"
         :domain="layout === 'vertical' ? yAxisDomain : xAxisDomain"
         :ticks="layout === 'vertical' ? yAxis.ticks : xAxis.ticks"
         :interval="layout === 'vertical' ? yAxis.interval : xAxis.interval"
@@ -116,7 +165,7 @@ const referenceLines = computed(() => props.referenceLines ?? []);
         :tick-line="showYTickLine"
         :axis-line="yDomainLine ?? true"
         :tick-count="layout === 'vertical' ? xNumTicks : yNumTicks"
-        :tick-formatter="layout === 'vertical' ? xTickFormatter : yTickFormatter"
+        :tick-formatter="layout === 'vertical' ? categoryFormatter : valueFormatter"
         :domain="layout === 'vertical' ? xAxisDomain : yAxisDomain"
         :ticks="layout === 'vertical' ? xAxis.ticks : yAxis.ticks"
         :interval="layout === 'vertical' ? xAxis.interval : yAxis.interval"

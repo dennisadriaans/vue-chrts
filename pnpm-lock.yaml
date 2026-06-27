@@ -72,6 +72,36 @@ importers:
 
   packages/nuxt-charts-next:
     dependencies:
+      '@types/d3-array':
+        specifier: ^3.2.2
+        version: 3.2.2
+      '@types/d3-scale':
+        specifier: ^4.0.9
+        version: 4.0.9
+      '@types/d3-selection':
+        specifier: ^3.0.11
+        version: 3.0.11
+      '@types/d3-shape':
+        specifier: ^3.1.8
+        version: 3.1.8
+      '@types/d3-zoom':
+        specifier: ^3.0.8
+        version: 3.0.8
+      d3-array:
+        specifier: ^3.2.4
+        version: 3.2.4
+      d3-scale:
+        specifier: ^4.0.2
+        version: 4.0.2
+      d3-selection:
+        specifier: ^3.0.0
+        version: 3.0.0
+      d3-shape:
+        specifier: ^3.2.0
+        version: 3.2.0
+      d3-zoom:
+        specifier: ^3.0.0
+        version: 3.0.0
       motion-v:
         specifier: ^2.3.0
         version: 2.3.0(@vueuse/core@14.3.0(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3))
@@ -84,7 +114,7 @@ importers:
         version: 3.2.4(vite@7.3.5(@types/node@26.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))
       '@nuxt/eslint':
         specifier: ^1.7.1
-        version: 1.16.0(@typescript-eslint/utils@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-sfc@3.5.38)(crossws@0.4.6(srvx@0.11.17))(eslint@9.39.4(jiti@2.7.0))(magicast@0.5.3)(oxc-parser@0.132.0)(typescript@5.9.3)(vite@7.3.5(@types/node@26.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 1.16.0(@typescript-eslint/utils@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-sfc@3.5.38)(crossws@0.4.6(srvx@0.11.17))(eslint@9.39.4(jiti@2.7.0))(magicast@0.5.3)(oxc-parser@0.110.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1))(typescript@5.9.3)(vite@7.3.5(@types/node@26.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))
       '@nuxt/eslint-config':
         specifier: ^1.13.0
         version: 1.16.0(@typescript-eslint/utils@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-sfc@3.5.38)(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
@@ -287,9 +317,9 @@ importers:
       nuxt-auth-utils:
         specifier: ^0.5.25
         version: 0.5.29(magicast@0.5.3)
-      nuxt-charts:
+      nuxt-charts-next:
         specifier: workspace:*
-        version: link:../nuxt-charts
+        version: link:../nuxt-charts-next
       nuxt-shiki:
         specifier: 0.3.1
         version: 0.3.1(magicast@0.5.3)
@@ -12075,6 +12105,38 @@ snapshots:
       - eslint-import-resolver-node
       - eslint-plugin-format
       - magicast
+      - supports-color
+      - typescript
+      - utf-8-validate
+      - vite
+
+  '@nuxt/eslint@1.16.0(@typescript-eslint/utils@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-sfc@3.5.38)(crossws@0.4.6(srvx@0.11.17))(eslint@9.39.4(jiti@2.7.0))(magicast@0.5.3)(oxc-parser@0.110.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1))(typescript@5.9.3)(vite@7.3.5(@types/node@26.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))':
+    dependencies:
+      '@eslint/config-inspector': 3.0.4(crossws@0.4.6(srvx@0.11.17))(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
+      '@nuxt/devtools-kit': 3.2.4(magicast@0.5.3)(vite@7.3.5(@types/node@26.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))
+      '@nuxt/eslint-config': 1.16.0(@typescript-eslint/utils@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-sfc@3.5.38)(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
+      '@nuxt/eslint-plugin': 1.16.0(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
+      '@nuxt/kit': 4.4.8(magicast@0.5.3)
+      chokidar: 5.0.0
+      eslint: 9.39.4(jiti@2.7.0)
+      eslint-flat-config-utils: 3.2.0
+      eslint-typegen: 2.3.1(eslint@9.39.4(jiti@2.7.0))
+      find-up: 8.0.0
+      get-port-please: 3.2.0
+      mlly: 1.8.2
+      pathe: 2.0.3
+      unimport: 6.3.0(oxc-parser@0.110.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1))(rolldown@1.0.0-beta.52(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1))
+    transitivePeerDependencies:
+      - '@modelcontextprotocol/sdk'
+      - '@typescript-eslint/utils'
+      - '@vue/compiler-sfc'
+      - bufferutil
+      - crossws
+      - eslint-import-resolver-node
+      - eslint-plugin-format
+      - magicast
+      - oxc-parser
+      - rolldown
       - supports-color
       - typescript
       - utf-8-validate

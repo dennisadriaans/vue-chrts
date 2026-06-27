@@ -14,6 +14,7 @@ const COMPONENTS = {
   RadialBarChart: "RadialBarChart",
   FunnelChart: "FunnelChart",
   StatusTrackerChart: "StatusTrackerChart",
+  ZoomableAreaChart: "ZoomableAreaChart",
 } as const;
 
 export type ComponentName = keyof typeof COMPONENTS;
