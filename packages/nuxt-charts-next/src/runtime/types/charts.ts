@@ -201,6 +201,71 @@ export interface BubbleChartProps<T> extends CartesianChartBaseProps<T> {
   sizeOptions?: SizeOptions;
 }
 
+/**
+ * Candlestick (OHLC) chart props. New in v3 — no `vccs` primitive exists, so the
+ * adapter composes a `vccs` `<ComposedChart>` (for the real axes, grid, scales
+ * and tooltip) with a custom candle layer drawn from the axis scales exposed by
+ * `vccs`'s public hooks.
+ *
+ * Each row in `data` is one candle. Accessors name the OHLC fields; the default
+ * accessors read `label`/`open`/`high`/`low`/`close`/`volume`, so a row shaped
+ * like `{ label, open, high, low, close, volume? }` works with no config.
+ */
+export interface CandlestickChartProps<T> {
+  /** The data to render. Each element is one candle. */
+  data: T[];
+  /** Chart height in pixels. */
+  height: number;
+  /** Row field used for the x (category) axis label. Default `"label"`. */
+  xAccessor?: keyof T;
+  /** Row field for the open price. Default `"open"`. */
+  openAccessor?: keyof T;
+  /** Row field for the high price. Default `"high"`. */
+  highAccessor?: keyof T;
+  /** Row field for the low price. Default `"low"`. */
+  lowAccessor?: keyof T;
+  /** Row field for the close price. Default `"close"`. */
+  closeAccessor?: keyof T;
+  /** Optional row field for the traded volume. Default `"volume"`. */
+  volumeAccessor?: keyof T;
+  /** Colour for rising candles (close ≥ open). Default `#10b981`. */
+  upColor?: string;
+  /** Colour for falling candles (close < open). Default `#ef4444`. */
+  downColor?: string;
+  /** Max candle body width in pixels. Default 18. */
+  candleWidth?: number;
+  /** Wick (high-low line) width in pixels. Default 1.5. */
+  wickWidth?: number;
+  /** Draw a volume histogram beneath the candles. Default false. */
+  showVolume?: boolean;
+  /** Optional x-axis label. */
+  xLabel?: string;
+  /** Optional y-axis label. */
+  yLabel?: string;
+  /** Formats y-axis ticks and tooltip prices. */
+  yFormatter?: (value: number) => string;
+  /** Formats x-axis (category) ticks. Receives the row index. */
+  xFormatter?: (index: number) => string;
+  /** Custom formatter for tooltip titles. */
+  tooltipTitleFormatter?: (data: T) => string | number;
+  /** Desired number of y-axis ticks. */
+  yNumTicks?: number;
+  /** Fixed y-axis domain as `[min, max]`. Defaults to the data's low/high range. */
+  yDomain?: [number | undefined, number | undefined];
+  /** Show vertical grid lines. Default false. */
+  xGridLine?: boolean;
+  /** Show horizontal grid lines. Default true. */
+  yGridLine?: boolean;
+  /** Hide the x-axis entirely. */
+  hideXAxis?: boolean;
+  /** Hide the y-axis entirely. */
+  hideYAxis?: boolean;
+  /** Hide the tooltip. */
+  hideTooltip?: boolean;
+  /** Tooltip behaviour config. */
+  tooltip?: TooltipConfig;
+}
+
 export interface DonutChartProps<T = unknown> {
   /** Segment values, in the same order as `categories`. */
   data: number[];
@@ -323,6 +388,12 @@ export interface FunnelChartProps<T = unknown> {
   categories: Record<string, BulletLegendItemInterface>;
   /** Chart height in pixels. */
   height: number;
+  /**
+   * Visual variant. `'default'` (the classic trapezoid funnel) or `'layered'`
+   * (curved, nested layers with on-shape value / percentage / stage labels and a
+   * positioned tooltip). Default `'default'`.
+   */
+  variant?: "default" | "layered";
   /** Shape of the final (smallest) stage. Default `'triangle'`. */
   lastShapeType?: "triangle" | "rectangle";
   /** Show the value label on each stage. Default true. */

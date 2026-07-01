@@ -6,6 +6,16 @@ const categories: Record<string, BulletLegendItemInterface> = {
   paid: { name: "Paid", color: "#af57db" },
 };
 const data = [5000, 2300, 1200, 480];
+
+// layered variant — larger, curved, nested layers
+const layeredCategories: Record<string, BulletLegendItemInterface> = {
+  visitors: { name: "Visitors", color: "#0ea5e9" },
+  leads: { name: "Leads", color: "#a855f7" },
+  qualified: { name: "Qualified", color: "#fc5e2f" },
+  proposals: { name: "Proposals", color: "#f59e0b" },
+  won: { name: "Won", color: "#10b981" },
+};
+const layeredData = [12000, 7200, 4100, 2300, 1200];
 </script>
 
 <template>
@@ -28,6 +38,18 @@ const data = [5000, 2300, 1200, 480];
       :height="360"
       last-shape-type="rectangle"
       :legend-position="LegendPosition.BottomCenter"
+    />
+
+    <h2>Funnel Chart - Layered</h2>
+    <p style="color: #6b7280">
+      Curved, nested layers add depth while preserving the proportions of each
+      conversion stage.
+    </p>
+    <FunnelChart
+      variant="layered"
+      :data="layeredData"
+      :categories="layeredCategories"
+      :height="360"
     />
   </main>
 </template>

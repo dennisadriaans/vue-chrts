@@ -13,6 +13,7 @@ const COMPONENTS = {
   RadarChart: "RadarChart",
   RadialBarChart: "RadialBarChart",
   FunnelChart: "FunnelChart",
+  CandlestickChart: "CandlestickChart",
   StatusTrackerChart: "StatusTrackerChart",
   ZoomableAreaChart: "ZoomableAreaChart",
 } as const;

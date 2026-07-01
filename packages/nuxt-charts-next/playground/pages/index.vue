@@ -5,6 +5,11 @@ const charts = [
   { to: "/line", label: "Line chart" },
   { to: "/donut", label: "Donut chart" },
   { to: "/bubble", label: "Bubble chart" },
+  { to: "/radar", label: "Radar chart" },
+  { to: "/funnel", label: "Funnel chart" },
+  { to: "/radialbar", label: "Radial bar chart" },
+  { to: "/candlestick", label: "Candlestick chart" },
+  { to: "/status-tracker", label: "Status tracker chart" },
 ];
 </script>
 

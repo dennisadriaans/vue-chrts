@@ -191,3 +191,42 @@ export const statusCategories: Record<string, { name: string; color: string }> =
   outage: { name: "Outage", color: "#dc2626" },
   maintenance: { name: "Maintenance", color: "#2563eb" },
 };
+
+export interface Candle {
+  label: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
+/** Seeded pseudo-random OHLC walk, so the playground candles are stable. */
+export const candles: Candle[] = (() => {
+  let price = 148;
+  let seed = 19;
+  const random = () => {
+    seed = (seed * 16807) % 2147483647;
+    return (seed - 1) / 2147483646;
+  };
+  const start = new Date("2026-03-18T12:00:00Z");
+
+  return Array.from({ length: 40 }, (_, index) => {
+    const date = new Date(start);
+    date.setUTCDate(start.getUTCDate() + index);
+    const open = price;
+    const close = Math.max(20, open + (random() - 0.47) * 7);
+    const high = Math.max(open, close) + random() * 3.8;
+    const low = Math.min(open, close) - random() * 3.8;
+    price = close;
+
+    return {
+      label: date.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }),
+      open: Number(open.toFixed(2)),
+      high: Number(high.toFixed(2)),
+      low: Number(low.toFixed(2)),
+      close: Number(close.toFixed(2)),
+      volume: Math.round(450000 + random() * 1550000),
+    };
+  });
+})();
