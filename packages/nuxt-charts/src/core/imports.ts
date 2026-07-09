@@ -6,20 +6,31 @@ export const resolveImports = (config: ModuleOptions, filePath: string) => {
         return
     }
 
-    const allTypes = ['BulletLegendItemInterface', 'MarkerConfig', 'CrosshairConfig', 'AxisConfig', 'TooltipConfig', 'MapRegion', 'MapPin']
+    // Map-specific types are always provided (v2-only, no v3 equivalent).
+    const mapTypes = ['MapRegion', 'MapPin']
+    // Shared types also exported by nuxt-charts-next; skip when sharedImports=false.
+    const sharedTypes = ['BulletLegendItemInterface', 'MarkerConfig', 'CrosshairConfig', 'AxisConfig', 'TooltipConfig']
     addImportsSources({
         from: "vue-chrts/types",
         type: true,
-        imports: [...allTypes]
+        imports: config.sharedImports === false ? [...mapTypes] : [...sharedTypes, ...mapTypes]
     })
 
-    const enumImports = ['CurveType', 'LegendPosition', 'Orientation']
-    addImportsSources({
-        from: "vue-chrts/enums",
-        imports: [...enumImports]
-    })
+    if (config.sharedImports !== false) {
+        const enumImports = ['CurveType', 'LegendPosition', 'Orientation']
+        addImportsSources({
+            from: "vue-chrts/enums",
+            imports: [...enumImports]
+        })
 
-    const runtimeImports = ['DonutType', 'getMap', 'getPin']
+        addImportsSources({
+            from: "vue-chrts",
+            imports: ['DonutType']
+        })
+    }
+
+    // Map helpers are v2-only; always auto-imported when autoImports is on.
+    const runtimeImports = ['getMap', 'getPin']
     addImportsSources({
         from: "vue-chrts",
         imports: [...runtimeImports]

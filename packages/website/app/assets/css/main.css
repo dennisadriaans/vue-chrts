@@ -1,0 +1,112 @@
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+@source "../../../content/**/*";
+
+html,
+body,
+#__nuxt {
+  height: 100%;
+  font-size: 16px;
+  letter-spacing: -0.4px;
+}
+
+.wrapper {
+  min-height: 100%;
+}
+
+@theme static {
+  --container-8xl: 90rem;
+
+  --font-sans: 'DM Sans', sans-serif;
+  --font-serif: 'Space Mono', monospace;
+
+  --color-green-50: #effdf5;
+  --color-green-100: #d9fbe8;
+  --color-green-200: #b3f5d1;
+  --color-green-300: #75edae;
+  --color-green-400: #00dc82;
+  --color-green-500: #00c16a;
+  --color-green-600: #00a155;
+  --color-green-700: #007f45;
+  --color-green-800: #016538;
+  --color-green-900: #0a5331;
+  --color-green-950: #052e16;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+:root {
+  /* Global colors */
+  --ui-black: oklch(0 0 0);
+  --ui-header-height: 80px;
+
+  --dot-pattern-color: #111827;
+
+  --vis-tooltip-background-color: var(--ui-bg) !important;
+  --vis-tooltip-border-color: var(--ui-border) !important;
+
+  --vis-tooltip-title-color: var(--ui-text) !important;
+  --vis-tooltip-label-color: var(--ui-text-muted) !important;
+  --vis-tooltip-value-color: var(--ui-text) !important;
+  --vis-tooltip-border-radius: 0.75rem !important;
+
+
+  --vis-donut-background-color: transparent !important;
+
+  --side-bar-width: 280px;
+
+
+  /* Component: Steps */
+  --steps-text: var(--colors-green-100);
+  --steps-bg: var(--colors-green-100);
+  --steps-bg-complete: transparent;
+  --steps-border: var(--color-neutral-900);
+  --steps-border-complete: var(--color-green-500);
+  --steps-text-complete: var(--color-green-500);
+  --steps-icon-complete: var(--ui-text-inverted);
+  --steps-bg: var(--color-neutral-100);
+  --steps-bg-complete: var(--color-green-500);
+
+  /* Component: Progress */
+  --progress-bg: var(--ui-primary);
+
+
+  /* Vis colors defaults */
+  --vis-color0: oklch(0.72 0.192 149.58) !important;
+  --vis-color1: oklch(0.63 0.1963 157.86) !important;
+
+  --vis-tooltip-padding: 0 !important;
+
+  /* Component: Unovis Charts */
+  --vis-axis-tick-label-color: var(--ui-text-muted) !important;
+  --vis-legend-label-color: var(--ui-text-muted) !important;
+
+  --vis-legend-item-spacing: 0px !important;
+  --vis-legend-spacing: 24px !important;
+}
+
+.dark {
+  /* Global colors */
+  --dot-pattern-color: #9ca3af;
+  --ui-bg: oklch(0.18 0 0);
+
+  --vis-tooltip-title-border-bottom: 1px solid var(--ui-border) !important;
+
+  --vis-axis-grid-color: rgba(255, 255, 255, 0.1) !important;
+
+  --vis-axis-label-color: var(--ui-text-dimmed) !important;
+  --vis-axis-tick-label-color: var(--ui-text-muted) !important;
+
+  --vis-timeline-row-odd-fill-color: transparent !important;
+  --vis-timeline-row-even-fill-color: transparent !important;
+  --vis-timeline-label-color: var(--ui-text-dimmed) !important;
+}

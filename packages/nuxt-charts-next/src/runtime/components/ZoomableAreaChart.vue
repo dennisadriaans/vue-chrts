@@ -315,7 +315,6 @@ watch(W, () => {
 
 // ─── Clip id (unique per instance) ───────────────────────────────────────────
 const clipId = `zac-clip-${Math.random().toString(36).slice(2, 8)}`;
-const crosshairId = `zac-ch-${Math.random().toString(36).slice(2, 8)}`;
 </script>
 
 <template>

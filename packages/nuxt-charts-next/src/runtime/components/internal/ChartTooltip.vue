@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import type { TooltipContentProps } from "vccs";
+
+defineOptions({ name: "ChartTooltip" });
 
 const props = defineProps<TooltipContentProps>();
 
@@ -11,11 +14,6 @@ function formatValue(value: unknown): string {
   if (typeof value === "number") return value.toLocaleString();
   return String(value);
 }
-</script>
-
-<script lang="ts">
-import { computed } from "vue";
-export default { name: "ChartTooltip" };
 </script>
 
 <template>

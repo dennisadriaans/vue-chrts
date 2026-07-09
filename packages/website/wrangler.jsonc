@@ -1,0 +1,46 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nuxt-charts",
+  "main": "./.output/server/index.mjs",
+  "compatibility_date": "2025-12-16",
+  "keep_vars": true,
+  "assets": {
+    "directory": "./.output/public/",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": false,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "persist": true,
+      "invocation_logs": true
+    },
+    "traces": {
+      "enabled": false,
+      "persist": true,
+      "head_sampling_rate": 1
+    }
+  },
+  "r2_buckets": [
+    {
+      "binding": "BLOB",
+      "bucket_name": "nuxt-charts"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_id": "f4252de9-a7e3-47ce-aa56-499d23388483"
+    }
+  ],	
+  "kv_namespaces": [
+    {
+      "binding": "CACHE",
+      "id": "967132cf65f14d0aadd6fa0231e9957a"
+    }
+  ],
+  "placement": { "mode": "smart" },
+  "compatibility_flags": ["nodejs_compat"]
+}

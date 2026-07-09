@@ -1,0 +1,48 @@
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+.wrangler
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+secrets.temp.json
+
+high_resolution_screenshot.png
+
+# E2E test artifacts
+tests/e2e/.auth/
+playwright-report/
+test-results/
+
+# Ignore zip files in .releases version subfolders, but keep folders
+.releases/*/*.zip
+
+
+cli/node_modules
+cli/dist
+
+node-compile-cache/
+package-lock.json
+
+old/.data

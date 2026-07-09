@@ -47,31 +47,48 @@ const legendWrapperStyle = computed(() => toCssProperties(props.legendStyle));
 </script>
 
 <template>
-  <ResponsiveContainer width="100%" :height="height ?? radius * 2">
-    <PieChart>
-      <Pie
-        :data="segments"
-        data-key="value"
-        name-key="name"
-        :inner-radius="innerRadius"
-        :outer-radius="radius"
-        :start-angle="angles.startAngle"
-        :end-angle="angles.endAngle"
-        :padding-angle="padAngle ?? 0"
-        :is-animation-active="duration !== undefined && duration !== 0"
-      />
-      <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :is-animation-active="false" />
-      <Legend
-        v-if="!hideLegend"
-        :align="legend.align"
-        :vertical-align="legend.verticalAlign"
-        :layout="legend.layout"
-        :wrapper-style="legendWrapperStyle"
-      >
-        <template #content="slotProps">
-          <ChartLegend v-bind="slotProps" />
-        </template>
-      </Legend>
-    </PieChart>
-  </ResponsiveContainer>
+  <div class="donut-chart" :style="{ position: 'relative', width: '100%', height: `${height ?? radius * 2}px` }">
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        <Pie
+          :data="segments"
+          data-key="value"
+          name-key="name"
+          :inner-radius="innerRadius"
+          :outer-radius="radius"
+          :start-angle="angles.startAngle"
+          :end-angle="angles.endAngle"
+          :padding-angle="padAngle ?? 0"
+          :is-animation-active="duration !== undefined && duration !== 0"
+        />
+        <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :is-animation-active="false" />
+        <Legend
+          v-if="!hideLegend"
+          :align="legend.align"
+          :vertical-align="legend.verticalAlign"
+          :layout="legend.layout"
+          :wrapper-style="legendWrapperStyle"
+        >
+          <template #content="slotProps">
+            <ChartLegend v-bind="slotProps" />
+          </template>
+        </Legend>
+      </PieChart>
+    </ResponsiveContainer>
+
+    <!-- Centered overlay for custom content (v2 parity: default slot). -->
+    <div
+      v-if="$slots.default"
+      class="donut-chart__center"
+      :style="{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        pointerEvents: 'none',
+      }"
+    >
+      <slot />
+    </div>
+  </div>
 </template>

@@ -27,6 +27,20 @@ export interface ModuleOptions {
    * @default []
    */
   include?: string[];
+
+  /**
+   * Auto-import the shared enums/types (CurveType, LegendPosition, Orientation,
+   * DonutType, BulletLegendItemInterface, MarkerConfig, CrosshairConfig,
+   * AxisConfig, TooltipConfig).
+   *
+   * Set to `false` when running this module alongside `nuxt-charts-next` so the
+   * v3 module owns those names (avoids duplicate auto-imports and nominal enum
+   * type clashes). Map-specific helpers (getMap, getPin, geoMercator, the
+   * TopoJSON constants, MapRegion, MapPin) are always auto-imported when
+   * `autoImports` is enabled.
+   * @default true
+   */
+  sharedImports?: boolean;
 }
 
 /**
@@ -61,6 +75,7 @@ export default defineNuxtModule<ModuleOptions>({
     global: true,
     autoImports: true,
     include: [],
+    sharedImports: true,
   },
   async setup(options, nuxt) {
     // Only transpile vue-chrts itself. Do NOT transpile @unovis/ts or

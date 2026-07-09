@@ -1,0 +1,37 @@
+import chalk from 'chalk'
+import { Command } from 'commander'
+
+export function createHelpCommand(): Command {
+  return new Command('help')
+    .description('Show all available commands')
+    .action(async () => {
+      console.log()
+      console.log(chalk.dim('A CLI for managing Nuxt Charts components'))
+      console.log()
+      console.log(chalk.yellow('Commands:'))
+      console.log()
+      console.log(chalk.green('  add <component> [version] [targetPath]'))
+      console.log(chalk.dim('    Download and install a component to your project'))
+      console.log(chalk.dim('    Options: -t, --token <token>  API token for authentication'))
+      console.log()
+      console.log(chalk.green('  list'))
+      console.log(chalk.dim('    List all available components'))
+      console.log()
+      console.log(chalk.green('  config set-token <token>'))
+      console.log(chalk.dim('    Set and persist your API token'))
+      console.log()
+      console.log(chalk.green('  config show'))
+      console.log(chalk.dim('    Show current configuration (token is obfuscated)'))
+      console.log()
+      console.log(chalk.green('  help'))
+      console.log(chalk.dim('    Show this help message'))
+      console.log()
+      console.log(chalk.yellow('Examples:'))
+      console.log(chalk.dim('  $ nuxt-charts add ProgressCircle'))
+      console.log(chalk.dim('  $ nuxt-charts add Calendar 0.0.16 ./components'))
+      console.log(chalk.dim('  $ nuxt-charts config set-token abc123'))
+      console.log(chalk.dim('  $ nuxt-charts config show'))
+      console.log(chalk.dim('  $ nuxt-charts list'))
+      console.log()
+    })
+}
