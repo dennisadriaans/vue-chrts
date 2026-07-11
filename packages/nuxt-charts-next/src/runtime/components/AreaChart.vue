@@ -5,17 +5,23 @@
  * Accepts the `nuxt-charts` v2 `AreaChartProps` config API and composes the
  * `vccs` `<AreaChart>` + one `<Area>` per category.
  */
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import { Area, AreaChart as VccsAreaChart } from "vccs";
 import CartesianFrame from "./internal/CartesianFrame.vue";
+import GradientDefs from "./internal/GradientDefs";
 import type { AreaChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
 import { curveTypeToVccs } from "../utils/curve";
 import { markerToDot, normalizeMarkerConfig, toStrokeDasharray } from "../utils/marker";
 import { DEFAULT_GRADIENT_STOPS, gradientId } from "../utils/gradient";
 
-const props = defineProps<AreaChartProps<T>>();
+// `gradient` is a Boolean prop, so Vue coerces an absent value to `false`. Default
+// it to `true` explicitly so the area keeps its fade-out fill unless opted out.
+const props = withDefaults(defineProps<AreaChartProps<T>>(), {
+  gradient: true,
+});
 
+const gradientScope = useId();
 const markers = computed(() => normalizeMarkerConfig(props.markerConfig));
 
 /** Series enriched with the resolved `vccs` dot config from `markerConfig`. */
@@ -32,8 +38,11 @@ const stackId = computed(() => (props.stacked ? "stack" : undefined));
 const fillOpacity = computed(() => (props.hideArea ? 0 : 0.6));
 const dashArray = computed(() => toStrokeDasharray(props.lineDashArray));
 
-/** When `gradientStops` is set, fill each area with its own vertical gradient. */
-const useGradient = computed(() => Array.isArray(props.gradientStops));
+/**
+ * Fill each area with its own vertical fade-out gradient. On by default; set
+ * `gradient: false` for a flat fill, or pass `gradientStops` to customise.
+ */
+const useGradient = computed(() => !props.hideArea && props.gradient !== false);
 const gradientStops = computed(() =>
   props.gradientStops?.length ? props.gradientStops : DEFAULT_GRADIENT_STOPS,
 );
@@ -41,25 +50,18 @@ const gradientStops = computed(() =>
 
 <template>
   <CartesianFrame :container="VccsAreaChart" v-bind="props">
-    <defs v-if="useGradient">
-      <linearGradient
-        v-for="s in series"
-        :id="gradientId(s.dataKey)"
-        :key="s.dataKey"
-        x1="0"
-        y1="0"
-        x2="0"
-        y2="1"
-      >
-        <stop
-          v-for="(gs, i) in gradientStops"
-          :key="i"
-          :offset="gs.offset"
-          :stop-color="s.color"
-          :stop-opacity="gs.stopOpacity"
-        />
-      </linearGradient>
-    </defs>
+    <!--
+      GradientDefs builds SVG nodes with `h()` so they land in the SVG namespace
+      inside the chart surface. Do not wrap this in vccs `<Customized>`: that
+      component subscribes to the chart store and re-renders on every tooltip
+      mousemove, which recreates all gradients and freezes the page.
+    -->
+    <GradientDefs
+      v-if="useGradient"
+      :series="series"
+      :stops="gradientStops"
+      :scope="gradientScope"
+    />
     <Area
       v-for="s in series"
       :key="s.dataKey"
@@ -68,7 +70,7 @@ const gradientStops = computed(() =>
       :type="curve"
       :stack-id="stackId"
       :stroke="s.color"
-      :fill="useGradient ? `url(#${gradientId(s.dataKey)})` : s.color"
+      :fill="useGradient ? `url(#${gradientId(s.dataKey, gradientScope)})` : s.color"
       :fill-opacity="useGradient ? 1 : fillOpacity"
       :stroke-width="lineWidth ?? 2"
       :stroke-dasharray="dashArray"

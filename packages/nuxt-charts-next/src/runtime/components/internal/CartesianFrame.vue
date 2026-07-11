@@ -20,7 +20,7 @@ import {
 import type { CartesianChartBaseProps } from "../../types/charts";
 import type { Orientation } from "../../enums";
 import { legendPositionToLegendProps } from "../../utils/legend";
-import { resolveAxisProps, toTickFormatter } from "../../utils/axis";
+import { resolveAxisProps, toTickFormatter, type VccsAxisInterval } from "../../utils/axis";
 import { toAxisDomain, toCssProperties } from "../../utils/style";
 import ChartTooltip from "./ChartTooltip.vue";
 import ChartLegend from "./ChartLegend.vue";
@@ -128,6 +128,32 @@ const mergedContainerProps = computed(() => ({
 }));
 
 const referenceLines = computed(() => props.referenceLines ?? []);
+
+/** Short category axes skip vccs preserveEnd thinning (DOM text measurement). */
+const SMALL_CATEGORY_AXIS_MAX = 12;
+
+function resolveCategoryAxisInterval(
+  configured: VccsAxisInterval | undefined,
+  isCategoryAxis: boolean,
+): VccsAxisInterval | undefined {
+  if (configured !== undefined) return configured;
+  if (isCategoryAxis && props.data.length <= SMALL_CATEGORY_AXIS_MAX) return 0;
+  return undefined;
+}
+
+const xAxisInterval = computed(() =>
+  resolveCategoryAxisInterval(
+    layout.value === "vertical" ? yAxis.value.interval : xAxis.value.interval,
+    layout.value !== "vertical" && props.xAxisKey !== undefined,
+  ),
+);
+
+const yAxisInterval = computed(() =>
+  resolveCategoryAxisInterval(
+    layout.value === "vertical" ? xAxis.value.interval : yAxis.value.interval,
+    layout.value === "vertical" && props.xAxisKey !== undefined,
+  ),
+);
 </script>
 
 <template>
@@ -153,7 +179,7 @@ const referenceLines = computed(() => props.referenceLines ?? []);
         :tick-formatter="layout === 'vertical' ? valueFormatter : categoryFormatter"
         :domain="layout === 'vertical' ? yAxisDomain : xAxisDomain"
         :ticks="layout === 'vertical' ? yAxis.ticks : xAxis.ticks"
-        :interval="layout === 'vertical' ? yAxis.interval : xAxis.interval"
+        :interval="layout === 'vertical' ? yAxisInterval : xAxisInterval"
         :tick="layout === 'vertical' ? (yAxis.tick ?? true) : (xAxis.tick ?? true)"
         :label="layout === 'vertical' ? yLabel : xLabel"
         :type="layout === 'vertical' ? 'number' : 'category'"
@@ -168,7 +194,7 @@ const referenceLines = computed(() => props.referenceLines ?? []);
         :tick-formatter="layout === 'vertical' ? categoryFormatter : valueFormatter"
         :domain="layout === 'vertical' ? xAxisDomain : yAxisDomain"
         :ticks="layout === 'vertical' ? xAxis.ticks : yAxis.ticks"
-        :interval="layout === 'vertical' ? xAxis.interval : yAxis.interval"
+        :interval="layout === 'vertical' ? xAxisInterval : yAxisInterval"
         :tick="layout === 'vertical' ? (xAxis.tick ?? true) : (yAxis.tick ?? true)"
         :label="layout === 'vertical' ? xLabel : yLabel"
         :type="layout === 'vertical' ? 'category' : 'number'"

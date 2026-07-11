@@ -6,8 +6,8 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/ui',
     // v3 engine (vccs): all standard + new chart components (Area, Bar, Line,
-    // Donut, Bubble, Radar, RadialBar, Funnel, Candlestick, StatusTracker,
-    // ZoomableArea). This is the module current users should upgrade to.
+    // Donut, Bubble, Radar, RadialBar, Funnel, Candlestick, StatusTracker).
+    // This is the module current users should upgrade to.
     'nuxt-charts-next',
     // v2 engine (Unovis): retained ONLY for the specialty components that the
     // v3 engine does not (yet) provide — maps, gantt, sankey, dagre and the

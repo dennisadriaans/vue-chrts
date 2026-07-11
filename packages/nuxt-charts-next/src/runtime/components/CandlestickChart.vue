@@ -4,8 +4,7 @@
  *
  * `vccs` has no candlestick primitive, and faking one with a hidden `<Bar>` on
  * top of a `<ComposedChart>` fought the engine for scales and hover. So this owns
- * its SVG directly — the same self-rendering strategy as {@link ZoomableAreaChart}
- * in this package — and draws candles the way charting engines can't: a wick line
+ * its SVG directly and draws candles the way charting engines can't: a wick line
  * (high→low) plus a body rectangle (open↔close), hollow when falling.
  *
  * The public API stays in the config-prop style of the other `nuxt-charts`

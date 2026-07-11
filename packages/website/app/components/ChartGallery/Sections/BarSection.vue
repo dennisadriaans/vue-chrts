@@ -137,7 +137,7 @@ const comparisonCategories = computed(() => ({
     </div>
 
     <div
-      v-show="!showGallery"
+      v-if="!showGallery"
       class="grid grid-cols-1 gap-4 md:grid-cols-3"
     >
       <ChartGalleryCard
@@ -260,7 +260,7 @@ const comparisonCategories = computed(() => ({
 
     <!-- Gallery -->
     <div
-      v-show="showGallery"
+      v-if="showGallery"
       class="mt-8"
     >
       <div class="grid grid-cols-1 gap-4 md:grid-cols-3">

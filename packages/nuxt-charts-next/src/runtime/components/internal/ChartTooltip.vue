@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import type { TooltipContentProps } from "vccs";
 
-defineOptions({ name: "ChartTooltip" });
+defineOptions({ name: "ChartTooltip", inheritAttrs: false });
 
 const props = defineProps<TooltipContentProps>();
 

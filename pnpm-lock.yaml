@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  vccs@0.4.0:
+    hash: 2b61acbfbe570631c073772a3b4366bcf915e2529d135f70ca7771dfc121b839
+    path: patches/vccs@0.4.0.patch
+
 importers:
 
   .:
@@ -23,7 +28,7 @@ importers:
         version: 3.2.4(vite@7.3.5(@types/node@26.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))
       '@nuxt/eslint':
         specifier: ^1.7.1
-        version: 1.16.0(@typescript-eslint/utils@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-sfc@3.5.38)(crossws@0.4.6(srvx@0.11.17))(eslint@9.39.4(jiti@2.7.0))(magicast@0.5.3)(oxc-parser@0.132.0)(typescript@5.9.3)(vite@7.3.5(@types/node@26.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))
+        version: 1.16.0(@typescript-eslint/utils@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-sfc@3.5.38)(crossws@0.4.6(srvx@0.11.17))(eslint@9.39.4(jiti@2.7.0))(magicast@0.5.3)(oxc-parser@0.110.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1))(typescript@5.9.3)(vite@7.3.5(@types/node@26.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))
       '@nuxt/eslint-config':
         specifier: ^1.13.0
         version: 1.16.0(@typescript-eslint/utils@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-sfc@3.5.38)(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
@@ -107,7 +112,7 @@ importers:
         version: 2.3.0(@vueuse/core@14.3.0(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3))
       vccs:
         specifier: ^0.4.0
-        version: 0.4.0(motion-v@2.3.0(@vueuse/core@14.3.0(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3)))(redux@5.0.1)(vue@3.5.38(typescript@5.9.3))
+        version: 0.4.0(patch_hash=2b61acbfbe570631c073772a3b4366bcf915e2529d135f70ca7771dfc121b839)(motion-v@2.3.0(@vueuse/core@14.3.0(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3)))(redux@5.0.1)(vue@3.5.38(typescript@5.9.3))
     devDependencies:
       '@nuxt/devtools':
         specifier: ^3.1.1
@@ -136,6 +141,12 @@ importers:
       '@types/node':
         specifier: latest
         version: 26.0.0
+      '@vitejs/plugin-vue':
+        specifier: ^5.2.4
+        version: 5.2.4(vite@7.3.5(@types/node@26.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3))
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.11(@vue/compiler-dom@3.5.38)(@vue/server-renderer@3.5.38(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3))
       changelogen:
         specifier: ^0.6.2
         version: 0.6.2(magicast@0.5.3)
@@ -145,6 +156,9 @@ importers:
       eslint:
         specifier: ^9.39.2
         version: 9.39.4(jiti@2.7.0)
+      happy-dom:
+        specifier: ^20.0.11
+        version: 20.10.6
       nuxt:
         specifier: ^4.3.0
         version: 4.3.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1)(@libsql/client@0.15.15)(@parcel/watcher@2.5.6)(@types/node@26.0.0)(@vue/compiler-sfc@3.5.38)(better-sqlite3@12.11.1)(cac@6.7.14)(db0@0.3.4(@libsql/client@0.15.15)(better-sqlite3@12.11.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260620.1)(@libsql/client@0.15.15)(better-sqlite3@12.11.1)))(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260620.1)(@libsql/client@0.15.15)(better-sqlite3@12.11.1))(eslint@9.39.4(jiti@2.7.0))(ioredis@5.11.1)(lightningcss@1.32.0)(magicast@0.5.3)(optionator@0.9.4)(rollup@4.62.2)(srvx@0.11.17)(terser@5.48.0)(typescript@5.9.3)(vite@7.3.5(@types/node@26.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))(vue-tsc@3.3.5(typescript@5.9.3))(yaml@2.9.0)
@@ -12259,6 +12273,38 @@ snapshots:
       - utf-8-validate
       - vite
 
+  '@nuxt/eslint@1.16.0(@typescript-eslint/utils@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-sfc@3.5.38)(crossws@0.4.6(srvx@0.11.17))(eslint@9.39.4(jiti@2.7.0))(magicast@0.5.3)(oxc-parser@0.110.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1))(typescript@5.9.3)(vite@7.3.5(@types/node@26.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))':
+    dependencies:
+      '@eslint/config-inspector': 3.0.4(crossws@0.4.6(srvx@0.11.17))(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
+      '@nuxt/devtools-kit': 3.2.4(magicast@0.5.3)(vite@7.3.5(@types/node@26.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))
+      '@nuxt/eslint-config': 1.16.0(@typescript-eslint/utils@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-sfc@3.5.38)(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
+      '@nuxt/eslint-plugin': 1.16.0(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
+      '@nuxt/kit': 4.4.8(magicast@0.5.3)
+      chokidar: 5.0.0
+      eslint: 9.39.4(jiti@2.7.0)
+      eslint-flat-config-utils: 3.2.0
+      eslint-typegen: 2.3.1(eslint@9.39.4(jiti@2.7.0))
+      find-up: 8.0.0
+      get-port-please: 3.2.0
+      mlly: 1.8.2
+      pathe: 2.0.3
+      unimport: 6.3.0(oxc-parser@0.110.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1))(rolldown@1.0.0-beta.52(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1))
+    transitivePeerDependencies:
+      - '@modelcontextprotocol/sdk'
+      - '@typescript-eslint/utils'
+      - '@vue/compiler-sfc'
+      - bufferutil
+      - crossws
+      - eslint-import-resolver-node
+      - eslint-plugin-format
+      - magicast
+      - oxc-parser
+      - rolldown
+      - supports-color
+      - typescript
+      - utf-8-validate
+      - vite
+
   '@nuxt/eslint@1.16.0(@typescript-eslint/utils@8.61.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-sfc@3.5.38)(crossws@0.4.6(srvx@0.11.17))(eslint@9.39.4(jiti@2.7.0))(magicast@0.5.3)(oxc-parser@0.132.0)(typescript@5.9.3)(vite@7.3.5(@types/node@26.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))':
     dependencies:
       '@eslint/config-inspector': 3.0.4(crossws@0.4.6(srvx@0.11.17))(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
@@ -21879,7 +21925,7 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
 
-  vccs@0.4.0(motion-v@2.3.0(@vueuse/core@14.3.0(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3)))(redux@5.0.1)(vue@3.5.38(typescript@5.9.3)):
+  vccs@0.4.0(patch_hash=2b61acbfbe570631c073772a3b4366bcf915e2529d135f70ca7771dfc121b839)(motion-v@2.3.0(@vueuse/core@14.3.0(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3)))(redux@5.0.1)(vue@3.5.38(typescript@5.9.3)):
     dependencies:
       '@reduxjs/toolkit': 2.12.0
       '@reduxjs/vue-redux': 1.0.1(redux@5.0.1)(vue@3.5.38(typescript@5.9.3))

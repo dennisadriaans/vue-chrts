@@ -9,7 +9,7 @@ Unovis. You keep your templates; the engine underneath changed.
 
 - 📊 Config-driven chart components — no compositional boilerplate
 - 🔄 Auto-imported components, enums, and prop types
-- 🧮 Charts: Area, Bar, Line, Donut, Bubble, Radar, RadialBar, Funnel, Candlestick, StatusTracker, ZoomableArea
+- 🧮 Charts: Area, Bar, Line, Donut, Bubble, Radar, RadialBar, Funnel, Candlestick, StatusTracker
 - 🧠 Strong typing — `keyof T` autocomplete on axis keys, enum/literal suggestions
 - 🚀 Vue 3 + TypeScript, SSR-safe (charts render client-side)
 
@@ -71,7 +71,6 @@ const categories: Record<string, BulletLegendItemInterface> = {
 | `FunnelChart`    | `FunnelChart` + `Funnel`   | **new in v3** (`default` + `layered` variants) |
 | `CandlestickChart` | `ComposedChart` + custom candle layer | **new in v3** (OHLC + volume) |
 | `StatusTrackerChart` | Native responsive bars | **new in v3** |
-| `ZoomableAreaChart` | Self-owned SVG + `d3-zoom` | **new in v3** (scroll-zoom / pan) |
 
 ### New cross-cutting props (cartesian charts)
 

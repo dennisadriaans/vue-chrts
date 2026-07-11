@@ -1,2 +1,39 @@
 packages:
   - 'packages/*'
+allowBuilds:
+  '3': true
+  ',': true
+  '-': true
+  /: true
+  '@': true
+  '@parcel/watcher': false
+  a: true
+  b: true
+  better-sqlite3: true
+  c: true
+  d: true
+  e: true
+  esbuild: false
+  g: true
+  h: true
+  i: true
+  k: true
+  l: true
+  m: true
+  maplibre-gl: false
+  n: true
+  o: true
+  p: true
+  q: true
+  r: true
+  s: true
+  sharp: false
+  t: true
+  u: true
+  unrs-resolver: false
+  v: true
+  vue-demi: false
+  w: true
+  workerd: false
+patchedDependencies:
+  vccs@0.4.0: patches/vccs@0.4.0.patch
