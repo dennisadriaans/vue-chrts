@@ -18,29 +18,29 @@ const cards = [
     title: 'Area Charts',
     text: 'Show totals and highlight magnitude with smooth area charts. Great for visualizing stacked data and trends.'
   },
-  {
-    id: 'donut-charts',
-    fig: 'FIG 0.4',
-    title: 'Donut Charts',
-    text: 'Display proportions and breakdowns with visually engaging donut charts. Ideal for showing parts of a whole.'
-  }
+  // {
+  //   id: 'donut-charts',
+  //   fig: 'FIG 0.4',
+  //   title: 'Donut Charts',
+  //   text: 'Display proportions and breakdowns with visually engaging donut charts. Ideal for showing parts of a whole.'
+  // }
 ]
 </script>
 
 <template>
-  <div class="border-default overflow-hidden rounded-xl border">
-    <div class="bg-default/10 grid grid-cols-1 gap-px sm:grid-cols-2 lg:grid-cols-4">
+  <div class="">
+    <div class="grid grid-cols-1 gap-px sm:grid-cols-3">
       <NuxtLink
         v-for="card in cards"
         :key="card.id"
         :to="`/blocks/${card.id}`"
-        class="bg-default hover:bg-elevated/20 block transition-colors duration-300"
+        class=""
       >
         <HomeChartCard v-bind="card">
-          <HomeIllustrationsLineChart v-if="card.id === 'line-charts'" />
-          <HomeIllustrationsBarChart v-else-if="card.id === 'bar-charts'" />
-          <HomeIllustrationsAreaChart v-else-if="card.id === 'area-charts'" />
-          <HomeIllustrationsDonutChart v-else-if="card.id === 'donut-charts'" />
+          <HomeIllustrationsLineChart v-if="card.id === 'line-charts'" class="bg-elevated/10" />
+          <HomeIllustrationsBarChart v-else-if="card.id === 'bar-charts'" class="bg-elevated/10" />
+          <HomeIllustrationsAreaChart v-else-if="card.id === 'area-charts'" class="bg-elevated/10" />
+          <HomeIllustrationsDonutChart v-else-if="card.id === 'donut-charts'" class="bg-elevated/10" />
         </HomeChartCard>
       </NuxtLink>
     </div>

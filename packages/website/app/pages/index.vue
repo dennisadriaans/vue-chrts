@@ -152,7 +152,7 @@ onUnmounted(() => {
     >
       <UPageSection
         :ui="{
-          container: 'max-w-8xl mx-auto mb-16 py-8 sm:py-8 lg:py-8 bg-elevated/10'
+          container: 'max-w-8xl mx-auto mb-16 py-8 sm:py-8 lg:py-8'
         }"
       >
         <HomeChartCardsWrapper />

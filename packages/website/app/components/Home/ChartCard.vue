@@ -14,7 +14,7 @@ defineProps<Props>()
       {{ fig }}
     </span>
 
-    <div class="mb-10 flex min-h-40 flex-1 items-center justify-center sm:min-h-44">
+    <div class="mb-10 flex min-h-64 flex-1 items-center justify-center sm:min-h-72">
       <slot />
     </div>
 
@@ -22,9 +22,11 @@ defineProps<Props>()
       <h2 class="text-default text-base font-medium tracking-tight">
         {{ title }}
       </h2>
-      <p class="text-muted text-sm leading-relaxed">
+      <p class="text-muted dark:text-dimmed text-sm leading-relaxed">
         {{ text }}
       </p>
+
+      <NuxtLink :to="`/blocks/${title.toLowerCase().replace(/ /g, '-')}`" class="text-primary flex items-center gap-2 text-sm mt-8">Explore {{ title }} <UIcon name="i-lucide-arrow-right"></UIcon></NuxtLink>
     </div>
   </div>
 </template>

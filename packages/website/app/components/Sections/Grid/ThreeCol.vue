@@ -32,7 +32,7 @@ const features = [
         :key="index"
         variant="subtle"
         :ui="{
-          root: 'rounded-3xl group transition-all duration-300 hover:bg-neutral-100/50 dark:hover:bg-neutral-800/50',
+          root: 'rounded-3xl group transition-all duration-300 dark:bg-elevated/20 hover:bg-elevated/40 dark:hover:bg-elevated/40',
           body: 'sm:p-0 md:p-0'
         }"
       >

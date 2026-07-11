@@ -34,7 +34,21 @@ export default defineAppConfig({
       pre: {
         slots: {
           root: 'relative group my-0', // Removed 'my-5' globally
-          copy: 'hidden'
+          copy: 'hidden',
+          base: 'group font-mono text-sm/6 border border-muted bg-default dark:bg-elevated/40 rounded-md px-4 py-3 whitespace-pre-wrap wrap-break-word overflow-x-auto outline-primary/25 focus-visible:outline-3 focus-visible:border-primary **:[.line]:block **:[.line.highlight]:-mx-4 **:[.line.highlight]:px-4 **:[.line.highlight]:bg-accented/50!'
+        }
+      },
+      codeGroup: {
+        slots: {
+          root: 'relative group *:not-first:my-0! *:not-first:static! my-5 [&_pre]:rounded-t-none',
+          list: 'relative flex items-center gap-1 border border-muted bg-default dark:bg-elevated/40 border-b-0 rounded-t-md overflow-x-auto p-2',
+          indicator: 'absolute left-0 inset-y-2 w-(--reka-tabs-indicator-size) translate-x-(--reka-tabs-indicator-position) transition-[translate,width] duration-200 bg-elevated rounded-md shadow-xs',
+          trigger: [
+            'relative inline-flex items-center gap-1.5 text-default data-[state=active]:text-highlighted hover:bg-elevated/50 px-2 py-1.5 text-sm rounded-md disabled:cursor-not-allowed disabled:opacity-75 outline-primary/25 focus-visible:outline-3',
+            'transition-colors'
+          ],
+          triggerIcon: 'size-4 shrink-0',
+          triggerLabel: 'truncate'
         }
       },
       codePreview: {

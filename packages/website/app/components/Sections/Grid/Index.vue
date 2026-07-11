@@ -60,12 +60,12 @@ const features = [
 
           <DocsExamplesStatusTracker
             v-if="index === 0"
-            class="overflow-hidden py-12 px-8 bg-muted dark:bg-default!"
+            class="overflow-hidden py-8 px-8 bg-muted dark:bg-default!"
           />
 
           <UCard
             v-if="index === 1"
-            class="bg-muted dark:bg-default!"
+            class="bg-muted py-1.5 dark:bg-default! "
           >
 
             <UCard>
@@ -87,7 +87,7 @@ const features = [
             class="overflow-hidden py-12 px-8 bg-muted dark:bg-default!"
           />
 
-          <div class="relative flex items-start justify-between gap-6 px-5 pt-6 pb-4 flex-1 bg-default dark:bg-transparent rounded-bl-2xl rounded-br-2xl">
+          <div class="relative flex items-start justify-between gap-6 px-5 pt-6 pb-4 flex-1 bg-default dark:bg-elevated/10 rounded-bl-2xl rounded-br-2xl">
             <div class="space-y-2">
               <h3 class="text-xl font-semibold tracking-tight text-balance text-highlighted">
                 {{ feature.title }}
