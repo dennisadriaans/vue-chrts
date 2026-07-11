@@ -14,6 +14,7 @@ import type {
   AxisConfig,
   BulletLegendItemInterface,
   ChartPadding,
+  ChartTheme,
   CrosshairConfig,
   MarkerConfig,
   TooltipConfig,
@@ -102,6 +103,11 @@ export interface CartesianChartBaseProps<T> {
   yExplicitTicks?: (number | string | Date)[];
   /** @deprecated Unovis-only; no effect. */
   crosshairConfig?: CrosshairConfig<T>;
+  /**
+   * Per-chart appearance overrides (grid, axis, legend, hover, tooltip). Layers
+   * over the global `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
 }
 
 export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
@@ -280,9 +286,12 @@ export interface DonutChartProps<T = unknown> {
   type?: DonutType;
   /** Chart height in pixels. */
   height?: number;
-  /** Outer radius in pixels. */
-  radius: number;
-  /** Ring thickness in pixels (outer radius minus inner radius). */
+  /**
+   * Outer radius in pixels. When omitted or `0`, the ring auto-fits the
+   * container (recommended). Pass a number to pin an explicit outer radius.
+   */
+  radius?: number;
+  /** Ring thickness in pixels (outer radius minus inner radius). Default 40. */
   arcWidth?: number;
   /** Angular padding between segments. */
   padAngle?: number;
@@ -298,6 +307,11 @@ export interface DonutChartProps<T = unknown> {
   tooltipTitleFormatter?: (data: T) => string | number;
   /** Tooltip behaviour config. */
   tooltip?: TooltipConfig;
+  /**
+   * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
+   * global `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
   /** Animation duration in milliseconds. */
   duration?: number;
 }
@@ -337,6 +351,11 @@ export interface RadarChartProps<T> {
   hideRadiusAxis?: boolean;
   /** Tooltip behaviour config. */
   tooltip?: TooltipConfig;
+  /**
+   * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
+   * global `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
   /** Animation duration in milliseconds. */
   duration?: number;
 }
@@ -377,6 +396,11 @@ export interface RadialBarChartProps<T = unknown> {
   tooltipTitleFormatter?: (data: T) => string | number;
   /** Tooltip behaviour config. */
   tooltip?: TooltipConfig;
+  /**
+   * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
+   * global `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
   /** Animation duration in milliseconds. */
   duration?: number;
 }
@@ -415,6 +439,11 @@ export interface FunnelChartProps<T = unknown> {
   tooltipTitleFormatter?: (data: T) => string | number;
   /** Tooltip behaviour config. */
   tooltip?: TooltipConfig;
+  /**
+   * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
+   * global `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
   /** Animation duration in milliseconds. */
   duration?: number;
 }
@@ -530,6 +559,11 @@ export interface SankeyChartProps<
   hideTooltip?: boolean;
   /** Tooltip behaviour config. */
   tooltip?: TooltipConfig;
+  /**
+   * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
+   * global `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
   /** Animation duration in milliseconds. */
   duration?: number;
 }

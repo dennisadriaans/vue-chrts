@@ -1,0 +1,253 @@
+/**
+ * Chart chrome (tooltip, legend, status tracker, …). Plain CSS scoped to
+ * `vc-*` classes — no Tailwind utilities, so loading this globally cannot
+ * clash with the host app's `hidden lg:flex` (or any other utility).
+ */
+@layer vue-chrts {
+  .vc-tooltip {
+    pointer-events: none;
+    min-width: 8rem;
+    border-radius: var(--vc-tooltip-radius, 0.5rem);
+    border: 1px solid var(--vc-tooltip-border, oklch(0.922 0 0));
+    background: var(--vc-tooltip-bg, oklch(1 0 0));
+    color: var(--vc-tooltip-fg, oklch(0.205 0 0));
+    padding: var(--vc-tooltip-padding, 0.375rem 0.625rem);
+    box-shadow: var(--vc-tooltip-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
+    font-size: var(--vc-legend-size, 0.75rem);
+    line-height: 1.5;
+  }
+
+  .vc-tooltip__label {
+    margin: 0 0 0.25rem;
+    font-weight: 500;
+    color: var(--vc-tooltip-fg, oklch(0.205 0 0));
+  }
+
+  .vc-tooltip__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .vc-tooltip__item {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .vc-tooltip__dot {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    flex-shrink: 0;
+  }
+
+  .vc-tooltip__name {
+    color: var(--vc-tooltip-muted, oklch(0.556 0 0));
+  }
+
+  .vc-tooltip__value {
+    margin-left: auto;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--vc-tooltip-fg, oklch(0.205 0 0));
+  }
+
+  .vc-legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--vc-legend-gap, 0.75rem);
+    font-size: var(--vc-legend-size, 0.75rem);
+    font-weight: var(--vc-legend-weight, 400);
+    line-height: 1.5;
+  }
+
+  .vc-legend__item {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .vc-legend__item--inactive {
+    opacity: 0.4;
+  }
+
+  .vc-legend__dot {
+    display: inline-block;
+    width: var(--vc-legend-dot-size, 0.5rem);
+    height: var(--vc-legend-dot-size, 0.5rem);
+    border-radius: 9999px;
+    flex-shrink: 0;
+  }
+
+  .vc-legend__label {
+    color: var(--vc-legend-color, oklch(0.556 0 0));
+  }
+
+  .vc-candlestick-chart {
+    position: relative;
+    width: 100%;
+    cursor: crosshair;
+    user-select: none;
+  }
+
+  .vc-candlestick-chart__svg {
+    display: block;
+    width: 100%;
+    overflow: visible;
+  }
+
+  .vc-funnel-layered {
+    position: relative;
+    width: 100%;
+  }
+
+  .vc-funnel-layered__tooltip {
+    position: absolute;
+    transform: translate(-50%, calc(-100% - 10px));
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    white-space: nowrap;
+    border-radius: var(--vc-tooltip-radius, 0.5rem);
+    border: 1px solid var(--vc-tooltip-border, oklch(0.922 0 0));
+    background: var(--vc-tooltip-bg, oklch(1 0 0));
+    color: var(--vc-tooltip-fg, oklch(0.205 0 0));
+    padding: var(--vc-tooltip-padding, 0.375rem 0.625rem);
+    box-shadow: var(--vc-tooltip-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1));
+    font-size: var(--vc-legend-size, 0.75rem);
+  }
+
+  .vc-funnel-layered__name {
+    color: var(--vc-tooltip-muted, oklch(0.556 0 0));
+  }
+
+  .vc-funnel-layered__value {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  .vc-funnel-layered__dot {
+    display: inline-block;
+    width: var(--vc-legend-dot-size, 0.5rem);
+    height: var(--vc-legend-dot-size, 0.5rem);
+    border-radius: 9999px;
+    flex-shrink: 0;
+  }
+
+  .vc-funnel-layered-shape {
+    opacity: 0.96;
+    transition: opacity 150ms;
+  }
+
+  .vc-funnel-layered-shape:hover {
+    opacity: 1;
+  }
+
+  .vc-status-tracker {
+    width: 100%;
+    color: var(--foreground, oklch(0.205 0 0));
+    font-family: inherit;
+  }
+
+  .vc-status-tracker__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .vc-status-tracker__title,
+  .vc-status-tracker__summary {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .vc-status-tracker__title {
+    font-weight: 600;
+  }
+
+  .vc-status-tracker__summary {
+    color: var(--muted-foreground, oklch(0.556 0 0));
+    font-variant-numeric: tabular-nums;
+  }
+
+  .vc-status-tracker__track {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .vc-status-tracker__bar {
+    display: block;
+    height: 100%;
+    flex: 0 0 auto;
+    min-width: 1px;
+    transition: opacity 160ms ease;
+  }
+
+  .vc-status-tracker__bar:hover {
+    opacity: 0.78;
+  }
+
+  .vc-status-tracker__bar--rounded-start {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+  }
+
+  .vc-status-tracker__bar--rounded-end {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+  }
+
+  .vc-status-tracker__bar--empty:hover {
+    opacity: 1;
+  }
+
+  .vc-status-tracker__labels {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    color: var(--vc-legend-color, oklch(0.556 0 0));
+    font-size: var(--vc-legend-size, 0.75rem);
+    line-height: 1rem;
+  }
+
+  .vc-status-tracker__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--vc-legend-color, oklch(0.556 0 0));
+    font-size: var(--vc-legend-size, 0.75rem);
+    line-height: 1rem;
+  }
+
+  .vc-status-tracker__legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .vc-status-tracker__legend-dot {
+    width: var(--vc-legend-dot-size, 0.5rem);
+    height: var(--vc-legend-dot-size, 0.5rem);
+    border-radius: 9999px;
+    flex: 0 0 auto;
+  }
+}

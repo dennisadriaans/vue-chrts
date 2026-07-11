@@ -49,7 +49,7 @@ const yFormatter = (value: number): string => `${(value / 1000).toFixed(1)}k`
       :x-formatter="xFormatter"
       :y-formatter="yFormatter"
       :curve-type="CurveType.Natural"
-      :legend-position="LegendPosition.BottomCenter"
+      :legend-position="LegendPosition.TopCenter"
       :hide-legend="false"
       :x-grid-line="false"
       :y-grid-line="true"

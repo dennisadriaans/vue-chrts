@@ -117,7 +117,6 @@ const twoSegCategories = computed(() => ({
         :code="getSnippet('Full')"
       >
         <div class="flex items-center justify-center py-4">
-          123
           <DonutChart
             :data="threeSegData"
             :height="160"

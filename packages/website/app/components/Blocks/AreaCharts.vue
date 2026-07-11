@@ -16,7 +16,10 @@ defineOptions({
     </div>
     <ClientOnly>
       <div class="mt-12 space-y-24 lg:mt-0">
-        <PreviewExample title="Area Chart Preview">
+        <PreviewExample
+          dotted
+          title="Area Chart Preview"
+        >
           <template #chart>
             <BlocksAreaChartsChartPreview class="max-w-3xl mx-auto bg-default!" />
           </template>
@@ -28,7 +31,9 @@ defineOptions({
           />
         </PreviewExample>
 
-        <PreviewExample title="Area Chart One">
+        <PreviewExample
+          dotted
+          title="Area Chart One">
           <template #chart>
             <BlocksAreaChartsChartOne class="max-w-3xl mx-auto bg-default!" />
           </template>
@@ -40,7 +45,9 @@ defineOptions({
           />
         </PreviewExample>
 
-        <PreviewExample title="Area Chart Data">
+        <PreviewExample
+          dotted
+          title="Area Chart Data">
           <template #chart>
             <BlocksAreaChartsChartWithData class="max-w-2xl mx-auto bg-default!" />
           </template>
@@ -52,7 +59,9 @@ defineOptions({
           />
         </PreviewExample>
 
-        <PreviewExample title="Area Chart Two">
+        <PreviewExample
+          dotted
+          title="Area Chart Two">
           <template #chart>
             <BlocksAreaChartsChartTwo class="max-w-2xl mx-auto bg-default!" />
           </template>
@@ -64,7 +73,9 @@ defineOptions({
           />
         </PreviewExample>
 
-        <PreviewExample title="Area Chart Three">
+        <PreviewExample
+          dotted
+          title="Area Chart Three">
           <template #chart>
             <BlocksAreaChartsChartThree class="max-w-2xl mx-auto bg-default!" />
           </template>
@@ -76,7 +87,9 @@ defineOptions({
           />
         </PreviewExample>
 
-        <PreviewExample title="Area Chart Four">
+        <PreviewExample
+          dotted
+          title="Area Chart Four">
           <template #chart>
             <BlocksAreaChartsChartFour class="max-w-2xl mx-auto bg-default!" />
           </template>
@@ -88,7 +101,9 @@ defineOptions({
           />
         </PreviewExample>
 
-        <PreviewExample title="Area Chart Five">
+        <PreviewExample
+          dotted
+          title="Area Chart Five">
           <template #chart>
             <BlocksAreaChartsChartFive class="max-w-2xl mx-auto bg-default!" />
           </template>
@@ -100,7 +115,9 @@ defineOptions({
           />
         </PreviewExample>
 
-        <PreviewExample title="Area Chart Six">
+        <PreviewExample
+          dotted
+          title="Area Chart Six">
           <template #chart>
             <BlocksAreaChartsChartSix class="max-w-2xl mx-auto bg-default!" />
           </template>
@@ -112,7 +129,9 @@ defineOptions({
           />
         </PreviewExample>
 
-        <PreviewExample title="Area Chart Seven">
+        <PreviewExample
+          dotted
+          title="Area Chart Seven">
           <template #chart>
             <BlocksAreaChartsChartSeven class="max-w-2xl mx-auto bg-default!" />
           </template>
@@ -124,7 +143,9 @@ defineOptions({
           />
         </PreviewExample>
 
-        <PreviewExample title="Area Chart Eight">
+        <PreviewExample
+          dotted
+          title="Area Chart Eight">
           <template #chart>
             <BlocksAreaChartsChartEight class="max-w-2xl mx-auto bg-default!" />
           </template>
@@ -136,7 +157,9 @@ defineOptions({
           />
         </PreviewExample>
 
-        <PreviewExample title="Area Chart Nine">
+        <PreviewExample
+          dotted
+          title="Area Chart Nine">
           <template #chart>
             <BlocksAreaChartsChartNine class="max-w-2xl mx-auto bg-default!" />
           </template>
@@ -148,7 +171,9 @@ defineOptions({
           />
         </PreviewExample>
 
-        <PreviewExample title="Area Chart Ten">
+        <PreviewExample
+          dotted
+          title="Area Chart Ten">
           <template #chart>
             <BlocksAreaChartsChartTen class="max-w-2xl mx-auto bg-default!" />
           </template>

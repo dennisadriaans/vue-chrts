@@ -134,7 +134,7 @@ onUnmounted(() => {
       <div class="relative z-10 mx-auto max-w-3xl">
         <LogoBanner />
       </div>
-      <div class="dot-pattern absolute inset-0" />
+      <div class="dot-pattern dot-pattern-fade absolute inset-0" />
     </div>
 
     <!-- <UPageSection
@@ -236,19 +236,3 @@ onUnmounted(() => {
     </div>
   </div>
 </template>
-
-<style>
-.dot-pattern {
-  position: absolute;
-
-  background-image: radial-gradient(var(--dot-pattern-color) 1px,
-      transparent 1px);
-  background-size: 9px 9px;
-  background-position: -8.5px -8.5px;
-  opacity: 100%;
-
-  mask-image: radial-gradient(ellipse at center,
-      rgba(0, 0, 0, 1),
-      transparent 75%);
-}
-</style>

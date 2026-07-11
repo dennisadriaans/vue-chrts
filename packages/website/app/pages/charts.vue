@@ -12,13 +12,15 @@ const navRef = ref<HTMLElement>()
 const showFloatingNav = ref(false)
 const activeSection = ref<string>('')
 
-const sections = ['area', 'line', 'bar', 'donut']
+const sections = ['area', 'line', 'bar', 'donut', 'radar', 'radial']
 
 const sectionLabels: Record<string, string> = {
   area: 'Area',
   line: 'Line',
   bar: 'Bar',
-  donut: 'Donut'
+  donut: 'Donut',
+  radar: 'Radar',
+  radial: 'Radial'
 }
 
 const scrollToSection = (sectionId: string) => {
@@ -142,5 +144,7 @@ onUnmounted(() => {
     <ChartGallerySectionsLineSection :height="height" />
     <ChartGallerySectionsBarSection :height="height" />
     <ChartGallerySectionsDonutSection :height="height" />
+    <ChartGallerySectionsRadarSection :height="height" />
+    <ChartGallerySectionsRadialSection :height="height" />
   </div>
 </template>

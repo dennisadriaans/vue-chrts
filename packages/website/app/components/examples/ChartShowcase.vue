@@ -8,7 +8,7 @@
         Area Chart
       </h3>
       <ClientOnly>
-        <div class="w-full p-4 bg-elevated/50 rounded-lg">
+        <div class="w-full p-4 bg-elevated/50  dark:bg-elevated/20 rounded-lg">
           <BlocksAreaChartsMultipleLines />
         </div>
       </ClientOnly>
@@ -19,7 +19,7 @@
         Bar Chart
       </h3>
       <ClientOnly>
-        <div class="w-full p-4 bg-elevated/50 rounded-lg">
+        <div class="w-full p-4 bg-elevated/50  dark:bg-elevated/20 rounded-lg">
           <BlocksBarChartsStackedHorizontal />
         </div>
       </ClientOnly>
@@ -30,7 +30,7 @@
         Line Chart
       </h3>
       <ClientOnly>
-        <div class="w-full p-4 bg-elevated/50 rounded-lg">
+        <div class="w-full p-4 bg-elevated/50  dark:bg-elevated/20 rounded-lg">
           <BlocksLineChartsMultiLines />
         </div>
       </ClientOnly>

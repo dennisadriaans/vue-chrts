@@ -16,7 +16,7 @@ const { items } = useBlocksNavigation()
           class="group relative cursor-pointer border border-default dark:border-0 rounded-xl"
         >
           <div>
-            <div class="bg-elevated rounded-tr-xl rounded-tl-xl inset-shadow-xl">
+            <div class="bg-elevated/20 rounded-tr-xl rounded-tl-xl inset-shadow-xl">
               <template v-if="item.path === '/blocks/area-charts'">
                 <div class="p-6 pb-0">
                   <svg

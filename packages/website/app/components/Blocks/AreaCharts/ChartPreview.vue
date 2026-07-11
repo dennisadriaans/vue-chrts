@@ -60,6 +60,7 @@ const xFormatter = (tick: number): string => {
 <template>
   <UCard
     variant="subtle"
+    class="border-2 border-default"
   >
     <div class="space-y-4">
       <div class="space-y-1">
@@ -102,7 +103,7 @@ const xFormatter = (tick: number): string => {
         />
       </UCard>
 
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between -mb-2">
         <div class="flex items-center gap-6 text-sm">
           <div class="flex items-center gap-2">
             <span

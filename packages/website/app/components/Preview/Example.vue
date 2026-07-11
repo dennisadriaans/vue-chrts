@@ -2,6 +2,7 @@
 const props = defineProps<{
   title: string
   id?: string
+  dotted?: boolean
 }>()
 const slots = useSlots()
 const route = useRoute()
@@ -83,18 +84,33 @@ function closeCode() {
 
         <UCard
           v-else
-          class="h-full bg-elevated/60 dark:bg-elevated/20"
+          class="relative h-full overflow-hidden"
+          :class="[
+            dotted ? 'border-0 bg-transparent shadow-none ring-0' : 'bg-elevated/60 dark:bg-elevated/10'
+          ]"
           variant="subtle"
         >
-          <UCard>
-            <div
-              class="py-8"
-            >
-              <slot
-                name="chart"
-              />
+          <div
+            v-if="dotted"
+            class="dot-pattern-preview pointer-events-none absolute inset-0"
+            aria-hidden="true"
+          />
+          <div
+            v-if="dotted"
+            class="preview-dotted-edge-fade pointer-events-none absolute inset-0"
+            aria-hidden="true"
+          />
+          <UCard v-if="!dotted">
+            <div class="py-8">
+              <slot name="chart" />
             </div>
           </UCard>
+          <div
+            v-else
+            class="relative py-8"
+          >
+            <slot name="chart" />
+          </div>
         </UCard>
       </div>
     </ClientOnly>

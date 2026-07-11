@@ -10,6 +10,60 @@ export type VccsAxisTick = number | string;
 export type VccsAxisInterval = number | "preserveStartEnd";
 
 /**
+ * Axis slot sizing tuned for gallery / dashboard charts. vccs defaults (Y width
+ * 60, X height 30, tickMargin 2) leave the value Y-axis too far from the plot
+ * and X tick labels hugging the bottom edge.
+ */
+export const AXIS_SLOT = {
+  numericYWidth: 40,
+  categoryYWidth: 72,
+  titledYWidth: 72,
+  defaultXHeight: 38,
+  titledXHeight: 52,
+} as const;
+
+export function resolveYAxisWidth(options: {
+  hasTitle: boolean;
+  isCategoryAxis: boolean;
+}): number {
+  if (options.hasTitle) return AXIS_SLOT.titledYWidth;
+  if (options.isCategoryAxis) return AXIS_SLOT.categoryYWidth;
+  return AXIS_SLOT.numericYWidth;
+}
+
+export function resolveXAxisHeight(options: { hasTitle: boolean }): number {
+  return options.hasTitle ? AXIS_SLOT.titledXHeight : AXIS_SLOT.defaultXHeight;
+}
+
+/**
+ * Gap (in px) between an axis line and its tick labels, passed to the native
+ * `vccs` `tickMargin` prop. vccs positions labels in SVG space from this value
+ * (X labels hang below the axis, Y labels are right-aligned toward the plot and
+ * vertically centred on each gridline), so we let it own positioning instead of
+ * nudging with CSS transforms. vccs's own default (2) leaves labels cramped.
+ */
+export const AXIS_TICK_MARGIN = {
+  /** Between the x-axis line and the tick label below it. */
+  x: 8,
+  /** Between the plot edge and the right-aligned y tick label. */
+  y: 8,
+} as const;
+
+/**
+ * The native `vccs` `tick` prop value for an axis. vccs accepts `true` (default
+ * SVG presentation, with per-orientation `textAnchor` / `verticalAnchor`) or an
+ * object of SVG attrs that override those defaults. We only ever override the
+ * horizontal anchor (from `AxisConfig.tickTextAlign`); colour / size / weight
+ * are themed via CSS variables on `.v-charts-cartesian-axis-tick-value`.
+ */
+export function toTickProp(
+  tick: Record<string, unknown> | undefined,
+): true | { textAnchor: string } {
+  if (tick && typeof tick.textAnchor === "string") return { textAnchor: tick.textAnchor };
+  return true;
+}
+
+/**
  * Resolved subset of `vccs` axis props derived from the v2 config API. Centralises
  * the mapping for the props that *do* have a `vccs` equivalent (explicit ticks,
  * min/max-only) so both axes in {@link CartesianFrame} stay consistent.
@@ -82,4 +136,42 @@ export function toTickFormatter(
   if (!formatter) return undefined;
   return (value, index) =>
     (formatter as (tick: unknown, i?: number) => string)(value, index);
+}
+
+/** `vccs` axis title config (string labels default to the axis centre and overlap ticks). */
+export type VccsAxisLabel = {
+  value: string;
+  position: "insideBottom" | "insideLeft";
+  offset: number;
+  angle?: number;
+  textAnchor?: "start" | "middle" | "end";
+  fill: string;
+  fontSize: string;
+  fontWeight: string | number;
+};
+
+/**
+ * Build a positioned axis title for `vccs` cartesian axes.
+ *
+ * Plain strings land at the axis midpoint; `insideBottom` / `insideLeft` keep
+ * titles clear of tick values and inside the reserved axis slot.
+ */
+export function toAxisLabel(
+  text: string | undefined,
+  position: "insideBottom" | "insideLeft",
+  options?: { angle?: number; offset?: number },
+): VccsAxisLabel | undefined {
+  if (!text) return undefined;
+  return {
+    value: text,
+    position,
+    offset: options?.offset ?? (position === "insideLeft" ? 8 : 4),
+    ...(options?.angle !== undefined ? { angle: options.angle } : {}),
+    ...(position === "insideLeft" && options?.angle !== undefined
+      ? { textAnchor: "middle" as const }
+      : {}),
+    fill: "var(--vc-axis-label-color)",
+    fontSize: "var(--vc-axis-label-size)",
+    fontWeight: "var(--vc-axis-label-weight)",
+  };
 }

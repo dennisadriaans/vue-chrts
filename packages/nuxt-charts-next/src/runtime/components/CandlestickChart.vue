@@ -229,11 +229,11 @@ onBeforeUnmount(() => ro?.disconnect());
 <template>
   <div
     ref="containerRef"
-    class="candlestick-chart"
+    class="vc-candlestick-chart vue-chrts"
     @mousemove="onMouseMove"
     @mouseleave="onMouseLeave"
   >
-    <svg :width="W" :height="H" class="candlestick-chart__svg">
+    <svg :width="W" :height="H" class="vc-candlestick-chart__svg">
       <!-- Grid -->
       <template v-if="yGridLine">
         <line
@@ -380,18 +380,3 @@ onBeforeUnmount(() => ro?.disconnect());
     </Teleport>
   </div>
 </template>
-
-<style scoped>
-.candlestick-chart {
-  position: relative;
-  width: 100%;
-  cursor: crosshair;
-  user-select: none;
-}
-
-.candlestick-chart__svg {
-  display: block;
-  width: 100%;
-  overflow: visible;
-}
-</style>

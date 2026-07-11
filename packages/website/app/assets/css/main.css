@@ -42,6 +42,42 @@ body,
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  .dot-pattern {
+    background-image: radial-gradient(var(--dot-pattern-color) 1px, transparent 1px);
+    background-size: 9px 9px;
+    background-position: -8.5px -8.5px;
+  }
+
+  .dot-pattern-fade {
+    mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 1), transparent 75%);
+  }
+
+  .dot-pattern-preview {
+    background-image: radial-gradient(var(--dot-pattern-preview-color) 1px, transparent 1px);
+    background-size: 9px 9px;
+    background-position: -8.5px -8.5px;
+    mask-image:
+      linear-gradient(to right, transparent, #000 12%, #000 88%, transparent),
+      linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+    -webkit-mask-image:
+      linear-gradient(to right, transparent, #000 12%, #000 88%, transparent),
+      linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+  }
+
+  .preview-dotted-edge-fade {
+    background-color: var(--ui-bg);
+    mask-image:
+      linear-gradient(to right, #000, transparent 12%, transparent 88%, #000),
+      linear-gradient(to bottom, #000, transparent 14%, transparent 86%, #000);
+    -webkit-mask-image:
+      linear-gradient(to right, #000, transparent 12%, transparent 88%, #000),
+      linear-gradient(to bottom, #000, transparent 14%, transparent 86%, #000);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+  }
 }
 
 :root {
@@ -50,6 +86,7 @@ body,
   --ui-header-height: 80px;
 
   --dot-pattern-color: #111827;
+  --dot-pattern-preview-color: color-mix(in srgb, var(--dot-pattern-color) 14%, transparent);
 
   --vis-tooltip-background-color: var(--ui-bg) !important;
   --vis-tooltip-border-color: var(--ui-border) !important;
@@ -97,7 +134,10 @@ body,
 .dark {
   /* Global colors */
   --dot-pattern-color: #9ca3af;
+  --dot-pattern-preview-color: color-mix(in srgb, var(--dot-pattern-color) 10%, transparent);
   --ui-bg: oklch(0.18 0 0);
+
+  --ui-border: var(--ui-color-neutral-900);
 
   --vis-tooltip-title-border-bottom: 1px solid var(--ui-border) !important;
 

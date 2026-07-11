@@ -18,10 +18,13 @@ import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
 import type { RadialBarChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
-import { legendPositionToLegendProps } from "../utils/legend";
+import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
 import { toCssProperties } from "../utils/style";
+import { themeToVars } from "../utils/theme";
 
 const props = defineProps<RadialBarChartProps<T>>();
+
+const themeVars = computed(() => themeToVars(props.theme));
 
 /** Zip the value array against the categories record (positional, matching Donut). */
 const bars = computed(() => {
@@ -34,10 +37,13 @@ const bars = computed(() => {
 });
 
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
-const legendWrapperStyle = computed(() => toCssProperties(props.legendStyle));
+const legendWrapperStyle = computed(() =>
+  resolveLegendWrapperStyle(props.legendPosition, toCssProperties(props.legendStyle)),
+);
 </script>
 
 <template>
+  <div class="vue-chrts" :style="themeVars">
   <ResponsiveContainer width="100%" :height="height">
     <VccsRadialBarChart
       :data="bars"
@@ -66,4 +72,5 @@ const legendWrapperStyle = computed(() => toCssProperties(props.legendStyle));
       </Legend>
     </VccsRadialBarChart>
   </ResponsiveContainer>
+  </div>
 </template>

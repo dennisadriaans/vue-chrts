@@ -54,18 +54,34 @@ const series = computed(() =>
 
 const stackId = computed(() => (props.stacked ? "stack" : undefined));
 const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
+
+/**
+ * Only the outer edge of a stack gets rounded corners; inner segment joins
+ * stay square. `radius` order is `[top-left, top-right, bottom-right, bottom-left]`.
+ */
+function barRadius(index: number): number | [number, number, number, number] {
+  const r = props.radius ?? 2;
+  if (!props.stacked) return r;
+  const isLast = index === series.value.length - 1;
+  if (props.orientation === "horizontal") {
+    // Last series is the rightmost segment; round its right-side corners.
+    return isLast ? [0, r, r, 0] : 0;
+  }
+  // Last series is the topmost segment; round its top corners.
+  return isLast ? [r, r, 0, 0] : 0;
+}
 </script>
 
 <template>
   <CartesianFrame :container="VccsBarChart" :x-axis-key="xAxisKey" v-bind="props">
     <Bar
-      v-for="s in series"
+      v-for="(s, i) in series"
       :key="s.dataKey"
       :data-key="s.dataKey"
       :name="s.name"
       :stack-id="stackId"
       :fill="s.color"
-      :radius="radius ?? 2"
+      :radius="barRadius(i)"
       :hide="s.hidden"
       :is-animation-active="duration !== undefined && duration !== 0"
     >
