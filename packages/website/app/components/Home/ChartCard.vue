@@ -1,40 +1,30 @@
 <script setup lang="ts">
 interface Props {
-  icon: string
+  fig: string
   title: string
   text: string
-  linkText: string
-  linkIcon: string
 }
+
 defineProps<Props>()
 </script>
 
 <template>
-  <div
-    class="group hover:shadow-primary/5 ring-default hover:border-primary/15 dark:bg-elevated/30 space-y-4 rounded-xl bg-white p-2 p-8 ring transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-lg"
-  >
-    <ClientOnly> <slot /> </ClientOnly>
-
-    <UIcon
-      :name="icon"
-      class="text-primary mr-2 size-6"
-    />
-
-    <h2 class="text-highlighted text-2xl font-semibold">
-      {{ title }}
-    </h2>
-    <p class="text-toned dark:text-muted mt-4 max-w-sm">
-      {{ text }}
-    </p>
-
-    <span
-      class="text-primary group-hover:text-primary text-sm lg:text-md mt-8 flex items-center gap-2 font-semibold transition duration-600"
-    >
-      <span>{{ linkText }}</span>
-      <UIcon
-        :name="linkIcon"
-        size="16"
-      />
+  <div class="group flex h-full flex-col px-6 py-10 sm:px-8 sm:py-12 lg:px-10 lg:py-14">
+    <span class="text-dimmed mb-8 font-mono text-[11px] tracking-wide uppercase">
+      {{ fig }}
     </span>
+
+    <div class="mb-10 flex min-h-40 flex-1 items-center justify-center sm:min-h-44">
+      <slot />
+    </div>
+
+    <div class="space-y-2">
+      <h2 class="text-default text-base font-medium tracking-tight">
+        {{ title }}
+      </h2>
+      <p class="text-muted text-sm leading-relaxed">
+        {{ text }}
+      </p>
+    </div>
   </div>
 </template>

@@ -152,11 +152,11 @@ function setFeedbackCookie() {
     />
 
     <div
-      class="top-0 z-50 w-full px-4"
+      class="top-0 z-50 w-full"
       :class="route.path === '/pricing' ? 'absolute' : 'fixed'"
     >
       <LayoutTopBar
-        :class="bannerVisible ? 'mt-12' : 'mt-6'"
+        :class="bannerVisible ? 'mt-12' : ''"
         class="transition-all delay-200"
       />
     </div>

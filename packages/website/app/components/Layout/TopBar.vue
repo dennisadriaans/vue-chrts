@@ -59,7 +59,7 @@ const isShop = computed(() => route.name === 'templates-slug')
 
 <template>
   <div
-    class="border-default mx-auto w-full max-w-4xl rounded-full border bg-(--ui-bg)/50 backdrop-blur-sm"
+    class="strix-bar border-default w-full border-b bg-(--ui-bg)/60 backdrop-blur-md"
   >
     <div
       v-if="isDropdownVisible"
@@ -67,18 +67,21 @@ const isShop = computed(() => route.name === 'templates-slug')
     />
 
     <div
-      class="mx-auto flex max-w-7xl items-center justify-between py-3 px-4 lg:py-3"
-      :class="isShop ? 'lg:pr-3 lg:pl-6' : 'lg:px-4 lg:pl-6'"
+      class="mx-auto flex max-w-8xl items-center py-3 px-4 lg:py-3"
+      :class="isShop ? 'lg:pr-3 lg:pl-6' : 'lg:px-6'"
     >
-      <NuxtLink to="/">
+      <NuxtLink
+        to="/"
+        class="flex-shrink-0"
+      >
         <Logo />
       </NuxtLink>
 
       <div
         v-if="!isShop"
-        class="flex items-center gap-2 lg:gap-8"
+        class="flex flex-1 items-center justify-center gap-2 lg:gap-8"
       >
-        <div class="hidden items-center justify-between gap-2 lg:flex">
+        <div class="hidden items-center justify-center gap-1 lg:flex">
           <template
             v-for="item in mainMenuLinks"
             :key="item.to"
@@ -118,7 +121,7 @@ const isShop = computed(() => route.name === 'templates-slug')
         color="neutral"
         variant="outline"
         label="menu"
-        class="rounded-full lg:hidden"
+        class="ml-auto rounded-full lg:hidden"
         @click="toggleDropdown"
       />
       <div
@@ -140,7 +143,7 @@ const isShop = computed(() => route.name === 'templates-slug')
           }"
         />
       </div>
-      <div class="hidden items-center gap-4 lg:flex">
+      <div class="hidden flex-shrink-0 items-center gap-4 lg:flex">
         <template v-if="isShop">
           <UButton
             class="rounded-full ring-primary-500/20 ring-4"

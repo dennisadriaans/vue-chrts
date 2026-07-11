@@ -68,73 +68,63 @@ onUnmounted(() => {
 
 <template>
   <div class="relative">
-    <header class="relative px-4 pt-44 pb-24 lg:pt-52 lg:pb-18">
+    <div class="relative overflow-hidden">
       <div
-        class="absolute inset-0 hidden items-center justify-center lg:top-16 dark:flex -z-10"
+        class="pointer-events-none absolute inset-0"
+        aria-hidden="true"
       >
-        <div
-          class="absolute h-150 w-100 rounded-full opacity-60 blur-3xl lg:h-200 lg:w-300 -z-10"
-          style="
-            background: radial-gradient(
-              circle,
-              rgba(5, 223, 114, 0.15) 0%,
-              rgba(5, 223, 114, 0.08) 50%,
-              rgba(5, 223, 114, 0.05) 100%
-            );
-          "
-        />
+        <div class="hero-grid-lines absolute inset-0"></div>
+        <div class="hero-grid-cells absolute inset-0"></div>
       </div>
 
-      <div class="relative z-10 mb-8 flex items-center justify-center">
-        <Logo />
-      </div>
+      <header class="relative z-10 px-4 pt-44 pb-24 lg:pt-52 lg:pb-18">
+        <div class="relative z-10 mb-8 flex items-center justify-center">
+          <Logo />
+        </div>
 
-      <h1
-        class="text-highlighted mx-auto max-w-4xl text-center text-3xl font-bold tracking-tight lg:text-7xl text-pretty"
-      >
-        Create beautiful
-        <span>charts</span> with Vue and
-        <span class="text-primary">Nuxt</span>
-      </h1>
-      <p
-        class=" px-8 lg:px-0 dark:text-muted relative z-10 mx-auto mt-3 lg:mt-6 max-w-xl text-center lg:text-lg text-pretty sm:text-xl/8"
-      >
-        Modern Vue charts and components to build beautiful dashboards. Built with Tailwind CSS and Nuxt UI.
-      </p>
-
-      <div class="relative z-10 mt-6 flex flex-col items-center justify-center gap-4 lg:flex-row">
-        <UButton
-          variant="soft"
-          size="md"
-          color="primary"
-          trailing-icon="i-hugeicons:copy-01"
-          @click="copyToClipboard"
+        <h1
+          class="text-highlighted mx-auto max-w-4xl text-center text-3xl font-bold tracking-tight lg:text-7xl text-pretty"
         >
-          npx nuxi@latest module add nuxt-charts
-        </UButton>
+          Create beautiful
+          <span>charts</span> with Vue and
+          <span class="text-primary">Nuxt</span>
+        </h1>
+        <p
+          class=" px-8 lg:px-0 dark:text-muted relative z-10 mx-auto mt-3 lg:mt-8 max-w-xl text-center lg:text-xl text-pretty sm:text-xl/8"
+        >
+          Modern Vue charts and components to build beautiful dashboards. Built with Tailwind CSS and Nuxt UI.
+        </p>
 
-        <NuxtLink to="/blocks">
+        <div class="relative z-10 mt-16 flex flex-col items-center justify-center gap-4 lg:flex-row">
           <UButton
-            color="neutral"
-            class="cursor-pointer"
-            size="md"
-            trailing-icon="i-hugeicons:arrow-right-02"
-            @click="useButtonTracking().trackSelectContent('navigation', 'view_all_blocks')"
+            variant="soft"
+            size="xl"
+            color="primary"
+            trailing-icon="i-hugeicons:copy-01"
+            @click="copyToClipboard"
           >
-            View blocks
+            npx nuxi@latest module add nuxt-charts
           </UButton>
-        </NuxtLink>
-      </div>
-    </header>
 
-    <!-- <CanvasNetworkBackground /> -->
+          <NuxtLink to="/blocks">
+            <UButton
+              color="neutral"
+              class="cursor-pointer"
+              size="xl"
+              trailing-icon="i-hugeicons:arrow-right-02"
+              @click="useButtonTracking().trackSelectContent('navigation', 'view_all_blocks')"
+            >
+              View blocks
+            </UButton>
+          </NuxtLink>
+        </div>
+      </header>
 
-    <!-- Logo Banner -->
-    <div class="relative mx-auto max-w-screen-2xl pt-24 lg:pt-6 lg:pb-12">
-      <div class="relative z-10 mx-auto max-w-3xl">
-        <LogoBanner />
+      <div class="relative z-10 mx-auto max-w-screen-2xl pt-24 lg:pt-6 lg:pb-12">
+        <div class="mx-auto max-w-3xl">
+          <LogoBanner />
+        </div>
       </div>
-      <div class="dot-pattern dot-pattern-fade absolute inset-0" />
     </div>
 
     <!-- <UPageSection
@@ -162,7 +152,7 @@ onUnmounted(() => {
     >
       <UPageSection
         :ui="{
-          container: 'max-w-4xl mx-auto py-16 sm:py-24 lg:py-24'
+          container: 'max-w-8xl mx-auto mb-16 py-8 sm:py-8 lg:py-8 bg-elevated/10'
         }"
       >
         <HomeChartCardsWrapper />
