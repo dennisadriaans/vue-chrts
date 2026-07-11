@@ -165,6 +165,50 @@ export const BLOCK_CATEGORIES: BlockCategoryConfig[] = [
     description: 'File Upload Components',
     count: 1,
     new: true
+  },
+  {
+    slug: 'combo-charts',
+    title: 'Combo Charts',
+    folderName: 'ComboCharts',
+    componentName: 'BlocksComboCharts',
+    icon: 'i-lucide-combine',
+    image: '/images/blocks/blocks-combo.svg',
+    description: 'Dual-axis bar and line charts for mixed metrics',
+    count: 2,
+    new: true
+  },
+  {
+    slug: 'sparklines',
+    title: 'Sparklines',
+    folderName: 'Sparklines',
+    componentName: 'BlocksSparklines',
+    icon: 'i-lucide-activity',
+    image: '/images/blocks/blocks-sparkline.svg',
+    description: 'Compact inline trend charts for dense dashboards',
+    count: 3,
+    new: true
+  },
+  {
+    slug: 'stat-tiles',
+    title: 'Stat Tiles',
+    folderName: 'StatTiles',
+    componentName: 'BlocksStatTiles',
+    icon: 'i-lucide-gauge',
+    image: '/images/blocks/blocks-stat-tile.svg',
+    description: 'KPI cards with value, trend and inline sparkline',
+    count: 3,
+    new: true
+  },
+  {
+    slug: 'heatmaps',
+    title: 'Heatmaps',
+    folderName: 'Heatmaps',
+    componentName: 'BlocksHeatmaps',
+    icon: 'i-lucide-grid-3x3',
+    image: '/images/blocks/blocks-heatmap.svg',
+    description: 'GitHub-style contribution and activity heatmaps',
+    count: 2,
+    new: true
   }
   // {
   //   slug: 'bubble-charts',

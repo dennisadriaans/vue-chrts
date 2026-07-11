@@ -35,6 +35,14 @@ const getComponent = () => {
       return resolveComponent('BlocksApplication')
     case 'application/file-upload':
       return resolveComponent('BlocksFileUpload')
+    case 'combo-charts':
+      return resolveComponent('BlocksComboCharts')
+    case 'sparklines':
+      return resolveComponent('BlocksSparklines')
+    case 'stat-tiles':
+      return resolveComponent('BlocksStatTiles')
+    case 'heatmaps':
+      return resolveComponent('BlocksHeatmaps')
 
     default:
       throw createError({
@@ -61,6 +69,8 @@ const titleMap: Record<string, string> = {
   'heatmaps': 'Heatmaps',
   'timelines': 'Timelines',
   'sparklines': 'Sparklines',
+  'combo-charts': 'Combo Charts',
+  'stat-tiles': 'Stat Tiles',
   'dashboard': 'Dashboard',
   'navbar': 'Navbar'
 }

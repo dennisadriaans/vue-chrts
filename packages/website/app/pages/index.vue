@@ -151,11 +151,40 @@ onUnmounted(() => {
       }"
     >
       <UPageSection
+        title="Redefined for quality"
+        description="A new version to meet all your data application needs"
         :ui="{
-          container: 'max-w-8xl mx-auto mb-16 py-8 sm:py-8 lg:py-8'
+          container: 'max-w-8xl mx-auto mb-16 py-8 sm:py-8 lg:py-32'
         }"
       >
         <HomeChartCardsWrapper />
+      </UPageSection>
+    </motion.div>
+
+
+    <!-- Chart Cards -->
+    <motion.div
+      :initial="{
+        opacity: 0,
+        transform: 'translateY(5%)'
+      }"
+      :animate="{
+        opacity: 1,
+        transform: 'translateY(0%)'
+      }"
+      :transition="{
+        duration: 1,
+        delay: 0.8
+      }"
+    >
+      <UPageSection
+        title="Redefined for quality"
+        description="A new version to meet all your data application needs"
+        :ui="{
+          container: 'max-w-8xl mx-auto mb-16 py-8 sm:py-8 lg:py-32  gap-8 sm:gap-0'
+        }"
+      >
+        <HomeChartCardsWrapperTwo />
       </UPageSection>
     </motion.div>
 

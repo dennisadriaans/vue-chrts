@@ -2,6 +2,42 @@
 import { useBlocksNavigation } from '~/composables/useBlocksNavigation'
 
 const { items } = useBlocksNavigation()
+
+// Deterministic decorative data for the new block-card illustrations.
+// Kept in-script so the repetitive SVG marks (heatmap cells, combo bars)
+// stay maintainable rather than being hand-authored rect-by-rect.
+const heatmapCells = (() => {
+  let s = 7
+  const rnd = () => {
+    s = (s * 1103515245 + 12345) & 0x7fffffff
+    return s / 0x7fffffff
+  }
+  const cells: { x: number, y: number, o: number }[] = []
+  for (let c = 0; c < 22; c++) {
+    for (let r = 0; r < 7; r++) {
+      const v = rnd()
+      const o = v < 0.45 ? 0 : v < 0.65 ? 0.3 : v < 0.85 ? 0.6 : 1
+      cells.push({ x: 40 + c * 26, y: 110 + r * 26, o })
+    }
+  }
+  return cells
+})()
+
+const comboBars = [110, 165, 130, 205, 175, 250, 220, 285].map((h, i) => ({
+  x: 44 + i * 74,
+  h
+}))
+const comboLinePoints = comboBars
+  .map(b => `${b.x + 22},${330 - b.h * 0.7}`)
+  .join(' ')
+
+const sparkRows = [
+  { y: 108, d: 'M300 130 L330 118 L360 124 L390 100 L420 112 L450 86 L480 96 L510 74 L540 82' },
+  { y: 176, d: 'M300 190 L330 196 L360 184 L390 200 L420 178 L450 188 L480 166 L510 176 L540 158' },
+  { y: 244, d: 'M300 262 L330 250 L360 258 L390 240 L420 250 L450 232 L480 244 L510 224 L540 234' }
+]
+
+const statTiles = [40, 244, 448].map(x => ({ x }))
 </script>
 
 <template>
@@ -1964,6 +2000,287 @@ const { items } = useBlocksNavigation()
                         />
                       </linearGradient>
                     </defs>
+                  </svg>
+                </div>
+              </template>
+              <template v-if="item.path === '/blocks/combo-charts'">
+                <div class="p-6 pb-0">
+                  <svg
+                    width="100%"
+                    viewBox="0 0 650 351"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="2"
+                      y="0.5"
+                      width="646"
+                      height="404"
+                      rx="22.5"
+                      fill="var(--ui-bg)"
+                      stroke="var(--ui-border)"
+                      stroke-width="4"
+                    />
+                    <rect
+                      x="26"
+                      y="24"
+                      width="137"
+                      height="15"
+                      rx="1"
+                      class="text-(--ui-bg-elevated)"
+                      fill="var(--ui-bg)"
+                      stroke="var(--ui-border)"
+                      stroke-width="4"
+                    />
+                    <rect
+                      x="356"
+                      y="26"
+                      width="10"
+                      height="10"
+                      fill="#22C55E"
+                    />
+                    <rect
+                      x="375"
+                      y="26"
+                      width="70"
+                      height="10"
+                      rx="1"
+                      class="text-(--ui-bg-elevated)"
+                      fill="var(--ui-bg)"
+                      stroke="var(--ui-border)"
+                      stroke-width="4"
+                    />
+                    <rect
+                      x="475"
+                      y="26"
+                      width="10"
+                      height="10"
+                      fill="#6366F1"
+                    />
+                    <rect
+                      x="494"
+                      y="26"
+                      width="70"
+                      height="10"
+                      rx="1"
+                      class="text-(--ui-bg-elevated)"
+                      fill="var(--ui-bg)"
+                      stroke="var(--ui-border)"
+                      stroke-width="4"
+                    />
+                    <rect
+                      v-for="(bar, i) in comboBars"
+                      :key="`combo-bar-${i}`"
+                      :x="bar.x"
+                      :y="330 - bar.h"
+                      width="44"
+                      :height="bar.h"
+                      rx="4"
+                      fill="#22C55E"
+                      fill-opacity="0.85"
+                    />
+                    <polyline
+                      :points="comboLinePoints"
+                      fill="none"
+                      stroke="#6366F1"
+                      stroke-width="4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </template>
+              <template v-if="item.path === '/blocks/sparklines'">
+                <div class="p-6 pb-0">
+                  <svg
+                    width="100%"
+                    viewBox="0 0 650 351"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="2"
+                      y="0.5"
+                      width="646"
+                      height="404"
+                      rx="22.5"
+                      fill="var(--ui-bg)"
+                      stroke="var(--ui-border)"
+                      stroke-width="4"
+                    />
+                    <rect
+                      x="26"
+                      y="24"
+                      width="137"
+                      height="15"
+                      rx="1"
+                      class="text-(--ui-bg-elevated)"
+                      fill="var(--ui-bg)"
+                      stroke="var(--ui-border)"
+                      stroke-width="4"
+                    />
+                    <template
+                      v-for="(row, i) in sparkRows"
+                      :key="`spark-row-${i}`"
+                    >
+                      <rect
+                        x="40"
+                        :y="row.y"
+                        width="90"
+                        height="12"
+                        rx="4"
+                        class="text-(--ui-bg-elevated)"
+                        fill="var(--ui-bg)"
+                        stroke="var(--ui-border)"
+                        stroke-width="4"
+                      />
+                      <rect
+                        x="40"
+                        :y="row.y + 24"
+                        width="130"
+                        height="18"
+                        rx="4"
+                        fill="var(--ui-bg-elevated)"
+                      />
+                      <path
+                        :d="row.d"
+                        fill="none"
+                        stroke="#22C55E"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </template>
+                  </svg>
+                </div>
+              </template>
+              <template v-if="item.path === '/blocks/stat-tiles'">
+                <div class="p-6 pb-0">
+                  <svg
+                    width="100%"
+                    viewBox="0 0 650 351"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="2"
+                      y="0.5"
+                      width="646"
+                      height="404"
+                      rx="22.5"
+                      fill="var(--ui-bg)"
+                      stroke="var(--ui-border)"
+                      stroke-width="4"
+                    />
+                    <rect
+                      x="26"
+                      y="24"
+                      width="137"
+                      height="15"
+                      rx="1"
+                      class="text-(--ui-bg-elevated)"
+                      fill="var(--ui-bg)"
+                      stroke="var(--ui-border)"
+                      stroke-width="4"
+                    />
+                    <template
+                      v-for="(tile, i) in statTiles"
+                      :key="`stat-tile-${i}`"
+                    >
+                      <rect
+                        :x="tile.x"
+                        y="96"
+                        width="162"
+                        height="200"
+                        rx="12"
+                        fill="var(--ui-bg)"
+                        stroke="var(--ui-border)"
+                        stroke-width="3"
+                      />
+                      <rect
+                        :x="tile.x + 20"
+                        y="120"
+                        width="80"
+                        height="10"
+                        rx="4"
+                        fill="var(--ui-bg-elevated)"
+                      />
+                      <rect
+                        :x="tile.x + 20"
+                        y="146"
+                        width="110"
+                        height="26"
+                        rx="4"
+                        class="text-(--ui-bg-elevated)"
+                        fill="var(--ui-bg)"
+                        stroke="var(--ui-border)"
+                        stroke-width="4"
+                      />
+                      <path
+                        :d="`M${tile.x + 20} 196 l10 -6 l0 3 l8 0 l0 6 l-8 0 l0 3 z`"
+                        fill="#22C55E"
+                      />
+                      <rect
+                        :x="tile.x + 44"
+                        y="192"
+                        width="50"
+                        height="10"
+                        rx="4"
+                        fill="#22C55E"
+                        fill-opacity="0.5"
+                      />
+                      <path
+                        :d="`M${tile.x + 20} 262 L${tile.x + 44} 250 L${tile.x + 68} 256 L${tile.x + 92} 238 L${tile.x + 116} 248 L${tile.x + 142} 230`"
+                        fill="none"
+                        stroke="#22C55E"
+                        stroke-width="4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </template>
+                  </svg>
+                </div>
+              </template>
+              <template v-if="item.path === '/blocks/heatmaps'">
+                <div class="p-6 pb-0">
+                  <svg
+                    width="100%"
+                    viewBox="0 0 650 351"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="2"
+                      y="0.5"
+                      width="646"
+                      height="404"
+                      rx="22.5"
+                      fill="var(--ui-bg)"
+                      stroke="var(--ui-border)"
+                      stroke-width="4"
+                    />
+                    <rect
+                      x="26"
+                      y="24"
+                      width="137"
+                      height="15"
+                      rx="1"
+                      class="text-(--ui-bg-elevated)"
+                      fill="var(--ui-bg)"
+                      stroke="var(--ui-border)"
+                      stroke-width="4"
+                    />
+                    <rect
+                      v-for="(cell, i) in heatmapCells"
+                      :key="`heat-${i}`"
+                      :x="cell.x"
+                      :y="cell.y"
+                      width="20"
+                      height="20"
+                      rx="4"
+                      :fill="cell.o === 0 ? 'var(--ui-bg-elevated)' : '#22C55E'"
+                      :fill-opacity="cell.o === 0 ? 1 : cell.o"
+                    />
                   </svg>
                 </div>
               </template>

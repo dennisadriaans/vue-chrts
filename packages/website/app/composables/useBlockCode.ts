@@ -34,6 +34,10 @@ const CATEGORY_TO_DIRS: Record<string, string | string[]> = {
   'bubble-charts': 'Blocks/BubbleCharts',
   'timeline': 'Blocks/Timeline',
   'calendar': ['Blocks/Calendar', 'lib/Calendar'],
+  'combo-charts': 'Blocks/ComboCharts',
+  'sparklines': ['Blocks/Sparklines', 'lib/Sparkline'],
+  'stat-tiles': ['Blocks/StatTiles', 'lib/StatTile'],
+  'heatmaps': ['Blocks/Heatmaps', 'lib/ContributionGraph'],
 
   // Nested category slugs used in routes
   'dashboard/navbar': 'Blocks/Dashboard/Navbar',
