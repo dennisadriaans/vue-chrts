@@ -1,160 +1,134 @@
 <template>
   <svg
-    viewBox="0 0 280 200"
+    viewBox="0 0 220 160"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    class="mx-auto w-full max-w-[520px] text-muted"
+    class="mx-auto size-full max-w-[300px] text-muted"
     aria-hidden="true"
   >
-    <!-- corner registration marks -->
-    <path
-      d="M34 28 H46 M40 22 V34 M238 28 H250 M244 22 V34 M238 164 H250 M244 158 V170"
-      stroke="currentColor"
-      stroke-width="0.5"
-      opacity="0.25"
-    />
+    <defs>
+      <linearGradient id="line-fill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="var(--ui-primary)" stop-opacity="0.14" />
+        <stop offset="100%" stop-color="var(--ui-primary)" stop-opacity="0" />
+      </linearGradient>
+    </defs>
 
-    <!-- dashed frame (top + right) -->
-    <path
-      d="M40 28 H244 V164"
-      stroke="currentColor"
-      stroke-width="0.5"
-      stroke-dasharray="3 3"
-      opacity="0.12"
-    />
+    <g stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-dasharray="0.1 5" opacity="0.35">
+      <line x1="24" y1="36" x2="196" y2="36" />
+      <line x1="24" y1="68" x2="196" y2="68" />
+      <line x1="24" y1="100" x2="196" y2="100" />
+    </g>
+    <line x1="24" y1="132" x2="196" y2="132" stroke="currentColor" stroke-width="1" opacity="0.25" vector-effect="non-scaling-stroke" />
 
-    <!-- horizontal gridlines -->
-    <path
-      d="M40 44 H244 M40 76 H244 M40 108 H244 M40 140 H244"
-      stroke="currentColor"
-      stroke-width="0.5"
-      opacity="0.12"
-    />
-
-    <!-- vertical gridlines (construction) -->
-    <path
-      d="M74 28 V164 M108 28 V164 M142 28 V164 M176 28 V164 M210 28 V164"
-      stroke="currentColor"
-      stroke-width="0.5"
-      stroke-dasharray="1 4"
-      opacity="0.1"
-    />
-
-    <!-- axes -->
-    <path
-      d="M40 28 V164 H244"
-      stroke="currentColor"
-      stroke-width="1"
-      stroke-linecap="round"
-      opacity="0.4"
-    />
-
-    <!-- y-axis ticks -->
-    <path
-      d="M36 44 H40 M36 76 H40 M36 108 H40 M36 140 H40"
-      stroke="currentColor"
-      stroke-width="0.75"
-      opacity="0.3"
-    />
-
-    <!-- x-axis ticks -->
-    <path
-      d="M74 164 V168 M108 164 V168 M142 164 V168 M176 164 V168 M210 164 V168"
-      stroke="currentColor"
-      stroke-width="0.75"
-      opacity="0.3"
-    />
-
-    <!-- y-axis labels -->
-    <g class="font-mono" fill="currentColor" opacity="0.35" font-size="5.5" text-anchor="end">
-      <text x="32" y="46">80</text>
-      <text x="32" y="78">60</text>
-      <text x="32" y="110">40</text>
-      <text x="32" y="142">20</text>
+    <g fill="currentColor" opacity="0.15">
+      <rect x="37" y="139" width="14" height="3" rx="1.5" />
+      <rect x="81" y="139" width="14" height="3" rx="1.5" />
+      <rect x="125" y="139" width="14" height="3" rx="1.5" />
+      <rect x="169" y="139" width="14" height="3" rx="1.5" />
     </g>
 
-    <!-- x-axis labels -->
-    <g class="font-mono" fill="currentColor" opacity="0.3" font-size="5.5" text-anchor="middle">
-      <text x="74" y="174">01</text>
-      <text x="108" y="174">02</text>
-      <text x="142" y="174">03</text>
-      <text x="176" y="174">04</text>
-      <text x="210" y="174">05</text>
-    </g>
-
-    <!-- secondary line (smooth, descending trend) -->
     <path
-      d="M40 72 C58 78 66 96 84 100 C102 104 116 88 142 92 C168 96 184 118 210 116 C226 115 236 124 244 122"
-      stroke="currentColor"
-      stroke-width="1"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      opacity="0.35"
-    />
-
-    <!-- primary line (ascending, emphasized) -->
-    <path
-      d="M40 132 C58 124 68 88 90 92 C112 96 118 60 142 64 C166 68 172 44 196 48 C216 51 228 62 244 56"
+      d="M24 116 C44 112 60 106 80 104 C100 102 120 94 140 90 C160 86 180 78 196 74"
+      class="text-default line-ghost"
       stroke="currentColor"
       stroke-width="1.5"
       stroke-linecap="round"
-      stroke-linejoin="round"
-      class="text-default"
+      opacity="0.25"
+      pathLength="100"
+      stroke-dasharray="100"
     />
-    <circle cx="40" cy="132" r="2" fill="currentColor" class="text-default" />
-    <circle cx="90" cy="92" r="2" fill="currentColor" class="text-default" />
-    <circle cx="142" cy="64" r="2" fill="currentColor" class="text-default" />
-    <circle cx="244" cy="56" r="2" fill="currentColor" class="text-default" />
 
-    <!-- highlight marker (accent) -->
-    <g class="text-primary">
-      <path
-        d="M40 48 H190"
-        stroke="currentColor"
-        stroke-width="0.5"
-        stroke-dasharray="2 3"
-        opacity="0.25"
-      />
-      <line
-        x1="196"
-        y1="54"
-        x2="196"
-        y2="164"
-        stroke="currentColor"
-        stroke-width="0.5"
-        stroke-dasharray="2 3"
-        opacity="0.35"
-      />
-      <circle
-        cx="196"
-        cy="48"
-        r="5"
-        stroke="currentColor"
-        stroke-width="1"
-        opacity="0.45"
-      />
-      <circle cx="196" cy="48" r="2.25" fill="currentColor" />
+    <path
+      d="M24 108 C40 104 52 97 68 92 C84 87 94 97 110 93 C126 89 134 68 150 60 C166 52 180 48 196 44 L196 132 L24 132 Z"
+      fill="url(#line-fill)"
+      class="line-area"
+    />
+    <path
+      d="M24 108 C40 104 52 97 68 92 C84 87 94 97 110 93 C126 89 134 68 150 60 C166 52 180 48 196 44"
+      class="text-primary line-main"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      pathLength="100"
+      stroke-dasharray="100"
+    />
 
-      <!-- value chip -->
-      <rect
-        x="206"
-        y="34"
-        width="26"
-        height="12"
-        rx="2"
-        stroke="currentColor"
-        stroke-width="0.5"
-        opacity="0.45"
-      />
-      <text
-        x="219"
-        y="42.5"
-        text-anchor="middle"
-        class="font-mono"
-        font-size="6"
-        fill="currentColor"
-        opacity="0.9"
-      >48.2</text>
+    <g class="text-primary line-dot">
+      <circle cx="196" cy="44" r="8" fill="currentColor" opacity="0.12" />
+      <circle cx="196" cy="44" r="5.5" stroke="currentColor" stroke-width="1.5" class="line-pulse" />
+      <circle cx="196" cy="44" r="3" fill="currentColor" />
     </g>
   </svg>
 </template>
+
+<style scoped>
+@media (prefers-reduced-motion: no-preference) {
+  .line-pulse {
+    transform-origin: 196px 44px;
+    transform-box: view-box;
+    animation: line-pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .group:hover .line-main {
+    animation: line-draw 0.9s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+
+  .group:hover .line-ghost {
+    animation: line-draw 1.1s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+
+  .group:hover .line-area {
+    animation: line-fade 1.1s ease-out;
+  }
+
+  .group:hover .line-dot {
+    transform-origin: 196px 44px;
+    transform-box: view-box;
+    animation: line-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.55s backwards;
+  }
+}
+
+@keyframes line-draw {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes line-fade {
+  from {
+    opacity: 0;
+  }
+  60% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes line-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes line-pulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(0.65);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+</style>

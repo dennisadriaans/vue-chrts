@@ -12,35 +12,35 @@ const cards = [
     title: 'Bar Charts',
     text: 'Compare categories and visualize distributions with interactive bar charts—ideal for summaries and breakdowns.'
   },
-  {
-    id: 'area-charts',
-    fig: 'FIG 0.3',
-    title: 'Area Charts',
-    text: 'Show totals and highlight magnitude with smooth area charts. Great for visualizing stacked data and trends.'
-  },
   // {
-  //   id: 'donut-charts',
-  //   fig: 'FIG 0.4',
-  //   title: 'Donut Charts',
-  //   text: 'Display proportions and breakdowns with visually engaging donut charts. Ideal for showing parts of a whole.'
-  // }
+  //   id: 'area-charts',
+  //   fig: 'FIG 0.3',
+  //   title: 'Area Charts',
+  //   text: 'Show totals and highlight magnitude with smooth area charts. Great for visualizing stacked data and trends.'
+  // },
+  {
+    id: 'donut-charts',
+    fig: 'FIG 0.4',
+    title: 'Donut Charts',
+    text: 'Display proportions and breakdowns with visually engaging donut charts. Ideal for showing parts of a whole.'
+  }
 ]
 </script>
 
 <template>
   <div class="">
-    <div class="grid grid-cols-1 gap-px sm:grid-cols-3">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
       <NuxtLink
         v-for="card in cards"
         :key="card.id"
         :to="`/blocks/${card.id}`"
-        class=""
+        class="bg-elevated/20"
       >
         <HomeChartCard v-bind="card">
-          <HomeIllustrationsLineChart v-if="card.id === 'line-charts'" class="bg-elevated/10" />
-          <HomeIllustrationsBarChart v-else-if="card.id === 'bar-charts'" class="bg-elevated/10" />
-          <HomeIllustrationsAreaChart v-else-if="card.id === 'area-charts'" class="bg-elevated/10" />
-          <HomeIllustrationsDonutChart v-else-if="card.id === 'donut-charts'" class="bg-elevated/10" />
+          <HomeIllustrationsLineChart v-if="card.id === 'line-charts'" />
+          <HomeIllustrationsBarChart v-else-if="card.id === 'bar-charts'" />
+          <HomeIllustrationsAreaChart v-else-if="card.id === 'area-charts'" />
+          <HomeIllustrationsDonutChart v-else-if="card.id === 'donut-charts'" />
         </HomeChartCard>
       </NuxtLink>
     </div>

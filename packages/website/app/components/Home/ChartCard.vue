@@ -9,16 +9,12 @@ defineProps<Props>()
 </script>
 
 <template>
-  <div class="group flex h-full flex-col px-6 py-10 sm:px-8 sm:py-12 lg:px-10 lg:py-14">
-    <span class="text-dimmed mb-8 font-mono text-[11px] tracking-wide uppercase">
-      {{ fig }}
-    </span>
-
-    <div class="mb-10 flex min-h-64 flex-1 items-center justify-center sm:min-h-72">
+  <div class="group flex h-full flex-col">
+    <div class=" flex min-h-64 flex-1 items-center justify-center sm:min-h-72">
       <slot />
     </div>
 
-    <div class="space-y-2">
+    <div class="space-y-2 p-8 pt-0">
       <h2 class="text-default text-base font-medium tracking-tight">
         {{ title }}
       </h2>
