@@ -46,3 +46,5 @@ node-compile-cache/
 package-lock.json
 
 old/.data
+# Google service account keys
+nuxt-charts-*.json
