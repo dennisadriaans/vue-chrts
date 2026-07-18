@@ -53,6 +53,10 @@ export type DonutChartProps<T> = {
    */
   padAngle?: number;
   /**
+   * If `false`, hides the background. Default: true
+   */
+  showBackground?: boolean;
+  /**
    * Use custom formatter for tooltip titles
    */
   tooltipTitleFormatter?: (data: T) => string | number;
