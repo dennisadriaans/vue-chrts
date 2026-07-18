@@ -1,0 +1,10 @@
+{
+  "tag-prefix": "vue-chrts-v",
+  "path": ".",
+  "bumpFiles": [
+    {
+      "filename": "package.json",
+      "type": "json"
+    }
+  ]
+}
