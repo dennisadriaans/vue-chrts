@@ -1,6 +1,6 @@
 {
   "name": "nuxt-charts",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "description": "Nuxt module for vue-chrts (legacy Unovis engine)",
   "license": "MIT",
   "type": "module",
