@@ -76,6 +76,9 @@ const categories: Record<string, BulletLegendItemInterface> = {
 - `yAxes` — plot series with different units on independent y-axes.
 - `referenceLines` — draw horizontal / vertical reference lines across the plot.
 - `syncId` — synchronise tooltip / hover across charts that share the same id.
+- Revived from v2: `xExplicitTicks` / `yExplicitTicks` (→ axis `ticks`),
+  `minMaxTicksOnly` (→ `interval="preserveStartEnd"`), and `AxisConfig` tick text
+  colour / size / alignment now apply.
 
 #### Multiple y-axes
 
@@ -106,9 +109,6 @@ Each axis accepts `orientation`, `label`, `domain`, `numTicks`, `formatter`,
 `hide`, and the usual `AxisConfig` tick options; anything unset falls back to
 the top-level `yLabel` / `yDomain` / `yAxisConfig` props. Supported on
 `LineChart`, `AreaChart` and `BarChart` (vertical orientation).
-- Revived from v2: `xExplicitTicks` / `yExplicitTicks` (→ axis `ticks`),
-  `minMaxTicksOnly` (→ `interval="preserveStartEnd"`), and `AxisConfig` tick text
-  colour / size / alignment now apply.
 
 ### Deferred / removed
 

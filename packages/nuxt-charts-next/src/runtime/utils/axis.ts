@@ -114,18 +114,21 @@ export function resolveYAxes(options: {
     ids.push(id);
   }
 
+  /** Axes default to the left, matching the single-axis behaviour. */
+  const DEFAULT_ORIENTATION = "left" as const;
+
   return ids.map((id) => {
     // Look the config up under both spellings: `ids` holds canonical ids, but the
     // `yAxes` record may have been written with the other form.
     const config = yAxes?.[id] ?? yAxes?.[String(id) as unknown as AxisId];
-    if (!config) return { ...primary, id, orientation: "left" };
+    if (!config) return { ...primary, id, orientation: DEFAULT_ORIENTATION };
 
     const resolved = resolveAxisProps(undefined, config, config.minMaxTicksOnly ?? minMaxTicksOnly);
     return {
       ...primary,
       ...resolved,
       id,
-      orientation: config.orientation ?? "left",
+      orientation: config.orientation ?? DEFAULT_ORIENTATION,
       label: config.label ?? (id === PRIMARY_Y_AXIS_ID ? primary.label : undefined),
       domain: toAxisDomain(config.domain) ?? primary.domain,
       tickCount: config.numTicks ?? primary.tickCount,

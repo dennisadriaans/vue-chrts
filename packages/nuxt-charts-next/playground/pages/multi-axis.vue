@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { climate, monthly } from "../data";
+import type { BulletLegendItemInterface, YAxisConfig } from "../../src/runtime/types/shared";
 
 const climateCategories: Record<string, BulletLegendItemInterface> = {
   indoor: { name: "Indoor", color: "#2662d9", yAxis: "temp" },
