@@ -167,11 +167,11 @@ export type BarChartPropsBase<T> = {
   /**
    * Fixed X scale domain as [min, max].
    */
-  xDomain?: [number, number] | [Date, Date];
+  xDomain?: [number | undefined, number | undefined];
   /**
    * Fixed Y scale domain as [min, max].
    */
-  yDomain?: [number, number] | [Date, Date];
+  yDomain?: [number | undefined, number | undefined];
   /**
    * Animation duration in milliseconds for the chart components.
    */
