@@ -10,7 +10,11 @@ import { computed } from "vue";
 import { Bar, BarChart as VccsBarChart, LabelList } from "vccs";
 import CartesianFrame from "./internal/CartesianFrame.vue";
 import type { BarChartProps } from "../types/charts";
-import { categoriesToSeries } from "../utils/categories";
+import {
+  categoriesToSeries,
+  PRIMARY_Y_AXIS_ID,
+  type SeriesDescriptor,
+} from "../utils/categories";
 
 const props = defineProps<BarChartProps<T>>();
 
@@ -33,7 +37,7 @@ const valueAccessor = computed(() => {
 
 /** Index categories by key so a `yAxis` entry can look up its colour / label. */
 const categoryByKey = computed(() => {
-  const map = new Map<string, { name: string; color: string | undefined; hidden: boolean }>();
+  const map = new Map<string, SeriesDescriptor>();
   for (const s of categoriesToSeries(props.categories)) map.set(s.dataKey, s);
   return map;
 });
@@ -48,6 +52,7 @@ const series = computed(() =>
       name: cat?.name ?? k,
       color: cat?.color,
       hidden: cat?.hidden ?? false,
+      yAxisId: cat?.yAxisId ?? PRIMARY_Y_AXIS_ID,
     };
   }),
 );
@@ -63,6 +68,7 @@ const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis)
       :key="s.dataKey"
       :data-key="s.dataKey"
       :name="s.name"
+      :y-axis-id="s.yAxisId"
       :stack-id="stackId"
       :fill="s.color"
       :radius="radius ?? 2"

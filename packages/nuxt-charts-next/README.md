@@ -73,8 +73,39 @@ const categories: Record<string, BulletLegendItemInterface> = {
 
 ### New cross-cutting props (cartesian charts)
 
+- `yAxes` — plot series with different units on independent y-axes.
 - `referenceLines` — draw horizontal / vertical reference lines across the plot.
 - `syncId` — synchronise tooltip / hover across charts that share the same id.
+
+#### Multiple y-axes
+
+Give a category a `yAxis` id and describe that axis in `yAxes`. Series sharing
+an id share a scale; series without one stay on the primary axis, so existing
+charts are unaffected.
+
+```vue
+<script setup lang="ts">
+const categories = {
+  indoor: { name: "Indoor", color: "#2662d9", yAxis: "temp" },
+  outdoor: { name: "Outdoor", color: "#e23670", yAxis: "temp" },
+  humidity: { name: "Humidity", color: "#af57db", yAxis: "pct" },
+};
+
+const yAxes = {
+  temp: { orientation: "left", label: "°C" },
+  pct: { orientation: "right", label: "%", domain: [0, 100] },
+};
+</script>
+
+<template>
+  <LineChart :data="data" :categories="categories" :y-axes="yAxes" :height="320" x-axis="time" />
+</template>
+```
+
+Each axis accepts `orientation`, `label`, `domain`, `numTicks`, `formatter`,
+`hide`, and the usual `AxisConfig` tick options; anything unset falls back to
+the top-level `yLabel` / `yDomain` / `yAxisConfig` props. Supported on
+`LineChart`, `AreaChart` and `BarChart` (vertical orientation).
 - Revived from v2: `xExplicitTicks` / `yExplicitTicks` (→ axis `ticks`),
   `minMaxTicksOnly` (→ `interval="preserveStartEnd"`), and `AxisConfig` tick text
   colour / size / alignment now apply.

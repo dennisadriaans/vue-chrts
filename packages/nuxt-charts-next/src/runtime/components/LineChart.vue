@@ -37,6 +37,7 @@ const dashArray = computed(() => toStrokeDasharray(props.lineDashArray));
       :key="s.dataKey"
       :data-key="s.dataKey"
       :name="s.name"
+      :y-axis-id="s.yAxisId"
       :type="curve"
       :stack-id="stackId"
       :stroke="s.color"

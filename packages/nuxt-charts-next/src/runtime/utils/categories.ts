@@ -1,4 +1,7 @@
-import type { BulletLegendItemInterface } from "../types/shared";
+import type { AxisId, BulletLegendItemInterface } from "../types/shared";
+
+/** Id of the implicit primary y-axis, matching the `vccs` default. */
+export const PRIMARY_Y_AXIS_ID = 0;
 
 /**
  * A single resolved series, derived from one entry in a `categories` record.
@@ -13,6 +16,8 @@ export interface SeriesDescriptor {
   color: string;
   /** Whether the series is hidden. */
   hidden: boolean;
+  /** Id of the y-axis this series is plotted against. */
+  yAxisId: AxisId;
 }
 
 /**
@@ -37,5 +42,6 @@ export function categoriesToSeries(
     name: String(item.name ?? dataKey),
     color: resolveColor(item.color, index),
     hidden: item.hidden ?? false,
+    yAxisId: item.yAxis ?? PRIMARY_Y_AXIS_ID,
   }));
 }

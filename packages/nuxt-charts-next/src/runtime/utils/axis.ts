@@ -1,4 +1,6 @@
-import type { AxisConfig, axisFormatter } from "../types/shared";
+import type { AxisConfig, AxisId, axisFormatter, YAxisConfig } from "../types/shared";
+import { PRIMARY_Y_AXIS_ID, type SeriesDescriptor } from "./categories";
+import { toAxisDomain } from "./style";
 
 /** `vccs` axis `tickFormatter` signature. */
 export type VccsTickFormatter = (value: unknown, index: number) => string;
@@ -66,6 +68,68 @@ export function resolveAxisProps(
     interval: minMax ? "preserveStartEnd" : undefined,
     tick: Object.keys(tickAttrs).length ? tickAttrs : undefined,
   };
+}
+
+/** One resolved y-axis, ready to render as a `vccs` `<YAxis>`. */
+export interface ResolvedYAxis extends ResolvedAxisProps {
+  id: AxisId;
+  orientation: "left" | "right";
+  label: string | undefined;
+  domain: readonly [number, number] | undefined;
+  tickCount: number | undefined;
+  tickFormatter: VccsTickFormatter | undefined;
+  tickLine: boolean;
+  hide: boolean;
+}
+
+/**
+ * Build the list of y-axes to render.
+ *
+ * The primary axis (id {@link PRIMARY_Y_AXIS_ID}) is always present and driven
+ * by the top-level `yLabel` / `yDomain` / `yAxisConfig` props, so single-axis
+ * charts are unaffected. Each additional id referenced by a series' `yAxis` — or
+ * declared in `yAxes` — becomes its own axis, falling back to the primary axis'
+ * settings for anything its {@link YAxisConfig} leaves unset.
+ *
+ * Axes are emitted in `yAxes` declaration order (primary first) so the render
+ * order is stable and predictable when several share a side.
+ */
+export function resolveYAxes(options: {
+  series: readonly SeriesDescriptor[];
+  yAxes: Record<AxisId, YAxisConfig> | undefined;
+  primary: Omit<ResolvedYAxis, "id" | "orientation">;
+  minMaxTicksOnly: boolean | undefined;
+}): ResolvedYAxis[] {
+  const { series, yAxes, primary, minMaxTicksOnly } = options;
+
+  // Object keys are always strings, so an id declared in `yAxes` is matched to a
+  // series' `yAxis` by string form — otherwise a numeric id would split in two.
+  const ids: AxisId[] = [PRIMARY_Y_AXIS_ID];
+  const seen = new Set([String(PRIMARY_Y_AXIS_ID)]);
+  for (const id of [...Object.keys(yAxes ?? {}), ...series.map((s) => s.yAxisId)]) {
+    if (seen.has(String(id))) continue;
+    seen.add(String(id));
+    ids.push(id);
+  }
+
+  return ids.map((id) => {
+    const config = yAxes?.[id];
+    if (!config) return { ...primary, id, orientation: "left" };
+
+    const resolved = resolveAxisProps(undefined, config, config.minMaxTicksOnly ?? minMaxTicksOnly);
+    return {
+      ...primary,
+      ...resolved,
+      id,
+      orientation: config.orientation ?? "left",
+      label: config.label ?? (id === PRIMARY_Y_AXIS_ID ? primary.label : undefined),
+      domain: toAxisDomain(config.domain) ?? primary.domain,
+      tickCount: config.numTicks ?? primary.tickCount,
+      tickFormatter: toTickFormatter(config.formatter ?? config.tickFormat) ?? primary.tickFormatter,
+      tickLine: config.tickLine ?? primary.tickLine,
+      hide: config.hide ?? false,
+    };
+  });
 }
 
 /**

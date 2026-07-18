@@ -20,7 +20,8 @@ import {
 import type { CartesianChartBaseProps } from "../../types/charts";
 import type { Orientation } from "../../enums";
 import { legendPositionToLegendProps } from "../../utils/legend";
-import { resolveAxisProps, toTickFormatter } from "../../utils/axis";
+import { resolveAxisProps, resolveYAxes, toTickFormatter } from "../../utils/axis";
+import { categoriesToSeries } from "../../utils/categories";
 import { toAxisDomain, toCssProperties } from "../../utils/style";
 import ChartTooltip from "./ChartTooltip.vue";
 import ChartLegend from "./ChartLegend.vue";
@@ -128,6 +129,28 @@ const mergedContainerProps = computed(() => ({
 }));
 
 const referenceLines = computed(() => props.referenceLines ?? []);
+
+/**
+ * The value y-axes. Empty for horizontal bars (which render the swapped
+ * category axis instead) and when the y-axis is hidden outright.
+ */
+const resolvedYAxes = computed(() => {
+  if (props.hideYAxis || layout.value === "vertical") return [];
+  return resolveYAxes({
+    series: categoriesToSeries(props.categories),
+    yAxes: props.yAxes,
+    minMaxTicksOnly: props.minMaxTicksOnly,
+    primary: {
+      ...yAxis.value,
+      label: props.yLabel,
+      domain: yAxisDomain.value,
+      tickCount: props.yNumTicks,
+      tickFormatter: valueFormatter.value,
+      tickLine: showYTickLine.value,
+      hide: false,
+    },
+  });
+});
 </script>
 
 <template>
@@ -158,20 +181,40 @@ const referenceLines = computed(() => props.referenceLines ?? []);
         :label="layout === 'vertical' ? yLabel : xLabel"
         :type="layout === 'vertical' ? 'number' : 'category'"
       />
+      <!--
+        Horizontal orientation keeps the single swapped category y-axis; only
+        the standard layout supports several value axes (one per `yAxes` id).
+      -->
       <YAxis
-        v-if="!hideYAxis"
-        :data-key="layout === 'vertical' ? xAxisKey : undefined"
-        :hide="hideYAxis"
+        v-if="!hideYAxis && layout === 'vertical'"
+        :data-key="xAxisKey"
         :tick-line="showYTickLine"
         :axis-line="yDomainLine ?? true"
-        :tick-count="layout === 'vertical' ? xNumTicks : yNumTicks"
-        :tick-formatter="layout === 'vertical' ? categoryFormatter : valueFormatter"
-        :domain="layout === 'vertical' ? xAxisDomain : yAxisDomain"
-        :ticks="layout === 'vertical' ? xAxis.ticks : yAxis.ticks"
-        :interval="layout === 'vertical' ? xAxis.interval : yAxis.interval"
-        :tick="layout === 'vertical' ? (xAxis.tick ?? true) : (yAxis.tick ?? true)"
-        :label="layout === 'vertical' ? xLabel : yLabel"
-        :type="layout === 'vertical' ? 'category' : 'number'"
+        :tick-count="xNumTicks"
+        :tick-formatter="categoryFormatter"
+        :domain="xAxisDomain"
+        :ticks="xAxis.ticks"
+        :interval="xAxis.interval"
+        :tick="xAxis.tick ?? true"
+        :label="xLabel"
+        type="category"
+      />
+      <YAxis
+        v-for="axis in resolvedYAxes"
+        :key="axis.id"
+        :y-axis-id="axis.id"
+        :orientation="axis.orientation"
+        :hide="axis.hide"
+        :tick-line="axis.tickLine"
+        :axis-line="yDomainLine ?? true"
+        :tick-count="axis.tickCount"
+        :tick-formatter="axis.tickFormatter"
+        :domain="axis.domain"
+        :ticks="axis.ticks"
+        :interval="axis.interval"
+        :tick="axis.tick ?? true"
+        :label="axis.label"
+        type="number"
       />
 
       <slot />
