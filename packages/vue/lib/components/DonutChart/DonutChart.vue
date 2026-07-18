@@ -20,6 +20,7 @@ const emit = defineEmits<{
 const props = withDefaults(defineProps<DonutChartProps<T>>(), {
   duration: 600,
   legendPosition: LegendPosition.BottomCenter,
+  showBackground: true,
   tooltip: () => ({
     followCursor: true,
   }),
@@ -111,6 +112,7 @@ const colors = (_: number, i: number) => {
         :color="colors"
         :angle-range="isHalf ? [-1.5707963267948966, 1.5707963267948966] : []"
         :pad-angle="props.padAngle || 0"
+        :show-background="props.showBackground"
       />
 
       <div
