@@ -189,7 +189,7 @@ const mapsData = computed(() => props.data);
           'display: flex; gap: var(--vis-legend-spacing);',
         ]"
         :items="
-          Object.values(props.categories).map((item) => ({
+          Object.values(props.categories ?? {}).map((item) => ({
             ...item,
             color: Array.isArray(item.color) ? item.color[0] : item.color,
           }))
