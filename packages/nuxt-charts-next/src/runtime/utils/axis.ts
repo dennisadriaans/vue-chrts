@@ -1,5 +1,5 @@
 import type { AxisConfig, AxisId, axisFormatter, YAxisConfig } from "../types/shared";
-import { PRIMARY_Y_AXIS_ID, type SeriesDescriptor } from "./categories";
+import { PRIMARY_Y_AXIS_ID, normalizeAxisId, type SeriesDescriptor } from "./categories";
 import { toAxisDomain } from "./style";
 
 /** `vccs` axis `tickFormatter` signature. */
@@ -102,18 +102,22 @@ export function resolveYAxes(options: {
 }): ResolvedYAxis[] {
   const { series, yAxes, primary, minMaxTicksOnly } = options;
 
-  // Object keys are always strings, so an id declared in `yAxes` is matched to a
-  // series' `yAxis` by string form — otherwise a numeric id would split in two.
+  // Object keys are always strings, so ids are canonicalised before deduping —
+  // otherwise a numeric id declared in `yAxes` would never match the same id
+  // written as a number on a category. See `normalizeAxisId`.
   const ids: AxisId[] = [PRIMARY_Y_AXIS_ID];
-  const seen = new Set([String(PRIMARY_Y_AXIS_ID)]);
-  for (const id of [...Object.keys(yAxes ?? {}), ...series.map((s) => s.yAxisId)]) {
-    if (seen.has(String(id))) continue;
-    seen.add(String(id));
+  const seen = new Set<AxisId>([PRIMARY_Y_AXIS_ID]);
+  for (const raw of [...Object.keys(yAxes ?? {}), ...series.map((s) => s.yAxisId)]) {
+    const id = normalizeAxisId(raw);
+    if (seen.has(id)) continue;
+    seen.add(id);
     ids.push(id);
   }
 
   return ids.map((id) => {
-    const config = yAxes?.[id];
+    // Look the config up under both spellings: `ids` holds canonical ids, but the
+    // `yAxes` record may have been written with the other form.
+    const config = yAxes?.[id] ?? yAxes?.[String(id) as unknown as AxisId];
     if (!config) return { ...primary, id, orientation: "left" };
 
     const resolved = resolveAxisProps(undefined, config, config.minMaxTicksOnly ?? minMaxTicksOnly);

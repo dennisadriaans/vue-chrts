@@ -148,6 +148,33 @@ describe("resolveYAxes", () => {
     });
     expect(axes).toHaveLength(2);
     expect(axes[1]).toMatchObject({ orientation: "right" });
+    // vccs binds series to axes with `===`, so the id must match the series'
+    // id by type as well as value — `"1"` would silently orphan the series.
+    expect(axes[1]?.id).toBe(1);
+    const [series] = categoriesToSeries({ pct: { name: "Pct", yAxis: 1 } });
+    expect(axes.some((a) => a.id === series?.yAxisId)).toBe(true);
+  });
+
+  it("treats a stringified numeric id as the same axis as its numeric form", () => {
+    const axes = resolveYAxes({
+      series: categoriesToSeries({
+        a: { name: "A", yAxis: 1 },
+        b: { name: "B", yAxis: "1" },
+      }),
+      yAxes: { 1: { orientation: "right", label: "Shared" } },
+      minMaxTicksOnly: undefined,
+      primary,
+    });
+    expect(axes.map((a) => a.id)).toEqual([PRIMARY_Y_AXIS_ID, 1]);
+    expect(axes[1]).toMatchObject({ orientation: "right", label: "Shared" });
+  });
+
+  it("binds a series declaring yAxis '0' to the primary axis", () => {
+    const series = categoriesToSeries({ views: { name: "Views", yAxis: "0" } });
+    expect(series[0]?.yAxisId).toBe(PRIMARY_Y_AXIS_ID);
+
+    const axes = resolveYAxes({ series, yAxes: undefined, minMaxTicksOnly: undefined, primary });
+    expect(axes.map((a) => a.id)).toEqual([PRIMARY_Y_AXIS_ID]);
   });
 
   it("inherits unset options from the primary axis", () => {
