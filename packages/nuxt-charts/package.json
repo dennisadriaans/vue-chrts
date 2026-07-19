@@ -28,7 +28,7 @@
     "test:watch": "vitest watch",
     "test:e2e": "playwright test",
     "test:e2e:prod": "NUXT_CHARTS_E2E_MODE=prod playwright test",
-    "test:e2e:all": "pnpm run test:e2e && pnpm run test:e2e:prod",
+    "test:e2e:all": "./scripts/run-e2e.sh",
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {

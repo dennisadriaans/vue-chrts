@@ -16,6 +16,7 @@ dist-ssr
 .nitro
 test-results
 playwright-report
+.artifacts
 
 # Editor directories and files
 .vscode/*
