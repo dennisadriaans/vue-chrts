@@ -14,6 +14,8 @@ dist-ssr
 .nuxt
 .output
 .nitro
+test-results
+playwright-report
 
 # Editor directories and files
 .vscode/*

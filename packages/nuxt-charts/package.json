@@ -26,6 +26,7 @@
     "typecheck": "pnpm run test:types",
     "test": "vitest run",
     "test:watch": "vitest watch",
+    "test:e2e": "playwright test",
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
@@ -39,6 +40,7 @@
     "@nuxt/module-builder": "^1.0.2",
     "@nuxt/schema": "^4.3.0",
     "@nuxt/test-utils": "^3.23.0",
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "latest",
     "changelogen": "^0.6.2",
