@@ -128,6 +128,8 @@ const legendAlignment = computed(() => {
       :padding="props.padding"
       :duration="duration"
       :scaleByDomain="true"
+      :x-domain="props.xDomain"
+      :y-domain="props.yDomain"
       @click="emit('click', $event, hoverValues)"
     >
       <VisTooltip

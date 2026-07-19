@@ -28,4 +28,13 @@ dist-ssr
 
 .turbo/*
 
+.claude/
+
 packages/website/.data
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key

@@ -64,7 +64,7 @@ function resolvePackageDir(
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: "nuxt-charts-v2",
+    name: "nuxt-charts",
     configKey: "nuxtCharts",
     compatibility: {
       nuxt: ">=3",

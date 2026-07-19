@@ -1,6 +1,6 @@
 {
   "name": "nuxt-charts",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "description": "Nuxt module for vue-chrts (legacy Unovis engine)",
   "license": "MIT",
   "type": "module",
@@ -29,7 +29,7 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "vue-chrts": "workspace:*"
+    "vue-chrts": "2.2.0-test.0"
   },
   "devDependencies": {
     "@nuxt/devtools": "^3.1.1",
