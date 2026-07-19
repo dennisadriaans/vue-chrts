@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { motion } from "motion-v";
-
 useSeoMeta({
   title: "Beautiful Chart Library for Vue | Nuxt Charts",
   ogTitle: "Beautiful Chart Library for Vue | Nuxt Charts",

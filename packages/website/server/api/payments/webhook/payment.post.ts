@@ -7,12 +7,7 @@ export default defineEventHandler(async (event) => {
     apiVersion: '2025-02-24.acacia'
   })
   try {
-    let webhookSecret = config.stripeWebhookSecret
-
-    if (import.meta.dev) {
-      webhookSecret
-        = 'whsec_f9c429ecc0425aea34cd061810fe273081f11504515edc309ef2871c74cadbb9'
-    }
+    const webhookSecret = config.stripeWebhookSecret
 
     if (!webhookSecret) {
       throw new Error('Stripe Webhook Secret is missing')
