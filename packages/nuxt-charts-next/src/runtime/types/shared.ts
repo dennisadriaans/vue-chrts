@@ -19,6 +19,33 @@ export interface BulletLegendItemInterface {
   inactive?: boolean;
   hidden?: boolean;
   pointer?: boolean;
+  /**
+   * Id of the y-axis this series is plotted against. Series sharing an id share
+   * a scale. Defaults to the primary axis, so charts that omit it are unchanged.
+   */
+  yAxis?: AxisId;
+}
+
+/** Identifies one y-axis. Series and axis configs are matched by this value. */
+export type AxisId = string | number;
+
+/**
+ * Configuration for one y-axis in a multi-axis chart, keyed by {@link AxisId}
+ * in the `yAxes` prop.
+ */
+export interface YAxisConfig extends AxisConfig {
+  /** Which side of the plot area the axis is drawn on. Default `left`. */
+  orientation?: "left" | "right";
+  /** Axis label. */
+  label?: string;
+  /** Fixed domain as `[min, max]`. */
+  domain?: [number | undefined, number | undefined];
+  /** Desired number of ticks. */
+  numTicks?: number;
+  /** Formats this axis' ticks. */
+  formatter?: axisFormatter;
+  /** Hide the axis while still plotting its series. */
+  hide?: boolean;
 }
 
 /**

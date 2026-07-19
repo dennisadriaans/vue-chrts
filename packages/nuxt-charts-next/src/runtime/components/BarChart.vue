@@ -10,7 +10,12 @@ import { computed } from "vue";
 import { Bar, BarChart as VccsBarChart, LabelList } from "vccs";
 import CartesianFrame from "./internal/CartesianFrame.vue";
 import type { BarChartProps } from "../types/charts";
-import { categoriesToSeries } from "../utils/categories";
+import type { AxisId } from "../types/shared";
+import {
+  categoriesToSeries,
+  PRIMARY_Y_AXIS_ID,
+  type SeriesDescriptor,
+} from "../utils/categories";
 
 const props = defineProps<BarChartProps<T>>();
 
@@ -33,7 +38,7 @@ const valueAccessor = computed(() => {
 
 /** Index categories by key so a `yAxis` entry can look up its colour / label. */
 const categoryByKey = computed(() => {
-  const map = new Map<string, { name: string; color: string | undefined; hidden: boolean }>();
+  const map = new Map<string, SeriesDescriptor>();
   for (const s of categoriesToSeries(props.categories)) map.set(s.dataKey, s);
   return map;
 });
@@ -48,11 +53,17 @@ const series = computed(() =>
       name: cat?.name ?? k,
       color: cat?.color,
       hidden: cat?.hidden ?? false,
+      yAxisId: cat?.yAxisId ?? PRIMARY_Y_AXIS_ID,
     };
   }),
 );
 
-const stackId = computed(() => (props.stacked ? "stack" : undefined));
+/**
+ * Stacking is per-axis: series on different y-axes plot against different scales,
+ * so summing them into one stack would be meaningless. Each axis gets its own
+ * stack id; single-axis charts keep a single `stack-0` group as before.
+ */
+const stackIdFor = (yAxisId: AxisId) => (props.stacked ? `stack-${yAxisId}` : undefined);
 const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
 </script>
 
@@ -63,7 +74,8 @@ const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis)
       :key="s.dataKey"
       :data-key="s.dataKey"
       :name="s.name"
-      :stack-id="stackId"
+      :y-axis-id="s.yAxisId"
+      :stack-id="stackIdFor(s.yAxisId)"
       :fill="s.color"
       :radius="radius ?? 2"
       :hide="s.hidden"
