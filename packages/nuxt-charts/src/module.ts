@@ -63,14 +63,21 @@ export default defineNuxtModule<ModuleOptions>({
     include: [],
   },
   async setup(options, nuxt) {
-    // Only transpile vue-chrts itself. Do NOT transpile @unovis/ts or
-    // @unovis/vue — they already ship compiled ESM. Adding them to
-    // build.transpile causes Nuxt/Vite to serve their files directly via
-    // @fs/ URLs instead of pre-bundling, which breaks CJS interop for
-    // their transitive dependencies (striptags, d3-collection, etc.).
-    if (!nuxt.options.build.transpile.includes("vue-chrts")) {
-      nuxt.options.build.transpile.push("vue-chrts");
-    }
+    // Deliberately do NOT transpile vue-chrts (or @unovis/ts, @unovis/vue —
+    // they already ship compiled ESM). build.transpile marks a package
+    // external for client dep pre-bundling, which conflicts with listing the
+    // same package in optimizeDeps.include below: esbuild aborts with
+    // `The entry point "vue-chrts" cannot be marked as external`
+    // (Nuxt 4.4 / Vite 7). Pre-bundling alone handles the CJS interop that
+    // transpiling was meant to fix.
+    //
+    // Strip the entry after all modules have run, in case a layer or another
+    // module added it.
+    nuxt.hook("modules:done", () => {
+      nuxt.options.build.transpile = nuxt.options.build.transpile.filter(
+        (entry) => entry !== "vue-chrts",
+      );
+    });
 
     // Resolve @unovis package directories through vue-chrts.
     // In pnpm strict mode, @unovis/ts and @unovis/vue are only accessible
