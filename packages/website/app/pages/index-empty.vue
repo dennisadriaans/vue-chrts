@@ -170,6 +170,8 @@ const features = [
             </div>
           </div>
 
+          <SectionsHeroDashboard class="mt-24" />
+
           <div class="mx-auto mt-12 max-w-3xl">
             <LogoBanner />
           </div>
@@ -198,87 +200,9 @@ const features = [
       </section>
     </div>
 
-    <div class="max-w-7xl mx-auto grid grid-cols-3 my-16 gap-8"> <UCard
-        v-for="feature in features"
-        :key="feature.title"
-        :ui="{ root: 'rounded-2xl h-full' }"
-      >
-        <UIcon :name="feature.icon" class="text-primary size-6" />
-        <h3
-          class="text-highlighted mt-4 text-base font-semibold tracking-tight"
-        >
-          {{ feature.title }}
-        </h3>
-        <p
-          class="text-muted dark:text-dimmed mt-2 text-sm leading-relaxed text-pretty"
-        >
-          {{ feature.description }}
-        </p>
-      </UCard>
-    </div>
+    <SectionsWhyNuxt />
 
-    <div
-      class="max-w-7xl mx-auto flex items-center justify-between mt-36 gap-32"
-    >
-      <h2 class="text-5xl font-semibold text-pretty">
-        123
-      </h2>
-      <p class="text-muted dark:text-dimmed text-2xl text-pretty">
-        Subscriptions, usage, seats, credits, trials, and discounts. Compose
-        them however your product charges.
-      </p>
-    </div>
-
-    <div class="max-w-7xl mx-auto grid grid-cols-3 my-16 gap-8">
-      <UCard>
-        <div class="space-y-1">
-          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
-          <p class="text-muted dark:text-dimmed">
-            Beautiful charts for your dashboard.
-          </p>
-        </div>
-      </UCard>
-      <UCard>
-        <div class="space-y-1">
-          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
-          <p class="text-muted dark:text-dimmed">
-            Beautiful charts for your dashboard.
-          </p>
-        </div>
-      </UCard>
-      <UCard>
-        <div class="space-y-1">
-          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
-          <p class="text-muted dark:text-dimmed">
-            Beautiful charts for your dashboard.
-          </p>
-        </div>
-      </UCard>
-      <UCard>
-        <div class="space-y-1">
-          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
-          <p class="text-muted dark:text-dimmed">
-            Beautiful charts for your dashboard.
-          </p>
-        </div>
-      </UCard>
-      <UCard>
-        <div class="space-y-1">
-          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
-          <p class="text-muted dark:text-dimmed">
-            Beautiful charts for your dashboard.
-          </p>
-        </div>
-      </UCard>
-      <UCard>
-        <div class="space-y-1">
-          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
-          <p class="text-muted dark:text-dimmed">
-            Beautiful charts for your dashboard.
-          </p>
-        </div>
-      </UCard>
-    </div>
+    <SectionsChartsAndTypes />
 
     <div class="my-36 space-y-16">
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-32">

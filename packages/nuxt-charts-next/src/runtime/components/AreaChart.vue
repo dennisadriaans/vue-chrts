@@ -14,6 +14,8 @@ import { categoriesToSeries } from "../utils/categories";
 import { curveTypeToVccs } from "../utils/curve";
 import { markerToDot, normalizeMarkerConfig, toStrokeDasharray } from "../utils/marker";
 import { DEFAULT_GRADIENT_STOPS, gradientId } from "../utils/gradient";
+import DitherDefs from "./internal/DitherDefs";
+import { ditherId, type DitherVariant } from "../utils/dither";
 
 // `gradient` is a Boolean prop, so Vue coerces an absent value to `false`. Default
 // it to `true` explicitly so the area keeps its fade-out fill unless opted out.
@@ -42,14 +44,36 @@ const dashArray = computed(() => toStrokeDasharray(props.lineDashArray));
  * Fill each area with its own vertical fade-out gradient. On by default; set
  * `gradient: false` for a flat fill, or pass `gradientStops` to customise.
  */
-const useGradient = computed(() => !props.hideArea && props.gradient !== false);
+/**
+ * Dithered (halftone) fill. Opt-in and takes precedence over the gradient:
+ * `dither` accepts `true` (the `bayer` variant) or a named variant.
+ */
+const useDither = computed(
+  () => !props.hideArea && props.dither !== undefined && props.dither !== false,
+);
+const ditherVariant = computed<DitherVariant>(() =>
+  typeof props.dither === "string" ? props.dither : "bayer",
+);
+
+const useGradient = computed(
+  () => !props.hideArea && props.gradient !== false && !useDither.value,
+);
 const gradientStops = computed(() =>
   props.gradientStops?.length ? props.gradientStops : DEFAULT_GRADIENT_STOPS,
 );
+
+/** Resolve the `fill` for one series: dither pattern, gradient, or flat colour. */
+function fillFor(dataKey: string, color: string): string {
+  if (useDither.value) return `url(#${ditherId(dataKey, gradientScope)})`;
+  if (useGradient.value) return `url(#${gradientId(dataKey, gradientScope)})`;
+  return color;
+}
+
+const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
 </script>
 
 <template>
-  <CartesianFrame :container="VccsAreaChart" v-bind="props">
+  <CartesianFrame :container="VccsAreaChart" :x-axis-key="xAxisKey" v-bind="props">
     <!--
       GradientDefs builds SVG nodes with `h()` so they land in the SVG namespace
       inside the chart surface. Do not wrap this in vccs `<Customized>`: that
@@ -62,6 +86,14 @@ const gradientStops = computed(() =>
       :stops="gradientStops"
       :scope="gradientScope"
     />
+    <!-- Same namespace/`Customized` constraints as GradientDefs above. -->
+    <DitherDefs
+      v-if="useDither"
+      :series="series"
+      :variant="ditherVariant"
+      :scope="gradientScope"
+      :tile="ditherTile ?? 8"
+    />
     <Area
       v-for="s in series"
       :key="s.dataKey"
@@ -70,8 +102,8 @@ const gradientStops = computed(() =>
       :type="curve"
       :stack-id="stackId"
       :stroke="s.color"
-      :fill="useGradient ? `url(#${gradientId(s.dataKey, gradientScope)})` : s.color"
-      :fill-opacity="useGradient ? 1 : fillOpacity"
+      :fill="fillFor(s.dataKey, s.color)"
+      :fill-opacity="useGradient || useDither ? 1 : fillOpacity"
       :stroke-width="lineWidth ?? 2"
       :stroke-dasharray="dashArray"
       :dot="(s.dot as boolean)"

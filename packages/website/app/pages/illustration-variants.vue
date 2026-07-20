@@ -96,7 +96,7 @@ const sections = [
         :title="section.title"
         :description="section.description"
         :ui="{
-          container: 'max-w-8xl mx-auto mb-8 py-8 sm:py-12 lg:py-20 gap-8 sm:gap-0'
+          container: 'max-w-7xl mx-auto mb-8 py-8 sm:py-12 lg:py-20 gap-8 sm:gap-0'
         }"
       >
         <HomeChartCardsWrapper v-if="section.component === 'one'" />

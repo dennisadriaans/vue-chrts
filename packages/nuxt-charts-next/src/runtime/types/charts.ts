@@ -10,6 +10,7 @@
  * autocomplete on axis keys and typed formatters.
  */
 import type { CurveType, DonutType, LegendPosition, Orientation } from "../enums";
+import type { DitherVariant } from "../utils/dither";
 import type {
   AxisConfig,
   BulletLegendItemInterface,
@@ -111,6 +112,8 @@ export interface CartesianChartBaseProps<T> {
 }
 
 export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
+  /** The data key used for the category (x) axis. */
+  xAxis?: keyof T;
   /** Curve interpolation for the area outline. */
   curveType?: CurveType;
   /** Render only the line, hiding the area fill. */
@@ -119,6 +122,13 @@ export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
   gradient?: boolean;
   /** Gradient stops for the area fill. Overrides the default fade. */
   gradientStops?: Array<{ offset: string; stopOpacity: number }>;
+  /**
+   * Fill the area with a tiling halftone dot pattern instead of a gradient.
+   * Takes precedence over `gradient` when set. `true` uses the `bayer` variant.
+   */
+  dither?: boolean | DitherVariant;
+  /** Tile edge length in px for the dither pattern. Default 8. */
+  ditherTile?: number;
   /** Line width in pixels. Default 2. */
   lineWidth?: number;
   /** Stack the areas instead of overlaying them. */
@@ -134,7 +144,7 @@ export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
 
 export type LineChartProps<T> = Omit<
   AreaChartProps<T>,
-  "hideArea" | "gradient" | "gradientStops"
+  "hideArea" | "gradient" | "gradientStops" | "dither" | "ditherTile"
 >;
 
 /**

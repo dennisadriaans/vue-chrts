@@ -266,7 +266,7 @@ const faqItems = [
             </div>
           </div>
 
-          <SectionsHeroWidget></SectionsHeroWidget>
+          <SectionsHeroWidget :height="260" />
         </div>
       </header>
     </div>
@@ -305,118 +305,6 @@ const faqItems = [
           </figcaption>
         </figure>
       </div>
-    </section>
-
-    <!-- Component sandbox -->
-    <section class="mx-auto max-w-7xl px-4 py-24 lg:py-32">
-      <div class="max-w-2xl">
-        <p
-          class="text-primary text-xs font-semibold tracking-[0.12em] uppercase"
-        >
-          Components
-        </p>
-        <h2
-          class="text-highlighted mt-3 text-3xl font-semibold tracking-tight text-balance lg:text-4xl"
-        >
-          Preview it, copy it, ship it
-        </h2>
-        <p
-          class="text-muted dark:text-dimmed mt-4 text-lg leading-relaxed text-pretty"
-        >
-          Every chart is a single component with typed props. Take the snippet
-          and drop it into your project.
-        </p>
-      </div>
-
-      <UCard class="mt-10" :ui="{ root: 'rounded-2xl', body: 'p-5 sm:p-6' }">
-        <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <UTabs
-            v-model="activeSandboxTab"
-            :items="sandboxTabs"
-            variant="pill"
-            size="sm"
-            :content="false"
-          />
-
-          <div class="flex items-center gap-2">
-            <UTabs
-              v-model="sandboxView"
-              :items="sandboxViews"
-              variant="pill"
-              size="xs"
-              :content="false"
-              :ui="{ list: 'bg-elevated' }"
-            />
-            <UButton
-              color="neutral"
-              variant="ghost"
-              size="sm"
-              icon="i-hugeicons:copy-01"
-              @click="copySnippet"
-            >
-              Copy
-            </UButton>
-          </div>
-        </div>
-
-        <div v-if="sandboxView === 'preview'" class="min-h-[280px]">
-          <ClientOnly>
-            <AreaChart
-              v-if="activeSandboxTab === 'area'"
-              :data="sandboxData"
-              :height="260"
-              :categories="sandboxCategories"
-              :x-formatter="sandboxXFormatter"
-              :y-formatter="sandboxYFormatter"
-              :curve-type="CurveType.Cardinal"
-              :x-grid-line="false"
-              :x-domain-line="false"
-              :y-domain-line="false"
-              stacked
-            />
-            <LineChart
-              v-else-if="activeSandboxTab === 'line'"
-              :data="sandboxData"
-              :height="260"
-              :categories="sandboxCategories"
-              :x-formatter="sandboxXFormatter"
-              :y-formatter="sandboxYFormatter"
-              :curve-type="CurveType.Cardinal"
-              :x-grid-line="false"
-              :x-domain-line="false"
-              :y-domain-line="false"
-            />
-            <BarChart
-              v-else-if="activeSandboxTab === 'bar'"
-              :data="sandboxData"
-              :height="260"
-              :categories="sandboxCategories"
-              :y-axis="['revenue', 'expenses']"
-              :x-formatter="sandboxXFormatter"
-              :y-formatter="sandboxYFormatter"
-              :x-grid-line="false"
-              :x-domain-line="false"
-              :y-domain-line="false"
-            />
-            <DonutChart
-              v-else
-              :data="donutData"
-              :categories="donutCategories"
-              :height="260"
-              :radius="0"
-            />
-
-            <template #fallback>
-              <div class="h-[260px]" />
-            </template>
-          </ClientOnly>
-        </div>
-
-        <pre
-          v-else
-          class="bg-muted text-default overflow-x-auto rounded-lg p-5 font-mono text-sm leading-relaxed"
-        ><code>{{ sandboxSnippets[activeSandboxTab] }}</code></pre>
-      </UCard>
     </section>
 
     <SectionsWhyNuxt></SectionsWhyNuxt>
@@ -465,14 +353,14 @@ const faqItems = [
         >
           <NuxtLink :to="template.slug" class="block">
             <!-- Thumbnail -->
-            <div class="bg-muted aspect-16/10 w-full overflow-hidden">
+            <div class="bg-muted aspect-16/10 w-full overflow-hidden rounded-xl">
               <!-- Light image -->
               <img
                 v-if="template.image?.light"
                 :src="template.image.light"
                 :alt="template.image.alt || template.name"
                 loading="lazy"
-                class="block size-full object-cover object-top transition-transform duration-300 group-hover:scale-105 dark:hidden"
+                class="block size-full object-cover object-top border-4 border-default transition-transform duration-300 group-hover:scale-105 dark:hidden"
               >
               <!-- Dark image -->
               <img
@@ -480,7 +368,7 @@ const faqItems = [
                 :src="template.image.dark"
                 :alt="template.image.alt || template.name"
                 loading="lazy"
-                class="hidden size-full object-cover object-top transition-transform duration-300 group-hover:scale-105 dark:block"
+                class="hidden size-full object-cover object-top border-4 border-default rounded-xl transition-transform duration-300 group-hover:scale-105 dark:block"
               >
             </div>
 
