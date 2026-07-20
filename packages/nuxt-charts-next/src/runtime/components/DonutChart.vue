@@ -104,6 +104,7 @@ const legendWrapperStyle = computed(() =>
           :start-angle="angles.startAngle"
           :end-angle="angles.endAngle"
           :padding-angle="padAngle ?? 0"
+          :stroke="stroke ?? 'none'"
           :is-animation-active="duration !== undefined && duration !== 0"
         />
         <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :is-animation-active="false" />

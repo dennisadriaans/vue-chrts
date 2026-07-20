@@ -89,7 +89,7 @@
     "typescript": "^5.9.3",
     "vitest": "^3.2.4",
     "vitest-axe": "^0.1.0",
-    "vue-tsc": "^2.2.12",
+    "vue-tsc": "^3.3.5",
     "wrangler": "^4.54.0"
   }
 }

@@ -86,7 +86,7 @@ const categories = computed(() => {
       </template>
 
       <div class="flex flex-col items-center gap-10 py-6">
-        <div class="relative">
+        <div class="relative w-[220px]">
           <DonutChart
             :data="currentMonth.data.map(d => d.value)"
             :categories="categories"

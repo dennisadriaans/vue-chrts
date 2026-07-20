@@ -128,6 +128,24 @@ body,
     mask-composite: intersect;
     -webkit-mask-composite: source-in;
   }
+
+  .blur-mask-fade {
+    /* Multi-stop ramps approximate an ease-in-out alpha curve, so the fade
+       reads as a soft dissolve instead of a visible linear band. */
+    --blur-mask-v:
+      #000 0%,
+      #000 42%,
+      rgb(0 0 0 / 0.88) 55%,
+      rgb(0 0 0 / 0.68) 66%,
+      rgb(0 0 0 / 0.44) 76%,
+      rgb(0 0 0 / 0.24) 85%,
+      rgb(0 0 0 / 0.1) 92%,
+      rgb(0 0 0 / 0.03) 97%,
+      transparent 100%;
+
+    -webkit-mask-image: linear-gradient(to bottom, var(--blur-mask-v));
+    mask-image: linear-gradient(to bottom, var(--blur-mask-v));
+  }
 }
 
 :root {
@@ -183,9 +201,11 @@ body,
 
 .dark {
   /* Global colors */
+
+  --ui-bg: var(--color-neutral-950);
+
   --dot-pattern-color: #9ca3af;
   --dot-pattern-preview-color: color-mix(in srgb, var(--dot-pattern-color) 10%, transparent);
-  --ui-bg: oklch(0.18 0 0);
 
   --ui-border: var(--ui-color-neutral-900);
 

@@ -80,30 +80,6 @@ const statusData = computed(() => {
           />
         </PreviewExample>
 
-        <PreviewExample title="Spark Line Inline Metrics">
-          <template #chart>
-            <BlocksStatusUptimeSparklinesRealtimeSparklines />
-          </template>
-          <PreviewCode
-            id="status-sparkline-realtime"
-            category="status"
-            block="sparklines/realtime-sparklines"
-            :lock-code="true"
-          />
-        </PreviewExample>
-
-        <PreviewExample title="Spark Line Inline Metrics">
-          <template #chart>
-            <BlocksStatusUptimeSparklinesTableSparklines />
-          </template>
-          <PreviewCode
-            id="status-sparklines-table"
-            category="status"
-            block="sparklines/table-sparklines"
-            :lock-code="true"
-          />
-        </PreviewExample>
-
         <PreviewExample title="Server Performance Heatmap">
           <template #chart>
             <BlocksStatusUptimeHeatMapServerPerformanceHeatmap />

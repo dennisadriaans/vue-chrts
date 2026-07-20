@@ -67,7 +67,7 @@ const isShop = computed(() => route.name === 'templates-slug')
     />
 
     <div
-      class="mx-auto flex max-w-8xl items-center py-3 px-4 lg:py-3"
+      class="mx-auto flex max-w-7xl items-center py-3 px-4 lg:py-3"
       :class="isShop ? 'lg:pr-3 lg:pl-6' : 'lg:px-6'"
     >
       <NuxtLink

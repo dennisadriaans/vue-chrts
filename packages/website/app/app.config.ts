@@ -116,7 +116,7 @@ export default defineAppConfig({
     // },
     card: {
       slots: {
-        root: 'overflow-visible bg-elevated/50 dark:bg-elevated/10',
+        root: 'overflow-visible bg-elevated/50 dark:bg-elevated/20',
       }
     },
     badge: {

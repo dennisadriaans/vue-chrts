@@ -7,7 +7,8 @@
  * (`<Area>` / `<Bar>` / `<Line>` / `<Scatter>`) to the default slot. This keeps
  * every chart adapter small and the axis/legend/tooltip wiring in one place.
  */
-import { computed, type Component } from "vue";
+import { computed, h, type Component } from "vue";
+import type { TooltipContentProps } from "vccs";
 import {
   CartesianGrid,
   Legend,
@@ -228,6 +229,36 @@ const yAxisInterval = computed(() =>
   ),
 );
 
+/**
+ * `vccs` passes the raw category tick value as the tooltip label; axis ticks
+ * go through `categoryFormatter` separately. Mirror that formatter here so
+ * index-based `xFormatter` callbacks (v2 parity) affect the tooltip title too.
+ */
+const tooltipContent = computed(() => {
+  const formatLabel = categoryFormatter.value;
+  const titleFormatter = props.tooltipTitleFormatter;
+
+  return (tooltipProps: TooltipContentProps) => {
+    let label = tooltipProps.label;
+    const row = tooltipProps.payload?.[0]?.payload as T | undefined;
+
+    if (titleFormatter && row != null) {
+      label = titleFormatter(row);
+    } else if (formatLabel != null && label !== undefined && label !== "") {
+      const rowIndex = row != null ? props.data.indexOf(row) : -1;
+      const index =
+        rowIndex >= 0
+          ? rowIndex
+          : typeof label === "number"
+            ? label
+            : Number(label);
+      label = formatLabel(label, Number.isNaN(index) ? 0 : index);
+    }
+
+    return h(ChartTooltip, { ...tooltipProps, label });
+  };
+});
+
 </script>
 
 <template>
@@ -296,7 +327,7 @@ const yAxisInterval = computed(() =>
 
       <Tooltip
         v-if="!hideTooltip"
-        :content="ChartTooltip"
+        :content="tooltipContent"
         :cursor="cursor"
         :is-animation-active="false"
       />
