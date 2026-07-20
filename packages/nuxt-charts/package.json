@@ -1,6 +1,6 @@
 {
   "name": "nuxt-charts",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "description": "Nuxt module for vue-chrts (legacy Unovis engine)",
   "license": "MIT",
   "type": "module",
@@ -26,6 +26,9 @@
     "typecheck": "pnpm run test:types",
     "test": "vitest run",
     "test:watch": "vitest watch",
+    "test:e2e": "playwright test",
+    "test:e2e:prod": "NUXT_CHARTS_E2E_MODE=prod playwright test",
+    "test:e2e:all": "./scripts/run-e2e.sh",
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
@@ -39,6 +42,7 @@
     "@nuxt/module-builder": "^1.0.2",
     "@nuxt/schema": "^4.3.0",
     "@nuxt/test-utils": "^3.23.0",
+    "@playwright/test": "^1.61.1",
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "latest",
     "changelogen": "^0.6.2",

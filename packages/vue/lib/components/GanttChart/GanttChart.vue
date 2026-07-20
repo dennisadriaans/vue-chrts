@@ -90,6 +90,8 @@ const colors = computed(() => {
       :data="props.data"
       :height="props.height"
       :duration="duration"
+      :x-domain="props.xDomain"
+      :y-domain="props.yDomain"
       @wheel="handleScroll"
     >
       <VisTimeline

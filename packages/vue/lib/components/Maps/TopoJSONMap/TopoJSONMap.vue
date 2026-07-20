@@ -24,8 +24,8 @@ const props = withDefaults(defineProps<MapsData<T>>(), {
 });
 
 const emit = defineEmits<{
-  (e: "mouseenter", d: any): void;
-  (e: "mouseleave", d: any): void;
+  (e: "mouseenter", d: any, event: MouseEvent): void;
+  (e: "mouseleave", d: any, event: MouseEvent): void;
   (e: "feature-click", d: any, event: MouseEvent): void;
   (e: "point-click", d: MapPoint, event: MouseEvent): void;
 }>();
@@ -98,6 +98,14 @@ const handleFeatureClick = (d: any, event: MouseEvent) => {
   emit("feature-click", d, event);
 };
 
+const handleMouseEnter = (d: any, event: MouseEvent) => {
+  emit("mouseenter", d, event);
+};
+
+const handleMouseLeave = (d: any, event: MouseEvent) => {
+  emit("mouseleave", d, event);
+};
+
 // Handler for clicking on points
 const handlePointClick = (d: MapPoint, event: MouseEvent) => {
   clickedPoint.value = d;
@@ -164,9 +172,13 @@ const mapsData = computed(() => props.data);
         :events="{
           [TopoJSONMap.selectors.feature]: {
             click: handleFeatureClick,
+            mouseenter: handleMouseEnter,
+            mouseleave: handleMouseLeave,
           },
           [TopoJSONMap.selectors.point]: {
             click: handlePointClick,
+            mouseenter: handleMouseEnter,
+            mouseleave: handleMouseLeave,
           },
         }"
       />
@@ -189,7 +201,7 @@ const mapsData = computed(() => props.data);
           'display: flex; gap: var(--vis-legend-spacing);',
         ]"
         :items="
-          Object.values(props.categories).map((item) => ({
+          Object.values(props.categories ?? {}).map((item) => ({
             ...item,
             color: Array.isArray(item.color) ? item.color[0] : item.color,
           }))

@@ -41,6 +41,10 @@ const props = withDefaults(defineProps<SankeyChartProps<N, L>>(), {
   iterations: 32,
   highlightSubtreeOnHover: false,
   labelMaxWidth: 70,
+  // Passed straight to VisSankey, so leaving it undefined would override
+  // Unovis' own `l => l.value` default and size every link from NaN.
+  // Function-typed props take the accessor itself, not a factory returning it.
+  linkValue: (link: L) => (link as { value?: number }).value ?? 0,
   tooltip: () => ({
     followCursor: true,
   }),
