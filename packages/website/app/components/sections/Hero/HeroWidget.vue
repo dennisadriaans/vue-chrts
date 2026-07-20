@@ -59,7 +59,7 @@ const heroYFormatter = (value: number) => `$${(value / 1000).toFixed(1)}k`;
 
 <template>
   <!-- Live chart widget -->
-  <UCard :ui="{ root: 'rounded-2xl bg-[#141414]! z-10 relative', body: 'p-5 sm:p-6' }">
+  <UCard :ui="{ root: 'rounded-2xl bg-[#0e0e0e]! z-10 relative', body: 'p-5 sm:p-6' }">
     <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
       <div>
         <p class="text-highlighted text-sm font-medium">Monthly revenue</p>

@@ -303,8 +303,13 @@ export interface DonutChartProps<T = unknown> {
   radius?: number;
   /** Ring thickness in pixels (outer radius minus inner radius). Default 40. */
   arcWidth?: number;
-  /** Angular padding between segments. */
+  /** Angular padding between segments, in degrees. */
   padAngle?: number;
+  /**
+   * Outline colour drawn around each segment. Defaults to `'none'`; pass a
+   * colour to separate segments with a border (e.g. the card background).
+   */
+  stroke?: string;
   /** Hide the legend. */
   hideLegend?: boolean;
   /** Legend position. */

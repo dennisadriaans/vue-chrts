@@ -287,6 +287,8 @@ const faqItems = [
           </div>
         </div>
 
+        <SectionsHeroDashboard class="mt-24" />
+
         <div class="mx-auto mt-12 max-w-3xl">
           <LogoBanner />
         </div>
@@ -306,6 +308,7 @@ const faqItems = [
         </figure>
       </div>
     </section>
+    
 
     <SectionsWhyNuxt></SectionsWhyNuxt>
 
@@ -407,24 +410,6 @@ const faqItems = [
       <div class="mt-12">
         <TestimonialsGrid />
       </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="mx-auto max-w-3xl px-4 py-24 lg:py-32">
-      <div class="max-w-2xl">
-        <p
-          class="text-primary text-xs font-semibold tracking-[0.12em] uppercase"
-        >
-          FAQ
-        </p>
-        <h2
-          class="text-highlighted mt-3 text-3xl font-semibold tracking-tight text-balance lg:text-4xl"
-        >
-          Common questions
-        </h2>
-      </div>
-
-      <UAccordion :items="faqItems" class="mt-10" />
     </section>
 
     <!-- Closing CTA -->

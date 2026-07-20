@@ -27,16 +27,6 @@ const cards: ChartCard[] = [
     description: 'A donut tuned through theme tokens. Adjust corner radius and segment spacing without touching the chart.'
   },
   {
-    id: 'bar-chart-two',
-    title: 'Bar Chart Two',
-    description: 'Daily income and expense side by side over twelve days, grouped per day for direct comparison.'
-  },
-  {
-    id: 'area-chart-one',
-    title: 'Area Chart One',
-    description: 'This year\'s revenue layered over last year\'s, with currency formatting on every axis and tooltip.'
-  },
-  {
     id: 'date-picker',
     title: 'Date Picker',
     description: 'A range calendar in a dropdown, with quick presets for today, last 7 days, and last 30 days.'
@@ -44,7 +34,7 @@ const cards: ChartCard[] = [
   {
     id: 'linecharts-chart-two',
     title: 'Line Chart Two',
-    description: 'Actual against target budget, with controls to switch the range and swap the curve type live.'
+    description: 'A smooth weekly series with hollow markers and a dashed grid, so each point and trend read clearly.'
   },
   {
     id: 'expense-budget-cards',
@@ -62,11 +52,6 @@ const cards: ChartCard[] = [
     description: 'Ninety days of uptime as one bar per day, with outages standing out against the operational run.'
   },
   {
-    id: 'cards-with-mini-charts',
-    title: 'Cards with Mini Charts',
-    description: 'Stat cards that carry a small chart inline, pairing the headline number with its recent shape.'
-  },
-  {
     id: 'donut-chart-one',
     title: 'Donut Chart One',
     description: 'System load split across CPU, memory, and network, with a legend listing each share.'
@@ -77,11 +62,6 @@ const cards: ChartCard[] = [
     description: 'Quarterly revenue split by subscriptions, services, and products, stacked into one running total.'
   },
   {
-    id: 'donut-chart-three',
-    title: 'Donut Chart Three',
-    description: 'Expenses by category with a period selector, so the same donut covers any window you pick.'
-  },
-  {
     id: 'linecharts-sales',
     title: 'Sales Volume',
     description: 'Sales volume across the first half of the year, with values shortened to thousands on the axis.'
@@ -90,21 +70,6 @@ const cards: ChartCard[] = [
     id: 'cards-with-progress-circle',
     title: 'Cards with Progress Circle',
     description: 'Progress toward a goal as a ring, for quotas and limits where the share matters more than the total.'
-  },
-  {
-    id: 'ai-chat-interface',
-    title: 'AI Chat Interface',
-    description: 'A full chat layout with conversation list, streaming replies, and collapsible reasoning steps.'
-  },
-  {
-    id: 'developer-salaries',
-    title: 'Developer Salaries',
-    description: 'Salary ranges compared across roles, using horizontal bars to keep long labels readable.'
-  },
-  {
-    id: 'cards-with-area-chart',
-    title: 'Cards with Area Chart',
-    description: 'A metric card with a full area chart underneath, for when the trend deserves more than a sparkline.'
   },
   {
     id: 'contribution-graph',
@@ -120,7 +85,7 @@ const cards: ChartCard[] = [
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto flex items-center justify-between mt-36 gap-32">
+  <div class="max-w-7xl mx-auto flex items-center justify-between mt-36 gap-32 px-4">
     <h2 class="text-5xl font-semibold text-pretty">123</h2>
     <p class="text-muted dark:text-dimmed text-2xl text-pretty">
       Subscriptions, usage, seats, credits, trials, and discounts. Compose them
@@ -128,16 +93,65 @@ const cards: ChartCard[] = [
     </p>
   </div>
 
-  <div class="max-w-7xl mx-auto grid grid-cols-3 my-16 gap-8">
+  <div class="max-w-7xl mx-auto grid grid-cols-3 my-16 gap-8 px-4">
     <UCard
-      v-for="card in cards"
-      :key="card.id"
+      v-for="(card, cardKey) in cards"
+      :key="cardKey"
     >
+
       <div class="space-y-1">
         <h3 class="text-highlighted mt-4 text-base font-semibold tracking-tight">{{ card.title }}</h3>
         <p class="text-muted dark:text-dimmed mt-2 text-sm leading-relaxed text-pretty">
           {{ card.description }}
         </p>
+      </div>
+
+      <div class="blur-mask-fade px-2 mt-4">
+        <template v-if="card.id === 'area-chart-preview'">
+          <HomeChartsCardinal />
+        </template>
+        <template v-else-if="card.id === 'bar-chart-one'">
+          <HomeChartsBarExample />
+        </template>
+        <template v-else-if="card.id === 'linecharts-chart-one'">
+          <HomeChartsLineChartSale />
+        </template>
+        <template v-else-if="card.id === 'with-radius-and-spacing'">
+          <HomeChartsDonutSimple />
+        </template>
+        <template v-else-if="card.id === 'date-picker'">
+          <HomeComponentsCalendar />
+        </template>
+        <template v-else-if="card.id === 'linecharts-chart-two'">
+          <HomeChartsLineChartTwo />
+        </template>
+        <template v-else-if="card.id === 'expense-budget-cards'">
+          <HomeComponentsExpenseBudget />
+        </template>
+        <template v-else-if="card.id === 'interactive-monochrome'">
+          <HomeChartsInteractiveMonochrome />
+        </template>
+        <template v-else-if="card.id === 'tracker'">
+          <HomeComponentsTracker /> 
+        </template>
+        <template v-else-if="card.id === 'donut-chart-one'">
+          <HomeChartsDonutOne />
+        </template>
+        <template v-else-if="card.id === 'area-chart-data'">
+          <HomeChartsAreaChartData />
+        </template>
+        <template v-else-if="card.id === 'linecharts-sales'">
+          <HomeChartsSalesVolume />
+        </template>
+        <template v-else-if="card.id === 'cards-with-progress-circle'">
+          <HomeComponentsProgressCircle />
+        </template>
+        <template v-else-if="card.id === 'contribution-graph'">
+          <HomeComponentsContributionGraph />
+        </template>
+        <template v-else-if="card.id === 'default-cards'">
+          <HomeComponentsDefaultCard />
+        </template>
       </div>
     </UCard>
   </div>
