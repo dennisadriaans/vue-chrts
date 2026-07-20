@@ -31,7 +31,7 @@ const items = computed(() => [
       :key="colorMode.value"
       :data="systemData"
       :categories="systemCategories"
-      :height="160"
+      :height="120"
       :arc-width="10"
       :pad-angle="2"
       :hide-legend="true"

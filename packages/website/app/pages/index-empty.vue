@@ -207,7 +207,7 @@ const features = [
     <div class="my-36 space-y-16">
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-32">
         <h2 class="text-5xl font-semibold text-pretty">
-          Ship any pricing model in an afternoon
+          Placeholder title
         </h2>
         <p class="text-muted dark:text-dimmed text-2xl text-pretty">
           Subscriptions, usage, seats, credits, trials, and discounts. Compose
@@ -215,8 +215,10 @@ const features = [
         </p>
       </div>
 
-      <UCard class="max-w-7xl mx-auto h-96"> </UCard>
-    </div>
+      <UCard class="max-w-7xl mx-auto h-96">
+        (Placeholder illustration)
+      </UCard>
+    </div>  
 
     <div class="my-36 space-y-16">
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-32">
