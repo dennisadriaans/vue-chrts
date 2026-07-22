@@ -51,6 +51,41 @@ const xFormatter = (v: unknown) =>
       :hide-legend="true"
     />
 
+    <h2>Bar Chart - Cubes</h2>
+    <BarChart
+      :data="monthly"
+      :categories="categoriesDesktop"
+      :y-axis="yAxisDesktop"
+      x-axis="month"
+      :height="320"
+      variant="cubes"
+      :hide-legend="true"
+      :y-grid-line="false"
+    />
+
+    <h2>Bar Chart - Cubes Stacked</h2>
+    <BarChart
+      :data="monthly"
+      :categories="categoriesMultiple"
+      :y-axis="yAxisMultiple"
+      x-axis="month"
+      :height="320"
+      variant="cubes"
+      stacked
+      :y-grid-line="false"
+    />
+
+    <h2>Bar Chart - Cubes Grouped</h2>
+    <BarChart
+      :data="monthly"
+      :categories="categoriesMultiple"
+      :y-axis="yAxisMultiple"
+      x-axis="month"
+      :height="320"
+      variant="cubes"
+      :y-grid-line="false"
+    />
+
     <h2>Bar Chart - Horizontal</h2>
     <BarChart
       :data="monthly"

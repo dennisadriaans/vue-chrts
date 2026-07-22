@@ -193,6 +193,21 @@ export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
   groupPadding?: number;
   /** Value-label config. */
   valueLabel?: ValueLabel;
+  /**
+   * Bar render variant. `"solid"` is the default rectangle bar.
+   * `"cubes"` draws a vertical stack of rounded squares. Works with single,
+   * grouped, and stacked (`stacked`) series — for stacks, only the first
+   * series draws the ghost column; each series fills its own cube range.
+   */
+  variant?: "solid" | "cubes";
+  /** Gap between cubes in px when `variant="cubes"`. Default 2. */
+  cubeGap?: number;
+  /** Corner radius per cube when `variant="cubes"`. Default 2. */
+  cubeRadius?: number;
+  /** Preferred cube edge length in px when `variant="cubes"`. Default 10. */
+  cubeSize?: number;
+  /** Fill for empty/ghost cubes when `variant="cubes"`. */
+  cubeEmptyColor?: string;
   /** @deprecated Unovis-only; no effect. Use `stacked`. */
   stackAndGrouped?: boolean;
   /** @deprecated Unovis-only; no effect. */
