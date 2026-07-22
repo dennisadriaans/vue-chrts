@@ -94,21 +94,77 @@ describe("AreaChart dither fill", () => {
   it("renders a per-series pattern when dither is enabled", async () => {
     await mountChart({ dither: true });
     const patterns = [...document.querySelectorAll("pattern")];
-    expect(patterns).toHaveLength(2);
-    expect(patterns.some((p) => p.id.endsWith("-desktop"))).toBe(true);
-    expect(patterns.some((p) => p.id.endsWith("-mobile"))).toBe(true);
-    expect(patterns[0]?.querySelectorAll("circle").length).toBeGreaterThan(0);
+    // Per series: the dot tile plus the plot-sized pattern the fill references.
+    expect(patterns).toHaveLength(4);
+    expect(patterns.some((p) => p.id === "nc-dither-v-0-desktop")).toBe(true);
+    expect(patterns.some((p) => p.id === "nc-dither-v-0-mobile")).toBe(true);
+    const dots = document.getElementById("nc-dither-v-0-desktop-dots")!;
+    expect(dots.querySelectorAll("circle").length).toBeGreaterThan(0);
   });
 
-  it("replaces the gradient rather than stacking with it", async () => {
+  it("composes the vertical gradient wash under the dither pattern", async () => {
     await mountChart({ dither: true });
+    // Per series: the dot tile plus the plot-sized pattern the fill references.
+    expect(document.querySelectorAll("pattern").length).toBe(4);
+
+    // The referenced fill is the combo pattern, which paints wash then dots.
+    const combo = document.getElementById("nc-dither-v-0-desktop")!;
+    const fills = [...combo.querySelectorAll("rect")].map((r) => r.getAttribute("fill"));
+    expect(fills).toEqual([
+      "url(#nc-dither-v-0-desktop-wash)",
+      "url(#nc-dither-v-0-desktop-dots)",
+    ]);
+
+    // The wash is a series-coloured vertical fade, so the area still ramps to
+    // transparent at the domain line the way a plain gradient fill does.
+    const wash = document.getElementById("nc-dither-v-0-desktop-wash")!;
+    const stops = [...wash.querySelectorAll("stop")];
+    expect(stops[0]?.getAttribute("stop-color")).toBe("#2662d9");
+    expect(Number(stops.at(-1)?.getAttribute("stop-opacity"))).toBe(0);
+  });
+
+  it("skips the wash when gradient is disabled", async () => {
+    await mountChart({ dither: true, gradient: false });
     expect(document.querySelectorAll("linearGradient").length).toBe(0);
+    // Dot tile plus the alias the fill references — no wash rects.
+    expect(document.querySelectorAll("pattern rect").length).toBe(0);
+  });
+
+  it("scales the wash with ditherWash", async () => {
+    await mountChart({ dither: true, ditherWash: 0.5 });
+    const stops = [...document.getElementById("nc-dither-v-0-desktop-wash")!.querySelectorAll("stop")];
+    // Default top stop is 0.6, halved.
+    expect(Number(stops[0]?.getAttribute("stop-opacity"))).toBeCloseTo(0.3);
+  });
+
+  it("drops the wash entirely when ditherWash is 0", async () => {
+    await mountChart({ dither: true, ditherWash: 0 });
+    expect(document.querySelectorAll("linearGradient").length).toBe(0);
+    expect(document.querySelectorAll("pattern rect").length).toBe(0);
+  });
+
+  it("honours custom gradientStops on the dither fade mask", async () => {
+    await mountChart({
+      dither: true,
+      gradientStops: [
+        { offset: "0%", stopOpacity: 1 },
+        { offset: "50%", stopOpacity: 0.5 },
+        { offset: "100%", stopOpacity: 0 },
+      ],
+    });
+    // One wash gradient per series, plus the shared dot-fade ramp.
+    expect(document.querySelectorAll("linearGradient").length).toBe(3);
+    const stops = [
+      ...document.getElementById("nc-dither-v-0-desktop-wash")!.querySelectorAll("stop"),
+    ];
+    expect(stops).toHaveLength(3);
+    expect(stops[0]?.getAttribute("stop-opacity")).toBe("1");
   });
 
   it("accepts each named variant", async () => {
     for (const variant of DITHER_VARIANTS) {
       const wrapper = await mountChart({ dither: variant });
-      expect(document.querySelectorAll("pattern").length).toBe(2);
+      expect(document.querySelectorAll("pattern").length).toBe(4);
       wrapper.unmount();
       document.body.innerHTML = "";
     }
@@ -116,7 +172,9 @@ describe("AreaChart dither fill", () => {
 
   it("honours a custom tile size", async () => {
     await mountChart({ dither: true, ditherTile: 16 });
-    expect(document.querySelector("pattern")?.getAttribute("width")).toBe("16");
+    expect(
+      document.getElementById("nc-dither-v-0-desktop-dots")?.getAttribute("width"),
+    ).toBe("16");
   });
 
   it("emits no pattern when the area is hidden", async () => {
@@ -126,9 +184,7 @@ describe("AreaChart dither fill", () => {
 
   it("colours the dots per series", async () => {
     await mountChart({ dither: true });
-    const desktop = document.getElementById(
-      [...document.querySelectorAll("pattern")].find((p) => p.id.endsWith("-desktop"))!.id,
-    );
-    expect(desktop?.querySelector("circle")?.getAttribute("fill")).toBe("#2662d9");
+    const dots = document.getElementById("nc-dither-v-0-desktop-dots");
+    expect(dots?.querySelector("circle")?.getAttribute("fill")).toBe("#2662d9");
   });
 });

@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  cubeOpacityAtRow,
+  cubeSizeAtRow,
   layoutCubeColumn,
   valueToCubeCount,
   DEFAULT_CUBE_GAP,
@@ -54,7 +56,7 @@ describe("layoutCubeColumn", () => {
     expect(bottom).toBeCloseTo(column.y + column.height);
   });
 
-  it("uses the full band width when narrower than preferred size", () => {
+  it("clamps to the band width when narrower than preferred size", () => {
     const narrow = { x: 0, y: 0, width: 6, height: 100 };
     const cubes = layoutCubeColumn({
       column: narrow,
@@ -63,6 +65,21 @@ describe("layoutCubeColumn", () => {
     });
     expect(cubes.every((c) => c.size === 6)).toBe(true);
     expect(cubes[0]!.x).toBe(0);
+  });
+
+  it("centers every cube on one vertical axis when tapering", () => {
+    const cubes = layoutCubeColumn({
+      column,
+      valueHeight: 160,
+      preferredSize: 10,
+      minSize: 2,
+      includeEmpty: false,
+    });
+    const centers = cubes.map((c) => c.x + c.size / 2);
+    const expected = column.x + column.width / 2;
+    for (const cx of centers) {
+      expect(cx).toBeCloseTo(expected);
+    }
   });
 
   it("keeps vertical gaps uniform", () => {
@@ -120,5 +137,100 @@ describe("layoutCubeColumn", () => {
     });
     expect(cubes.length).toBeGreaterThan(0);
     expect(cubes.every((c) => c.filled)).toBe(true);
+  });
+
+  it("tapers cube size from top (preferred) to bottom (minSize)", () => {
+    const cubes = layoutCubeColumn({
+      column,
+      valueHeight: 200,
+      preferredSize: 10,
+      minSize: 2,
+      gap: 2,
+    });
+    const sorted = [...cubes].sort((a, b) => a.y - b.y);
+    expect(sorted[0]!.size).toBeCloseTo(10);
+    expect(sorted[sorted.length - 1]!.size).toBeCloseTo(2);
+    for (let i = 1; i < sorted.length; i++) {
+      expect(sorted[i]!.size).toBeLessThanOrEqual(sorted[i - 1]!.size);
+    }
+
+    const centers = sorted.map((c) => c.y + c.size / 2);
+    const stride = centers[1]! - centers[0]!;
+    for (let i = 2; i < centers.length; i++) {
+      expect(centers[i]! - centers[i - 1]!).toBeCloseTo(stride);
+    }
+  });
+
+  it("keeps the same size on a given horizontal row across short and tall bars", () => {
+    const tall = layoutCubeColumn({
+      column,
+      valueHeight: 200,
+      preferredSize: 10,
+      minSize: 2,
+      includeEmpty: false,
+    });
+    const short = layoutCubeColumn({
+      column,
+      valueHeight: 60,
+      preferredSize: 10,
+      minSize: 2,
+      includeEmpty: false,
+    });
+
+    const tallByY = new Map(tall.map((c) => [+c.y.toFixed(2), c.size]));
+    for (const cube of short) {
+      const tallSize = tallByY.get(+cube.y.toFixed(2));
+      expect(tallSize).toBeDefined();
+      expect(cube.size).toBeCloseTo(tallSize!);
+    }
+
+    const shortSorted = [...short].sort((a, b) => a.y - b.y);
+    // Short bar sits near the baseline, so its top cubes are already mid-taper.
+    expect(shortSorted[0]!.size).toBeLessThan(10);
+    expect(shortSorted[shortSorted.length - 1]!.size).toBeCloseTo(2);
+  });
+});
+
+describe("cubeSizeAtRow", () => {
+  it("returns max when a single row or no taper", () => {
+    expect(cubeSizeAtRow(0, 1, 10, 2)).toBe(10);
+    expect(cubeSizeAtRow(3, 8, 10, 10)).toBe(10);
+  });
+
+  it("lerps from max at top to min at bottom", () => {
+    expect(cubeSizeAtRow(0, 5, 10, 2)).toBe(10);
+    expect(cubeSizeAtRow(4, 5, 10, 2)).toBe(2);
+    expect(cubeSizeAtRow(2, 5, 10, 2)).toBe(6);
+  });
+});
+
+describe("cubeOpacityAtRow", () => {
+  it("stays fully opaque for a single row", () => {
+    expect(cubeOpacityAtRow(0, 1, 0.05)).toBe(1);
+  });
+
+  it("fades from 1 at top to minOpacity at bottom", () => {
+    expect(cubeOpacityAtRow(0, 5, 0.05)).toBe(1);
+    expect(cubeOpacityAtRow(4, 5, 0.05)).toBeCloseTo(0.05);
+    // Ease-in: mid row is still relatively opaque.
+    expect(cubeOpacityAtRow(2, 5, 0.05)).toBeGreaterThan(0.5);
+  });
+});
+
+describe("layoutCubeColumn opacity taper", () => {
+  it("pairs size taper with opacity washout", () => {
+    const cubes = layoutCubeColumn({
+      column: { x: 40, y: 10, width: 48, height: 200 },
+      valueHeight: 200,
+      preferredSize: 10,
+      minSize: 2,
+      minOpacity: 0.05,
+    });
+    const sorted = [...cubes].sort((a, b) => a.y - b.y);
+    expect(sorted[0]!.opacity).toBe(1);
+    expect(sorted[sorted.length - 1]!.opacity).toBeCloseTo(0.05);
+    for (let i = 1; i < sorted.length; i++) {
+      expect(sorted[i]!.opacity).toBeLessThanOrEqual(sorted[i - 1]!.opacity);
+    }
   });
 });

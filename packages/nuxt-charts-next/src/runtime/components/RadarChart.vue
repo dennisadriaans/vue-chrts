@@ -44,7 +44,17 @@ const themeVars = computed(() => themeToVars(props.theme));
     <VccsRadarChart :data="data">
       <PolarGrid stroke="var(--vc-grid-color)" />
       <PolarAngleAxis :data-key="angleKey" :tick-formatter="angleFormatter" />
-      <PolarRadiusAxis v-if="!hideRadiusAxis" />
+      <!--
+        vccs defaults the radius axis to `angle: 0`, which lays the 0→max scale
+        out horizontally to the right. Point it up instead so the scale reads
+        bottom-to-top from the centre; `orientation: middle` then centres the
+        tick labels on the axis line rather than hanging them off one side.
+      -->
+      <PolarRadiusAxis
+        v-if="!hideRadiusAxis"
+        :angle="radiusAxisAngle ?? 90"
+        orientation="middle"
+      />
 
       <Radar
         v-for="s in series"

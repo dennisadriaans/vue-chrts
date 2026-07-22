@@ -32,7 +32,7 @@ import {
   type VccsAxisInterval,
 } from "../../utils/axis";
 import { toAxisDomain, toCssProperties } from "../../utils/style";
-import { axisTickVars, resolveHoverVisible, themeToVars } from "../../utils/theme";
+import { axisTickVars, resolveHoverRadius, resolveHoverVisible, themeToVars } from "../../utils/theme";
 import ChartTooltip from "./ChartTooltip.vue";
 import ChartLegend from "./ChartLegend.vue";
 
@@ -172,13 +172,13 @@ const gridStroke = "var(--vc-grid-color)";
 const axisLineStyle = { stroke: "var(--vc-axis-line-color)" } as const;
 const tickLineStyle = { stroke: "var(--vc-axis-line-color)" } as const;
 
-/** Hover cursor: token-driven rectangle, or `false` to hide (theme.hover.visible). */
+/** Hover cursor: token-driven fill/stroke; radius must be numeric for vccs Rectangle. */
 const cursor = computed(() =>
   resolveHoverVisible(props.theme)
     ? {
         fill: "var(--vc-hover-fill)",
         stroke: "var(--vc-hover-stroke)",
-        radius: "var(--vc-hover-radius)",
+        radius: resolveHoverRadius(props.theme),
       }
     : false,
 );

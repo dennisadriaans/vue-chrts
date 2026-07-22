@@ -118,17 +118,29 @@ export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
   curveType?: CurveType;
   /** Render only the line, hiding the area fill. */
   hideArea?: boolean;
-  /** Fill the area with a vertical fade-out gradient. Default `true`. Set `false` for a flat fill. */
+  /**
+   * Vertical fade-out for the area fill. Default `true`. Set `false` for a flat
+   * fill. When `dither` is also set, the fade is applied as a mask over the
+   * dither pattern instead of replacing it.
+   */
   gradient?: boolean;
-  /** Gradient stops for the area fill. Overrides the default fade. */
+  /** Gradient stops for the area fade. Overrides the default opacity ramp. */
   gradientStops?: Array<{ offset: string; stopOpacity: number }>;
   /**
-   * Fill the area with a tiling halftone dot pattern instead of a gradient.
-   * Takes precedence over `gradient` when set. `true` uses the `bayer` variant.
+   * Fill the area with a tiling halftone dot pattern. `true` uses the `bayer`
+   * variant. Composes with `gradient` (the vertical fade) unless `gradient` is
+   * `false`.
    */
   dither?: boolean | DitherVariant;
   /** Tile edge length in px for the dither pattern. Default 8. */
   ditherTile?: number;
+  /**
+   * Opacity of the solid colour wash painted under the dither dots, which is
+   * what makes a dithered area fade from colour at the top to transparent at
+   * the domain line like a normal gradient fill, instead of showing bare dots.
+   * Defaults to the top `gradientStops` opacity; set `0` for dots only.
+   */
+  ditherWash?: number;
   /** Line width in pixels. Default 2. */
   lineWidth?: number;
   /** Stack the areas instead of overlaying them. */
@@ -144,7 +156,7 @@ export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
 
 export type LineChartProps<T> = Omit<
   AreaChartProps<T>,
-  "hideArea" | "gradient" | "gradientStops" | "dither" | "ditherTile"
+  "hideArea" | "gradient" | "gradientStops" | "dither" | "ditherTile" | "ditherWash"
 >;
 
 /**
@@ -187,9 +199,24 @@ export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
   orientation?: Orientation;
   /** Rounded corner radius for bars in pixels. Default 2. */
   radius?: number;
-  /** Fractional padding between bars in `[0, 1)`. */
+  /**
+   * Gap between bars within a group. Number = px, string = percent (e.g. `"2%"`).
+   * Lower values pull grouped bars closer. Default `4` (vccs).
+   */
+  barGap?: number | string;
+  /**
+   * Gap between category groups. Number = px, string = percent (e.g. `"10%"`).
+   * Default `"10%"` (vccs).
+   */
+  barCategoryGap?: number | string;
+  /**
+   * @deprecated Prefer `barGap`. Still forwarded as `barGap` when `barGap` is omitted.
+   */
   barPadding?: number;
-  /** Padding between bar groups in pixels. */
+  /**
+   * @deprecated Prefer `barCategoryGap`. Still forwarded as `barCategoryGap` when
+   * `barCategoryGap` is omitted.
+   */
   groupPadding?: number;
   /** Value-label config. */
   valueLabel?: ValueLabel;
@@ -204,8 +231,23 @@ export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
   cubeGap?: number;
   /** Corner radius per cube when `variant="cubes"`. Default 2. */
   cubeRadius?: number;
-  /** Preferred cube edge length in px when `variant="cubes"`. Default 10. */
+  /**
+   * Preferred cube edge length in px when `variant="cubes"`. Default 10.
+   * Clamped to the bar band width so columns stay straight and centered.
+   */
   cubeSize?: number;
+  /**
+   * When set below `cubeSize`, cubes taper from `cubeSize` at the top of the
+   * plot to this size at the baseline. Size follows absolute chart Y so every
+   * horizontal line shares one cube size. Opacity also fades top → bottom
+   * (see `cubeMinOpacity`). Omit for uniform cubes.
+   */
+  cubeMinSize?: number;
+  /**
+   * Floor fill-opacity when size-tapering (top stays 1). Default `0.05`.
+   * Only applies when `cubeMinSize` is set.
+   */
+  cubeMinOpacity?: number;
   /** Fill for empty/ghost cubes when `variant="cubes"`. */
   cubeEmptyColor?: string;
   /** @deprecated Unovis-only; no effect. Use `stacked`. */
@@ -379,6 +421,11 @@ export interface RadarChartProps<T> {
   legendStyle?: string | Record<string, string>;
   /** Hide the radius (value) axis. */
   hideRadiusAxis?: boolean;
+  /**
+   * Angle (in degrees, counter-clockwise from 3 o'clock) along which the radius
+   * axis is drawn. Default 90, i.e. straight up from the centre.
+   */
+  radiusAxisAngle?: number;
   /** Tooltip behaviour config. */
   tooltip?: TooltipConfig;
   /**

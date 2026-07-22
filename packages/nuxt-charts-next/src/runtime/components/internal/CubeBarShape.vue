@@ -27,6 +27,10 @@ const props = withDefaults(
     gap?: number;
     radius?: number;
     preferredSize?: number;
+    /** When set below preferredSize, cubes shrink from top → bottom. */
+    minSize?: number;
+    /** Floor opacity when size-tapering (top = 1). Default 0.05. */
+    minOpacity?: number;
     emptyColor?: string;
     /** When false, only filled cubes are emitted (stacked layers above the first). */
     includeEmpty?: boolean;
@@ -41,31 +45,47 @@ const props = withDefaults(
 );
 
 const cubes = computed(() => {
+  const hasBackground =
+    props.background && props.background.width > 0 && props.background.height > 0;
+  const hasBar =
+    props.x != null &&
+    props.y != null &&
+    (props.width ?? 0) > 0 &&
+    (props.height ?? 0) > 0;
+
+  // Vertical band from background (full plot height); horizontal slot from the
+  // bar itself so grouped/stacked columns stay centered on their own axis.
   const column =
-    props.background && props.background.width > 0 && props.background.height > 0
-      ? props.background
-      : props.x != null &&
-          props.y != null &&
-          (props.width ?? 0) > 0 &&
-          (props.height ?? 0) > 0
-        ? {
-            x: props.x,
-            y: props.y,
-            width: props.width!,
-            height: props.height!,
-          }
-        : null;
+    hasBackground && hasBar
+      ? {
+          x: props.x!,
+          y: props.background!.y,
+          width: props.width!,
+          height: props.background!.height,
+        }
+      : hasBackground
+        ? props.background!
+        : hasBar
+          ? {
+              x: props.x!,
+              y: props.y!,
+              width: props.width!,
+              height: props.height!,
+            }
+          : null;
 
   if (!column) return [];
 
   return layoutCubeColumn({
     column,
     valueHeight: Math.max(0, props.height ?? 0),
-    segmentY: props.background ? (props.y ?? undefined) : undefined,
+    segmentY: hasBackground ? (props.y ?? undefined) : undefined,
     includeEmpty: props.includeEmpty,
     gap: props.gap,
     radius: props.radius,
     preferredSize: props.preferredSize,
+    minSize: props.minSize,
+    minOpacity: props.minOpacity,
   });
 });
 </script>
@@ -82,6 +102,7 @@ const cubes = computed(() => {
       :rx="cube.radius"
       :ry="cube.radius"
       :fill="cube.filled ? (fill ?? 'currentColor') : emptyColor"
+      :fill-opacity="cube.opacity"
     />
   </g>
 </template>

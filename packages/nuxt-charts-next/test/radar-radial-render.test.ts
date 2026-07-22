@@ -58,6 +58,25 @@ describe("RadarChart / RadialBarChart render with gallery-shaped data", () => {
     expect(shapes.length).toBeGreaterThan(0);
   });
 
+  it("radar draws the radius axis upward from the centre, not to the right", async () => {
+    await mountChart(RadarChart, {
+      data: [
+        { metric: "Speed", productA: 120 },
+        { metric: "Reliability", productA: 98 },
+        { metric: "Comfort", productA: 86 },
+      ],
+      categories: { productA: { name: "Product A", color: "#2662d9" } },
+      dataKey: "metric",
+      height: 300,
+    });
+    const line = document.querySelector(".v-charts-polar-radius-axis-line");
+    expect(line).not.toBeNull();
+    const [x1, y1, x2, y2] = ["x1", "y1", "x2", "y2"].map((a) => Number(line!.getAttribute(a)));
+    // Vertical: both endpoints share an x, and the far tick sits above the near one.
+    expect(Math.abs(x1! - x2!)).toBeLessThan(0.001);
+    expect(y2!).toBeLessThan(y1!);
+  });
+
   it("radial bar renders sectors from a positional value list", async () => {
     await mountChart(RadialBarChart, {
       data: [275, 200, 187, 173, 90],

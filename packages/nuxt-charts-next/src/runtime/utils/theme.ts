@@ -57,6 +57,18 @@ export function resolveHoverVisible(theme: ChartTheme | undefined): boolean {
   return theme?.hover?.visible !== false;
 }
 
+/** Default matches `--vc-hover-radius` in `theme.css`. vccs `Rectangle` needs a number. */
+export const DEFAULT_HOVER_RADIUS = 6;
+
+/**
+ * Corner radius for the hover cursor rectangle. CSS vars can't be passed —
+ * vccs validates `radius` as `Number | Array`.
+ */
+export function resolveHoverRadius(theme: ChartTheme | undefined): number {
+  const r = theme?.hover?.radius;
+  return typeof r === "number" && Number.isFinite(r) ? r : DEFAULT_HOVER_RADIUS;
+}
+
 /**
  * Map per-axis tick *colour / size / weight* (from {@link AxisConfig}) onto
  * scoped `--vc-{x|y}-tick-*` CSS variables read by

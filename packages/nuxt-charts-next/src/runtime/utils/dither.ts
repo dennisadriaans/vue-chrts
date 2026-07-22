@@ -22,6 +22,25 @@ export function ditherId(dataKey: string, scope?: string): string {
   return `nc-dither-${id.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
 }
 
+/**
+ * Id for the repeating dot tile of a series.
+ *
+ * Separate from `ditherId` because a faded dither composes two paints: this
+ * tile is painted over a gradient wash inside the plot-sized pattern that
+ * `ditherId` names and the area's `fill` actually references.
+ */
+export function dotsId(dataKey: string, scope?: string): string {
+  return `${ditherId(dataKey, scope)}-dots`;
+}
+
+/**
+ * Id for the shared vertical fade applied to the dot texture. One per chart
+ * scope — the stops carry opacity only, so every series can reuse it.
+ */
+export function ditherFadeMaskId(scope: string): string {
+  return `nc-dither-fade-${scope.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
+}
+
 /** One dot within a dither tile, in tile-relative units (0–1). */
 export interface DitherDot {
   /** Horizontal centre, as a fraction of the tile width. */

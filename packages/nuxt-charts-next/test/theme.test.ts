@@ -3,7 +3,7 @@ import { describe, expect, it, beforeAll, afterEach } from "vitest";
 import { mount, flushPromises } from "@vue/test-utils";
 import AreaChart from "../src/runtime/components/AreaChart.vue";
 import DonutChart from "../src/runtime/components/DonutChart.vue";
-import { resolveHoverVisible, themeToVars, axisTickVars } from "../src/runtime/utils/theme";
+import { resolveHoverRadius, resolveHoverVisible, themeToVars, axisTickVars } from "../src/runtime/utils/theme";
 import type { ChartTheme } from "../src/runtime/types/shared";
 
 const mounted: Array<{ unmount: () => void }> = [];
@@ -102,6 +102,17 @@ describe("resolveHoverVisible", () => {
   it("is false only when explicitly disabled", () => {
     expect(resolveHoverVisible({ hover: { visible: false } })).toBe(false);
     expect(resolveHoverVisible({ hover: { visible: true } })).toBe(true);
+  });
+});
+
+describe("resolveHoverRadius", () => {
+  it("defaults to 6 to match --vc-hover-radius", () => {
+    expect(resolveHoverRadius(undefined)).toBe(6);
+    expect(resolveHoverRadius({})).toBe(6);
+  });
+
+  it("uses theme.hover.radius when set", () => {
+    expect(resolveHoverRadius({ hover: { radius: 8 } })).toBe(8);
   });
 });
 

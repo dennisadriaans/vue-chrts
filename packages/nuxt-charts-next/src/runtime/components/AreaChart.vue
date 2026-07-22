@@ -41,12 +41,8 @@ const fillOpacity = computed(() => (props.hideArea ? 0 : 0.6));
 const dashArray = computed(() => toStrokeDasharray(props.lineDashArray));
 
 /**
- * Fill each area with its own vertical fade-out gradient. On by default; set
- * `gradient: false` for a flat fill, or pass `gradientStops` to customise.
- */
-/**
- * Dithered (halftone) fill. Opt-in and takes precedence over the gradient:
- * `dither` accepts `true` (the `bayer` variant) or a named variant.
+ * Dithered (halftone) fill. Opt-in; uses a tiling pattern instead of a solid
+ * or gradient paint. `true` selects the `bayer` variant.
  */
 const useDither = computed(
   () => !props.hideArea && props.dither !== undefined && props.dither !== false,
@@ -55,17 +51,48 @@ const ditherVariant = computed<DitherVariant>(() =>
   typeof props.dither === "string" ? props.dither : "bayer",
 );
 
-const useGradient = computed(
+/**
+ * Vertical fade-out as the fill paint (no dither). On by default; set
+ * `gradient: false` for a flat fill, or pass `gradientStops` to customise.
+ */
+const useGradientFill = computed(
   () => !props.hideArea && props.gradient !== false && !useDither.value,
 );
+
+/**
+ * Same vertical fade composed on top of a dither pattern. Default on so Bayer
+ * / noise / fade still dissolve toward the baseline; `gradient: false` keeps
+ * a flat full-opacity dither.
+ */
+const useDitherFade = computed(
+  () => useDither.value && props.gradient !== false,
+);
+
 const gradientStops = computed(() =>
   props.gradientStops?.length ? props.gradientStops : DEFAULT_GRADIENT_STOPS,
 );
 
+/**
+ * Stops for the colour wash drawn under the dither dots. Without it the dots —
+ * which cover only a few percent of a tile — read as bare texture instead of
+ * the tinted, fading fill an area chart normally has.
+ *
+ * `ditherWash` scales the stop opacities, so `0` gives dots on their own.
+ */
+const ditherWashStops = computed(() => {
+  if (!useDitherFade.value) return undefined;
+  const scale = props.ditherWash ?? 1;
+  if (scale <= 0) return undefined;
+  return gradientStops.value.map((stop) => ({
+    ...stop,
+    stopOpacity: stop.stopOpacity * scale,
+  }));
+});
+
 /** Resolve the `fill` for one series: dither pattern, gradient, or flat colour. */
 function fillFor(dataKey: string, color: string): string {
   if (useDither.value) return `url(#${ditherId(dataKey, gradientScope)})`;
-  if (useGradient.value) return `url(#${gradientId(dataKey, gradientScope)})`;
+  if (useGradientFill.value) return `url(#${gradientId(dataKey, gradientScope)})`;
   return color;
 }
 
@@ -81,7 +108,7 @@ const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis)
       mousemove, which recreates all gradients and freezes the page.
     -->
     <GradientDefs
-      v-if="useGradient"
+      v-if="useGradientFill"
       :series="series"
       :stops="gradientStops"
       :scope="gradientScope"
@@ -93,6 +120,8 @@ const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis)
       :variant="ditherVariant"
       :scope="gradientScope"
       :tile="ditherTile ?? 8"
+      :fade-stops="ditherWashStops"
+      :height="height"
     />
     <Area
       v-for="s in series"
@@ -103,7 +132,7 @@ const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis)
       :stack-id="stackId"
       :stroke="s.color"
       :fill="fillFor(s.dataKey, s.color)"
-      :fill-opacity="useGradient || useDither ? 1 : fillOpacity"
+      :fill-opacity="useGradientFill || useDither ? 1 : fillOpacity"
       :stroke-width="lineWidth ?? 2"
       :stroke-dasharray="dashArray"
       :dot="(s.dot as boolean)"

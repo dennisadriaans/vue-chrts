@@ -73,6 +73,16 @@ const series = computed(() =>
 const stackId = computed(() => (props.stacked ? "stack" : undefined));
 const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
 
+/** Forward spacing props onto the `vccs` chart container. */
+const chartContainerProps = computed(() => {
+  const barGap = props.barGap ?? props.barPadding;
+  const barCategoryGap = props.barCategoryGap ?? props.groupPadding;
+  return {
+    ...(barGap !== undefined ? { barGap } : {}),
+    ...(barCategoryGap !== undefined ? { barCategoryGap } : {}),
+  };
+});
+
 /**
  * Only the outer edge of a stack gets rounded corners; inner segment joins
  * stay square. `radius` order is `[top-left, top-right, bottom-right, bottom-left]`.
@@ -89,7 +99,12 @@ function barRadius(index: number): number | [number, number, number, number] {
 </script>
 
 <template>
-  <CartesianFrame :container="VccsBarChart" :x-axis-key="xAxisKey" v-bind="props">
+  <CartesianFrame
+    :container="VccsBarChart"
+    :x-axis-key="xAxisKey"
+    :container-props="chartContainerProps"
+    v-bind="props"
+  >
     <Bar
       v-for="(s, i) in series"
       :key="s.dataKey"
@@ -117,6 +132,8 @@ function barRadius(index: number): number | [number, number, number, number] {
           :gap="cubeGap"
           :radius="cubeRadius"
           :preferred-size="cubeSize"
+          :min-size="typeof cubeMinSize === 'number' ? cubeMinSize : undefined"
+          :min-opacity="typeof cubeMinOpacity === 'number' ? cubeMinOpacity : undefined"
           :empty-color="cubeEmptyColor"
           :include-empty="!stacked || i === 0"
         />

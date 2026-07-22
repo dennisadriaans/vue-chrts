@@ -43,14 +43,18 @@ const cubeTrendData = (() => {
     return {
       date: date.toISOString().slice(0, 10),
       label: date.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" }),
-      value,
+      revenue: value,
     };
   });
 })();
 
 const cubeTrendCategories = {
-  value: { name: "Failed executions", color: "#f97316" },
+  revenue: { name: "Revenue", color: "var(--color-green-500)" },
 };
+
+/** Ghost cubes between the value and the chart top — Nuxt UI `bg-elevated/50`. */
+const cubeTrendEmptyColor =
+  "color-mix(in oklab, var(--ui-bg-elevated) 50%, transparent)";
 
 type HeroChartType = "area" | "bar";
 
@@ -121,10 +125,10 @@ const cubeTrendYFormatter = (value: number) => String(value);
     <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
       <div>
         <p class="text-highlighted text-sm font-medium">
-          {{ isCubeTrend ? "Performance trend" : "Monthly revenue" }}
+          {{ isCubeTrend ? "Daily revenue" : "Monthly revenue" }}
         </p>
         <p class="text-muted dark:text-dimmed text-xs">
-          {{ isCubeTrend ? "Failed executions · last 80 days" : "Last 6 months" }}
+          {{ isCubeTrend ? "Last 80 days" : "Last 6 months" }}
         </p>
       </div>
 
@@ -201,21 +205,26 @@ const cubeTrendYFormatter = (value: number) => String(value);
         :data="cubeTrendData"
         :height="height"
         :categories="cubeTrendCategories"
-        :y-axis="['value']"
+        :y-axis="['revenue']"
         x-axis="date"
         :x-formatter="cubeTrendXFormatter"
         :y-formatter="cubeTrendYFormatter"
         variant="cubes"
-        :cube-size="8"
+        :cube-size="5"
+        :cube-min-size="1"
+        :cube-min-opacity="0.02"
         :cube-gap="2"
+        :cube-radius="1"
+        :cube-empty-color="cubeTrendEmptyColor"
+        :bar-category-gap="1"
         :y-domain="[0, 100]"
         :x-grid-line="false"
-        :y-grid-line="false"
+        :y-grid-line="true"
         :x-domain-line="false"
         :y-domain-line="false"
         :x-num-ticks="5"
         :y-num-ticks="4"
-        :y-explicit-ticks="[25, 50, 75, 100]"
+        :y-explicit-ticks="[0, 25, 50, 75, 100]"
         hide-legend
       />
       <BarChart

@@ -25,7 +25,7 @@ import {
   toTickProp,
 } from "../utils/axis";
 import { toAxisDomain, toCssProperties } from "../utils/style";
-import { axisTickVars, resolveHoverVisible, themeToVars } from "../utils/theme";
+import { axisTickVars, resolveHoverRadius, resolveHoverVisible, themeToVars } from "../utils/theme";
 
 const props = defineProps<BubbleChartProps<T>>();
 
@@ -74,7 +74,11 @@ const yTickLineProp = computed(() =>
 );
 const cursor = computed(() =>
   resolveHoverVisible(props.theme)
-    ? { fill: "var(--vc-hover-fill)", stroke: "var(--vc-hover-stroke)", radius: "var(--vc-hover-radius)" }
+    ? {
+        fill: "var(--vc-hover-fill)",
+        stroke: "var(--vc-hover-stroke)",
+        radius: resolveHoverRadius(props.theme),
+      }
     : false,
 );
 
