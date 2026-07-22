@@ -35,7 +35,7 @@ const marketShareLabels = {
     :categories="marketShareLabels"
     :height="160"
     :radius="80"
-    :pad-angle="0.1"
+    :pad-angle="2"
     :arc-width="20"
   >
     <div class="text-center">

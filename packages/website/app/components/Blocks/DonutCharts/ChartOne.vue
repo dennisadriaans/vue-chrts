@@ -45,9 +45,8 @@ const items = computed(() => [
         :data="systemData"
         :height="160"
         :type="DonutType.Full"
-        :radius="6"
         :arc-width="15"
-        :pad-angle="0.1"
+        :pad-angle="2"
         :categories="systemCategories"
         :hide-legend="true"
       >

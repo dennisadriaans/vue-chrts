@@ -69,7 +69,6 @@ const formatCurrency = (amount: number) => {
       <div class="flex flex-col items-center">
         <DonutChart
           :data="expenseData.map((i) => i.value)"
-          :height="180"
           :categories="
             expenseData.reduce(
               (acc, item, index) => {

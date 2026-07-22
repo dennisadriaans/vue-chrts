@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { TabsItem } from "@nuxt/ui";
-import type { AppConfigInput } from "nuxt/schema";
 
 defineOptions({
   tags: ["donutcharts", "withradiusandspacing"],
@@ -10,7 +9,7 @@ const colorMode = useColorMode();
 
 colorMode.preference = "dark";
 
-const newAppConfig: AppConfigInput = {
+updateAppConfig({
   theme: {
     radius: 0.25,
     blackAsPrimary: false,
@@ -20,24 +19,8 @@ const newAppConfig: AppConfigInput = {
       primary: "emerald",
       neutral: "zinc",
     },
-
-    tabs: {
-      compoundVariants: [
-        {
-          color: "neutral",
-          variant: "pill",
-          class: {
-            indicator: "bg-default dark:bg-muted",
-            list: "dark:bg-default",
-            trigger: "data-[state=active]:text-default",
-          },
-        },
-      ],
-    },
   },
-};
-
-updateAppConfig(newAppConfig);
+});
 
 const props = defineProps<{
   hideText?: boolean;
@@ -152,7 +135,19 @@ const categories = computed(() =>
             </div>
           </div>
 
-          <UTabs :content="false" :items="items" class="w-full" size="sm" />
+          <UTabs
+            :content="false"
+            :items="items"
+            class="w-full"
+            size="sm"
+            color="neutral"
+            variant="pill"
+            :ui="{
+              indicator: 'bg-default dark:bg-muted',
+              list: 'dark:bg-default',
+              trigger: 'data-[state=active]:text-default',
+            }"
+          />
 
           <p v-if="!props.hideText" class="text-muted px-16 text-center">
             Your win % is higher on

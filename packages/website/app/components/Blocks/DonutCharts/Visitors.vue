@@ -34,10 +34,12 @@ const months = [
       { name: 'Email', value: 16.8, display: '15.9k', color: '#fb923c' }
     ]
   }
-]
+] as const
 
 const currentMonthIndex = ref(2)
-const currentMonth = computed(() => months[currentMonthIndex.value])
+// `months` is a non-empty tuple, so index 0 is the safe fallback for the
+// out-of-range case `noUncheckedIndexedAccess` forces us to handle.
+const currentMonth = computed(() => months[currentMonthIndex.value] ?? months[0])
 
 const prevMonth = () => {
   currentMonthIndex.value = (currentMonthIndex.value - 1 + months.length) % months.length
@@ -92,13 +94,13 @@ const categories = computed(() => {
             :categories="categories"
             :height="220"
             :arc-width="16"
-            :pad-angle="0.02"
+            :pad-angle="2"
             :radius="0"
             :hide-legend="true"
           >
-            <div class="flex flex-col items-center justify-center">
-              <span class="text-4xl font-bold text-highlighted tracking-tight">{{ currentMonth.total }}</span>
-              <span class="text-sm text-dimmed mt-1 font-medium">visitors this month</span>
+            <div class="flex flex-col items-center justify-center text-center">
+              <span class="text-2xl font-bold text-highlighted tracking-tight">{{ currentMonth.total }}</span>
+              <span class="text-sm text-dimmed mt-1 font-medium">visitors</span>
             </div>
           </DonutChart>
         </div>

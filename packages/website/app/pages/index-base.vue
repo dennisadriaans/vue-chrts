@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { motion } from "motion-v";
+
 useSeoMeta({
   title: "Beautiful Chart Library for Vue | Nuxt Charts",
   ogTitle: "Beautiful Chart Library for Vue | Nuxt Charts",
@@ -63,34 +65,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener("resize", updateBreakpoint);
 });
-
-const trustMetrics = [
-  { value: "40k+", label: "Monthly downloads" },
-  { value: "1.2k", label: "GitHub stars" },
-  { value: "20+", label: "Chart components" },
-  { value: "MIT", label: "Licensed" },
-];
-
-const features = [
-  {
-    icon: "i-lucide-server",
-    title: "SSR-safe by default",
-    description:
-      "Charts render on the server and hydrate without layout shift or mismatch warnings.",
-  },
-  {
-    icon: "i-lucide-package",
-    title: "Auto-imported",
-    description:
-      "Add the module once. Every chart component is available across your app.",
-  },
-  {
-    icon: "i-lucide-file-code",
-    title: "Typed end to end",
-    description:
-      "Props, data shapes and formatters ship with types, so mistakes surface in your editor.",
-  },
-];
 </script>
 
 <template>
@@ -101,7 +75,7 @@ const features = [
         <div class="hero-grid-cells absolute inset-0"></div>
       </div>
 
-      <header class="relative z-10 px-4 pt-44 pb-24 lg:pt-42 lg:pb-18">
+      <header class="relative z-10 px-4 pt-44 pb-24 lg:pt-52 lg:pb-18">
         <div class="relative z-10 mb-8 flex items-center justify-center">
           <Logo />
         </div>
@@ -152,62 +126,109 @@ const features = [
         </div>
       </header>
 
-      <!-- Social proof -->
-      <section class="border-default border-y">
-        <div class="mx-auto max-w-7xl px-4 py-12">
-          <div class="grid grid-cols-2 gap-8 lg:grid-cols-4">
-            <div
-              v-for="metric in trustMetrics"
-              :key="metric.label"
-              class="flex flex-col items-center justify-center"
-            >
-              <p class="text-highlighted text-3xl font-semibold tracking-tight">
-                {{ metric.value }}
-              </p>
-              <p class="text-muted dark:text-dimmed mt-1 text-sm tracking-wide">
-                {{ metric.label }}
-              </p>
-            </div>
-          </div>
-
-          <SectionsHeroDashboard class="mt-24" />
-
-          <div class="mx-auto mt-12 max-w-3xl">
-            <LogoBanner />
-          </div>
-
-          <figure class="mx-auto mt-12 max-w-2xl text-center">
-            <blockquote
-              class="text-default text-lg leading-relaxed text-pretty"
-            >
-              “My favorite way to add charts to Nuxt. Clean, simple and
-              beautiful.”
-            </blockquote>
-
-            <figcaption class="mt-4 flex items-center justify-center gap-x-3">
-              <img
-                src="https://github.com/atinux.png"
-                alt="Sébastien Chopin"
-                class="h-10 w-10 rounded-full border-2 border-default"
-              />
-              <div class="text-left text-sm">
-                <div class="font-semibold">Sébastien Chopin</div>
-                <div class="text-muted dark:text-dimmed">Creator of Nuxt</div>
-              </div>
-            </figcaption>
-          </figure>
+      <div
+        class="relative z-10 mx-auto max-w-screen-2xl pt-24 lg:pt-6 lg:pb-12"
+      >
+        <div class="mx-auto max-w-3xl">
+          <LogoBanner />
         </div>
-      </section>
+      </div>
     </div>
 
-    <SectionsWhyNuxt />
+    <div class="max-w-7xl mx-auto grid grid-cols-3 my-16 gap-8">
+      <UCard>
+        <div class="text-center space-y-1">
+          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
+          <p class="text-muted dark:text-dimmed">
+            Beautiful charts for your dashboard.
+          </p>
+        </div>
+      </UCard>
+      <UCard>
+        <div class="text-center space-y-1">
+          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
+          <p class="text-muted dark:text-dimmed">
+            Beautiful charts for your dashboard.
+          </p>
+        </div>
+      </UCard>
+      <UCard>
+        <div class="text-center space-y-1">
+          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
+          <p class="text-muted dark:text-dimmed">
+            Beautiful charts for your dashboard.
+          </p>
+        </div>
+      </UCard>
+    </div>
 
-    <SectionsChartsAndTypes />
+    <div
+      class="max-w-7xl mx-auto flex items-center justify-between my-36 gap-32"
+    >
+      <h2 class="text-5xl font-semibold text-pretty">
+        Ship any pricing model in an afternoon
+      </h2>
+      <p class="text-muted dark:text-dimmed text-2xl text-pretty">
+        Subscriptions, usage, seats, credits, trials, and discounts. Compose
+        them however your product charges.
+      </p>
+    </div>
+
+    <div class="max-w-7xl mx-auto grid grid-cols-3 my-16 gap-8">
+      <UCard>
+        <div class="space-y-1">
+          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
+          <p class="text-muted dark:text-dimmed">
+            Beautiful charts for your dashboard.
+          </p>
+        </div>
+      </UCard>
+      <UCard>
+        <div class="space-y-1">
+          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
+          <p class="text-muted dark:text-dimmed">
+            Beautiful charts for your dashboard.
+          </p>
+        </div>
+      </UCard>
+      <UCard>
+        <div class="space-y-1">
+          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
+          <p class="text-muted dark:text-dimmed">
+            Beautiful charts for your dashboard.
+          </p>
+        </div>
+      </UCard>
+      <UCard>
+        <div class="space-y-1">
+          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
+          <p class="text-muted dark:text-dimmed">
+            Beautiful charts for your dashboard.
+          </p>
+        </div>
+      </UCard>
+      <UCard>
+        <div class="space-y-1">
+          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
+          <p class="text-muted dark:text-dimmed">
+            Beautiful charts for your dashboard.
+          </p>
+        </div>
+      </UCard>
+      <UCard>
+        <div class="space-y-1">
+          <h2 class="text-2xl font-semibold">Beautiful charts</h2>
+          <p class="text-muted dark:text-dimmed">
+            Beautiful charts for your dashboard.
+          </p>
+        </div>
+      </UCard>
+    </div>
 
     <div class="my-36 space-y-16">
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-32">
         <h2 class="text-5xl font-semibold text-pretty">
-          Placeholder title
+          Ship any pricing model in an afternoon
         </h2>
         <p class="text-muted dark:text-dimmed text-2xl text-pretty">
           Subscriptions, usage, seats, credits, trials, and discounts. Compose
@@ -215,10 +236,8 @@ const features = [
         </p>
       </div>
 
-      <UCard class="max-w-7xl mx-auto h-96">
-        (Placeholder illustration)
-      </UCard>
-    </div>  
+      <UCard class="max-w-7xl mx-auto h-96"> </UCard>
+    </div>
 
     <div class="my-36 space-y-16">
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-32">
@@ -238,7 +257,7 @@ const features = [
     </div>
 
     <div
-      class="max-w-7xl mx-auto flex flex-col items-center justify-between mt-64 mb-32 gap-8"
+      class="max-w-7xl mx-auto flex flex-col items-center justify-between my-64 gap-8"
     >
       <h2 class="text-5xl font-semibold text-pretty text-center">
         Ship any pricing model in an afternoon
@@ -253,5 +272,7 @@ const features = [
         <UButton size="xl" variant="soft" color="neutral">Open Demo</UButton>
       </div>
     </div>
+
+    <div class="mb-96"></div>
   </div>
 </template>

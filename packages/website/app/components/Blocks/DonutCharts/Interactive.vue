@@ -32,12 +32,16 @@ const randomizeData = () => {
 }
 
 const increaseDesktop = () => {
-  dataPoints.value[0].value += 10
+  const desktop = dataPoints.value[0]
+  if (!desktop) return
+  desktop.value += 10
 }
 
 const decreaseDesktop = () => {
-  if (dataPoints.value[0].value > 10) {
-    dataPoints.value[0].value -= 10
+  const desktop = dataPoints.value[0]
+  if (!desktop) return
+  if (desktop.value > 10) {
+    desktop.value -= 10
   }
 }
 </script>
@@ -72,8 +76,7 @@ const decreaseDesktop = () => {
             :categories="categories"
             :height="180"
             :arc-width="20"
-            :pad-angle="0.05"
-            :radius="4"
+            :pad-angle="2"
             :hide-legend="true"
           >
             <div class="flex flex-col items-center justify-center">
@@ -107,7 +110,6 @@ const decreaseDesktop = () => {
                   variant="ghost"
                   icon="i-lucide-minus"
                   size="xs"
-                  :ui="{ rounded: 'rounded-md' }"
                   @click="decreaseDesktop"
                 />
                 <span class="w-8 text-center text-sm font-mono font-medium">{{ item.value }}</span>
@@ -116,7 +118,6 @@ const decreaseDesktop = () => {
                   variant="ghost"
                   icon="i-lucide-plus"
                   size="xs"
-                  :ui="{ rounded: 'rounded-md' }"
                   @click="increaseDesktop"
                 />
               </div>

@@ -59,7 +59,7 @@ const formatCurrency = (value: number) => {
             :data="segments.map(s => s.chartValue)"
             :categories="categories"
             :arc-width="16"
-            :pad-angle="0.02"
+            :pad-angle="2"
             :radius="0"
             :height="200"
             :hide-legend="true"

@@ -80,6 +80,7 @@ const categories = computed(() => {
             :categories="categories"
             :hide-legend="true"
             :radius="0"
+            :arc-width="12"
             :type="DonutType.Full"
           >
             <div class="text-center">
