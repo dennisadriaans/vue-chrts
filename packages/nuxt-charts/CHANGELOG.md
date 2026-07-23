@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.2.1](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts-v2.2.1-beta.0...nuxt-charts-v2.2.1) (2026-07-23)
+
 ## [2.2.1-beta.0](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts-v2.1.5-test.0...nuxt-charts-v2.2.1-beta.0) (2026-07-23)
 
 
