@@ -27,10 +27,13 @@ import FunnelLayeredShape, {
 } from "./internal/FunnelLayeredShape.vue";
 import type { FunnelChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
-import { legendPositionToLegendProps } from "../utils/legend";
+import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
 import { toCssProperties } from "../utils/style";
+import { themeToVars } from "../utils/theme";
 
 const props = defineProps<FunnelChartProps<T>>();
+
+const themeVars = computed(() => themeToVars(props.theme));
 
 /** Zip the value array against the categories record (positional, matching Donut). */
 const stages = computed(() => {
@@ -59,7 +62,9 @@ const layeredData = computed(() => {
 
 const showValueLabel = computed(() => props.showValueLabel ?? true);
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
-const legendWrapperStyle = computed(() => toCssProperties(props.legendStyle));
+const legendWrapperStyle = computed(() =>
+  resolveLegendWrapperStyle(props.legendPosition, toCssProperties(props.legendStyle)),
+);
 
 // --- layered tooltip (positioned, follows the cursor) ---
 const chartContainer = useTemplateRef<HTMLElement>("chartContainer");
@@ -87,8 +92,8 @@ function hideTooltip() {
   <div
     v-if="isLayered"
     ref="chartContainer"
-    class="funnel-layered"
-    :style="{ height: `${height}px` }"
+    class="vc-funnel-layered vue-chrts"
+    :style="{ height: `${height}px`, ...themeVars }"
   >
     <ResponsiveContainer width="100%" height="100%">
       <VccsFunnelChart :margin="{ top: 16, right: 0, bottom: 8, left: 0 }">
@@ -113,21 +118,22 @@ function hideTooltip() {
 
     <div
       v-if="!hideTooltip && activeDatum"
-      class="funnel-layered__tooltip"
+      class="vc-funnel-layered__tooltip"
       :style="{ left: `${tooltipPosition.x}px`, top: `${tooltipPosition.y}px` }"
     >
       <span
-        class="funnel-layered__dot"
+        class="vc-funnel-layered__dot"
         :style="{ background: activeDatum.color }"
       />
-      <span class="funnel-layered__name">{{ activeDatum.name }}</span>
-      <strong class="funnel-layered__value">{{
+      <span class="vc-funnel-layered__name">{{ activeDatum.name }}</span>
+      <strong class="vc-funnel-layered__value">{{
         activeDatum.value.toLocaleString()
       }}</strong>
     </div>
   </div>
 
-  <ResponsiveContainer v-else width="100%" :height="height">
+  <div v-else class="vue-chrts" :style="themeVars">
+  <ResponsiveContainer width="100%" :height="height">
     <VccsFunnelChart>
       <Funnel
         :data="stages"
@@ -152,44 +158,5 @@ function hideTooltip() {
       </Legend>
     </VccsFunnelChart>
   </ResponsiveContainer>
+  </div>
 </template>
-
-<style scoped>
-.funnel-layered {
-  position: relative;
-  width: 100%;
-}
-
-.funnel-layered__tooltip {
-  position: absolute;
-  transform: translate(-50%, calc(-100% - 10px));
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.625rem;
-  border-radius: 0.375rem;
-  background: hsl(var(--popover, 0 0% 100%));
-  border: 1px solid hsl(var(--border, 214.3 31.8% 91.4%));
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  font-size: 0.75rem;
-  color: hsl(var(--popover-foreground, 222.2 84% 4.9%));
-  white-space: nowrap;
-}
-
-.funnel-layered__name {
-  color: hsl(var(--muted-foreground, 215.4 16.3% 46.9%));
-}
-
-.funnel-layered__value {
-  font-variant-numeric: tabular-nums;
-}
-
-.funnel-layered__dot {
-  display: inline-block;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 9999px;
-  flex-shrink: 0;
-}
-</style>

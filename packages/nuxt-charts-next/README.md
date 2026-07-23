@@ -1,83 +1,75 @@
-# nuxt-charts (v3)
+# nuxt-charts
 
-Nuxt module for [vccs](https://vue-charts.com) — an unofficial Vue 3 port of
-Recharts. v3 keeps the familiar **config-prop API** from v2 (`:data`,
-`:categories`, `:yAxis`, `:height`, …) but renders it through `vccs` instead of
-Unovis. You keep your templates; the engine underneath changed.
+Beautiful chart components for Nuxt — Area, Bar, Line, Donut, Bubble, Radar, Radial Bar, Funnel, Candlestick and Status Tracker.
 
-## Features
+Powered by [vccs](https://vue-charts.com) (Vue port of Recharts). Drop-in config-prop API from nuxt-charts v2.
 
-- 📊 Config-driven chart components — no compositional boilerplate
-- 🔄 Auto-imported components, enums, and prop types
-- 🧮 Charts: Area, Bar, Line, Donut, Bubble, Radar, RadialBar, Funnel, StatusTracker
-- 🧠 Strong typing — `keyof T` autocomplete on axis keys, enum/literal suggestions
-- 🚀 Vue 3 + TypeScript, SSR-safe (charts render client-side)
-
-## Installation
+## Install
 
 ```bash
-pnpm add nuxt-charts
-# or: npm install nuxt-charts / yarn add nuxt-charts
+# beta (v3)
+pnpm add nuxt-charts@beta
 ```
-
-`vccs` and `motion-v` ship as dependencies — no extra install needed.
-
-## Usage
 
 ```ts
-// nuxt.config.ts
 export default defineNuxtConfig({
   modules: ["nuxt-charts"],
-});
+})
 ```
 
-```vue
-<template>
-  <LineChart
-    :data="data"
-    :categories="categories"
-    :height="300"
-    x-axis="month"
-    :curve-type="CurveType.MonotoneX"
-  />
-</template>
+## Charts
 
-<script setup lang="ts">
-// LineChart, CurveType and BulletLegendItemInterface are auto-imported.
-const data = [
-  { month: "Jan", sales: 100, profit: 50 },
-  { month: "Feb", sales: 120, profit: 55 },
-  { month: "Mar", sales: 180, profit: 80 },
-];
-
-const categories: Record<string, BulletLegendItemInterface> = {
-  sales: { name: "Sales", color: "#3b82f6" },
-  profit: { name: "Profit", color: "#10b981" },
-};
-</script>
-```
-
-## Available components
-
-| Component        | Renders via `vccs`         | Notes |
-| ---------------- | -------------------------- | ----- |
-| `AreaChart`      | `AreaChart` + `Area`       | v2 parity |
-| `BarChart`       | `BarChart` + `Bar`         | v2 parity |
-| `LineChart`      | `LineChart` + `Line`       | v2 parity |
-| `DonutChart`     | `PieChart` + `Pie`         | v2 parity |
-| `BubbleChart`    | `ScatterChart` + `Scatter` | v2 parity |
-| `RadarChart`     | `RadarChart` + `Radar`     | **new in v3** |
-| `RadialBarChart` | `RadialBarChart` + `RadialBar` | **new in v3** |
-| `FunnelChart`    | `FunnelChart` + `Funnel`   | **new in v3** |
-| `StatusTrackerChart` | Native responsive bars | **new in v3** |
+| Component | Notes |
+|---|---|
+| `AreaChart` | Gradients, dither fills, stacked |
+| `BarChart` | Grouped, stacked, horizontal, cube bars |
+| `LineChart` | Multi-series, curve types |
+| `DonutChart` | Center slot for labels |
+| `BubbleChart` | Scatter with size encoding |
+| `RadarChart` | New in v3 |
+| `RadialBarChart` | New in v3 |
+| `FunnelChart` | New in v3 |
+| `CandlestickChart` | New in v3 |
+| `StatusTrackerChart` | New in v3 |
 
 ### New cross-cutting props (cartesian charts)
 
+- `yAxes` — plot series with different units on independent y-axes.
 - `referenceLines` — draw horizontal / vertical reference lines across the plot.
 - `syncId` — synchronise tooltip / hover across charts that share the same id.
 - Revived from v2: `xExplicitTicks` / `yExplicitTicks` (→ axis `ticks`),
   `minMaxTicksOnly` (→ `interval="preserveStartEnd"`), and `AxisConfig` tick text
   colour / size / alignment now apply.
+
+#### Multiple y-axes
+
+Give a category a `yAxis` id and describe that axis in `yAxes`. Series sharing
+an id share a scale; series without one stay on the primary axis, so existing
+charts are unaffected.
+
+```vue
+<script setup lang="ts">
+const categories = {
+  indoor: { name: "Indoor", color: "#2662d9", yAxis: "temp" },
+  outdoor: { name: "Outdoor", color: "#e23670", yAxis: "temp" },
+  humidity: { name: "Humidity", color: "#af57db", yAxis: "pct" },
+};
+
+const yAxes = {
+  temp: { orientation: "left", label: "°C" },
+  pct: { orientation: "right", label: "%", domain: [0, 100] },
+};
+</script>
+
+<template>
+  <LineChart :data="data" :categories="categories" :y-axes="yAxes" :height="320" x-axis="time" />
+</template>
+```
+
+Each axis accepts `orientation`, `label`, `domain`, `numTicks`, `formatter`,
+`hide`, and the usual `AxisConfig` tick options; anything unset falls back to
+the top-level `yLabel` / `yDomain` / `yAxisConfig` props. Supported on
+`LineChart`, `AreaChart` and `BarChart` (vertical orientation).
 
 ### Deferred / removed
 
@@ -98,7 +90,7 @@ export default defineNuxtConfig({
     autoImports: true, // auto-import enums and prop types
     include: [],       // [] = all; or a subset, e.g. ["BarChart", "LineChart"]
   },
-});
+})
 ```
 
 ## Auto-imported enums & types
@@ -111,17 +103,7 @@ export default defineNuxtConfig({
 
 ## Migrating from v2
 
-The API is intentionally close to v2. Notes:
-
-- `BarChart` keeps `:yAxis` (value keys) and `:xAxis` (category key).
-- Most v2 props carry over. `xExplicitTicks` / `yExplicitTicks`, `minMaxTicksOnly`
-  and the `AxisConfig` tick-text props are now honoured (they map onto `vccs`
-  axis features).
-- A few genuinely Unovis-only props (`crosshairConfig`, `markerConfig`,
-  `lineDashArray`, `tickTextFitMode` / trim / word-break, `stackAndGrouped`) are
-  accepted but inert — marked `@deprecated`, no effect, so old templates keep
-  type-checking.
-- `legendStyle` as a raw CSS string is ignored; pass an object instead.
+See the [Upgrade to v3](https://nuxtcharts.com/docs/getting-started/upgrade-to-v3) guide. Specialty charts (maps, gantt, dual, sankey, dagre) are not in v3 yet — stay on `nuxt-charts@2` if you need them.
 
 ## License
 

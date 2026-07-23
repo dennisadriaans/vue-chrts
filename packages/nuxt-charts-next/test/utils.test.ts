@@ -1,9 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { CurveType, DonutType, LegendPosition, Orientation } from "../src/runtime/enums";
 import { curveTypeToVccs } from "../src/runtime/utils/curve";
-import { legendPositionToLegendProps } from "../src/runtime/utils/legend";
-import { categoriesToSeries } from "../src/runtime/utils/categories";
-import { resolveAxisProps } from "../src/runtime/utils/axis";
+import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../src/runtime/utils/legend";
+import { categoriesToSeries, PRIMARY_Y_AXIS_ID } from "../src/runtime/utils/categories";
+import {
+  AXIS_SLOT,
+  AXIS_TICK_MARGIN,
+  resolveAxisProps,
+  resolveXAxisHeight,
+  resolveYAxisWidth,
+  resolveYAxes,
+  toTickProp,
+} from "../src/runtime/utils/axis";
 import { toAxisDomain, toCssProperties } from "../src/runtime/utils/style";
 import {
   markerToDot,
@@ -57,6 +65,26 @@ describe("legendPositionToLegendProps", () => {
   });
 });
 
+describe("resolveLegendWrapperStyle", () => {
+  it("adds top padding for bottom legends so vccs reserves space below the plot", () => {
+    expect(resolveLegendWrapperStyle(LegendPosition.BottomCenter)).toEqual({
+      paddingTop: "var(--vc-legend-inset, 0.75rem)",
+    });
+  });
+
+  it("adds bottom padding for top legends so vccs reserves space above the plot", () => {
+    expect(resolveLegendWrapperStyle(LegendPosition.TopLeft)).toEqual({
+      paddingBottom: "var(--vc-legend-inset, 0.75rem)",
+    });
+  });
+
+  it("lets user legendStyle override the default inset padding", () => {
+    expect(
+      resolveLegendWrapperStyle(LegendPosition.BottomCenter, { paddingTop: "2rem" }),
+    ).toEqual({ paddingTop: "2rem" });
+  });
+});
+
 describe("categoriesToSeries", () => {
   it("preserves order and resolves name / colour", () => {
     const series = categoriesToSeries({
@@ -64,10 +92,18 @@ describe("categoriesToSeries", () => {
       mobile: { name: "Mobile", color: ["#22c55e", "#000"] },
     });
     expect(series).toEqual([
-      { dataKey: "desktop", name: "Desktop", color: "#3b82f6", hidden: false },
+      { dataKey: "desktop", name: "Desktop", color: "#3b82f6", hidden: false, yAxisId: 0 },
       // array colour collapses to its first entry (v2 compatibility)
-      { dataKey: "mobile", name: "Mobile", color: "#22c55e", hidden: false },
+      { dataKey: "mobile", name: "Mobile", color: "#22c55e", hidden: false, yAxisId: 0 },
     ]);
+  });
+
+  it("reads the per-category y-axis id, defaulting to the primary axis", () => {
+    const series = categoriesToSeries({
+      temperature: { name: "Temp", yAxis: "temp" },
+      humidity: { name: "Humidity" },
+    });
+    expect(series.map((s) => s.yAxisId)).toEqual(["temp", PRIMARY_Y_AXIS_ID]);
   });
 
   it("falls back to the key when name is missing", () => {
@@ -75,6 +111,108 @@ describe("categoriesToSeries", () => {
     expect(s).toBeDefined();
     expect(s?.name).toBe("");
     expect(s?.dataKey).toBe("views");
+  });
+});
+
+describe("resolveYAxes", () => {
+  const primary = {
+    label: "Primary",
+    domain: undefined,
+    tickCount: undefined,
+    tickFormatter: undefined,
+    tickLine: false,
+    hide: false,
+    ticks: undefined,
+    interval: undefined,
+    tick: undefined,
+  };
+
+  it("renders only the primary axis when no series opts into another", () => {
+    const axes = resolveYAxes({
+      series: categoriesToSeries({ desktop: { name: "Desktop" } }),
+      yAxes: undefined,
+      minMaxTicksOnly: undefined,
+      primary,
+    });
+    expect(axes).toHaveLength(1);
+    expect(axes[0]).toMatchObject({ id: PRIMARY_Y_AXIS_ID, orientation: "left", label: "Primary" });
+  });
+
+  it("gives series on the same id one shared axis and splits the others", () => {
+    const axes = resolveYAxes({
+      series: categoriesToSeries({
+        t1: { name: "T1", yAxis: "temp" },
+        t2: { name: "T2", yAxis: "temp" },
+        pct: { name: "Pct", yAxis: "pct" },
+      }),
+      yAxes: {
+        temp: { orientation: "left", label: "°C" },
+        pct: { orientation: "right", label: "%" },
+      },
+      minMaxTicksOnly: undefined,
+      primary,
+    });
+    expect(axes.map((a) => a.id)).toEqual([PRIMARY_Y_AXIS_ID, "temp", "pct"]);
+    expect(axes.map((a) => a.orientation)).toEqual(["left", "left", "right"]);
+    expect(axes.map((a) => a.label)).toEqual(["Primary", "°C", "%"]);
+  });
+
+  it("creates an axis for an id referenced only by a series", () => {
+    const axes = resolveYAxes({
+      series: categoriesToSeries({ pct: { name: "Pct", yAxis: "pct" } }),
+      yAxes: undefined,
+      minMaxTicksOnly: undefined,
+      primary,
+    });
+    expect(axes.map((a) => a.id)).toEqual([PRIMARY_Y_AXIS_ID, "pct"]);
+  });
+
+  it("matches a numeric yAxes key to a numeric series id", () => {
+    const axes = resolveYAxes({
+      series: categoriesToSeries({ pct: { name: "Pct", yAxis: 1 } }),
+      yAxes: { 1: { orientation: "right" } },
+      minMaxTicksOnly: undefined,
+      primary,
+    });
+    expect(axes).toHaveLength(2);
+    expect(axes[1]).toMatchObject({ orientation: "right" });
+    // vccs binds series to axes with `===`, so the id must match the series'
+    // id by type as well as value — `"1"` would silently orphan the series.
+    expect(axes[1]?.id).toBe(1);
+    const [series] = categoriesToSeries({ pct: { name: "Pct", yAxis: 1 } });
+    expect(axes.some((a) => a.id === series?.yAxisId)).toBe(true);
+  });
+
+  it("treats a stringified numeric id as the same axis as its numeric form", () => {
+    const axes = resolveYAxes({
+      series: categoriesToSeries({
+        a: { name: "A", yAxis: 1 },
+        b: { name: "B", yAxis: "1" },
+      }),
+      yAxes: { 1: { orientation: "right", label: "Shared" } },
+      minMaxTicksOnly: undefined,
+      primary,
+    });
+    expect(axes.map((a) => a.id)).toEqual([PRIMARY_Y_AXIS_ID, 1]);
+    expect(axes[1]).toMatchObject({ orientation: "right", label: "Shared" });
+  });
+
+  it("binds a series declaring yAxis '0' to the primary axis", () => {
+    const series = categoriesToSeries({ views: { name: "Views", yAxis: "0" } });
+    expect(series[0]?.yAxisId).toBe(PRIMARY_Y_AXIS_ID);
+
+    const axes = resolveYAxes({ series, yAxes: undefined, minMaxTicksOnly: undefined, primary });
+    expect(axes.map((a) => a.id)).toEqual([PRIMARY_Y_AXIS_ID]);
+  });
+
+  it("inherits unset options from the primary axis", () => {
+    const [, secondary] = resolveYAxes({
+      series: categoriesToSeries({ pct: { name: "Pct", yAxis: "pct" } }),
+      yAxes: { pct: { orientation: "right" } },
+      minMaxTicksOnly: undefined,
+      primary: { ...primary, tickCount: 5, tickLine: true },
+    });
+    expect(secondary).toMatchObject({ tickCount: 5, tickLine: true, orientation: "right" });
   });
 });
 
@@ -132,6 +270,46 @@ describe("resolveAxisProps", () => {
         undefined,
       ).tick,
     ).toEqual({ fill: "#f00", fontSize: "12px", textAnchor: "end" });
+  });
+});
+
+describe("axis slot sizing", () => {
+  it("uses a tighter band for numeric Y axes", () => {
+    expect(resolveYAxisWidth({ hasTitle: false, isCategoryAxis: false })).toBe(
+      AXIS_SLOT.numericYWidth,
+    );
+  });
+
+  it("reserves more width for category Y axes", () => {
+    expect(resolveYAxisWidth({ hasTitle: false, isCategoryAxis: true })).toBe(
+      AXIS_SLOT.categoryYWidth,
+    );
+  });
+
+  it("expands axis slots when a title is present", () => {
+    expect(resolveXAxisHeight({ hasTitle: true })).toBe(AXIS_SLOT.titledXHeight);
+    expect(resolveYAxisWidth({ hasTitle: true, isCategoryAxis: false })).toBe(
+      AXIS_SLOT.titledYWidth,
+    );
+  });
+
+});
+
+describe("toTickProp", () => {
+  it("defaults to true so vccs applies its native per-orientation anchors", () => {
+    expect(toTickProp(undefined)).toBe(true);
+    expect(toTickProp({ fill: "#f00", fontSize: "11px" })).toBe(true);
+  });
+
+  it("forwards only the text anchor when an alignment is configured", () => {
+    expect(toTickProp({ fill: "#f00", textAnchor: "end" })).toEqual({ textAnchor: "end" });
+  });
+});
+
+describe("axis tick margin", () => {
+  it("gives labels breathing room beyond the cramped vccs default", () => {
+    expect(AXIS_TICK_MARGIN.x).toBeGreaterThan(2);
+    expect(AXIS_TICK_MARGIN.y).toBeGreaterThan(2);
   });
 });
 

@@ -1,7 +1,7 @@
 {
-  "name": "nuxt-charts",
+  "name": "nuxt-charts-legacy",
   "version": "2.2.1",
-  "description": "Nuxt module for vue-chrts (legacy Unovis engine)",
+  "description": "Legacy Nuxt Charts module (Unovis / vue-chrts). Prefer nuxt-charts v3.",
   "license": "MIT",
   "type": "module",
   "exports": {

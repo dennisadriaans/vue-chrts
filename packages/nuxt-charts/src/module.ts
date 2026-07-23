@@ -27,6 +27,20 @@ export interface ModuleOptions {
    * @default []
    */
   include?: string[];
+
+  /**
+   * Auto-import the shared enums/types (CurveType, LegendPosition, Orientation,
+   * DonutType, BulletLegendItemInterface, MarkerConfig, CrosshairConfig,
+   * AxisConfig, TooltipConfig).
+   *
+   * Set to `false` when running this module alongside `nuxt-charts-next` so the
+   * v3 module owns those names (avoids duplicate auto-imports and nominal enum
+   * type clashes). Map-specific helpers (getMap, getPin, geoMercator, the
+   * TopoJSON constants, MapRegion, MapPin) are always auto-imported when
+   * `autoImports` is enabled.
+   * @default true
+   */
+  sharedImports?: boolean;
 }
 
 /**
@@ -50,8 +64,8 @@ function resolvePackageDir(
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: "nuxt-charts",
-    configKey: "nuxtCharts",
+    name: "nuxt-charts-legacy",
+    configKey: "nuxtChartsLegacy",
     compatibility: {
       nuxt: ">=3",
     },
@@ -61,6 +75,7 @@ export default defineNuxtModule<ModuleOptions>({
     global: true,
     autoImports: true,
     include: [],
+    sharedImports: true,
   },
   async setup(options, nuxt) {
     // Deliberately do NOT transpile vue-chrts (or @unovis/ts, @unovis/vue —
@@ -128,7 +143,14 @@ export default defineNuxtModule<ModuleOptions>({
     const runtimePath = resolve("./runtime/vue-chrts");
 
     // Initialize auto-imports and components
-    resolveImports(options, runtimePath);
+    resolveImports(options, import.meta.url);
     resolveComponents(options, runtimePath);
+
+    // Ensure the website (and other consumers) can resolve vue-chrts even under
+    // pnpm isolation when this module is loaded alongside nuxt-charts-next.
+    const vueChrtsDir = resolvePackageDir("vue-chrts");
+    if (vueChrtsDir) {
+      nuxt.options.alias["vue-chrts"] = vueChrtsDir;
+    }
   },
 });

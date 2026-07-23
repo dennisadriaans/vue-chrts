@@ -113,19 +113,19 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section class="status-tracker-chart" :aria-label="ariaLabel">
-    <header v-if="!hideHeader && (title || summary !== undefined)" class="status-tracker-chart__header">
-      <h3 v-if="title" class="status-tracker-chart__title">
+  <section class="vc-status-tracker vue-chrts" :aria-label="ariaLabel">
+    <header v-if="!hideHeader && (title || summary !== undefined)" class="vc-status-tracker__header">
+      <h3 v-if="title" class="vc-status-tracker__title">
         {{ title }}
       </h3>
-      <p v-if="summary !== undefined" class="status-tracker-chart__summary">
+      <p v-if="summary !== undefined" class="vc-status-tracker__summary">
         {{ summary }}
       </p>
     </header>
 
     <div
       ref="containerRef"
-      class="status-tracker-chart__track"
+      class="vc-status-tracker__track"
       role="img"
       :aria-label="ariaLabel"
       :style="trackerStyle"
@@ -133,11 +133,11 @@ onUnmounted(() => {
       <span
         v-for="(bar, index) in visibleBars"
         :key="bar.key"
-        class="status-tracker-chart__bar"
+        class="vc-status-tracker__bar"
         :class="{
-          'status-tracker-chart__bar--rounded-start': rounded && index === 0,
-          'status-tracker-chart__bar--rounded-end': rounded && index === visibleBars.length - 1,
-          'status-tracker-chart__bar--empty': bar.isEmpty,
+          'vc-status-tracker__bar--rounded-start': rounded && index === 0,
+          'vc-status-tracker__bar--rounded-end': rounded && index === visibleBars.length - 1,
+          'vc-status-tracker__bar--empty': bar.isEmpty,
         }"
         :style="{ ...barStyle, backgroundColor: bar.color }"
         :title="hideTooltip ? undefined : bar.title"
@@ -145,115 +145,16 @@ onUnmounted(() => {
       />
     </div>
 
-    <div v-if="startLabel || endLabel" class="status-tracker-chart__labels">
+    <div v-if="startLabel || endLabel" class="vc-status-tracker__labels">
       <span>{{ startLabel }}</span>
       <span>{{ endLabel }}</span>
     </div>
 
-    <ul v-if="!hideLegend && legendItems.length" class="status-tracker-chart__legend">
-      <li v-for="item in legendItems" :key="item.dataKey" class="status-tracker-chart__legend-item">
-        <span class="status-tracker-chart__legend-dot" :style="{ backgroundColor: item.color }" />
+    <ul v-if="!hideLegend && legendItems.length" class="vc-status-tracker__legend">
+      <li v-for="item in legendItems" :key="item.dataKey" class="vc-status-tracker__legend-item">
+        <span class="vc-status-tracker__legend-dot" :style="{ backgroundColor: item.color }" />
         <span>{{ item.name }}</span>
       </li>
     </ul>
   </section>
 </template>
-
-<style scoped>
-.status-tracker-chart {
-  width: 100%;
-  color: hsl(var(--foreground, 222.2 84% 4.9%));
-  font-family: inherit;
-}
-
-.status-tracker-chart__header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-}
-
-.status-tracker-chart__title,
-.status-tracker-chart__summary {
-  margin: 0;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-
-.status-tracker-chart__title {
-  font-weight: 600;
-}
-
-.status-tracker-chart__summary {
-  color: hsl(var(--muted-foreground, 215.4 16.3% 46.9%));
-  font-variant-numeric: tabular-nums;
-}
-
-.status-tracker-chart__track {
-  display: flex;
-  width: 100%;
-  overflow: hidden;
-}
-
-.status-tracker-chart__bar {
-  display: block;
-  height: 100%;
-  flex: 0 0 auto;
-  min-width: 1px;
-  transition: opacity 160ms ease;
-}
-
-.status-tracker-chart__bar:hover {
-  opacity: 0.78;
-}
-
-.status-tracker-chart__bar--rounded-start {
-  border-top-left-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
-}
-
-.status-tracker-chart__bar--rounded-end {
-  border-top-right-radius: 0.25rem;
-  border-bottom-right-radius: 0.25rem;
-}
-
-.status-tracker-chart__bar--empty:hover {
-  opacity: 1;
-}
-
-.status-tracker-chart__labels {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 0.5rem;
-  color: hsl(var(--muted-foreground, 215.4 16.3% 46.9%));
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
-.status-tracker-chart__legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  margin: 0.75rem 0 0;
-  padding: 0;
-  list-style: none;
-  color: hsl(var(--muted-foreground, 215.4 16.3% 46.9%));
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
-.status-tracker-chart__legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-}
-
-.status-tracker-chart__legend-dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 9999px;
-  flex: 0 0 auto;
-}
-</style>

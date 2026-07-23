@@ -19,6 +19,33 @@ export interface BulletLegendItemInterface {
   inactive?: boolean;
   hidden?: boolean;
   pointer?: boolean;
+  /**
+   * Id of the y-axis this series is plotted against. Series sharing an id share
+   * a scale. Defaults to the primary axis, so charts that omit it are unchanged.
+   */
+  yAxis?: AxisId;
+}
+
+/** Identifies one y-axis. Series and axis configs are matched by this value. */
+export type AxisId = string | number;
+
+/**
+ * Configuration for one y-axis in a multi-axis chart, keyed by {@link AxisId}
+ * in the `yAxes` prop.
+ */
+export interface YAxisConfig extends AxisConfig {
+  /** Which side of the plot area the axis is drawn on. Default `left`. */
+  orientation?: "left" | "right";
+  /** Axis label. */
+  label?: string;
+  /** Fixed domain as `[min, max]`. */
+  domain?: [number | undefined, number | undefined];
+  /** Desired number of ticks. */
+  numTicks?: number;
+  /** Formats this axis' ticks. */
+  formatter?: axisFormatter;
+  /** Hide the axis while still plotting its series. */
+  hide?: boolean;
 }
 
 /**
@@ -116,4 +143,72 @@ export interface ChartPadding {
   right: number;
   bottom: number;
   left: number;
+}
+
+/**
+ * Per-chart appearance overrides. Every field maps onto a `--vc-*` CSS token
+ * (`runtime/assets/theme.css` for SVG + tokens, `runtime/assets/components.css`
+ * for HTML chrome) written inline on the chart root. Set `theme.legend.size` to
+ * scale legend, axis ticks, axis titles, and radar labels together.
+ */
+export interface ChartTheme {
+  /** Grid + axis (domain) lines. */
+  grid?: {
+    /** Line colour. Token: `--vc-grid-color`. */
+    color?: string;
+    /** SVG dash pattern, e.g. `"3 3"` (solid: `"0"`). Token: `--vc-grid-dash`. */
+    dash?: string;
+    /** Line width in pixels. Token: `--vc-grid-width`. */
+    width?: number;
+  };
+  /** Axis ticks + labels. */
+  axis?: {
+    /** Tick label colour. Token: `--vc-tick-color`. */
+    tickColor?: string;
+    /** Tick label size. Defaults to `--vc-legend-size`. Token: `--vc-tick-size`. */
+    tickSize?: string;
+    /** Tick label weight. Token: `--vc-tick-weight`. */
+    tickWeight?: number | string;
+    /** Axis title colour. Token: `--vc-axis-label-color`. */
+    labelColor?: string;
+    /** Axis title size. Defaults to `--vc-legend-size`. Token: `--vc-axis-label-size`. */
+    labelSize?: string;
+    /** Domain (axis) line colour. Token: `--vc-axis-line-color`. */
+    lineColor?: string;
+  };
+  /** Legend text + spacing. */
+  legend?: {
+    /** Text colour. Token: `--vc-legend-color`. */
+    color?: string;
+    /** Font size for legend and all chart labels. Token: `--vc-legend-size`. */
+    size?: string;
+    /** Font weight. Token: `--vc-legend-weight`. */
+    weight?: number | string;
+    /** Gap between items, e.g. `"0.75rem"`. Token: `--vc-legend-gap`. */
+    gap?: string;
+    /** Gap between plot and legend, e.g. `"0.75rem"`. Token: `--vc-legend-inset`. */
+    inset?: string;
+  };
+  /** Hover cursor (the band/rect behind the hovered point). */
+  hover?: {
+    /** Fill colour. Token: `--vc-hover-fill`. */
+    fill?: string;
+    /** Stroke colour. Token: `--vc-hover-stroke`. */
+    stroke?: string;
+    /** Corner radius in pixels. Token: `--vc-hover-radius`. */
+    radius?: number;
+    /** Set `false` to hide the hover cursor entirely (tooltip still shows). */
+    visible?: boolean;
+  };
+  /** Tooltip container. */
+  tooltip?: {
+    /** Background colour. Token: `--vc-tooltip-bg`. */
+    bg?: string;
+    /** Text colour. Token: `--vc-tooltip-fg`. */
+    fg?: string;
+    /** Border colour. Token: `--vc-tooltip-border`. */
+    border?: string;
+    /** Corner radius, e.g. `"0.5rem"`. Token: `--vc-tooltip-radius`. */
+    radius?: string;
+  };
 }

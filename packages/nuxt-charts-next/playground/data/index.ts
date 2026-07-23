@@ -230,3 +230,21 @@ export const candles: Candle[] = (() => {
     };
   });
 })();
+
+export interface ClimateRow {
+  time: string;
+  indoor: number;
+  outdoor: number;
+  setpoint: number;
+  humidity: number;
+}
+
+/** Three temperatures (°C) alongside a percentage — the multi-axis case. */
+export const climate: ClimateRow[] = [
+  { time: "00:00", indoor: 21.4, outdoor: 8.1, setpoint: 21, humidity: 58 },
+  { time: "04:00", indoor: 20.8, outdoor: 6.4, setpoint: 21, humidity: 63 },
+  { time: "08:00", indoor: 21.9, outdoor: 11.2, setpoint: 22, humidity: 55 },
+  { time: "12:00", indoor: 23.6, outdoor: 17.8, setpoint: 22, humidity: 47 },
+  { time: "16:00", indoor: 24.1, outdoor: 19.3, setpoint: 22, humidity: 44 },
+  { time: "20:00", indoor: 22.7, outdoor: 13.5, setpoint: 21, humidity: 51 },
+];
