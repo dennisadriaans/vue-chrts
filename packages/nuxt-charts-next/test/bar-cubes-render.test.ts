@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { describe, expect, it, beforeAll, afterEach } from "vitest";
-import { mount, flushPromises } from "@vue/test-utils";
+import { mount, flushPromises, VueWrapper } from "@vue/test-utils";
 import BarChart from "../src/runtime/components/BarChart.vue";
 
 const mounted: Array<{ unmount: () => void }> = [];
@@ -40,7 +40,11 @@ const categories = {
 };
 
 async function mountBar(props: Record<string, unknown> = {}) {
-  const wrapper = mount(BarChart, {
+  // `BarChart` is a generic SFC; mounting it without an explicit type argument
+  // collapses `T` to `never`, so the key-dependent `yAxis` / `xAxis` props no
+  // longer type-check. Cast through `never` (as radar-radial-render.test.ts does)
+  // to mount it in the test harness.
+  const wrapper = mount(BarChart as never, {
     props: {
       data,
       categories,
@@ -51,7 +55,7 @@ async function mountBar(props: Record<string, unknown> = {}) {
       ...props,
     },
     attachTo: document.body,
-  });
+  } as never) as VueWrapper;
   await flushPromises();
   await new Promise((r) => setTimeout(r, 0));
   await flushPromises();
