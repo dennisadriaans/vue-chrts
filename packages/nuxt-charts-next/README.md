@@ -38,13 +38,21 @@ export default defineNuxtConfig({
 export default defineNuxtConfig({
   modules: ["nuxt-charts"],
   nuxtCharts: {
-    prefix: "",
-    global: true,
-    autoImports: true,
-    include: [],
+    prefix: "",        // prefix component names, e.g. "V" -> <VBarChart>
+    global: true,      // register globally (no import needed)
+    autoImports: true, // auto-import enums and prop types
+    include: [],       // [] = all; or a subset, e.g. ["BarChart", "LineChart"]
   },
 })
 ```
+
+## Auto-imported enums & types
+
+- Enums: `CurveType`, `LegendPosition`, `Orientation`, `DonutType`
+- Types: `AreaChartProps`, `BarChartProps`, `LineChartProps`, `BubbleChartProps`,
+  `DonutChartProps`, `RadarChartProps`, `RadialBarChartProps`, `FunnelChartProps`,
+  `StatusTrackerChartProps`, `StatusTrackerDatum`, `BulletLegendItemInterface`,
+  `AxisConfig`, `TooltipConfig`, `ValueLabel`, `ReferenceLineConfig`
 
 ## Migrating from v2
 
