@@ -1,5 +1,5 @@
 /**
- * nuxt-charts-next design tokens.
+ * nuxt-charts v3 design tokens.
  *
  * Every chart renders inside a `.vue-chrts` root. These `--vc-*` tokens are the
  * public theming API — set them globally, per-chart via the `theme` prop, or

@@ -1,4 +1,4 @@
-import { BulletLegendItemInterface } from '@unovis/ts'
+import type { BulletLegendItemInterface } from 'nuxt-charts/types'
 
 export interface ElectionDatum {
   year: number

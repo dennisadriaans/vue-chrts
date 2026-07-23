@@ -5,27 +5,8 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/image',
     '@nuxt/ui',
-    // v3 engine (vccs): all standard + new chart components (Area, Bar, Line,
-    // Donut, Bubble, Radar, RadialBar, Funnel, Candlestick, StatusTracker).
-    // This is the module current users should upgrade to.
-    'nuxt-charts-next',
-    // v2 engine (Unovis): retained ONLY for the specialty components that the
-    // v3 engine does not (yet) provide — maps, gantt, sankey, dagre and the
-    // dual-axis chart. `include` prevents it from re-registering the standard
-    // chart names, so nuxt-charts-next owns those.
-    ['nuxt-charts', {
-      include: [
-        'GanttChart',
-        'DagreGraph',
-        'DualChart',
-        'SankeyChart',
-        'TopoJSONMap',
-        'DottedMap'
-      ],
-      // Let nuxt-charts-next own the shared enums/types so there is a single,
-      // type-consistent source for CurveType/LegendPosition/DonutType/etc.
-      sharedImports: false
-    }],
+    // nuxt-charts v3 (vccs) — standalone chart module, no vue-chrts/Unovis.
+    'nuxt-charts',
     'nuxt-auth-utils',
     'nuxt-shiki',
     '@nuxt/scripts',
@@ -94,6 +75,24 @@ export default defineNuxtConfig({
       },
       '/docs/progress-circle': {
         redirect: '/docs/components/progress-circle'
+      },
+      '/docs/charts/gantt-chart': {
+        redirect: '/docs/getting-started/upgrade-to-v3'
+      },
+      '/docs/charts/dual-chart': {
+        redirect: '/docs/getting-started/upgrade-to-v3'
+      },
+      '/docs/maps/dotted-map': {
+        redirect: '/docs/getting-started/upgrade-to-v3'
+      },
+      '/docs/maps/topojson-map': {
+        redirect: '/docs/getting-started/upgrade-to-v3'
+      },
+      '/docs/maps': {
+        redirect: '/docs/getting-started/upgrade-to-v3'
+      },
+      '/blocks/combo-charts': {
+        redirect: '/blocks'
       },
       '/nuxt-dashboard': {
         redirect: '/templates/nuxt-dashboard'
@@ -203,6 +202,27 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    '/docs/charts/gantt-chart': {
+      redirect: '/docs/getting-started/upgrade-to-v3'
+    },
+    '/docs/charts/dual-chart': {
+      redirect: '/docs/getting-started/upgrade-to-v3'
+    },
+    '/docs/charts/dual-axes-chart': {
+      redirect: '/docs/getting-started/upgrade-to-v3'
+    },
+    '/docs/maps/dotted-map': {
+      redirect: '/docs/getting-started/upgrade-to-v3'
+    },
+    '/docs/maps/topojson-map': {
+      redirect: '/docs/getting-started/upgrade-to-v3'
+    },
+    '/docs/maps': {
+      redirect: '/docs/getting-started/upgrade-to-v3'
+    },
+    '/blocks/combo-charts': {
+      redirect: '/blocks'
+    }
   },
 
   sourcemap: {

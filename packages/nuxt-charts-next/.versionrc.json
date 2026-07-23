@@ -1,5 +1,5 @@
 {
-  "tag-prefix": "nuxt-charts-legacy-v",
+  "tag-prefix": "nuxt-charts-v",
   "path": ".",
   "bumpFiles": [
     {
