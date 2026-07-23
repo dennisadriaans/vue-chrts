@@ -89,11 +89,11 @@ function onCrosshairUpdate(d: T) {
   hoverValues.value = d;
 }
 
-const accessors = props.yAxis.map((i) => {
-  return (d: any) => d[i];
-});
+const accessors = computed(() =>
+  props.yAxis.map((i) => (d: any) => d[i])
+);
 
-const numBars = accessors.length;
+const numBars = computed(() => accessors.value.length);
 
 interface LabelDatum {
   x: number;
@@ -101,12 +101,14 @@ interface LabelDatum {
   itemIndex: number;
 }
 
-const labelData: LabelDatum[] = props.data.flatMap((item, colIndex) =>
-  accessors.map((yAccessor, itemIndex) => ({
-    x: colIndex,
-    y: Number(yAccessor(item) ?? 0),
-    itemIndex,
-  }))
+const labelData = computed<LabelDatum[]>(() =>
+  props.data.flatMap((item, colIndex) =>
+    accessors.value.map((yAccessor, itemIndex) => ({
+      x: colIndex,
+      y: Number(yAccessor(item) ?? 0),
+      itemIndex,
+    }))
+  )
 );
 
 // Compute label x-position so each value label sits centered over (or in front of) its own bar
@@ -118,7 +120,7 @@ const labelData: LabelDatum[] = props.data.flatMap((item, colIndex) =>
 const labelX = (d: LabelDatum) => {
   // Do not offset for stacked variants
   if (props.stacked || props.stackAndGrouped) return d.x;
-  const n = numBars;
+  const n = numBars.value;
   if (n <= 1) return d.x; // single series, already centered
 
   // Effective drawable width of the group after outer group padding (heuristic)
@@ -141,7 +143,9 @@ const labelX = (d: LabelDatum) => {
   return d.x + offsetFromCenter;
 };
 
-const isHorizontal = (props.orientation ?? Orientation.Vertical) === Orientation.Horizontal;
+const isHorizontal = computed(
+  () => (props.orientation ?? Orientation.Vertical) === Orientation.Horizontal
+);
 
 const labelValue = (d: LabelDatum) =>
   d.y + (props.valueLabel?.labelSpacing ?? 0) * (d.y < 0 ? -1 : 1);
