@@ -1,4 +1,4 @@
-import type { BulletLegendItemInterface } from '@unovis/ts'
+import type { BulletLegendItemInterface } from 'nuxt-charts/types'
 
 /* Demo data for homepage */
 export const categories1: Record<string, BulletLegendItemInterface> = {

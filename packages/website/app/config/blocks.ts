@@ -167,17 +167,6 @@ export const BLOCK_CATEGORIES: BlockCategoryConfig[] = [
     new: true
   },
   {
-    slug: 'combo-charts',
-    title: 'Combo Charts',
-    folderName: 'ComboCharts',
-    componentName: 'BlocksComboCharts',
-    icon: 'i-lucide-combine',
-    image: '/images/blocks/blocks-combo.svg',
-    description: 'Dual-axis bar and line charts for mixed metrics',
-    count: 2,
-    new: true
-  },
-  {
     slug: 'sparklines',
     title: 'Sparklines',
     folderName: 'Sparklines',
@@ -210,15 +199,7 @@ export const BLOCK_CATEGORIES: BlockCategoryConfig[] = [
     count: 2,
     new: true
   }
-  // {
-  //   slug: 'bubble-charts',
-  //   title: 'Bubble Charts',
-  //   folderName: 'BubbleCharts',
-  //   componentName: 'BlocksBubbleCharts',
-  //   icon: 'i-lucide-circle-dot',
-  //   description: 'Bubble visualizations for multi-dimensional data',
-  //   count: 1
-  // }
+  // DualChart combo blocks deferred until v3.1 (ComposedChart).
 ]
 
 // Create lookup maps for quick access

@@ -1,4 +1,4 @@
-import type { BulletLegendItemInterface } from '@unovis/ts'
+import type { BulletLegendItemInterface } from 'nuxt-charts/types'
 
 export interface IncomeExpenseItem {
   month: string

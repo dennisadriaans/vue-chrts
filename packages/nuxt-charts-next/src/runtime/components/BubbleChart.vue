@@ -29,13 +29,30 @@ import { axisTickVars, resolveHoverRadius, resolveHoverVisible, themeToVars } fr
 
 const props = defineProps<BubbleChartProps<T>>();
 
-const xKey = computed(() => String(props.xAccessor));
-const yKey = computed(() => String(props.yAccessor));
-const zKey = computed(() => (props.sizeAccessor !== undefined ? String(props.sizeAccessor) : undefined));
+/** Keep function accessors intact — `String(fn)` breaks v2 site/block usage. */
+function resolveAccessor(accessor: BubbleChartProps<T>["xAccessor"] | undefined) {
+  if (accessor === undefined) return undefined;
+  return typeof accessor === "function" ? accessor : String(accessor);
+}
+
+const xKey = computed(() => resolveAccessor(props.xAccessor)!);
+const yKey = computed(() => resolveAccessor(props.yAccessor)!);
+const zKey = computed(() => resolveAccessor(props.sizeAccessor));
 const categoryKey = computed(() => String(props.categoryKey));
 
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
-const sizeRange = computed(() => props.sizeRange ?? [props.sizeOptions?.minRadius ?? 1, props.sizeOptions?.maxRadius ?? 20]);
+const sizeRange = computed(() => {
+  if (props.sizeRange) return props.sizeRange;
+  // sizeOptions used radius in v2; ZAxis expects an area-like pixel range.
+  const min = props.sizeOptions?.minRadius;
+  const max = props.sizeOptions?.maxRadius;
+  if (min !== undefined || max !== undefined) {
+    const rMin = min ?? 4;
+    const rMax = max ?? 20;
+    return [Math.PI * rMin * rMin, Math.PI * rMax * rMax] as [number, number];
+  }
+  return [60, 400] as [number, number];
+});
 
 const xTickFormatter = computed(() => toTickFormatter(props.xFormatter));
 const yTickFormatter = computed(() => toTickFormatter(props.yFormatter));

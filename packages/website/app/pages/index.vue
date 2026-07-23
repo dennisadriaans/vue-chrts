@@ -175,7 +175,7 @@ const faqItems = [
   {
     label: "Does it work in plain Vue 3, without Nuxt?",
     content:
-      "Yes. The underlying library is a standard Vue 3 package — install vue-chrts and import components directly. The Nuxt module adds auto-imports and SSR wiring on top.",
+      "Nuxt Charts v3 is a Nuxt module built on vccs. For plain Vue 3 without Nuxt, use the vue-charts / vccs stack directly; the module adds auto-imports and SSR wiring for Nuxt apps.",
   },
   {
     label: "How does styling work with Tailwind v4 and Nuxt UI v3?",
@@ -190,7 +190,7 @@ const faqItems = [
   {
     label: "What renders the charts?",
     content:
-      "Unovis and D3 handle the drawing. Nuxt Charts wraps them in a Vue-first API with sensible defaults so you configure props, not scales and axes.",
+      "vccs (a Vue 3 port of Recharts) handles the drawing. Nuxt Charts wraps it in a Vue-first config-prop API with sensible defaults so you configure props, not scales and axes.",
   },
 ];
 </script>

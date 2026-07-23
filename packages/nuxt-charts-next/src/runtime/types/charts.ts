@@ -324,16 +324,22 @@ export interface SizeOptions {
   maxRadius?: number;
 }
 
+/** v2 accepted Unovis-style function accessors; v3 also accepts row field keys. */
+export type BubbleAccessor<T> = keyof T | ((datum: T) => number | string | Date | null | undefined);
+
 export interface BubbleChartProps<T> extends CartesianChartBaseProps<T> {
-  /** Data key for the bubble's x value. */
-  xAccessor: keyof T;
-  /** Data key for the bubble's y value. */
-  yAccessor: keyof T;
-  /** Data key for the bubble's size value. */
-  sizeAccessor?: keyof T;
+  /** Data key or accessor for the bubble's x value. */
+  xAccessor: BubbleAccessor<T>;
+  /** Data key or accessor for the bubble's y value. */
+  yAccessor: BubbleAccessor<T>;
+  /** Data key or accessor for the bubble's size value. */
+  sizeAccessor?: BubbleAccessor<T>;
   /** Data key used to split points into colour-coded series. */
   categoryKey: keyof T;
-  /** Bubble size range as `[min, max]` radius. Default `[1, 20]`. */
+  /**
+   * Bubble size range mapped through `ZAxis` as `[min, max]` area.
+   * Default `[60, 400]` (matches typical Recharts scatter sizing).
+   */
   sizeRange?: [number, number];
   /** Bubble fill opacity. */
   opacity?: number;

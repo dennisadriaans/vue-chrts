@@ -1,4 +1,4 @@
-import { addImportsSources } from "@nuxt/kit";
+import { addImportsSources, createResolver } from "@nuxt/kit";
 import type { ModuleOptions } from "../module";
 
 export const resolveImports = (config: ModuleOptions, filePath: string) => {
@@ -6,12 +6,17 @@ export const resolveImports = (config: ModuleOptions, filePath: string) => {
         return
     }
 
+    const { resolve } = createResolver(filePath)
+    // Local shim — see runtime/types.ts. Avoids bare `vue-chrts/types` which
+    // has no runtime export condition and breaks Vite SFC transforms.
+    const typesFrom = resolve("./runtime/types")
+
     // Map-specific types are always provided (v2-only, no v3 equivalent).
     const mapTypes = ['MapRegion', 'MapPin']
     // Shared types also exported by nuxt-charts-next; skip when sharedImports=false.
     const sharedTypes = ['BulletLegendItemInterface', 'MarkerConfig', 'CrosshairConfig', 'AxisConfig', 'TooltipConfig']
     addImportsSources({
-        from: "vue-chrts/types",
+        from: typesFrom,
         type: true,
         imports: config.sharedImports === false ? [...mapTypes] : [...sharedTypes, ...mapTypes]
     })

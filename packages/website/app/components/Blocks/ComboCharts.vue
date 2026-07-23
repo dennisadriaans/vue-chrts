@@ -1,47 +1,18 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 defineOptions({
   tags: ['blocks', 'combo-charts']
 })
 </script>
 
 <template>
-  <div class="space-y-8">
-    <div class="space-y-2">
-      <h2 class="text-2xl font-semibold">
-        Combo Charts
-      </h2>
-      <p class="text-toned dark:text-muted">
-        Combine bars and lines on a dual axis to compare metrics with different
-        scales in a single chart.
-      </p>
-    </div>
-
-    <ClientOnly>
-      <div class="mt-12 space-y-24 lg:mt-0">
-        <PreviewExample title="Revenue & Growth">
-          <template #chart>
-            <BlocksComboChartsRevenueGrowth />
-          </template>
-          <PreviewCode
-            id="combo-revenue-growth"
-            category="combo-charts"
-            block="revenue-growth"
-            :lock-code="true"
-          />
-        </PreviewExample>
-
-        <PreviewExample title="Traffic & Conversion">
-          <template #chart>
-            <BlocksComboChartsTrafficConversion />
-          </template>
-          <PreviewCode
-            id="combo-traffic-conversion"
-            category="combo-charts"
-            block="traffic-conversion"
-            :lock-code="true"
-          />
-        </PreviewExample>
-      </div>
-    </ClientOnly>
+  <div class="mx-auto max-w-2xl space-y-3 py-16 text-center">
+    <h2 class="text-highlighted text-xl font-semibold">
+      Combo Charts coming in v3.1
+    </h2>
+    <p class="text-muted text-sm">
+      Dual-axis bar + line charts ship with the upcoming
+      <code>ComposedChart</code> adapter. They are not part of the v3 beta.
+    </p>
+    <UButton to="/blocks" label="Back to blocks" color="neutral" variant="outline" />
   </div>
 </template>
