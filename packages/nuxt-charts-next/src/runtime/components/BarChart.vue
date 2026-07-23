@@ -9,10 +9,12 @@
  * `variant="cubes"` swaps the default rectangle for a cube-grid column
  * ({@link CubeBarShape}). Supports single, grouped, and stacked series.
  */
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import { Bar, BarChart as VccsBarChart, LabelList, Rectangle } from "vccs";
 import CartesianFrame from "./internal/CartesianFrame.vue";
 import CubeBarShape from "./internal/CubeBarShape.vue";
+import HalftoneBarShape from "./internal/HalftoneBarShape.vue";
+import HalftoneDefs from "./internal/HalftoneDefs";
 import type { BarChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
 import {
@@ -31,6 +33,23 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
 });
 
 const isCubes = computed(() => props.variant === "cubes");
+
+/**
+ * `variant="halftone"` paints each column with a 1-bit ordered dither that runs
+ * solid on the baseline to sparse at the top, instead of a flat rectangle.
+ */
+const isHalftone = computed(() => props.variant === "halftone");
+
+/** Scope for the lattice `<defs>`; per chart instance so ids never collide. */
+const halftoneScope = useId();
+
+/** How many discrete coverage levels each column is sliced into. */
+const HALFTONE_STEPS = 14;
+
+/** One level set per series — the lattice is painted in the series colour. */
+function halftoneSeriesScope(dataKey: string): string {
+  return `${halftoneScope}-${dataKey}`;
+}
 
 /**
  * Adapt the v2 `valueLabel.label(d, index)` callback to the `vccs` `LabelList`
@@ -105,6 +124,22 @@ function barRadius(index: number): number | [number, number, number, number] {
     :container-props="chartContainerProps"
     v-bind="props"
   >
+    <!--
+      One lattice level set per series. Built with `h()` (see HalftoneDefs) so
+      the patterns land in the SVG namespace; do not wrap in vccs `<Customized>`,
+      which re-renders on every tooltip mousemove and would rebuild them all.
+    -->
+    <HalftoneDefs
+      v-for="s in isHalftone ? series : []"
+      :key="`ht-${s.dataKey}`"
+      :scope="halftoneSeriesScope(s.dataKey)"
+      :color="s.color"
+      :cell="halftoneCell ?? 2"
+      :steps="HALFTONE_STEPS"
+      :from="halftoneFrom ?? 0"
+      :to="halftoneTo ?? 1"
+      :bias="halftoneBias ?? 1"
+    />
     <Bar
       v-for="(s, i) in series"
       :key="s.dataKey"
@@ -136,6 +171,18 @@ function barRadius(index: number): number | [number, number, number, number] {
           :min-opacity="typeof cubeMinOpacity === 'number' ? cubeMinOpacity : undefined"
           :empty-color="cubeEmptyColor"
           :include-empty="!stacked || i === 0"
+        />
+        <HalftoneBarShape
+          v-else-if="isHalftone"
+          :x="shapeProps.x"
+          :y="shapeProps.y"
+          :width="shapeProps.width"
+          :height="shapeProps.height"
+          :fill="shapeProps.fill ?? s.color"
+          :scope="halftoneSeriesScope(s.dataKey)"
+          :steps="HALFTONE_STEPS"
+          :cap-height="halftoneCap ?? 3"
+          :radius="typeof barRadius(i) === 'number' ? (barRadius(i) as number) : 0"
         />
         <Rectangle v-else v-bind="shapeProps" />
       </template>

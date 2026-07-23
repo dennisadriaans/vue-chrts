@@ -10,7 +10,7 @@
  * autocomplete on axis keys and typed formatters.
  */
 import type { CurveType, DonutType, LegendPosition, Orientation } from "../enums";
-import type { DitherVariant } from "../utils/dither";
+import type { DitherVariant, HalftoneDirection } from "../utils/dither";
 import type {
   AxisConfig,
   BulletLegendItemInterface,
@@ -130,10 +130,37 @@ export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
    * Fill the area with a tiling halftone dot pattern. `true` uses the `bayer`
    * variant. Composes with `gradient` (the vertical fade) unless `gradient` is
    * `false`.
+   *
+   * `"halftone"` works the other way round: the fill stays solid and the dither
+   * is punched *out* of it on a hard-edged pixel lattice that opens up toward
+   * the baseline, for the 1-bit / CRT look. It manages its own colour ramp, so
+   * `gradientStops` and `ditherWash` do not apply to it.
    */
   dither?: boolean | DitherVariant;
-  /** Tile edge length in px for the dither pattern. Default 8. */
+  /**
+   * Lattice edge length in px for the dither pattern. Default 8. For
+   * `halftone` this is the 8×8 lattice edge, so one cell is an eighth of it.
+   */
   ditherTile?: number;
+  /**
+   * `halftone` only — which end of the fill stays solid. `"down"` (default)
+   * keeps the top solid and dissolves toward the baseline, which suits an area
+   * whose line is the subject. `"up"` is the bar/column form: solid on the
+   * baseline, dissolving upward.
+   */
+  ditherDirection?: HalftoneDirection;
+  /**
+   * `halftone` only — coverage at each end of the ramp, 0–1. Defaults to the
+   * full `0 → 1` sweep. Raise `ditherFrom` so the fill never fully vanishes,
+   * or lower `ditherTo` to keep even the densest end textured.
+   */
+  ditherFrom?: number;
+  ditherTo?: number;
+  /**
+   * `halftone` only — curve applied to the ramp. `1` is linear; above 1 holds
+   * the sparse end longer, so the solid end arrives later.
+   */
+  ditherBias?: number;
   /**
    * Opacity of the solid colour wash painted under the dither dots, which is
    * what makes a dithered area fade from colour at the top to transparent at
@@ -156,7 +183,16 @@ export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
 
 export type LineChartProps<T> = Omit<
   AreaChartProps<T>,
-  "hideArea" | "gradient" | "gradientStops" | "dither" | "ditherTile" | "ditherWash"
+  | "hideArea"
+  | "gradient"
+  | "gradientStops"
+  | "dither"
+  | "ditherTile"
+  | "ditherWash"
+  | "ditherDirection"
+  | "ditherFrom"
+  | "ditherTo"
+  | "ditherBias"
 >;
 
 /**
@@ -226,7 +262,33 @@ export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
    * grouped, and stacked (`stacked`) series — for stacks, only the first
    * series draws the ghost column; each series fills its own cube range.
    */
-  variant?: "solid" | "cubes";
+  /**
+   * `"halftone"` fills each column with a 1-bit ordered dither instead: solid
+   * on the baseline, sweeping through an exact checkerboard, down to isolated
+   * specks at the top. Every cell is fully on or off, so edges stay hard —
+   * this is not an alpha fade.
+   */
+  variant?: "solid" | "cubes" | "halftone";
+  /** Cell edge in px when `variant="halftone"`. The lattice is 8 cells. Default 2. */
+  halftoneCell?: number;
+  /**
+   * Coverage at each end of the halftone ramp, 0–1. Defaults to the full
+   * `0 → 1` sweep. Raise `halftoneFrom` so a column never fully vanishes at its
+   * top, or lower `halftoneTo` to keep even the baseline textured.
+   */
+  halftoneFrom?: number;
+  halftoneTo?: number;
+  /**
+   * Curve applied to the halftone ramp. `1` is linear; above 1 holds the sparse
+   * end longer, so the solid baseline arrives later.
+   */
+  halftoneBias?: number;
+  /**
+   * Height in px of the solid cap drawn at the top of each halftone column.
+   * The bright leading edge is what stops the sparse end reading as noise.
+   * Default 3; set `0` to drop it.
+   */
+  halftoneCap?: number;
   /** Gap between cubes in px when `variant="cubes"`. Default 2. */
   cubeGap?: number;
   /** Corner radius per cube when `variant="cubes"`. Default 2. */
@@ -360,6 +422,28 @@ export interface DonutChartProps<T = unknown> {
   radius?: number;
   /** Ring thickness in pixels (outer radius minus inner radius). Default 40. */
   arcWidth?: number;
+  /**
+   * Fill the ring with a radial 1-bit ordered dither: solid at the outer edge,
+   * dissolving to isolated specks toward the hole. Every cell is fully on or
+   * off, so edges stay hard — this is not an alpha fade.
+   *
+   * Needs exact pixel geometry, so it applies only when `height` is set and the
+   * chart has been measured; otherwise segments fall back to flat fills.
+   */
+  dither?: "halftone";
+  /** Cell edge in px for the dither lattice. The lattice is 8 cells. Default 2. */
+  ditherCell?: number;
+  /**
+   * Coverage at each end of the radial ramp, 0–1. `ditherFrom` is the inner
+   * edge, `ditherTo` the outer. Defaults to the full `0 → 1` sweep.
+   */
+  ditherFrom?: number;
+  ditherTo?: number;
+  /**
+   * Curve applied to the radial ramp. `1` is linear; above 1 keeps the inner
+   * edge sparse for longer.
+   */
+  ditherBias?: number;
   /** Angular padding between segments, in degrees. */
   padAngle?: number;
   /**

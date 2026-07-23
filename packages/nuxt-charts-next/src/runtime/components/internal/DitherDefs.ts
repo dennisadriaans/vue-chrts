@@ -1,10 +1,13 @@
 import { defineComponent, h, type PropType } from "vue";
 import {
   buildDitherPattern,
+  buildHalftonePattern,
   ditherFadeMaskId,
   ditherId,
   dotsId,
+  halftoneMaskId,
   type DitherVariant,
+  type HalftoneDirection,
 } from "../../utils/dither";
 import type { GradientStop } from "../../utils/gradient";
 
@@ -25,6 +28,132 @@ type SeriesItem = { dataKey: string; color: string };
  * placed via a component slot. Building them with `h()` sets the correct SVG
  * namespace so `fill="url(#…)"` resolves.
  */
+interface HalftoneProps {
+  series: SeriesItem[];
+  scope: string;
+  tile: number;
+  height: number;
+  direction: HalftoneDirection;
+  from: number;
+  to: number;
+  bias: number;
+  fadeStops?: GradientStop[];
+}
+
+/**
+ * The `halftone` variant — a true 1-bit ordered dither.
+ *
+ * The colour is flat; the *mask* carries the entire gradient. Each band of the
+ * ramp tiles a pattern whose painted cell count is fixed, so coverage sweeps
+ * from isolated specks through an exact checkerboard to solid fill. That
+ * crossover is what makes it read as a gradient instead of a texture fading in
+ * alpha — and because a cell is either fully on or fully off, every edge stays
+ * hard, which is where the CRT character comes from.
+ *
+ * Deliberately *not* combined with an opacity gradient: fading the colour as
+ * well would soften the cells and collapse the effect back into a plain wash.
+ *
+ * The mask lives in `userSpaceOnUse` plot coordinates so every band lines up
+ * with the same lattice regardless of where the shape's own geometry falls.
+ */
+function renderHalftone(props: HalftoneProps) {
+  const height = props.height || 1;
+  // `tile` is the lattice edge in the public API; a cell is one dot of it.
+  const cell = Math.max(1, props.tile / 8);
+  const pattern = buildHalftonePattern(cell, {
+    direction: props.direction,
+    from: props.from,
+    to: props.to,
+    bias: props.bias,
+  });
+  const width = 4000; // Wide enough to span any plot; patterns clip to the shape.
+
+  const nodes: ReturnType<typeof h>[] = [];
+
+  for (const series of props.series) {
+    const maskId = halftoneMaskId(series.dataKey, props.scope);
+
+    /**
+     * One pattern per band. Cells are squares rather than circles: at these
+     * sizes a circle anti-aliases into a soft blob and loses the hard 1-bit
+     * edge the whole effect depends on.
+     *
+     * White paints, black is transparent — so a band's cell list *is* its
+     * coverage, and an empty list renders nothing at all.
+     */
+    const bandPatterns = pattern.bands.map((band, index) => {
+      const id = `${maskId}-b${index}`;
+      return h(
+        "pattern",
+        {
+          id,
+          key: id,
+          width: pattern.tile,
+          height: pattern.tile,
+          patternUnits: "userSpaceOnUse",
+        },
+        band.cells.map(([col, row]) =>
+          h("rect", {
+            key: `${col}-${row}`,
+            x: col * pattern.cell,
+            y: row * pattern.cell,
+            width: pattern.cell,
+            height: pattern.cell,
+            fill: "#fff",
+          }),
+        ),
+      );
+    });
+
+    /** One masked strip per band, stacked to cover the shape. */
+    const bandRects = pattern.bands.map((band, index) => {
+      const y = band.y0 * height;
+      // Overlap by a hair: exact edges leave hairline seams between strips
+      // once the browser rounds them to device pixels.
+      const strip = Math.max(0, (band.y1 - band.y0) * height) + 0.5;
+      return h("rect", {
+        key: `strip-${index}`,
+        x: 0,
+        y,
+        width,
+        height: strip,
+        fill: `url(#${maskId}-b${index})`,
+      });
+    });
+
+    nodes.push(
+      ...bandPatterns,
+      h("mask", { id: maskId, key: maskId, maskUnits: "userSpaceOnUse" }, bandRects),
+      /** The paint the shape references: flat colour, shaped by the mask. */
+      h(
+        "pattern",
+        {
+          id: ditherId(series.dataKey, props.scope),
+          key: `combo-${series.dataKey}`,
+          x: 0,
+          y: 0,
+          width,
+          height,
+          patternUnits: "userSpaceOnUse",
+        },
+        [
+          h("rect", {
+            key: "fill",
+            x: 0,
+            y: 0,
+            width,
+            height,
+            fill: series.color,
+            mask: `url(#${maskId})`,
+          }),
+        ],
+      ),
+    );
+  }
+
+  return h("defs", {}, nodes);
+}
+
 export default defineComponent({
   name: "DitherDefs",
   props: {
@@ -46,8 +175,18 @@ export default defineComponent({
      * rather than repeating with the dot tile.
      */
     height: { type: Number, default: 0 },
+    /** `halftone` only — which end of the shape stays solid. */
+    direction: { type: String as PropType<HalftoneDirection>, default: "down" },
+    /** `halftone` only — coverage at the sparse end of the ramp (0–1). */
+    from: { type: Number, default: 0 },
+    /** `halftone` only — coverage at the dense end of the ramp (0–1). */
+    to: { type: Number, default: 1 },
+    /** `halftone` only — ramp curve; above 1 holds the sparse end longer. */
+    bias: { type: Number, default: 1 },
   },
   setup: (props) => () => {
+    if (props.variant === "halftone") return renderHalftone(props);
+
     const pattern = buildDitherPattern(props.variant, props.tile);
     const stops = props.fadeStops;
 

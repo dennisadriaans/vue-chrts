@@ -122,6 +122,10 @@ const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis)
       :tile="ditherTile ?? 8"
       :fade-stops="ditherWashStops"
       :height="height"
+      :direction="ditherDirection ?? 'down'"
+      :from="ditherFrom ?? 0"
+      :to="ditherTo ?? 1"
+      :bias="ditherBias ?? 1"
     />
     <Area
       v-for="s in series"

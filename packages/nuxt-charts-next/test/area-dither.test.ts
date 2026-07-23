@@ -2,7 +2,11 @@
 import { describe, expect, it, beforeAll, afterEach } from "vitest";
 import { mount, flushPromises } from "@vue/test-utils";
 import AreaChart from "../src/runtime/components/AreaChart.vue";
-import { buildDitherPattern, DITHER_VARIANTS } from "../src/runtime/utils/dither";
+import {
+  buildDitherPattern,
+  buildHalftonePattern,
+  DITHER_VARIANTS,
+} from "../src/runtime/utils/dither";
 
 const mounted: Array<{ unmount: () => void }> = [];
 
@@ -85,6 +89,111 @@ describe("buildDitherPattern", () => {
   });
 });
 
+describe("buildHalftonePattern", () => {
+  const CELLS = 64; // 8x8 lattice
+
+  it("sweeps the full coverage range, densest at the top when going down", () => {
+    const { bands } = buildHalftonePattern(3, { direction: "down" });
+    expect(bands[0]!.cells.length).toBe(CELLS);
+    expect(bands.at(-1)!.cells).toHaveLength(0);
+  });
+
+  it("flips which end is solid for direction up", () => {
+    const { bands } = buildHalftonePattern(3, { direction: "up" });
+    expect(bands[0]!.cells).toHaveLength(0);
+    expect(bands.at(-1)!.cells.length).toBe(CELLS);
+  });
+
+  it("passes through an even checkerboard at the midpoint", () => {
+    const { bands } = buildHalftonePattern();
+    const mid = bands[Math.floor(bands.length / 2)]!;
+    expect(mid.coverage).toBeCloseTo(0.5, 1);
+    // An ordered dither spreads the on-cells evenly rather than clumping them,
+    // so each lattice row carries roughly the same share at 50%.
+    const perRow = new Map<number, number>();
+    for (const [, row] of mid.cells) perRow.set(row, (perRow.get(row) ?? 0) + 1);
+    for (const count of perRow.values()) expect(count).toBe(4);
+  });
+
+  it("decreases monotonically down the shape", () => {
+    const { bands } = buildHalftonePattern();
+    for (let i = 1; i < bands.length; i++) {
+      expect(bands[i]!.cells.length).toBeLessThanOrEqual(bands[i - 1]!.cells.length);
+    }
+  });
+
+  it("covers the shape contiguously end to end", () => {
+    const { bands } = buildHalftonePattern();
+    expect(bands[0]!.y0).toBeCloseTo(0);
+    for (let i = 1; i < bands.length; i++) {
+      expect(bands[i]!.y0).toBeCloseTo(bands[i - 1]!.y1);
+    }
+    expect(bands.at(-1)!.y1).toBeCloseTo(1);
+  });
+
+  it("clamps the ramp to the from/to range", () => {
+    const { bands } = buildHalftonePattern(3, { from: 0.25, to: 0.75 });
+    for (const band of bands) {
+      expect(band.coverage).toBeGreaterThanOrEqual(0.25 - 1e-9);
+      expect(band.coverage).toBeLessThanOrEqual(0.75 + 1e-9);
+    }
+    // Never fully solid nor fully empty inside a clamped range.
+    expect(bands[0]!.cells.length).toBeLessThan(CELLS);
+    expect(bands.at(-1)!.cells.length).toBeGreaterThan(0);
+  });
+
+  it("keeps every cell on the lattice", () => {
+    for (const band of buildHalftonePattern().bands) {
+      for (const [col, row] of band.cells) {
+        expect(col).toBeGreaterThanOrEqual(0);
+        expect(col).toBeLessThan(8);
+        expect(row).toBeGreaterThanOrEqual(0);
+        expect(row).toBeLessThan(8);
+      }
+    }
+  });
+
+  it("is deterministic, so SSR and client markup agree", () => {
+    expect(buildHalftonePattern()).toEqual(buildHalftonePattern());
+  });
+});
+
+describe("AreaChart halftone fill", () => {
+  it("paints flat colour through the coverage mask", async () => {
+    await mountChart({ dither: "halftone" });
+    const combo = document.getElementById("nc-dither-v-0-desktop")!;
+    const rect = combo.querySelector("rect")!;
+    // Flat colour: the mask alone carries the gradient, so there is no wash.
+    expect(rect.getAttribute("fill")).toBe("#2662d9");
+    expect(rect.getAttribute("mask")).toBe("url(#nc-dither-v-0-desktop-halftone)");
+    expect(document.getElementById("nc-dither-v-0-desktop-wash")).toBeNull();
+    expect(document.getElementById("nc-dither-v-0-desktop-dots")).toBeNull();
+  });
+
+  it("emits additive cells — no black knock-out rects", async () => {
+    await mountChart({ dither: "halftone" });
+    const band = document.getElementById("nc-dither-v-0-desktop-halftone-b0")!;
+    const fills = [...band.querySelectorAll("rect")].map(r => r.getAttribute("fill"));
+    expect(fills.length).toBeGreaterThan(0);
+    expect(new Set(fills)).toEqual(new Set(["#fff"]));
+  });
+
+  it("derives the cell size from ditherTile", async () => {
+    await mountChart({ dither: "halftone", ditherTile: 16 });
+    const band = document.getElementById("nc-dither-v-0-desktop-halftone-b0")!;
+    expect(band.getAttribute("width")).toBe("16");
+    // One cell is an eighth of the lattice edge.
+    expect(band.querySelector("rect")!.getAttribute("width")).toBe("2");
+  });
+
+  it("honours ditherDirection", async () => {
+    await mountChart({ dither: "halftone", ditherDirection: "up" });
+    // Going up, the top band is the sparse end, so it paints nothing.
+    const top = document.getElementById("nc-dither-v-0-desktop-halftone-b0")!;
+    expect(top.querySelectorAll("rect")).toHaveLength(0);
+  });
+});
+
 describe("AreaChart dither fill", () => {
   it("renders no pattern by default", async () => {
     await mountChart();
@@ -164,7 +273,10 @@ describe("AreaChart dither fill", () => {
   it("accepts each named variant", async () => {
     for (const variant of DITHER_VARIANTS) {
       const wrapper = await mountChart({ dither: variant });
-      expect(document.querySelectorAll("pattern").length).toBe(4);
+      // Every variant must paint *some* pattern the fill can reference; the
+      // count differs because halftone emits one pattern per ramp band.
+      expect(document.querySelectorAll("pattern").length).toBeGreaterThan(0);
+      expect(document.getElementById("nc-dither-v-0-desktop")).not.toBeNull();
       wrapper.unmount();
       document.body.innerHTML = "";
     }

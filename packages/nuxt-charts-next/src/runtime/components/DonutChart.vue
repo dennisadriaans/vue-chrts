@@ -8,10 +8,11 @@
  * children (Pie does not use extractCellProps unlike Bar).
  * `DonutType.Half` renders a semicircle gauge.
  */
-import { computed } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, useId } from "vue";
 import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "vccs";
 import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import HalftoneRadialDefs, { halftoneRadialId } from "./internal/HalftoneRadialDefs";
 import type { DonutChartProps } from "../types/charts";
 import { DonutType } from "../enums";
 import { categoriesToSeries } from "../utils/categories";
@@ -24,6 +25,45 @@ const props = defineProps<DonutChartProps<T>>();
 /** Per-chart `--vc-*` overrides for the legend / tooltip tokens. */
 const themeVars = computed(() => themeToVars(props.theme));
 
+const halftoneScope = useId();
+
+/**
+ * Measured width of the chart box.
+ *
+ * The radial halftone places its annuli in chart coordinates, so it needs the
+ * pixel centre — and vccs resolves `cx: "50%"` internally without exposing it.
+ * Observing our own wrapper is the cheapest way to learn the same number.
+ */
+const root = ref<HTMLElement>();
+const chartWidth = ref(0);
+let observer: ResizeObserver | undefined;
+
+onMounted(() => {
+  if (!root.value || typeof ResizeObserver === "undefined") return;
+  observer = new ResizeObserver((entries) => {
+    chartWidth.value = entries[0]?.contentRect.width ?? 0;
+  });
+  observer.observe(root.value);
+});
+
+onBeforeUnmount(() => {
+  observer?.disconnect();
+  observer = undefined;
+});
+
+/**
+ * Radial 1-bit dither on the ring. Needs exact pixel geometry to place its
+ * annuli, which is only available on the auto-fit-with-height path below — so
+ * it silently falls back to flat fills when the chart is sized by percentage.
+ */
+const useHalftone = computed(
+  () =>
+    props.dither === "halftone"
+    && !!props.height
+    && props.height > 0
+    && chartWidth.value > 0,
+);
+
 /** Zip the value array against the categories record (positional, matching v2). */
 const segments = computed(() => {
   const cats = categoriesToSeries(props.categories);
@@ -31,8 +71,16 @@ const segments = computed(() => {
     name: cats[i]?.name ?? String(i),
     value,
     // vccs reads `fill` directly from the data entry to color each sector
-    fill: cats[i]?.color ?? `var(--chart-color-${i})`,
+    fill: useHalftone.value
+      ? `url(#${halftoneRadialId(halftoneScope, i)})`
+      : (cats[i]?.color ?? `var(--chart-color-${i})`),
   }));
+});
+
+/** Flat colours in data order, for the halftone lattice to paint with. */
+const segmentColors = computed(() => {
+  const cats = categoriesToSeries(props.categories);
+  return props.data.map((_, i) => cats[i]?.color ?? `var(--chart-color-${i})`);
 });
 
 /** Default ring thickness (px) when `arcWidth` is not supplied. */
@@ -85,6 +133,29 @@ const angles = computed(() =>
     : { startAngle: 0, endAngle: 360 },
 );
 
+/**
+ * Ring geometry in px for the halftone annuli.
+ *
+ * The `<defs>` are emitted inside the same SVG as the sectors, so the pattern
+ * lives in chart coordinates. vccs centres the pie at 50%/50% of its box; a
+ * half donut instead sits on the bottom edge, matching the `angles` above.
+ *
+ * `cx` is unknown until the container measures itself, so it is expressed as a
+ * fraction of the chart width via the pattern's own box — see the width/height
+ * passed to `HalftoneRadialDefs`.
+ */
+const halftoneRing = computed(() => {
+  const outer = typeof outerRadius.value === "number" ? outerRadius.value : 0;
+  const inner = typeof innerRadius.value === "number" ? innerRadius.value : 0;
+  const height = props.height ?? 0;
+  return {
+    inner,
+    outer,
+    cx: chartWidth.value / 2,
+    cy: props.type === DonutType.Half ? height : height / 2,
+  };
+});
+
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
 const legendWrapperStyle = computed(() =>
   resolveLegendWrapperStyle(props.legendPosition, toCssProperties(props.legendStyle)),
@@ -92,9 +163,26 @@ const legendWrapperStyle = computed(() =>
 </script>
 
 <template>
-  <div class="donut-chart vue-chrts" :style="{ position: 'relative', width: '100%', height: `${height ?? (radius ? radius * 2 : 200)}px`, ...themeVars }">
+  <div ref="root" class="donut-chart vue-chrts" :style="{ position: 'relative', width: '100%', height: `${height ?? (radius ? radius * 2 : 200)}px`, ...themeVars }">
     <ResponsiveContainer width="100%" height="100%">
       <PieChart>
+        <!--
+          Radial dither paints. Built with `h()` so they land in the SVG
+          namespace; see HalftoneRadialDefs.
+        -->
+        <HalftoneRadialDefs
+          v-if="useHalftone"
+          :scope="halftoneScope"
+          :colors="segmentColors"
+          :cx="halftoneRing.cx"
+          :cy="halftoneRing.cy"
+          :inner-radius="halftoneRing.inner"
+          :outer-radius="halftoneRing.outer"
+          :cell="ditherCell ?? 2"
+          :from="ditherFrom ?? 0"
+          :to="ditherTo ?? 1"
+          :bias="ditherBias ?? 1"
+        />
         <Pie
           :data="segments"
           data-key="value"
