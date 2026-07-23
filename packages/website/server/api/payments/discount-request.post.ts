@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 
   await send({
     from: 'dennis@nuxtcharts.com',
-    to: 'mail@adriaansendennis.nl',
+    to: useRuntimeConfig().notificationEmail,
     subject: 'DashboardStack Discount Request',
     html: `
       <p>A premium user has requested the DashboardStack discount.</p>

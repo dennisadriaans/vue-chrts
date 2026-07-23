@@ -11,9 +11,8 @@ const requireAdminUser = async (event: any) => {
   const session = await requireUserSession(event)
   const user = session?.user as { email?: string } | undefined
 
-  // NOTE: Admin email is hardcoded per requirements
-  // Future: Consider using role-based permission system or environment variable
-  if (!user || user.email !== 'adriaansendennis@gmail.com') {
+  const adminEmail = useRuntimeConfig().adminEmail
+  if (!adminEmail || !user || user.email !== adminEmail) {
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden: Admin access required'

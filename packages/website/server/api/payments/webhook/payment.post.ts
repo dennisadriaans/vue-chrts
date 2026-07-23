@@ -94,7 +94,7 @@ export default defineEventHandler(async (event) => {
           /* Mail to myself */
           await send({
             from: 'dennis@nuxtcharts.com',
-            to: ['mail@adriaansendennis.nl'],
+            to: [config.notificationEmail],
             subject: 'New customer',
             html: 'New paid customer with email: ' + data.customer_email
           })

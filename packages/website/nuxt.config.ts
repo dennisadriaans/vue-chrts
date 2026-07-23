@@ -173,6 +173,15 @@ export default defineNuxtConfig({
     gaApiSecret: '',
     githubToken: '',
     plunkApiToken: '',
+    // Admin/notification identities — never hardcode these in source.
+    adminEmail: '',
+    notificationEmail: '',
+    // Comma-separated list of emails permitted to join the affiliate program.
+    affiliateAllowedEmails: '',
+    // Verified "nuxt" affiliate secrets (Stripe Connect account id + contact
+    // email used for reverse-charge invoicing). Kept out of source.
+    affiliateNuxtAccountId: '',
+    affiliateNuxtEmail: '',
     turnstile: {
       secretKey: ''
     },
@@ -190,7 +199,10 @@ export default defineNuxtConfig({
       stripePublishableKey: '',
       gaMeasurementId: '',
       googleTagManager: '',
-      lockCode: process.env.NUXT_PUBLIC_LOCK_CODE || ''
+      lockCode: process.env.NUXT_PUBLIC_LOCK_CODE || '',
+      // Exposed to the client for UI gating only (server routes re-check).
+      adminEmail: '',
+      affiliateAllowedEmails: ''
     },
     session: {
       password: '',

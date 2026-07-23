@@ -1,7 +1,7 @@
 import type Stripe from 'stripe'
 import { calculateCommission } from '~~/server/utils/affiliate'
 import { createBatchReverseInvoice } from '~~/server/utils/commission-invoice'
-import { verifiedAffiliates, getAffiliateAccountId } from '~~/server/utils/affiliate-config'
+import { getAffiliateById, getAffiliateAccountId } from '~~/server/utils/affiliate-config'
 import { getStripeClient } from '~~/server/utils/stripe'
 import type { BatchLineItem } from '~~/server/utils/commission-invoice'
 
@@ -14,7 +14,8 @@ import type { BatchLineItem } from '~~/server/utils/commission-invoice'
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event)
 
-  if (!user || (user as { email?: string }).email !== 'adriaansendennis@gmail.com') {
+  const adminEmail = useRuntimeConfig().adminEmail
+  if (!adminEmail || !user || (user as { email?: string }).email !== adminEmail) {
     throw createError({ statusCode: 403, statusMessage: 'Forbidden: Admin access required' })
   }
 
@@ -109,7 +110,7 @@ export default defineEventHandler(async (event) => {
     const results = []
 
     for (const [accountId, group] of pendingByAffiliate) {
-      const affiliateConfig = verifiedAffiliates[group.affiliateId]
+      const affiliateConfig = getAffiliateById(group.affiliateId)
       const affiliateAccount = await stripe.accounts.retrieve(accountId)
 
       const affiliateName

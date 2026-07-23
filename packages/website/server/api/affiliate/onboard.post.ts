@@ -1,5 +1,5 @@
 import { useStripeAffiliates } from '~~/server/utils/stripe'
-import { verifiedAffiliates } from '~~/server/utils/affiliate-config'
+import { findVerifiedAffiliateByEmail } from '~~/server/utils/affiliate-config'
 
 export default defineEventHandler(async (event) => {
   const session = await requireUserSession(event)
@@ -7,7 +7,10 @@ export default defineEventHandler(async (event) => {
   const email = (user?.email || '').trim().toLowerCase()
   const { country } = await readBody(event) || {}
 
-  const allowedEmails = ['seb@atinux.com', 'mail@adriaansendennis.nl', 'adriaansendennis@gmail.com']
+  const allowedEmails = (useRuntimeConfig().affiliateAllowedEmails || '')
+    .split(',')
+    .map((e: string) => e.trim().toLowerCase())
+    .filter(Boolean)
 
   if (!email) {
     throw createError({
@@ -28,9 +31,7 @@ export default defineEventHandler(async (event) => {
     const { origin } = getRequestURL(event)
 
     // Check if user is a verified affiliate with an existing account
-    const verifiedAffiliate = Object.values(verifiedAffiliates).find(
-      a => a.email.toLowerCase() === email
-    )
+    const verifiedAffiliate = findVerifiedAffiliateByEmail(email)
 
     if (verifiedAffiliate) {
       // User has an existing verified affiliate account

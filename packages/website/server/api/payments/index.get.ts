@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
   const { getPaymentsByEmail } = useStripePayments()
 
   if (import.meta.dev) {
-    return await getPaymentsByEmail('adriaansendennis@gmail.com')
+    return await getPaymentsByEmail(useRuntimeConfig().adminEmail || user.email)
   } else {
     try {
       return await getPaymentsByEmail(user.email)

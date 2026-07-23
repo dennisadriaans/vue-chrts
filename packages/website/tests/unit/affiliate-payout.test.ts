@@ -1,6 +1,25 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 import { calculateCommission } from '~~/server/utils/affiliate'
-import { getAffiliateAccountId, verifiedAffiliates } from '~~/server/utils/affiliate-config'
+import {
+  getAffiliateAccountId,
+  getAffiliateEmail,
+  findVerifiedAffiliateByEmail,
+  getAffiliateByAccountId,
+  verifiedAffiliateIds
+} from '~~/server/utils/affiliate-config'
+
+// Affiliate secrets (Stripe account id + contact email) live in runtime config,
+// not source. Provide test values so the resolution logic can be exercised.
+const TEST_NUXT_ACCOUNT_ID = 'acct_test_nuxt'
+const TEST_NUXT_EMAIL = 'affiliate@example.com'
+
+mockNuxtImport('useRuntimeConfig', () => {
+  return () => ({
+    affiliateNuxtAccountId: TEST_NUXT_ACCOUNT_ID,
+    affiliateNuxtEmail: TEST_NUXT_EMAIL
+  })
+})
 
 // ─── Stripe Mock ──────────────────────────────────────────────────────────────
 // Full mock of the Stripe calls used in pay.post.ts and commission-invoice.ts.
@@ -92,9 +111,9 @@ function createStripeMock(overrides: Record<string, any> = {}) {
     },
     accounts: {
       retrieve: vi.fn().mockImplementation(async () => ({
-        id: 'acct_1T1UsRPNofVDB3JC',
+        id: TEST_NUXT_ACCOUNT_ID,
         business_profile: { name: 'NuxtLabs' },
-        email: 'seb@atinux.com',
+        email: TEST_NUXT_EMAIL,
         details_submitted: true,
         payouts_enabled: true
       }))
@@ -105,19 +124,33 @@ function createStripeMock(overrides: Record<string, any> = {}) {
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
 describe('affiliate-config', () => {
-  it('only has nuxt/seb@atinux.com as verified affiliate', () => {
-    const ids = Object.keys(verifiedAffiliates)
-    expect(ids).toEqual(['nuxt'])
-    expect(verifiedAffiliates.nuxt.email).toBe('seb@atinux.com')
+  it('only has nuxt as verified affiliate', () => {
+    expect([...verifiedAffiliateIds]).toEqual(['nuxt'])
   })
 
-  it('resolves nuxt → acct_1T1UsRPNofVDB3JC', () => {
-    expect(getAffiliateAccountId('nuxt')).toBe('acct_1T1UsRPNofVDB3JC')
+  it('resolves nuxt account id + email from runtime config', () => {
+    expect(getAffiliateAccountId('nuxt')).toBe(TEST_NUXT_ACCOUNT_ID)
+    expect(getAffiliateEmail('nuxt')).toBe(TEST_NUXT_EMAIL)
   })
 
   it('returns null for unknown affiliate', () => {
     expect(getAffiliateAccountId('unknown')).toBeNull()
     expect(getAffiliateAccountId(undefined)).toBeNull()
+    expect(getAffiliateEmail('unknown')).toBe('')
+  })
+
+  it('reverse-lookups an affiliate by config account id', () => {
+    const affiliate = getAffiliateByAccountId(TEST_NUXT_ACCOUNT_ID)
+    expect(affiliate?.id).toBe('nuxt')
+    expect(affiliate?.country).toBe('FR')
+    expect(getAffiliateByAccountId('acct_unknown')).toBeNull()
+  })
+
+  it('finds an affiliate by config email (case-insensitive)', () => {
+    const affiliate = findVerifiedAffiliateByEmail(TEST_NUXT_EMAIL.toUpperCase())
+    expect(affiliate?.id).toBe('nuxt')
+    expect(affiliate?.accountId).toBe(TEST_NUXT_ACCOUNT_ID)
+    expect(findVerifiedAffiliateByEmail('nobody@example.com')).toBeNull()
   })
 })
 
@@ -154,7 +187,7 @@ describe('commission-invoice: createReverseInvoice (logic verification)', () => 
     const orderId = 'cs_test_new'
     const metadata = {
       order_id: orderId,
-      affiliate_account_id: 'acct_1T1UsRPNofVDB3JC',
+      affiliate_account_id: TEST_NUXT_ACCOUNT_ID,
       invoice_type: 'reverse_charge_commission'
     }
     expect(metadata.order_id).toBe(orderId)
@@ -238,7 +271,7 @@ describe('pay.post.ts flow (mocked)', () => {
     let invoice = existingInvoice
     if (!invoice) {
       // Simulate createReverseInvoice
-      const cust = await stripe.customers.create({ email: 'seb@atinux.com', name: 'NuxtLabs' })
+      const cust = await stripe.customers.create({ email: 'affiliate@example.com', name: 'NuxtLabs' })
       await stripe.invoiceItems.create({
         customer: cust.id,
         amount: Math.round(commissionAmount * 100),
@@ -303,7 +336,7 @@ describe('pay.post.ts flow (mocked)', () => {
     expect(result.success).toBe(true)
     expect(result.commission?.amount).toBe(9.80)
     expect(stripe.transfers.create).toHaveBeenCalledWith(
-      expect.objectContaining({ amount: 980, destination: 'acct_1T1UsRPNofVDB3JC' })
+      expect.objectContaining({ amount: 980, destination: TEST_NUXT_ACCOUNT_ID })
     )
     expect(stripe.invoiceItems.create).toHaveBeenCalledWith(
       expect.objectContaining({ amount: 980 })

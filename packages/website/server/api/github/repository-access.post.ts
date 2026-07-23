@@ -49,12 +49,6 @@ export default defineEventHandler(async (event) => {
 
   const { checkHasPaid } = useStripePayments()
 
-  // if (import.meta.dev) {
-  //   user = { email: 'pieter@csoft.co.za' }
-  //   githubUsername = 'Pietervdw'
-  //   productSlug = body.product
-  // }
-
   // 2. Validate Inputs
   if (!user) {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' })
@@ -128,8 +122,8 @@ async function handleRepositoryAccess({
   const reposToProcess
     = productSlug === 'all-access-pass'
       ? Object.values(ProductMap).filter(
-          p => p.slug && p.slug !== 'all-access-pass'
-        )
+        p => p.slug && p.slug !== 'all-access-pass'
+      )
       : [Object.values(ProductMap).find(p => p.slug === productSlug)]
 
   if (!reposToProcess[0]) {
@@ -182,15 +176,6 @@ async function processRepositoryAccess(
 
   try {
     const inviteResponse = await inviteToRepository(githubUsername, repo)
-
-    // const { send } = createPlunkService()
-
-    // await send({
-    //   from: 'dennis@nuxtcharts.com',
-    //   to: 'mail@adriaansendennis.nl',
-    //   subject: 'User Invited to GitHub Repository',
-    //   html: `${repositoryUrl}<br><br>Email: ${user.email || 'No email provided'}`
-    // })
 
     return {
       hasAccess: true,

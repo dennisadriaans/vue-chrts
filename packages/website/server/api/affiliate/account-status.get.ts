@@ -1,5 +1,5 @@
 import { useStripeAffiliates } from '~~/server/utils/stripe'
-import { verifiedAffiliates } from '~~/server/utils/affiliate-config'
+import { findVerifiedAffiliateByEmail } from '~~/server/utils/affiliate-config'
 
 export default defineEventHandler(async (event) => {
   const session = await requireUserSession(event)
@@ -16,9 +16,7 @@ export default defineEventHandler(async (event) => {
   try {
     const { getAccountByEmail, getAccountById } = useStripeAffiliates()
 
-    const verifiedAffiliate = Object.values(verifiedAffiliates).find(
-      a => a.email.toLowerCase() === email
-    )
+    const verifiedAffiliate = findVerifiedAffiliateByEmail(email)
 
     const account = verifiedAffiliate
       ? await getAccountById(verifiedAffiliate.accountId)

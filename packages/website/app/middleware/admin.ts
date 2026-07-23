@@ -9,11 +9,12 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return navigateTo('/login')
   }
 
-  // Check if accessing /admin/** routes
-  // NOTE: Admin email is hardcoded per requirements
-  // Future: Consider using role-based permission system or environment variable
+  // Check if accessing /admin/** routes.
+  // This is UI-level gating only — every /api/admin/** route re-checks the
+  // admin identity server-side, so a bypass here grants no privileged access.
   if (to.path.startsWith('/admin/')) {
-    if (user.value?.email !== 'adriaansendennis@gmail.com') {
+    const adminEmail = useRuntimeConfig().public.adminEmail
+    if (!adminEmail || user.value?.email !== adminEmail) {
       toast.error('You do not have permission to access this page')
       return navigateTo('/')
     }

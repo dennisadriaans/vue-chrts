@@ -207,13 +207,14 @@ const uiEditorTokenName = ref('')
 const showTokenModal = ref(false)
 const generatedToken = ref('')
 
-const allowedAffiliateEmails = [
-  'seb@atinux.com',
-  'mail@adriaansendennis.nl',
-  'adriaansendennis@gmail.com'
-]
+// UI gating only — the /api/affiliate/** routes re-check the allowlist server-side.
+const allowedAffiliateEmails = (useRuntimeConfig().public.affiliateAllowedEmails || '')
+  .split(',')
+  .map(email => email.trim().toLowerCase())
+  .filter(Boolean)
 const isAllowedAffiliate = computed(() => {
-  return user.value?.email && allowedAffiliateEmails.includes(user.value.email)
+  const email = user.value?.email?.toLowerCase()
+  return !!email && allowedAffiliateEmails.includes(email)
 })
 
 // Fetch license data directly

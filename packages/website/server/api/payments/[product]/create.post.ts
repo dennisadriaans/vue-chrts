@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
     try {
       await send({
         from: 'dennis@nuxtcharts.com',
-        to: 'mail@adriaansendennis.nl',
+        to: useRuntimeConfig().notificationEmail,
         subject: 'Stripe ERROR!',
         html: `${error}`
       })

@@ -8,7 +8,8 @@ export default defineNuxtRouteMiddleware(() => {
   //   return navigateTo('/')
   // }
 
-  if (user?.value?.email !== 'adriaansendennis@gmail.com') {
+  const adminEmail = useRuntimeConfig().public.adminEmail
+  if (!adminEmail || user?.value?.email !== adminEmail) {
     toast.error('You do not have permission to access this page')
     return navigateTo('/')
   }

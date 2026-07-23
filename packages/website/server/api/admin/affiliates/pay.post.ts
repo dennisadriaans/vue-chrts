@@ -1,6 +1,6 @@
 import { calculateCommission } from '~~/server/utils/affiliate'
 import { createReverseInvoice } from '~~/server/utils/commission-invoice'
-import { getAffiliateAccountId, verifiedAffiliates } from '~~/server/utils/affiliate-config'
+import { getAffiliateAccountId, getAffiliateById } from '~~/server/utils/affiliate-config'
 import { getStripeClient } from '~~/server/utils/stripe'
 
 /**
@@ -51,7 +51,8 @@ async function resolveOrder(stripe: ReturnType<typeof getStripeClient>, commissi
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event)
 
-  if (!user || user.email !== 'adriaansendennis@gmail.com') {
+  const adminEmail = useRuntimeConfig().adminEmail
+  if (!adminEmail || !user || user.email !== adminEmail) {
     throw createError({ statusCode: 403, statusMessage: 'Forbidden: Admin access required' })
   }
 
@@ -124,7 +125,7 @@ export default defineEventHandler(async (event) => {
     const existingInvoice = foundInvoices.data.find(inv => (inv.total ?? 0) > 0) || null
 
     // ── 6. Resolve affiliate details ──────────────────────────────────
-    const affiliateConfig = affiliateId ? verifiedAffiliates[affiliateId] : undefined
+    const affiliateConfig = getAffiliateById(affiliateId)
     const affiliateAccount = await stripe.accounts.retrieve(affiliateAccountId)
 
     const affiliateName
