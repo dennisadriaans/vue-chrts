@@ -92,8 +92,8 @@ const categories: Record<string, BulletLegendItemInterface> = {
 
 ```ts
 export default defineNuxtConfig({
-  modules: ["nuxt-charts"],
-  nuxtCharts: {
+  modules: ["nuxt-charts-next"],
+  nuxtChartsNext: {
     prefix: "",        // prefix component names, e.g. "V" -> <VBarChart>
     global: true,      // register globally (no import needed)
     autoImports: true, // auto-import enums and prop types
@@ -101,6 +101,10 @@ export default defineNuxtConfig({
   },
 });
 ```
+
+> While this package coexists with legacy `nuxt-charts`, its module `meta.name`
+> is `nuxt-charts-next` (config key `nuxtChartsNext`). Nuxt skips a second
+> module that shares the same `meta.name`, so the names must stay distinct.
 
 ## Auto-imported enums & types
 

@@ -40,8 +40,10 @@ const VCCS_DEPS = ["vccs", "motion-v", "vccs > eventemitter3"];
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: "nuxt-charts",
-    configKey: "nuxtCharts",
+    // Must differ from legacy `nuxt-charts` while both are loaded side-by-side
+    // (Nuxt skips a second module with the same meta.name).
+    name: "nuxt-charts-next",
+    configKey: "nuxtChartsNext",
     compatibility: {
       nuxt: ">=3",
     },

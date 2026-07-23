@@ -143,7 +143,14 @@ export default defineNuxtModule<ModuleOptions>({
     const runtimePath = resolve("./runtime/vue-chrts");
 
     // Initialize auto-imports and components
-    resolveImports(options, runtimePath);
+    resolveImports(options, import.meta.url);
     resolveComponents(options, runtimePath);
+
+    // Ensure the website (and other consumers) can resolve vue-chrts even under
+    // pnpm isolation when this module is loaded alongside nuxt-charts-next.
+    const vueChrtsDir = resolvePackageDir("vue-chrts");
+    if (vueChrtsDir) {
+      nuxt.options.alias["vue-chrts"] = vueChrtsDir;
+    }
   },
 });
