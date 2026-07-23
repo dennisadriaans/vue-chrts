@@ -1,0 +1,10 @@
+{
+  "tag-prefix": "nuxt-charts-v",
+  "path": ".",
+  "bumpFiles": [
+    {
+      "filename": "package.json",
+      "type": "json"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "vue";
 import { LegendPosition } from "../enums";
 
 /** `vccs` `<Legend>` horizontal alignment. */
@@ -34,4 +35,31 @@ export function legendPositionToLegendProps(
 ): VccsLegendProps {
   if (position === undefined) return LEGEND_MAP[LegendPosition.BottomCenter];
   return LEGEND_MAP[position];
+}
+
+/**
+ * Gap between the plot area and the legend. Applied as wrapper padding on the
+ * side facing the chart so vccs's legend-size measurement reserves the extra
+ * space in chart margins (see `appendOffsetOfLegend` in vccs).
+ */
+export const LEGEND_INSET = "var(--vc-legend-inset, 0.75rem)" as const;
+
+/**
+ * Build the `vccs` `<Legend wrapperStyle>` object: a position-aware inset
+ * between chart and legend, merged with any user `legendStyle` overrides.
+ */
+export function resolveLegendWrapperStyle(
+  position: LegendPosition | undefined,
+  userStyle?: CSSProperties,
+): CSSProperties {
+  const { verticalAlign } = legendPositionToLegendProps(position);
+
+  const insetStyle: CSSProperties =
+    verticalAlign === "bottom"
+      ? { paddingTop: LEGEND_INSET }
+      : verticalAlign === "top"
+        ? { paddingBottom: LEGEND_INSET }
+        : {};
+
+  return { ...insetStyle, ...userStyle };
 }

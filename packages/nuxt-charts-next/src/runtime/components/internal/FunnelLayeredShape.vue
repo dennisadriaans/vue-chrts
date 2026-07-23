@@ -91,7 +91,7 @@ export default { name: "FunnelLayeredShape" };
 <template>
   <g
     v-if="payload && geometry"
-    class="funnel-layered-shape"
+    class="vc-funnel-layered-shape"
     @mouseenter="handleMouseenter"
     @mousemove="emit('mousemove', $event)"
     @mouseleave="emit('mouseleave')"
@@ -156,13 +156,3 @@ export default { name: "FunnelLayeredShape" };
     </text>
   </g>
 </template>
-
-<style scoped>
-.funnel-layered-shape {
-  opacity: 0.96;
-  transition: opacity 150ms;
-}
-.funnel-layered-shape:hover {
-  opacity: 1;
-}
-</style>

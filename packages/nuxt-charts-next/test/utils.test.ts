@@ -1,9 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { CurveType, DonutType, LegendPosition, Orientation } from "../src/runtime/enums";
 import { curveTypeToVccs } from "../src/runtime/utils/curve";
-import { legendPositionToLegendProps } from "../src/runtime/utils/legend";
+import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../src/runtime/utils/legend";
 import { categoriesToSeries } from "../src/runtime/utils/categories";
-import { resolveAxisProps } from "../src/runtime/utils/axis";
+import {
+  AXIS_SLOT,
+  AXIS_TICK_MARGIN,
+  resolveAxisProps,
+  resolveXAxisHeight,
+  resolveYAxisWidth,
+  toTickProp,
+} from "../src/runtime/utils/axis";
 import { toAxisDomain, toCssProperties } from "../src/runtime/utils/style";
 import {
   markerToDot,
@@ -54,6 +61,26 @@ describe("legendPositionToLegendProps", () => {
       align: "right",
       verticalAlign: "top",
     });
+  });
+});
+
+describe("resolveLegendWrapperStyle", () => {
+  it("adds top padding for bottom legends so vccs reserves space below the plot", () => {
+    expect(resolveLegendWrapperStyle(LegendPosition.BottomCenter)).toEqual({
+      paddingTop: "var(--vc-legend-inset, 0.75rem)",
+    });
+  });
+
+  it("adds bottom padding for top legends so vccs reserves space above the plot", () => {
+    expect(resolveLegendWrapperStyle(LegendPosition.TopLeft)).toEqual({
+      paddingBottom: "var(--vc-legend-inset, 0.75rem)",
+    });
+  });
+
+  it("lets user legendStyle override the default inset padding", () => {
+    expect(
+      resolveLegendWrapperStyle(LegendPosition.BottomCenter, { paddingTop: "2rem" }),
+    ).toEqual({ paddingTop: "2rem" });
   });
 });
 
@@ -132,6 +159,46 @@ describe("resolveAxisProps", () => {
         undefined,
       ).tick,
     ).toEqual({ fill: "#f00", fontSize: "12px", textAnchor: "end" });
+  });
+});
+
+describe("axis slot sizing", () => {
+  it("uses a tighter band for numeric Y axes", () => {
+    expect(resolveYAxisWidth({ hasTitle: false, isCategoryAxis: false })).toBe(
+      AXIS_SLOT.numericYWidth,
+    );
+  });
+
+  it("reserves more width for category Y axes", () => {
+    expect(resolveYAxisWidth({ hasTitle: false, isCategoryAxis: true })).toBe(
+      AXIS_SLOT.categoryYWidth,
+    );
+  });
+
+  it("expands axis slots when a title is present", () => {
+    expect(resolveXAxisHeight({ hasTitle: true })).toBe(AXIS_SLOT.titledXHeight);
+    expect(resolveYAxisWidth({ hasTitle: true, isCategoryAxis: false })).toBe(
+      AXIS_SLOT.titledYWidth,
+    );
+  });
+
+});
+
+describe("toTickProp", () => {
+  it("defaults to true so vccs applies its native per-orientation anchors", () => {
+    expect(toTickProp(undefined)).toBe(true);
+    expect(toTickProp({ fill: "#f00", fontSize: "11px" })).toBe(true);
+  });
+
+  it("forwards only the text anchor when an alignment is configured", () => {
+    expect(toTickProp({ fill: "#f00", textAnchor: "end" })).toEqual({ textAnchor: "end" });
+  });
+});
+
+describe("axis tick margin", () => {
+  it("gives labels breathing room beyond the cramped vccs default", () => {
+    expect(AXIS_TICK_MARGIN.x).toBeGreaterThan(2);
+    expect(AXIS_TICK_MARGIN.y).toBeGreaterThan(2);
   });
 });
 

@@ -43,7 +43,6 @@ export const resolveImports = (config: ModuleOptions, resolverUrl: string) => {
       // but kept so old templates type-check), so keep them auto-importable.
       "MarkerConfig",
       "CrosshairConfig",
-      "ZoomableAreaChartProps",
     ],
   });
 };

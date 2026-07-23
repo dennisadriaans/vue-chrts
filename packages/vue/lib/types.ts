@@ -63,3 +63,6 @@ export interface TooltipConfig {
    */
   followCursor?: boolean;
 }
+
+export type { MapRegion, MapPin } from "./components/Maps/DottedMap/types";
+

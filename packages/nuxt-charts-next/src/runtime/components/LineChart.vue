@@ -28,10 +28,12 @@ const series = computed(() =>
 const curve = computed(() => curveTypeToVccs(props.curveType));
 const stackId = computed(() => (props.stacked ? "stack" : undefined));
 const dashArray = computed(() => toStrokeDasharray(props.lineDashArray));
+
+const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
 </script>
 
 <template>
-  <CartesianFrame :container="VccsLineChart" v-bind="props">
+  <CartesianFrame :container="VccsLineChart" :x-axis-key="xAxisKey" v-bind="props">
     <Line
       v-for="s in series"
       :key="s.dataKey"

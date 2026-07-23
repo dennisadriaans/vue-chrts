@@ -9,4 +9,12 @@ export default withNuxt(
       'vue/multi-word-component-names': 'off',
     },
   },
+  // Playground inspiration components are demo scaffolding, not shipped code.
+  {
+    files: ['playground/components/**/*.vue'],
+    rules: {
+      'vue/multi-word-component-names': 'off',
+      'vue/require-default-prop': 'off',
+    },
+  },
 )

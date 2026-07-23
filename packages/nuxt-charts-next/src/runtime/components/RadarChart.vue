@@ -21,8 +21,9 @@ import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
 import type { RadarChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
-import { legendPositionToLegendProps } from "../utils/legend";
+import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
 import { toCssProperties } from "../utils/style";
+import { themeToVars } from "../utils/theme";
 
 const props = defineProps<RadarChartProps<T>>();
 
@@ -31,15 +32,29 @@ const series = computed(() => categoriesToSeries(props.categories).filter((s) =>
 
 const angleKey = computed(() => String(props.dataKey));
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
-const legendWrapperStyle = computed(() => toCssProperties(props.legendStyle));
+const legendWrapperStyle = computed(() =>
+  resolveLegendWrapperStyle(props.legendPosition, toCssProperties(props.legendStyle)),
+);
+const themeVars = computed(() => themeToVars(props.theme));
 </script>
 
 <template>
+  <div class="vue-chrts" :style="themeVars">
   <ResponsiveContainer width="100%" :height="height">
     <VccsRadarChart :data="data">
-      <PolarGrid />
+      <PolarGrid stroke="var(--vc-grid-color)" />
       <PolarAngleAxis :data-key="angleKey" :tick-formatter="angleFormatter" />
-      <PolarRadiusAxis v-if="!hideRadiusAxis" />
+      <!--
+        vccs defaults the radius axis to `angle: 0`, which lays the 0→max scale
+        out horizontally to the right. Point it up instead so the scale reads
+        bottom-to-top from the centre; `orientation: middle` then centres the
+        tick labels on the axis line rather than hanging them off one side.
+      -->
+      <PolarRadiusAxis
+        v-if="!hideRadiusAxis"
+        :angle="radiusAxisAngle ?? 90"
+        orientation="middle"
+      />
 
       <Radar
         v-for="s in series"
@@ -66,4 +81,5 @@ const legendWrapperStyle = computed(() => toCssProperties(props.legendStyle));
       </Legend>
     </VccsRadarChart>
   </ResponsiveContainer>
+  </div>
 </template>

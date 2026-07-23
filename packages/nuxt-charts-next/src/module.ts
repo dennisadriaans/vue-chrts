@@ -1,4 +1,4 @@
-import { defineNuxtModule } from "@nuxt/kit";
+import { createResolver, defineNuxtModule } from "@nuxt/kit";
 import { resolveComponents, resolveImports } from "./core";
 
 export interface ModuleOptions {
@@ -74,6 +74,14 @@ export default defineNuxtModule<ModuleOptions>({
         if (!include.includes(dep)) include.push(dep);
       }
     });
+
+    // Design tokens (SVG internals) + chart chrome CSS. Only `vc-*` / `--vc-*`
+    // selectors — no Tailwind utilities, so the host app's classes are untouched.
+    const { resolve } = createResolver(import.meta.url);
+    nuxt.options.css.push(
+      resolve("./runtime/assets/theme.css"),
+      resolve("./runtime/assets/components.css"),
+    );
 
     resolveImports(options, import.meta.url);
     resolveComponents(options, import.meta.url);

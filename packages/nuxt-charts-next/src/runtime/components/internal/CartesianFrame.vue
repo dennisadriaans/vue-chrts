@@ -7,7 +7,8 @@
  * (`<Area>` / `<Bar>` / `<Line>` / `<Scatter>`) to the default slot. This keeps
  * every chart adapter small and the axis/legend/tooltip wiring in one place.
  */
-import { computed, type Component } from "vue";
+import { computed, h, type Component } from "vue";
+import type { TooltipContentProps } from "vccs";
 import {
   CartesianGrid,
   Legend,
@@ -19,9 +20,19 @@ import {
 } from "vccs";
 import type { CartesianChartBaseProps } from "../../types/charts";
 import type { Orientation } from "../../enums";
-import { legendPositionToLegendProps } from "../../utils/legend";
-import { resolveAxisProps, toTickFormatter } from "../../utils/axis";
+import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../../utils/legend";
+import {
+  AXIS_TICK_MARGIN,
+  resolveAxisProps,
+  resolveXAxisHeight,
+  resolveYAxisWidth,
+  toAxisLabel,
+  toTickFormatter,
+  toTickProp,
+  type VccsAxisInterval,
+} from "../../utils/axis";
 import { toAxisDomain, toCssProperties } from "../../utils/style";
+import { axisTickVars, resolveHoverRadius, resolveHoverVisible, themeToVars } from "../../utils/theme";
 import ChartTooltip from "./ChartTooltip.vue";
 import ChartLegend from "./ChartLegend.vue";
 
@@ -106,7 +117,9 @@ const valueFormatter = computed(() =>
 
 const xAxisDomain = computed(() => toAxisDomain(props.xDomain));
 const yAxisDomain = computed(() => toAxisDomain(props.yDomain));
-const legendWrapperStyle = computed(() => toCssProperties(props.legendStyle));
+const legendWrapperStyle = computed(() =>
+  resolveLegendWrapperStyle(props.legendPosition, toCssProperties(props.legendStyle)),
+);
 
 /** Explicit ticks / min-max-only / tick text styling, resolved per axis. */
 const xAxis = computed(() =>
@@ -120,6 +133,67 @@ const yAxis = computed(() =>
 const showXTickLine = computed(() => props.xAxisConfig?.tickLine ?? props.xTickLine ?? false);
 const showYTickLine = computed(() => props.yAxisConfig?.tickLine ?? props.yTickLine ?? false);
 
+/** Axis titles with explicit placement so they do not sit on top of tick values. */
+const xAxisTitle = computed(() =>
+  toAxisLabel(layout.value === "vertical" ? props.yLabel : props.xLabel, "insideBottom"),
+);
+const yAxisTitle = computed(() =>
+  toAxisLabel(layout.value === "vertical" ? props.xLabel : props.yLabel, "insideLeft", {
+    angle: -90,
+  }),
+);
+
+const isCategoryYAxis = computed(
+  () => layout.value === "vertical" && props.xAxisKey !== undefined,
+);
+
+const xAxisHeight = computed(() => resolveXAxisHeight({ hasTitle: !!xAxisTitle.value }));
+const yAxisWidth = computed(() =>
+  resolveYAxisWidth({ hasTitle: !!yAxisTitle.value, isCategoryAxis: isCategoryYAxis.value }),
+);
+
+/** Per-chart theme + per-axis tick colour/size overrides as inline `--vc-*` vars on the root. */
+const rootStyle = computed(() => ({
+  ...themeToVars(props.theme),
+  ...axisTickVars("x", xAxis.value.tick),
+  ...axisTickVars("y", yAxis.value.tick),
+}));
+
+/** Native `vccs` `tick` prop per axis — `true` by default, `{ textAnchor }` when aligned. */
+const xTickProp = computed(() => toTickProp(xAxis.value.tick));
+const yTickProp = computed(() => toTickProp(yAxis.value.tick));
+
+/**
+ * Grid / axis-line / tick-line SVG presentation, driven by the `--vc-*` tokens.
+ * These read CSS variables so global theming, dark mode and the `theme` prop all
+ * flow through without touching component code.
+ */
+const gridStroke = "var(--vc-grid-color)";
+const axisLineStyle = { stroke: "var(--vc-axis-line-color)" } as const;
+const tickLineStyle = { stroke: "var(--vc-axis-line-color)" } as const;
+
+/** Hover cursor: token-driven fill/stroke; radius must be numeric for vccs Rectangle. */
+const cursor = computed(() =>
+  resolveHoverVisible(props.theme)
+    ? {
+        fill: "var(--vc-hover-fill)",
+        stroke: "var(--vc-hover-stroke)",
+        radius: resolveHoverRadius(props.theme),
+      }
+    : false,
+);
+
+/**
+ * Axis-line (domain line) presentation. Shown → token-coloured SVG attrs;
+ * hidden → `false`. `xDomainLine` / `yDomainLine` default to shown (v2 parity).
+ */
+const xAxisLine = computed(() => ((props.xDomainLine ?? true) ? axisLineStyle : false));
+const yAxisLine = computed(() => ((props.yDomainLine ?? true) ? axisLineStyle : false));
+
+/** Tick-line presentation, mirroring the axis-line logic. */
+const xTickLineProp = computed(() => (showXTickLine.value ? tickLineStyle : false));
+const yTickLineProp = computed(() => (showYTickLine.value ? tickLineStyle : false));
+
 const mergedContainerProps = computed(() => ({
   data: props.data,
   layout: layout.value,
@@ -128,16 +202,76 @@ const mergedContainerProps = computed(() => ({
 }));
 
 const referenceLines = computed(() => props.referenceLines ?? []);
+
+/** Short category axes skip vccs preserveEnd thinning (DOM text measurement). */
+const SMALL_CATEGORY_AXIS_MAX = 12;
+
+function resolveCategoryAxisInterval(
+  configured: VccsAxisInterval | undefined,
+  isCategoryAxis: boolean,
+): VccsAxisInterval | undefined {
+  if (configured !== undefined) return configured;
+  if (isCategoryAxis && props.data.length <= SMALL_CATEGORY_AXIS_MAX) return 0;
+  return undefined;
+}
+
+const xAxisInterval = computed(() =>
+  resolveCategoryAxisInterval(
+    layout.value === "vertical" ? yAxis.value.interval : xAxis.value.interval,
+    layout.value !== "vertical" && props.xAxisKey !== undefined,
+  ),
+);
+
+const yAxisInterval = computed(() =>
+  resolveCategoryAxisInterval(
+    layout.value === "vertical" ? xAxis.value.interval : yAxis.value.interval,
+    layout.value === "vertical" && props.xAxisKey !== undefined,
+  ),
+);
+
+/**
+ * `vccs` passes the raw category tick value as the tooltip label; axis ticks
+ * go through `categoryFormatter` separately. Mirror that formatter here so
+ * index-based `xFormatter` callbacks (v2 parity) affect the tooltip title too.
+ */
+const tooltipContent = computed(() => {
+  const formatLabel = categoryFormatter.value;
+  const titleFormatter = props.tooltipTitleFormatter;
+
+  return (tooltipProps: TooltipContentProps) => {
+    let label = tooltipProps.label;
+    const row = tooltipProps.payload?.[0]?.payload as T | undefined;
+
+    if (titleFormatter && row != null) {
+      label = titleFormatter(row);
+    } else if (formatLabel != null && label !== undefined && label !== "") {
+      const rowIndex = row != null ? props.data.indexOf(row) : -1;
+      const index =
+        rowIndex >= 0
+          ? rowIndex
+          : typeof label === "number"
+            ? label
+            : Number(label);
+      label = formatLabel(label, Number.isNaN(index) ? 0 : index);
+    }
+
+    return h(ChartTooltip, { ...tooltipProps, label });
+  };
+});
+
 </script>
 
 <template>
+  <div class="vue-chrts" :style="rootStyle">
   <ResponsiveContainer width="100%" :height="height">
     <component :is="container" v-bind="mergedContainerProps">
       <CartesianGrid
         v-if="showXGrid || showYGrid"
         :horizontal="showYGrid"
         :vertical="showXGrid"
-        stroke-dasharray="3 3"
+        :stroke="gridStroke"
+        stroke-dasharray="var(--vc-grid-dash)"
+        :stroke-width="'var(--vc-grid-width)'"
       />
       <!--
         Horizontal orientation: vccs uses layout="vertical" which swaps the axes.
@@ -147,30 +281,34 @@ const referenceLines = computed(() => props.referenceLines ?? []);
         v-if="!hideXAxis"
         :data-key="layout === 'vertical' ? undefined : xAxisKey"
         :hide="hideXAxis"
-        :tick-line="showXTickLine"
-        :axis-line="xDomainLine ?? true"
+        :height="xAxisHeight"
+        :tick="xTickProp"
+        :tick-margin="AXIS_TICK_MARGIN.x"
+        :tick-line="xTickLineProp"
+        :axis-line="xAxisLine"
         :tick-count="layout === 'vertical' ? yNumTicks : xNumTicks"
         :tick-formatter="layout === 'vertical' ? valueFormatter : categoryFormatter"
         :domain="layout === 'vertical' ? yAxisDomain : xAxisDomain"
         :ticks="layout === 'vertical' ? yAxis.ticks : xAxis.ticks"
-        :interval="layout === 'vertical' ? yAxis.interval : xAxis.interval"
-        :tick="layout === 'vertical' ? (yAxis.tick ?? true) : (xAxis.tick ?? true)"
-        :label="layout === 'vertical' ? yLabel : xLabel"
+        :interval="layout === 'vertical' ? yAxisInterval : xAxisInterval"
+        :label="xAxisTitle"
         :type="layout === 'vertical' ? 'number' : 'category'"
       />
       <YAxis
         v-if="!hideYAxis"
         :data-key="layout === 'vertical' ? xAxisKey : undefined"
         :hide="hideYAxis"
-        :tick-line="showYTickLine"
-        :axis-line="yDomainLine ?? true"
+        :width="yAxisWidth"
+        :tick="yTickProp"
+        :tick-margin="AXIS_TICK_MARGIN.y"
+        :tick-line="yTickLineProp"
+        :axis-line="yAxisLine"
         :tick-count="layout === 'vertical' ? xNumTicks : yNumTicks"
         :tick-formatter="layout === 'vertical' ? categoryFormatter : valueFormatter"
         :domain="layout === 'vertical' ? xAxisDomain : yAxisDomain"
         :ticks="layout === 'vertical' ? xAxis.ticks : yAxis.ticks"
-        :interval="layout === 'vertical' ? xAxis.interval : yAxis.interval"
-        :tick="layout === 'vertical' ? (xAxis.tick ?? true) : (yAxis.tick ?? true)"
-        :label="layout === 'vertical' ? xLabel : yLabel"
+        :interval="layout === 'vertical' ? xAxisInterval : yAxisInterval"
+        :label="yAxisTitle"
         :type="layout === 'vertical' ? 'category' : 'number'"
       />
 
@@ -187,7 +325,12 @@ const referenceLines = computed(() => props.referenceLines ?? []);
         :label="line.label"
       />
 
-      <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :is-animation-active="false" />
+      <Tooltip
+        v-if="!hideTooltip"
+        :content="tooltipContent"
+        :cursor="cursor"
+        :is-animation-active="false"
+      />
       <Legend
         v-if="!hideLegend"
         :align="legend.align"
@@ -201,4 +344,5 @@ const referenceLines = computed(() => props.referenceLines ?? []);
       </Legend>
     </component>
   </ResponsiveContainer>
+  </div>
 </template>

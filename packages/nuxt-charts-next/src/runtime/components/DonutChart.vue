@@ -15,10 +15,14 @@ import ChartLegend from "./internal/ChartLegend.vue";
 import type { DonutChartProps } from "../types/charts";
 import { DonutType } from "../enums";
 import { categoriesToSeries } from "../utils/categories";
-import { legendPositionToLegendProps } from "../utils/legend";
+import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
 import { toCssProperties } from "../utils/style";
+import { themeToVars } from "../utils/theme";
 
 const props = defineProps<DonutChartProps<T>>();
+
+/** Per-chart `--vc-*` overrides for the legend / tooltip tokens. */
+const themeVars = computed(() => themeToVars(props.theme));
 
 /** Zip the value array against the categories record (positional, matching v2). */
 const segments = computed(() => {
@@ -31,9 +35,48 @@ const segments = computed(() => {
   }));
 });
 
-const innerRadius = computed(() =>
-  props.arcWidth !== undefined ? Math.max(props.radius - props.arcWidth, 0) : props.radius * 0.6,
-);
+/** Default ring thickness (px) when `arcWidth` is not supplied. */
+const DEFAULT_ARC_WIDTH = 40;
+/** Fraction of the available radius the ring fills in auto-fit mode. */
+const AUTO_OUTER_FRACTION = 0.9;
+
+/**
+ * Resolve outer/inner radius. When `radius` is omitted or `0` we auto-fit the
+ * ring to the container (v2 parity, and what every gallery example expects):
+ *  - with a known `height`, derive exact pixel radii so `arcWidth` is honoured
+ *    as a true pixel thickness;
+ *  - without a height, fall back to percentage radii so vccs sizes to its box.
+ * A positive `radius` pins an explicit pixel outer radius (playground usage).
+ */
+const radii = computed(() => {
+  const arcWidth = props.arcWidth ?? DEFAULT_ARC_WIDTH;
+
+  // Explicit pixel outer radius.
+  if (props.radius && props.radius > 0) {
+    return {
+      outerRadius: props.radius as number | string,
+      innerRadius: Math.max(props.radius - arcWidth, 0) as number | string,
+    };
+  }
+
+  // Auto-fit with a known height → exact pixel radii, so `arcWidth` is honoured
+  // as a true pixel thickness. A full ring is bounded by half the height; a half
+  // gauge (top semicircle) is bounded by the full height.
+  if (props.height && props.height > 0) {
+    const bound = props.type === DonutType.Half ? props.height : props.height / 2;
+    const outerRadius = bound * AUTO_OUTER_FRACTION;
+    return {
+      outerRadius,
+      innerRadius: Math.max(outerRadius - arcWidth, 0),
+    };
+  }
+
+  // Auto-fit without a usable height → percentage radii so vccs sizes to its box.
+  return { outerRadius: "90%", innerRadius: "60%" };
+});
+
+const outerRadius = computed(() => radii.value.outerRadius);
+const innerRadius = computed(() => radii.value.innerRadius);
 
 /** Half donut renders the top semicircle as a gauge. */
 const angles = computed(() =>
@@ -43,35 +86,55 @@ const angles = computed(() =>
 );
 
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
-const legendWrapperStyle = computed(() => toCssProperties(props.legendStyle));
+const legendWrapperStyle = computed(() =>
+  resolveLegendWrapperStyle(props.legendPosition, toCssProperties(props.legendStyle)),
+);
 </script>
 
 <template>
-  <ResponsiveContainer width="100%" :height="height ?? radius * 2">
-    <PieChart>
-      <Pie
-        :data="segments"
-        data-key="value"
-        name-key="name"
-        :inner-radius="innerRadius"
-        :outer-radius="radius"
-        :start-angle="angles.startAngle"
-        :end-angle="angles.endAngle"
-        :padding-angle="padAngle ?? 0"
-        :is-animation-active="duration !== undefined && duration !== 0"
-      />
-      <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :is-animation-active="false" />
-      <Legend
-        v-if="!hideLegend"
-        :align="legend.align"
-        :vertical-align="legend.verticalAlign"
-        :layout="legend.layout"
-        :wrapper-style="legendWrapperStyle"
-      >
-        <template #content="slotProps">
-          <ChartLegend v-bind="slotProps" />
-        </template>
-      </Legend>
-    </PieChart>
-  </ResponsiveContainer>
+  <div class="donut-chart vue-chrts" :style="{ position: 'relative', width: '100%', height: `${height ?? (radius ? radius * 2 : 200)}px`, ...themeVars }">
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        <Pie
+          :data="segments"
+          data-key="value"
+          name-key="name"
+          :inner-radius="innerRadius"
+          :outer-radius="outerRadius"
+          :start-angle="angles.startAngle"
+          :end-angle="angles.endAngle"
+          :padding-angle="padAngle ?? 0"
+          :stroke="stroke ?? 'none'"
+          :is-animation-active="duration !== undefined && duration !== 0"
+        />
+        <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :is-animation-active="false" />
+        <Legend
+          v-if="!hideLegend"
+          :align="legend.align"
+          :vertical-align="legend.verticalAlign"
+          :layout="legend.layout"
+          :wrapper-style="legendWrapperStyle"
+        >
+          <template #content="slotProps">
+            <ChartLegend v-bind="slotProps" />
+          </template>
+        </Legend>
+      </PieChart>
+    </ResponsiveContainer>
+
+    <!-- Centered overlay for custom content (v2 parity: default slot). -->
+    <div
+      v-if="$slots.default"
+      class="donut-chart__center"
+      :style="{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        pointerEvents: 'none',
+      }"
+    >
+      <slot />
+    </div>
+  </div>
 </template>

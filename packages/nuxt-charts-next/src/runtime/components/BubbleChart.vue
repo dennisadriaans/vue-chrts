@@ -15,30 +15,89 @@ import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
 import type { BubbleChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
-import { legendPositionToLegendProps } from "../utils/legend";
-import { resolveAxisProps, toTickFormatter } from "../utils/axis";
+import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
+import {
+  AXIS_TICK_MARGIN,
+  resolveAxisProps,
+  resolveXAxisHeight,
+  resolveYAxisWidth,
+  toTickFormatter,
+  toTickProp,
+} from "../utils/axis";
 import { toAxisDomain, toCssProperties } from "../utils/style";
+import { axisTickVars, resolveHoverRadius, resolveHoverVisible, themeToVars } from "../utils/theme";
 
 const props = defineProps<BubbleChartProps<T>>();
 
-const xKey = computed(() => String(props.xAccessor));
-const yKey = computed(() => String(props.yAccessor));
-const zKey = computed(() => (props.sizeAccessor !== undefined ? String(props.sizeAccessor) : undefined));
+/** Keep function accessors intact — `String(fn)` breaks v2 site/block usage. */
+function resolveAccessor(accessor: BubbleChartProps<T>["xAccessor"] | undefined) {
+  if (accessor === undefined) return undefined;
+  return typeof accessor === "function" ? accessor : String(accessor);
+}
+
+const xKey = computed(() => resolveAccessor(props.xAccessor)!);
+const yKey = computed(() => resolveAccessor(props.yAccessor)!);
+const zKey = computed(() => resolveAccessor(props.sizeAccessor));
 const categoryKey = computed(() => String(props.categoryKey));
 
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
-const sizeRange = computed(() => props.sizeRange ?? [props.sizeOptions?.minRadius ?? 1, props.sizeOptions?.maxRadius ?? 20]);
+const sizeRange = computed(() => {
+  if (props.sizeRange) return props.sizeRange;
+  // sizeOptions used radius in v2; ZAxis expects an area-like pixel range.
+  const min = props.sizeOptions?.minRadius;
+  const max = props.sizeOptions?.maxRadius;
+  if (min !== undefined || max !== undefined) {
+    const rMin = min ?? 4;
+    const rMax = max ?? 20;
+    return [Math.PI * rMin * rMin, Math.PI * rMax * rMax] as [number, number];
+  }
+  return [60, 400] as [number, number];
+});
 
 const xTickFormatter = computed(() => toTickFormatter(props.xFormatter));
 const yTickFormatter = computed(() => toTickFormatter(props.yFormatter));
 const xAxisDomain = computed(() => toAxisDomain(props.xDomain));
 const yAxisDomain = computed(() => toAxisDomain(props.yDomain));
-const legendWrapperStyle = computed(() => toCssProperties(props.legendStyle));
+const legendWrapperStyle = computed(() =>
+  resolveLegendWrapperStyle(props.legendPosition, toCssProperties(props.legendStyle)),
+);
 
 const xAxis = computed(() =>
   resolveAxisProps(props.xExplicitTicks, props.xAxisConfig, props.minMaxTicksOnly),
 );
 const yAxis = computed(() => resolveAxisProps(undefined, props.yAxisConfig, props.minMaxTicksOnly));
+
+const xAxisHeight = computed(() => resolveXAxisHeight({ hasTitle: !!props.xLabel }));
+const yAxisWidth = computed(() =>
+  resolveYAxisWidth({ hasTitle: !!props.yLabel, isCategoryAxis: false }),
+);
+
+const themeVars = computed(() => ({
+  ...themeToVars(props.theme),
+  ...axisTickVars("x", xAxis.value.tick),
+  ...axisTickVars("y", yAxis.value.tick),
+}));
+
+const xTickProp = computed(() => toTickProp(xAxis.value.tick));
+const yTickProp = computed(() => toTickProp(yAxis.value.tick));
+
+/** Token-driven grid / axis-line presentation (mirrors CartesianFrame). */
+const axisLineStyle = { stroke: "var(--vc-axis-line-color)" } as const;
+const xTickLineProp = computed(() =>
+  (props.xAxisConfig?.tickLine ?? props.xTickLine ?? false) ? axisLineStyle : false,
+);
+const yTickLineProp = computed(() =>
+  (props.yAxisConfig?.tickLine ?? props.yTickLine ?? false) ? axisLineStyle : false,
+);
+const cursor = computed(() =>
+  resolveHoverVisible(props.theme)
+    ? {
+        fill: "var(--vc-hover-fill)",
+        stroke: "var(--vc-hover-stroke)",
+        radius: resolveHoverRadius(props.theme),
+      }
+    : false,
+);
 
 /** Split the rows into one Scatter series per categoryKey value, coloured from `categories`. */
 const groups = computed(() => {
@@ -62,31 +121,43 @@ const groups = computed(() => {
 </script>
 
 <template>
+  <div class="vue-chrts" :style="themeVars">
   <ResponsiveContainer width="100%" :height="height">
     <ScatterChart>
-      <CartesianGrid v-if="(xGridLine ?? true) || (yGridLine ?? true)" stroke-dasharray="3 3" />
+      <CartesianGrid
+        v-if="(xGridLine ?? true) || (yGridLine ?? true)"
+        stroke="var(--vc-grid-color)"
+        stroke-dasharray="var(--vc-grid-dash)"
+        :stroke-width="'var(--vc-grid-width)'"
+      />
       <XAxis
         v-if="!hideXAxis"
         type="number"
         :data-key="xKey"
         :name="xLabel"
-        :tick-line="xAxisConfig?.tickLine ?? xTickLine ?? false"
+        :height="xAxisHeight"
+        :tick="xTickProp"
+        :tick-margin="AXIS_TICK_MARGIN.x"
+        :tick-line="xTickLineProp"
+        :axis-line="axisLineStyle"
         :tick-formatter="xTickFormatter"
         :domain="xAxisDomain"
         :ticks="xAxis.ticks"
         :interval="xAxis.interval"
-        :tick="xAxis.tick ?? true"
       />
       <YAxis
         v-if="!hideYAxis"
         type="number"
         :data-key="yKey"
         :name="yLabel"
-        :tick-line="yAxisConfig?.tickLine ?? yTickLine ?? false"
+        :width="yAxisWidth"
+        :tick="yTickProp"
+        :tick-margin="AXIS_TICK_MARGIN.y"
+        :tick-line="yTickLineProp"
+        :axis-line="axisLineStyle"
         :tick-formatter="yTickFormatter"
         :domain="yAxisDomain"
         :interval="yAxis.interval"
-        :tick="yAxis.tick ?? true"
       />
       <ZAxis v-if="zKey" type="number" :data-key="zKey" :range="sizeRange" />
 
@@ -99,7 +170,7 @@ const groups = computed(() => {
         :fill-opacity="opacity ?? 0.7"
       />
 
-      <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :is-animation-active="false" />
+      <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :cursor="cursor" :is-animation-active="false" />
       <Legend
         v-if="!hideLegend"
         :align="legend.align"
@@ -113,4 +184,5 @@ const groups = computed(() => {
       </Legend>
     </ScatterChart>
   </ResponsiveContainer>
+  </div>
 </template>

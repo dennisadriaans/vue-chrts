@@ -10,10 +10,12 @@
  * autocomplete on axis keys and typed formatters.
  */
 import type { CurveType, DonutType, LegendPosition, Orientation } from "../enums";
+import type { DitherVariant } from "../utils/dither";
 import type {
   AxisConfig,
   BulletLegendItemInterface,
   ChartPadding,
+  ChartTheme,
   CrosshairConfig,
   MarkerConfig,
   TooltipConfig,
@@ -102,15 +104,43 @@ export interface CartesianChartBaseProps<T> {
   yExplicitTicks?: (number | string | Date)[];
   /** @deprecated Unovis-only; no effect. */
   crosshairConfig?: CrosshairConfig<T>;
+  /**
+   * Per-chart appearance overrides (grid, axis, legend, hover, tooltip). Layers
+   * over the global `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
 }
 
 export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
+  /** The data key used for the category (x) axis. */
+  xAxis?: keyof T;
   /** Curve interpolation for the area outline. */
   curveType?: CurveType;
   /** Render only the line, hiding the area fill. */
   hideArea?: boolean;
-  /** Gradient stops for the area fill. */
+  /**
+   * Vertical fade-out for the area fill. Default `true`. Set `false` for a flat
+   * fill. When `dither` is also set, the fade is applied as a mask over the
+   * dither pattern instead of replacing it.
+   */
+  gradient?: boolean;
+  /** Gradient stops for the area fade. Overrides the default opacity ramp. */
   gradientStops?: Array<{ offset: string; stopOpacity: number }>;
+  /**
+   * Fill the area with a tiling halftone dot pattern. `true` uses the `bayer`
+   * variant. Composes with `gradient` (the vertical fade) unless `gradient` is
+   * `false`.
+   */
+  dither?: boolean | DitherVariant;
+  /** Tile edge length in px for the dither pattern. Default 8. */
+  ditherTile?: number;
+  /**
+   * Opacity of the solid colour wash painted under the dither dots, which is
+   * what makes a dithered area fade from colour at the top to transparent at
+   * the domain line like a normal gradient fill, instead of showing bare dots.
+   * Defaults to the top `gradientStops` opacity; set `0` for dots only.
+   */
+  ditherWash?: number;
   /** Line width in pixels. Default 2. */
   lineWidth?: number;
   /** Stack the areas instead of overlaying them. */
@@ -124,7 +154,10 @@ export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
   markerConfig?: MarkerConfig;
 }
 
-export type LineChartProps<T> = Omit<AreaChartProps<T>, "hideArea" | "gradientStops">;
+export type LineChartProps<T> = Omit<
+  AreaChartProps<T>,
+  "hideArea" | "gradient" | "gradientStops" | "dither" | "ditherTile" | "ditherWash"
+>;
 
 /**
  * A reference line drawn across a cartesian chart. New in v3 — maps onto the
@@ -166,12 +199,57 @@ export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
   orientation?: Orientation;
   /** Rounded corner radius for bars in pixels. Default 2. */
   radius?: number;
-  /** Fractional padding between bars in `[0, 1)`. */
+  /**
+   * Gap between bars within a group. Number = px, string = percent (e.g. `"2%"`).
+   * Lower values pull grouped bars closer. Default `4` (vccs).
+   */
+  barGap?: number | string;
+  /**
+   * Gap between category groups. Number = px, string = percent (e.g. `"10%"`).
+   * Default `"10%"` (vccs).
+   */
+  barCategoryGap?: number | string;
+  /**
+   * @deprecated Prefer `barGap`. Still forwarded as `barGap` when `barGap` is omitted.
+   */
   barPadding?: number;
-  /** Padding between bar groups in pixels. */
+  /**
+   * @deprecated Prefer `barCategoryGap`. Still forwarded as `barCategoryGap` when
+   * `barCategoryGap` is omitted.
+   */
   groupPadding?: number;
   /** Value-label config. */
   valueLabel?: ValueLabel;
+  /**
+   * Bar render variant. `"solid"` is the default rectangle bar.
+   * `"cubes"` draws a vertical stack of rounded squares. Works with single,
+   * grouped, and stacked (`stacked`) series — for stacks, only the first
+   * series draws the ghost column; each series fills its own cube range.
+   */
+  variant?: "solid" | "cubes";
+  /** Gap between cubes in px when `variant="cubes"`. Default 2. */
+  cubeGap?: number;
+  /** Corner radius per cube when `variant="cubes"`. Default 2. */
+  cubeRadius?: number;
+  /**
+   * Preferred cube edge length in px when `variant="cubes"`. Default 10.
+   * Clamped to the bar band width so columns stay straight and centered.
+   */
+  cubeSize?: number;
+  /**
+   * When set below `cubeSize`, cubes taper from `cubeSize` at the top of the
+   * plot to this size at the baseline. Size follows absolute chart Y so every
+   * horizontal line shares one cube size. Opacity also fades top → bottom
+   * (see `cubeMinOpacity`). Omit for uniform cubes.
+   */
+  cubeMinSize?: number;
+  /**
+   * Floor fill-opacity when size-tapering (top stays 1). Default `0.05`.
+   * Only applies when `cubeMinSize` is set.
+   */
+  cubeMinOpacity?: number;
+  /** Fill for empty/ghost cubes when `variant="cubes"`. */
+  cubeEmptyColor?: string;
   /** @deprecated Unovis-only; no effect. Use `stacked`. */
   stackAndGrouped?: boolean;
   /** @deprecated Unovis-only; no effect. */
@@ -184,16 +262,22 @@ export interface SizeOptions {
   maxRadius?: number;
 }
 
+/** v2 accepted Unovis-style function accessors; v3 also accepts row field keys. */
+export type BubbleAccessor<T> = keyof T | ((datum: T) => number | string | Date | null | undefined);
+
 export interface BubbleChartProps<T> extends CartesianChartBaseProps<T> {
-  /** Data key for the bubble's x value. */
-  xAccessor: keyof T;
-  /** Data key for the bubble's y value. */
-  yAccessor: keyof T;
-  /** Data key for the bubble's size value. */
-  sizeAccessor?: keyof T;
+  /** Data key or accessor for the bubble's x value. */
+  xAccessor: BubbleAccessor<T>;
+  /** Data key or accessor for the bubble's y value. */
+  yAccessor: BubbleAccessor<T>;
+  /** Data key or accessor for the bubble's size value. */
+  sizeAccessor?: BubbleAccessor<T>;
   /** Data key used to split points into colour-coded series. */
   categoryKey: keyof T;
-  /** Bubble size range as `[min, max]` radius. Default `[1, 20]`. */
+  /**
+   * Bubble size range mapped through `ZAxis` as `[min, max]` area.
+   * Default `[60, 400]` (matches typical Recharts scatter sizing).
+   */
   sizeRange?: [number, number];
   /** Bubble fill opacity. */
   opacity?: number;
@@ -275,12 +359,20 @@ export interface DonutChartProps<T = unknown> {
   type?: DonutType;
   /** Chart height in pixels. */
   height?: number;
-  /** Outer radius in pixels. */
-  radius: number;
-  /** Ring thickness in pixels (outer radius minus inner radius). */
+  /**
+   * Outer radius in pixels. When omitted or `0`, the ring auto-fits the
+   * container (recommended). Pass a number to pin an explicit outer radius.
+   */
+  radius?: number;
+  /** Ring thickness in pixels (outer radius minus inner radius). Default 40. */
   arcWidth?: number;
-  /** Angular padding between segments. */
+  /** Angular padding between segments, in degrees. */
   padAngle?: number;
+  /**
+   * Outline colour drawn around each segment. Defaults to `'none'`; pass a
+   * colour to separate segments with a border (e.g. the card background).
+   */
+  stroke?: string;
   /** Hide the legend. */
   hideLegend?: boolean;
   /** Legend position. */
@@ -293,6 +385,11 @@ export interface DonutChartProps<T = unknown> {
   tooltipTitleFormatter?: (data: T) => string | number;
   /** Tooltip behaviour config. */
   tooltip?: TooltipConfig;
+  /**
+   * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
+   * global `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
   /** Animation duration in milliseconds. */
   duration?: number;
 }
@@ -330,8 +427,18 @@ export interface RadarChartProps<T> {
   legendStyle?: string | Record<string, string>;
   /** Hide the radius (value) axis. */
   hideRadiusAxis?: boolean;
+  /**
+   * Angle (in degrees, counter-clockwise from 3 o'clock) along which the radius
+   * axis is drawn. Default 90, i.e. straight up from the centre.
+   */
+  radiusAxisAngle?: number;
   /** Tooltip behaviour config. */
   tooltip?: TooltipConfig;
+  /**
+   * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
+   * global `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
   /** Animation duration in milliseconds. */
   duration?: number;
 }
@@ -372,6 +479,11 @@ export interface RadialBarChartProps<T = unknown> {
   tooltipTitleFormatter?: (data: T) => string | number;
   /** Tooltip behaviour config. */
   tooltip?: TooltipConfig;
+  /**
+   * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
+   * global `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
   /** Animation duration in milliseconds. */
   duration?: number;
 }
@@ -410,68 +522,13 @@ export interface FunnelChartProps<T = unknown> {
   tooltipTitleFormatter?: (data: T) => string | number;
   /** Tooltip behaviour config. */
   tooltip?: TooltipConfig;
+  /**
+   * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
+   * global `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
   /** Animation duration in milliseconds. */
   duration?: number;
-}
-
-/**
- * Props for the zoomable area chart — a self-owned SVG with D3 scroll-zoom,
- * dynamic y-axis that rescales to the visible window, and multi-series support.
- *
- * Unlike `AreaChart` (Recharts-based), this component owns its SVG and handles
- * zoom/pan via d3-zoom. No `vccs` / Recharts dependency.
- */
-export interface ZoomableAreaChartProps<T extends Record<string, unknown>> {
-  /** The data to render. Each element is one data point. */
-  data: T[];
-  /** Chart height in pixels. Default 300. */
-  height?: number;
-  /**
-   * Maps each category key to its legend representation (label, colour).
-   * Keys are the data properties plotted as series.
-   */
-  categories: Record<string, BulletLegendItemInterface>;
-  /** Data key used for x-axis labels and tooltip titles. */
-  xKey?: keyof T;
-  /** Formats x-axis tick labels. Receives row index. */
-  xFormatter?: (index: number) => string;
-  /** Formats y-axis tick labels and tooltip values. Receives the numeric value. */
-  yFormatter?: (value: number) => string;
-  /** Custom formatter for tooltip titles. */
-  tooltipTitleFormatter?: (row: T) => string | number;
-  /** Optional x-axis label. */
-  xLabel?: string;
-  /** Optional y-axis label. */
-  yLabel?: string;
-  /** Per-side chart padding in pixels. */
-  padding?: ChartPadding;
-  /** Desired number of y-axis ticks. Default 5. */
-  yNumTicks?: number;
-  /** Hide the area fill, showing only the line. Default false. */
-  hideArea?: boolean;
-  /** Area fill opacity. Default 0.15. */
-  fillOpacity?: number;
-  /** Line stroke width in pixels. Default 2. */
-  lineWidth?: number;
-  /** Curve interpolation. Only CatmullRom, MonotoneX, Step, and Linear are supported. Default Linear. */
-  curveType?: CurveType;
-  /** Hide x-axis. Default false. */
-  hideXAxis?: boolean;
-  /** Hide y-axis. Default false. */
-  hideYAxis?: boolean;
-  /** Hide legend. Default false. */
-  hideLegend?: boolean;
-  /** Hide tooltip. Default false. */
-  hideTooltip?: boolean;
-  /** Minimum zoom scale (1 = no zoom out). Default 1. */
-  minZoom?: number;
-  /** Maximum zoom scale. Default 8. */
-  maxZoom?: number;
-  /**
-   * Fraction of the visible value span added as breathing room above and below
-   * the y-axis domain. Default 0.08 (8%).
-   */
-  yPaddingFactor?: number;
 }
 
 export interface StatusTrackerDatum {
@@ -585,6 +642,11 @@ export interface SankeyChartProps<
   hideTooltip?: boolean;
   /** Tooltip behaviour config. */
   tooltip?: TooltipConfig;
+  /**
+   * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
+   * global `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
   /** Animation duration in milliseconds. */
   duration?: number;
 }
