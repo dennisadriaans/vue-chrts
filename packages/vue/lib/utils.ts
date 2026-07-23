@@ -143,7 +143,7 @@ export const flattenData = (data: any[], xAxis: string) => {
 
   return data.map((entry: any) => {
     return {
-      month: entry.month,
+      [xAxis]: entry[xAxis],
       ...keys
         .flatMap((key) =>
           states.map((state) => ({
