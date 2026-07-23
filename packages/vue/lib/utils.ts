@@ -135,6 +135,8 @@ function capitalize(str: string) {
 }
 
 export const flattenData = (data: any[], xAxis: string) => {
+  if (data.length === 0) return [];
+
   const keys = Object.keys(data[0]).filter((key) => key !== xAxis);
 
   const states = Object.keys((data[0] as any)[keys[0]]);
