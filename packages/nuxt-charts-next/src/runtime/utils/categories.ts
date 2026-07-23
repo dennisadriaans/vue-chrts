@@ -1,4 +1,22 @@
-import type { BulletLegendItemInterface } from "../types/shared";
+import type { AxisId, BulletLegendItemInterface } from "../types/shared";
+
+/** Id of the implicit primary y-axis, matching the `vccs` default. */
+export const PRIMARY_Y_AXIS_ID = 0;
+
+/**
+ * Canonicalise an axis id to the form `vccs` will match on.
+ *
+ * `vccs` binds a series to its axis with strict equality (`item.yAxisId === axisId`),
+ * so `"1"` and `1` are two different axes as far as the engine is concerned. Object
+ * keys are always strings, which means a numeric id declared in `yAxes` would never
+ * match the same id written as a number on a category. Ids that look like integers
+ * are normalised to numbers so both spellings — including `yAxis: "0"` for the
+ * primary axis — land on one axis.
+ */
+export function normalizeAxisId(id: AxisId): AxisId {
+  if (typeof id === "number") return id;
+  return /^-?\d+$/.test(id) ? Number(id) : id;
+}
 
 /**
  * A single resolved series, derived from one entry in a `categories` record.
@@ -13,6 +31,8 @@ export interface SeriesDescriptor {
   color: string;
   /** Whether the series is hidden. */
   hidden: boolean;
+  /** Id of the y-axis this series is plotted against. */
+  yAxisId: AxisId;
 }
 
 /**
@@ -37,5 +57,6 @@ export function categoriesToSeries(
     name: String(item.name ?? dataKey),
     color: resolveColor(item.color, index),
     hidden: item.hidden ?? false,
+    yAxisId: item.yAxis == null ? PRIMARY_Y_AXIS_ID : normalizeAxisId(item.yAxis),
   }));
 }

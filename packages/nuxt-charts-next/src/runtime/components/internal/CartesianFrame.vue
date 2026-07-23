@@ -24,6 +24,7 @@ import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../../ut
 import {
   AXIS_TICK_MARGIN,
   resolveAxisProps,
+  resolveYAxes,
   resolveXAxisHeight,
   resolveYAxisWidth,
   toAxisLabel,
@@ -31,6 +32,7 @@ import {
   toTickProp,
   type VccsAxisInterval,
 } from "../../utils/axis";
+import { categoriesToSeries } from "../../utils/categories";
 import { toAxisDomain, toCssProperties } from "../../utils/style";
 import { axisTickVars, resolveHoverRadius, resolveHoverVisible, themeToVars } from "../../utils/theme";
 import ChartTooltip from "./ChartTooltip.vue";
@@ -259,6 +261,27 @@ const tooltipContent = computed(() => {
   };
 });
 
+/**
+ * The value y-axes. Empty for horizontal bars (which render the swapped
+ * category axis instead) and when the y-axis is hidden outright.
+ */
+const resolvedYAxes = computed(() => {
+  if (props.hideYAxis || layout.value === "vertical") return [];
+  return resolveYAxes({
+    series: categoriesToSeries(props.categories),
+    yAxes: props.yAxes,
+    minMaxTicksOnly: props.minMaxTicksOnly,
+    primary: {
+      ...yAxis.value,
+      label: props.yLabel,
+      domain: yAxisDomain.value,
+      tickCount: props.yNumTicks,
+      tickFormatter: valueFormatter.value,
+      tickLine: showYTickLine.value,
+      hide: false,
+    },
+  });
+});
 </script>
 
 <template>
@@ -294,22 +317,46 @@ const tooltipContent = computed(() => {
         :label="xAxisTitle"
         :type="layout === 'vertical' ? 'number' : 'category'"
       />
+      <!--
+        Horizontal orientation keeps the single swapped category y-axis; only
+        the standard layout supports several value axes (one per `yAxes` id).
+      -->
+      <!-- Horizontal orientation (layout="vertical"): the single swapped category y-axis. -->
       <YAxis
-        v-if="!hideYAxis"
-        :data-key="layout === 'vertical' ? xAxisKey : undefined"
-        :hide="hideYAxis"
+        v-if="!hideYAxis && layout === 'vertical'"
+        :data-key="xAxisKey"
         :width="yAxisWidth"
         :tick="yTickProp"
         :tick-margin="AXIS_TICK_MARGIN.y"
         :tick-line="yTickLineProp"
         :axis-line="yAxisLine"
-        :tick-count="layout === 'vertical' ? xNumTicks : yNumTicks"
-        :tick-formatter="layout === 'vertical' ? categoryFormatter : valueFormatter"
-        :domain="layout === 'vertical' ? xAxisDomain : yAxisDomain"
-        :ticks="layout === 'vertical' ? xAxis.ticks : yAxis.ticks"
-        :interval="layout === 'vertical' ? xAxisInterval : yAxisInterval"
+        :tick-count="xNumTicks"
+        :tick-formatter="categoryFormatter"
+        :domain="xAxisDomain"
+        :ticks="xAxis.ticks"
+        :interval="xAxisInterval"
         :label="yAxisTitle"
-        :type="layout === 'vertical' ? 'category' : 'number'"
+        type="category"
+      />
+      <!-- Standard layout: one value axis per resolved `yAxes` id (shared cutover styling). -->
+      <YAxis
+        v-for="axis in resolvedYAxes"
+        :key="axis.id"
+        :y-axis-id="axis.id"
+        :orientation="axis.orientation"
+        :hide="axis.hide"
+        :width="yAxisWidth"
+        :tick="toTickProp(axis.tick)"
+        :tick-margin="AXIS_TICK_MARGIN.y"
+        :tick-line="axis.tickLine ? yTickLineProp : false"
+        :axis-line="yAxisLine"
+        :tick-count="axis.tickCount"
+        :tick-formatter="axis.tickFormatter"
+        :domain="axis.domain"
+        :ticks="axis.ticks"
+        :interval="axis.interval"
+        :label="toAxisLabel(axis.label, axis.orientation === 'right' ? 'insideRight' : 'insideLeft', { angle: axis.orientation === 'right' ? 90 : -90 })"
+        type="number"
       />
 
       <slot />

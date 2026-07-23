@@ -13,12 +13,14 @@ import type { CurveType, DonutType, LegendPosition, Orientation } from "../enums
 import type { DitherVariant } from "../utils/dither";
 import type {
   AxisConfig,
+  AxisId,
   BulletLegendItemInterface,
   ChartPadding,
   ChartTheme,
   CrosshairConfig,
   MarkerConfig,
   TooltipConfig,
+  YAxisConfig,
   axisFormatter,
 } from "./shared";
 
@@ -87,6 +89,25 @@ export interface CartesianChartBaseProps<T> {
   xAxisConfig?: AxisConfig;
   /** Axis appearance config for the y-axis. */
   yAxisConfig?: AxisConfig;
+  /**
+   * Additional y-axes keyed by id, for plotting series with different units on
+   * independent scales. Reference an id from a category's `yAxis` field:
+   *
+   * ```ts
+   * const categories = {
+   *   temperature: { name: "Temp", yAxis: "temp" },
+   *   humidity: { name: "Humidity", yAxis: "pct" },
+   * };
+   * const yAxes = {
+   *   temp: { orientation: "left", label: "°C" },
+   *   pct: { orientation: "right", label: "%" },
+   * };
+   * ```
+   *
+   * Series without a `yAxis` fall back to the primary axis configured by the
+   * top-level `yLabel` / `yDomain` / `yAxisConfig` props.
+   */
+  yAxes?: Record<AxisId, YAxisConfig>;
   /** Tooltip behaviour config. */
   tooltip?: TooltipConfig;
   /** Reference lines drawn across the plot area. New in v3. */
