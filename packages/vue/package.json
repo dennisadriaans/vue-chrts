@@ -60,8 +60,8 @@
   "packageManager": "pnpm@10.33.0",
   "dependencies": {
     "@turf/boolean-point-in-polygon": "^7.3.1",
-    "@unovis/ts": "^1.6.2",
-    "@unovis/vue": "^1.6.2",
+    "@unovis/ts": "^1.6.7",
+    "@unovis/vue": "^1.6.7",
     "d3-geo": "^3.1.1",
     "proj4": "^2.20.2"
   }

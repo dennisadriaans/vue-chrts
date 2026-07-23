@@ -170,11 +170,11 @@ importers:
         specifier: ^7.3.1
         version: 7.3.5
       '@unovis/ts':
-        specifier: ^1.6.2
-        version: 1.6.6
+        specifier: ^1.6.7
+        version: 1.6.7
       '@unovis/vue':
-        specifier: ^1.6.2
-        version: 1.6.6(@unovis/ts@1.6.6)(vue@3.5.38(typescript@5.7.3))
+        specifier: ^1.6.7
+        version: 1.6.7(@unovis/ts@1.6.7)(vue@3.5.38(typescript@5.7.3))
       d3-geo:
         specifier: ^3.1.1
         version: 3.1.1
@@ -2707,13 +2707,13 @@ packages:
   '@unovis/graphlibrary@2.2.0-2':
     resolution: {integrity: sha512-HeEzpd/vDyWiIJt0rnh+2ICXUIuF2N0+Z9OJJiKg0DB+eFUcD+bk+9QPhYHwkFwfxdjDA9fHi1DZ/O/bbV58Nw==}
 
-  '@unovis/ts@1.6.6':
-    resolution: {integrity: sha512-i9VJpURi1sycMrTO6MfVRAThVH1Ugmu1olhkStlBGoCzbWvQW016K105AnvpQ3qGzpYkUAaW101ohdatt8yBrw==}
+  '@unovis/ts@1.6.7':
+    resolution: {integrity: sha512-CXmr+EQQyba9vqcyhvc963y06agBvaX0ut+lylTSUo4A/t1YYdrFQFKUULasdVY6Pe+OK5xveZOlJrYDiPOX3A==}
 
-  '@unovis/vue@1.6.6':
-    resolution: {integrity: sha512-2WmSy2JWuoNE6jtV12TMGF4BcXsGF4gkJe1mx2sClVZ6M6s6ByHNmXH2XjLSkKzHitYsHoduPiDFtcb3OBR3iw==}
+  '@unovis/vue@1.6.7':
+    resolution: {integrity: sha512-iyYdwwI8Tm8Kyb3aUvG3GVmId6gcmw8EY2Qbaim1W4uqktDYViFzJXIjLPbNir4ju+ziXmaxM2sfhfEC3t3TYw==}
     peerDependencies:
-      '@unovis/ts': 1.6.6
+      '@unovis/ts': 1.6.7
       vue: ^3
 
   '@unrs/resolver-binding-android-arm-eabi@1.12.2':
@@ -9639,7 +9639,7 @@ snapshots:
     dependencies:
       lodash-es: 4.18.1
 
-  '@unovis/ts@1.6.6':
+  '@unovis/ts@1.6.7':
     dependencies:
       '@emotion/css': 11.13.5
       '@juggle/resize-observer': 3.4.0
@@ -9711,9 +9711,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@unovis/vue@1.6.6(@unovis/ts@1.6.6)(vue@3.5.38(typescript@5.7.3))':
+  '@unovis/vue@1.6.7(@unovis/ts@1.6.7)(vue@3.5.38(typescript@5.7.3))':
     dependencies:
-      '@unovis/ts': 1.6.6
+      '@unovis/ts': 1.6.7
       vue: 3.5.38(typescript@5.7.3)
 
   '@unrs/resolver-binding-android-arm-eabi@1.12.2':
