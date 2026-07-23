@@ -1,5 +1,21 @@
 # Changelog
 
+## 3.0.0-beta.2
+
+### Added
+
+- **Multiple y-axes** for cartesian charts (`LineChart`, `AreaChart`, `BarChart`).
+  Give a category a `yAxis` id and describe each axis in the new `yAxes` prop to
+  plot series with different units on independent scales (#134).
+
+### Fixed
+
+- Production-readiness regressions for the site release: `BubbleChart` now
+  accepts v2 function accessors, the module resolves `vue-chrts` types under
+  pnpm isolation, and Sparkline / Stat Tile docs render again (#138).
+- `@unovis/ts` / `@unovis/vue` bumped to `^1.6.7` in the legacy `vue-chrts`
+  package (#137).
+
 ## 3.0.0-beta.1
 
 ### Major

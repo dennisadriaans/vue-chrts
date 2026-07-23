@@ -1,6 +1,6 @@
 {
   "name": "nuxt-charts",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "description": "Beautiful chart components for Nuxt (vccs engine) \u2014 Area, Bar, Line, Donut, Bubble, Radar, Radial Bar, Funnel, Candlestick, Status Tracker",
   "license": "MIT",
   "type": "module",
