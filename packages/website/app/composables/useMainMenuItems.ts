@@ -23,7 +23,7 @@ export function useMainMenuItems() {
         { label: 'Vue Charts', to: '/docs/getting-started/vue-charts' },
         { label: 'Area Chart', to: '/docs/charts/area-chart' },
         { label: 'Progress Circle', to: '/docs/components/progress-circle' },
-        { label: 'Dotted Map', to: '/docs/maps/dotted-map' }
+        { label: 'Radar Chart', to: '/docs/charts/radar-chart' }
       ]
 
       if (docsItems) {
