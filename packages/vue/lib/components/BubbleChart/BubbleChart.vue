@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-import { computed, ref, useSlots, useTemplateRef } from "vue";
+import { computed, useSlots } from "vue";
 import { Position, Scatter } from "@unovis/ts";
 import {
   VisXYContainer,
@@ -11,6 +11,7 @@ import {
 import { BubbleChartProps } from "./BubbleChart";
 import { LegendPosition } from "../../enums";
 import { getFirstPropertyValue } from "../../utils";
+import { useHoverTooltip } from "../../composables/useHoverTooltip";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -46,8 +47,7 @@ const props = withDefaults(defineProps<BubbleChartProps<T>>(), {
 });
 
 const slots = useSlots();
-const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
-const hoverValues = ref<T>();
+const { slotWrapperRef, hoverValues } = useHoverTooltip<T>();
 
 const x: NumericAccessor<T> = props.xAccessor!;
 const y: NumericAccessor<T> = props.yAccessor!;
@@ -133,6 +133,7 @@ const legendAlignment = computed(() => {
       @click="emit('click', $event, hoverValues)"
     >
       <VisTooltip
+        ref="tooltip"
         v-if="!props.hideTooltip"
         :triggers="triggers"
         :followCursor="props.tooltip.followCursor"

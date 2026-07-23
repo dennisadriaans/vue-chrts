@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends {}">
-import { computed, ref, useSlots, useTemplateRef } from "vue";
+import { computed, useSlots } from "vue";
 import { GroupedBar, StackedBar, Orientation, CurveType, Position } from "@unovis/ts";
+import { useHoverTooltip } from "../../composables/useHoverTooltip";
 
 import {
   VisAxis,
@@ -46,8 +47,7 @@ const props = withDefaults(defineProps<DualChartProps<T>>(), {
 });
 
 const slots = useSlots();
-const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
-const hoverValues = ref<T>();
+const { slotWrapperRef, hoverValues } = useHoverTooltip<T>();
 
 // Validate required props
 if (!props.barYAxis || props.barYAxis.length === 0) {
@@ -112,6 +112,28 @@ function onCrosshairUpdateWithContent(d: T): string {
   hoverValues.value = d;
   return generateTooltipContent(d);
 }
+
+// Must be a stable object reference (not created inline in the template).
+// `@unovis/vue`'s VisTooltip wrapper deep-compares its forwarded props on every
+// render, and a *new* `triggers` object (with new function closures) on every
+// render — which happens whenever `data`/`barYAxis`/etc. change — reads as
+// "props changed", causing it to call the underlying tooltip's `.render()`
+// with no arguments, which clears its content to "". That happens even with
+// the mouse sitting still, with no new hover at all.
+const tooltipTriggers = {
+  [GroupedBar.selectors.bar]: (d: T) => {
+    onCrosshairUpdate(d);
+    return d ? slotWrapperRef.value?.innerHTML : "";
+  },
+  // Unovis's StackedBar (unlike GroupedBar) binds each bar to a D3
+  // stack-layout wrapper object (`{ datum: row, index, stacked, stackIndex }`),
+  // not the row itself — the real row lives under `.datum`.
+  [StackedBar.selectors.bar]: (wrapper: { datum: T }) => {
+    const row = wrapper?.datum ?? (wrapper as unknown as T);
+    onCrosshairUpdate(row);
+    return row ? slotWrapperRef.value?.innerHTML : "";
+  },
+};
 </script>
 
 <template>
@@ -132,20 +154,12 @@ function onCrosshairUpdateWithContent(d: T): string {
       :y-domain="yDomain"
     >
       <VisTooltip
+        ref="tooltip"
         v-if="!hideTooltip"
         :followCursor="props.tooltip?.followCursor"
         :show-delay="props.tooltip?.showDelay"
         :hide-delay="props.tooltip?.hideDelay"
-        :triggers="{
-          [GroupedBar.selectors.bar]: (d: T) => {
-            onCrosshairUpdate(d);
-            return d ? slotWrapperRef?.innerHTML : '';
-          },
-          [StackedBar.selectors.bar]: (d: T) => {
-            onCrosshairUpdate(d);
-            return d ? slotWrapperRef?.innerHTML : '';
-          },
-        }"
+        :triggers="tooltipTriggers"
         :horizontal-placement="Position.Right"
         :vertical-placement="Position.Top"
       />

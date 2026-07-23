@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="T">
-import { computed, getCurrentInstance, onMounted, ref, useSlots, useTemplateRef } from "vue";
+import { computed, getCurrentInstance, useSlots } from "vue";
 import { type NumericAccessor, CurveType, Position } from "@unovis/ts";
 import { createScopedMarkers } from "../../utils";
+import { useHoverTooltip } from "../../composables/useHoverTooltip";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -45,8 +46,7 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
 });
 
 const slots = useSlots();
-const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
-const hoverValues = ref<T>();
+const { slotWrapperRef, hoverValues } = useHoverTooltip<T>();
 
 const markerScopeId = `area-${getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2)}`;
 
@@ -186,6 +186,7 @@ function onCrosshairUpdate(d: T): string {
       :x-domain="xDomain"
     >
       <VisTooltip
+        ref="tooltip"
         v-if="!hideTooltip"
         :horizontal-placement="Position.Right"
         :vertical-placement="Position.Top"
