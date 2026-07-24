@@ -32,7 +32,7 @@ const hoverValues = ref();
 
 const value = (d: number) => d;
 
-const isHalf = props.type === DonutType.Half;
+const isHalf = computed(() => props.type === DonutType.Half);
 
 function onCrosshairUpdate(d: T): string {
   const keyName = Object.values(props.categories)[(d as any).index].name;
