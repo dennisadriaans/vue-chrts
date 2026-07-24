@@ -46,7 +46,9 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
 });
 
 const slots = useSlots();
-const { slotWrapperRef, hoverValues } = useHoverTooltip<T>();
+const { slotWrapperRef, hoverValues, setHoveredRow } = useHoverTooltip<T>(
+  () => props.data
+);
 
 const markerScopeId = `area-${getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2)}`;
 
@@ -158,7 +160,13 @@ function generateTooltipContent(d: T): string {
   return "";
 }
 
+// `VisCrosshair` is also purely mousemove-driven — its `template` callback
+// only re-runs when the mouse actually moves. `setHoveredRow` lets
+// `useHoverTooltip` keep the tooltip content live if `data` changes while
+// the crosshair sits still (points are positioned by array index,
+// `x: (_, i) => i`, same as Unovis itself uses).
 function onCrosshairUpdate(d: T): string {
+  setHoveredRow(props.data, d);
   hoverValues.value = d;
   return generateTooltipContent(d);
 }

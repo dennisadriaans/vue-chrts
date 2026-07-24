@@ -46,7 +46,9 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
 });
 
 const slots = useSlots();
-const { slotWrapperRef, hoverValues } = useHoverTooltip<T>();
+const { slotWrapperRef, hoverValues, setHoveredRow } = useHoverTooltip<T>(
+  () => props.data
+);
 
 if (props.valueLabel && !props.xAxis) {
   throw new Error(
@@ -96,8 +98,14 @@ function onCrosshairUpdate(d: T) {
 // "props changed", causing it to call the underlying tooltip's `.render()`
 // with no arguments, which clears its content to "". That happens even with
 // the mouse sitting still, with no new hover at all.
+// The `setHoveredRow` calls let `useHoverTooltip` keep the tooltip content
+// live if `data` changes while the mouse sits still over a bar (bars are
+// positioned by array index, `x: (_, i) => i`, same as Unovis itself uses —
+// `stackAndGrouped`'s derived data array isn't `props.data`, so no match is
+// found there and this is a harmless no-op for that mode).
 const tooltipTriggers = {
   [GroupedBar.selectors.bar]: (d: T) => {
+    setHoveredRow(props.data, d);
     onCrosshairUpdate(d);
     return d ? slotWrapperRef.value?.innerHTML : "";
   },
@@ -106,6 +114,7 @@ const tooltipTriggers = {
   // not the row itself — the real row lives under `.datum`.
   [StackedBar.selectors.bar]: (wrapper: { datum: T }) => {
     const row = wrapper?.datum ?? (wrapper as unknown as T);
+    setHoveredRow(props.data, row);
     onCrosshairUpdate(row);
     return row ? slotWrapperRef.value?.innerHTML : "";
   },
