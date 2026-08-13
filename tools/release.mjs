@@ -21,9 +21,9 @@
  *
  * Flags:
  *   --package <name>  Skip the picker (`vue-chrts`, `nuxt-charts`, …).
- *   --bump <kind>     patch | minor | major | prerelease-beta | prerelease-rc.
+ *   --bump <kind>     staged | patch | minor | major | prerelease-beta | prerelease-rc.
  *   --version <x.y.z> An explicit version, overriding --bump.
- *   --notes <source>  commits | unreleased | fragments | none.
+ *   --notes <source>  existing | commits | unreleased | fragments | none.
  *   --dry-run         No writes, no git writes, no network. Walks the prompts.
  *   --skip-verify     Skip typecheck/test/build.
  *   --no-push         Commit and tag locally, push nothing (implies --no-npm).
@@ -72,6 +72,7 @@ import {
   archiveFragments,
   buildReleaseBody,
   compareUrl,
+  extractSection,
   notesForGithub,
   readChangelog,
   readFragments,
@@ -236,7 +237,9 @@ async function soft(result, okMessage, { question = 'Continue anyway?', defaultY
   const change = await detectChanges(pkg, { scoped: !ALL_COMMITS })
   const fragments = readFragments(pkg)
   const changelogText = readChangelog(pkg)
-  const split = splitChangelog(changelogText)
+  // Re-split once the version is known: a section already staged for it is
+  // lifted out of the file rather than left to collide with the new heading.
+  let split = splitChangelog(changelogText)
 
   info(`Last tag:          ${change.lastTag ?? color.dim('(none — first scoped release)')}`)
   info(
@@ -273,27 +276,42 @@ async function soft(result, okMessage, { question = 'Continue anyway?', defaultY
   )
   info(`package.json: ${manifestVersion ? color.bold(manifestVersion) : color.dim('(none)')}`)
 
-  const known = [taggedVersion, publishedVersion, manifestVersion].filter(Boolean)
-  const base = known.length
-    ? known.reduce((best, v) => (compare(v, best) > 0 ? v : best))
+  // Only a tag or a registry entry burns a version. package.json is often
+  // staged ahead of a release (a rewrite carrying its own version through
+  // several unpublished betas), so it seeds the suggestion, never the floor.
+  const released = [taggedVersion, publishedVersion].filter(Boolean)
+  const base = released.length
+    ? released.reduce((best, v) => (compare(v, best) > 0 ? v : best))
     : null
 
-  if (base && known.some((v) => v !== base)) {
-    warn(`These disagree; bumping from the highest (${base}) so no version is burned twice.`)
+  if (base && released.some((v) => v !== base)) {
+    warn(`Tag and registry disagree; bumping from the highest (${base}) so no version is burned twice.`)
   }
+
+  const ahead =
+    manifestVersion && (!base || compare(manifestVersion, base) > 0) ? manifestVersion : null
+  const staged = ahead && !(await isPublished(pkg.name, ahead)) ? ahead : null
+  if (staged) info(`package.json is staged at ${color.bold(staged)}, ahead of anything released.`)
+
+  const kindOptions = staged
+    ? [
+        { label: `staged — ${staged}`, value: 'staged', hint: 'ship the version in package.json' },
+        ...RELEASE_KIND_OPTIONS
+      ]
+    : RELEASE_KIND_OPTIONS
 
   const forcedVersion = flagValue('--version')
   const forcedBump = flagValue('--bump')
-  if (forcedBump && !RELEASE_KIND_OPTIONS.some((o) => o.value === forcedBump)) {
-    panic(`Unknown --bump ${forcedBump} (have ${RELEASE_KIND_OPTIONS.map((o) => o.value).join(', ')})`)
+  if (forcedBump && !kindOptions.some((o) => o.value === forcedBump)) {
+    panic(`Unknown --bump ${forcedBump} (have ${kindOptions.map((o) => o.value).join(', ')})`)
   }
 
   let suggested
   if (forcedVersion) {
     suggested = forcedVersion
-  } else if (base) {
-    const kind = forcedBump ?? (await select('Release kind?', RELEASE_KIND_OPTIONS))
-    suggested = nextVersion(base, kind)
+  } else if (base || staged) {
+    const kind = forcedBump ?? (await select('Release kind?', kindOptions))
+    suggested = kind === 'staged' ? staged : nextVersion(base ?? staged, kind)
   } else {
     suggested = manifestVersion ?? '0.1.0'
     info('First release — pick the starting version.')
@@ -322,7 +340,20 @@ async function soft(result, okMessage, { question = 'Continue anyway?', defaultY
   // ── 4. Release notes ─────────────────────────────────────────────────────
   heading('Release notes')
 
+  const existing = extractSection(changelogText, version)
+  if (existing) {
+    split = splitChangelog(existing.text)
+    info(`CHANGELOG.md already has a ## ${version} section — it will be re-emitted, not duplicated.`)
+  }
+
   const noteOptions = []
+  if (existing?.body) {
+    noteOptions.push({
+      label: `existing ## ${version} section`,
+      value: 'existing',
+      hint: 'the notes already written for this version'
+    })
+  }
   if (change.commits.length) {
     noteOptions.push({
       label: 'conventional commits',
@@ -362,6 +393,7 @@ async function soft(result, okMessage, { question = 'Continue anyway?', defaultY
     mode,
     commits: change.commits,
     unreleased: split.unreleased,
+    existing: existing?.body,
     fragments,
     summary
   })

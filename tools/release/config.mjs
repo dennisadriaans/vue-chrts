@@ -44,7 +44,12 @@ export function parseTag(tag) {
  * "since the last release".
  */
 export const LEGACY_TAG_GLOBS = {
-  'vue-chrts': 'v*'
+  'vue-chrts': 'v*',
+  // Both Nuxt packages descend from the flat-tag era: `nuxt-charts` is the v3
+  // rewrite in packages/nuxt-charts-next, `nuxt-charts-legacy` the v2 module
+  // that used to own the name.
+  'nuxt-charts': 'v*',
+  'nuxt-charts-legacy': 'v*'
 }
 
 /** Verification gates, run through turbo and scoped to the released package. */

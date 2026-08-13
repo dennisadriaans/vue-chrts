@@ -27,6 +27,7 @@ import {
   buildReleaseBody,
   commitSections,
   compareUrl,
+  extractSection,
   parseConventional,
   releaseHeading,
   renderChangelog,
@@ -230,6 +231,43 @@ test('renderChangelog works on a changelog that never had an Unreleased heading'
   // The `/` of a scoped name would otherwise split the URL path.
   assert.match(compareUrl('@s/a@1.0.0', '@s/a@1.1.0'), /compare\/@s%2Fa@1\.0\.0\.\.\.@s%2Fa@1\.1\.0$/)
   assert.equal(compareUrl(null, 'a@1.1.0'), null)
+})
+
+test('a version staged in CHANGELOG.md is lifted out instead of duplicated', () => {
+  const staged = `# Changelog
+
+## 3.0.0-beta.0
+
+### Major
+
+- Engine swap.
+
+## [2.2.1](https://example.test/compare) (2026-07-23)
+
+Older notes.
+`
+  const found = extractSection(staged, '3.0.0-beta.0')
+  assert.match(found.body, /Engine swap\./)
+  assert.doesNotMatch(found.body, /Older notes/)
+  assert.doesNotMatch(found.text, /3\.0\.0-beta\.0/)
+  assert.match(found.text, /^# Changelog/)
+  assert.match(found.text, /## \[2\.2\.1\]/)
+
+  const out = renderChangelog({
+    version: '3.0.0-beta.0',
+    date: '2026-08-13',
+    body: buildReleaseBody({ mode: 'existing', existing: found.body }),
+    split: splitChangelog(found.text),
+    url: compareUrl('v2.2.0', 'nuxt-charts@3.0.0-beta.0')
+  })
+  assert.equal(out.match(/## \[?3\.0\.0-beta\.0/g).length, 1)
+  assert.equal(out.match(/Engine swap\./g).length, 1)
+  // The file never had an Unreleased heading, so the release does not add one.
+  assert.doesNotMatch(out, /## Unreleased/)
+
+  // A linked heading written by a previous run is matched too.
+  assert.ok(extractSection(out, '3.0.0-beta.0'))
+  assert.equal(extractSection(staged, '3.0.0-beta.9'), null)
 })
 
 test('writeVersion inserts a missing version right after name', () => {

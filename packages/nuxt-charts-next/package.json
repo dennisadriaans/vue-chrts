@@ -1,6 +1,6 @@
 {
   "name": "nuxt-charts",
-  "version": "3.0.0-beta.2",
+  "version": "3.0.0-beta.0",
   "description": "Beautiful chart components for Nuxt (vccs engine) \u2014 Area, Bar, Line, Donut, Bubble, Radar, Radial Bar, Funnel, Candlestick, Status Tracker",
   "license": "MIT",
   "author": "Dennis Adriaansen <adriaansendennis@gmail.com>",
@@ -49,7 +49,8 @@
   "scripts": {
     "prepack": "nuxt-module-build build",
     "dev": "nuxi dev playground",
-    "build": "nuxi build playground",
+    "build": "nuxt-module-build build",
+    "build:playground": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "release": "node ../../tools/release.mjs --package nuxt-charts",
     "lint": "eslint .",
@@ -57,7 +58,7 @@
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
-    "release:dry": "pnpm run prepack && pnpm publish --tag beta --access public --dry-run"
+    "release:dry": "node ../../tools/release.mjs --package nuxt-charts --dry-run"
   },
   "dependencies": {
     "@types/d3-array": "^3.2.2",

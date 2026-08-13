@@ -212,21 +212,53 @@ export function splitChangelog(text) {
   const headingIdx = text.indexOf(UNRELEASED_HEADING)
   if (headingIdx === -1) {
     const firstSection = text.search(/(^|\n)## /)
-    if (firstSection === -1) return { head: text.trimEnd() + '\n\n', unreleased: '', tail: '' }
+    if (firstSection === -1) {
+      return { head: text.trimEnd() + '\n\n', unreleased: '', tail: '', hadUnreleased: false }
+    }
     const cut = text[firstSection] === '\n' ? firstSection + 1 : firstSection
-    return { head: text.slice(0, cut), unreleased: '', tail: text.slice(cut) }
+    return { head: text.slice(0, cut), unreleased: '', tail: text.slice(cut), hadUnreleased: false }
   }
   const rest = text.slice(headingIdx + UNRELEASED_HEADING.length)
   const nextHeading = rest.search(/\n## /)
   const unreleased = nextHeading === -1 ? rest.trim() : rest.slice(0, nextHeading).trim()
   const tail = nextHeading === -1 ? '' : rest.slice(nextHeading + 1)
-  return { head: text.slice(0, headingIdx), unreleased, tail }
+  return { head: text.slice(0, headingIdx), unreleased, tail, hadUnreleased: true }
 }
 
 /**
- * @param {'commits'|'unreleased'|'fragments'|'none'} mode
+ * A section already written for `version` — `## 3.0.0-beta.0` or
+ * `## [3.0.0-beta.0](url) (date)`. Versions are often staged in CHANGELOG.md
+ * before they ship; without this the release would write a second heading for
+ * the same version right above the first.
+ *
+ * Returns the section body plus the changelog with that section removed, so the
+ * release re-emits it under a proper linked heading instead of duplicating it.
  */
-export function buildReleaseBody({ mode, commits = [], unreleased, fragments = [], summary }) {
+export function extractSection(text, version) {
+  const escaped = version.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const heading = new RegExp(`(^|\\n)## (?:\\[${escaped}\\][^\\n]*|${escaped})[^\\n]*\\n`)
+  const match = heading.exec(text)
+  if (!match) return null
+
+  const start = match.index + (match[1] ? 1 : 0)
+  const rest = text.slice(match.index + match[0].length)
+  const next = rest.search(/\n## /)
+  const body = (next === -1 ? rest : rest.slice(0, next)).trim()
+  const after = next === -1 ? '' : rest.slice(next + 1)
+  return { body, text: `${text.slice(0, start)}${after}` }
+}
+
+/**
+ * @param {'commits'|'unreleased'|'existing'|'fragments'|'none'} mode
+ */
+export function buildReleaseBody({
+  mode,
+  commits = [],
+  unreleased,
+  existing,
+  fragments = [],
+  summary
+}) {
   const parts = []
   if (summary) parts.push(summary.trim())
   if (mode === 'commits') {
@@ -234,6 +266,7 @@ export function buildReleaseBody({ mode, commits = [], unreleased, fragments = [
     if (sections) parts.push(sections)
   }
   if (mode === 'unreleased' && unreleased) parts.push(unreleased)
+  if (mode === 'existing' && existing) parts.push(existing)
   if (mode === 'fragments') {
     const sections = fragmentSections(fragments)
     if (sections) parts.push(sections)
@@ -250,12 +283,17 @@ export function releaseHeading(version, date, url) {
   return url ? `## [${version}](${url}) (${date})` : `## [${version}] (${date})`
 }
 
-/** CHANGELOG.md with the release section inserted and `## Unreleased` emptied. */
+/**
+ * CHANGELOG.md with the release section inserted and `## Unreleased` emptied.
+ * The empty heading is only re-emitted for files that already used it — the
+ * generated changelogs in this repo never had one.
+ */
 export function renderChangelog({ version, date, body, split, url }) {
-  const { head, tail } = split
+  const { head, tail, hadUnreleased = true } = split
   const section = `${releaseHeading(version, date, url)}\n\n${body}\n`
   const tailBlock = tail ? `\n${tail.trimEnd()}\n` : ''
-  return `${head}${UNRELEASED_HEADING}\n\n${section}${tailBlock}`
+  const unreleasedBlock = hadUnreleased ? `${UNRELEASED_HEADING}\n\n` : ''
+  return `${head}${unreleasedBlock}${section}${tailBlock}`
 }
 
 export function writeChangelog(pkg, text) {
