@@ -3,6 +3,26 @@
   "version": "2.2.1",
   "description": "Legacy Nuxt Charts module (Unovis / vue-chrts). Prefer nuxt-charts v3.",
   "license": "MIT",
+  "author": "Dennis Adriaansen <adriaansendennis@gmail.com>",
+  "homepage": "https://nuxtcharts.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dennisadriaans/vue-chrts.git",
+    "directory": "packages/nuxt-charts"
+  },
+  "bugs": {
+    "url": "https://github.com/dennisadriaans/vue-chrts/issues"
+  },
+  "keywords": [
+    "nuxt",
+    "nuxt-module",
+    "vue",
+    "charts",
+    "chart",
+    "dataviz",
+    "visualization",
+    "unovis"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -21,7 +41,7 @@
     "dev": "nuxi dev playground",
     "build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-    "release": "pnpm run prepack && commit-and-tag-version && pnpm publish",
+    "release": "node ../../tools/release.mjs --package nuxt-charts-legacy",
     "lint": "eslint .",
     "typecheck": "pnpm run test:types",
     "test": "vitest run",
@@ -45,8 +65,6 @@
     "@playwright/test": "^1.61.1",
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "latest",
-    "changelogen": "^0.6.2",
-    "commit-and-tag-version": "^12.5.1",
     "eslint": "^9.39.2",
     "nuxt": "^4.3.0",
     "tailwindcss": "^4.2.2",

@@ -3,6 +3,26 @@
   "version": "3.0.0-beta.2",
   "description": "Beautiful chart components for Nuxt (vccs engine) \u2014 Area, Bar, Line, Donut, Bubble, Radar, Radial Bar, Funnel, Candlestick, Status Tracker",
   "license": "MIT",
+  "author": "Dennis Adriaansen <adriaansendennis@gmail.com>",
+  "homepage": "https://nuxtcharts.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dennisadriaans/vue-chrts.git",
+    "directory": "packages/nuxt-charts-next"
+  },
+  "bugs": {
+    "url": "https://github.com/dennisadriaans/vue-chrts/issues"
+  },
+  "keywords": [
+    "nuxt",
+    "nuxt-module",
+    "vue",
+    "charts",
+    "chart",
+    "dataviz",
+    "visualization",
+    "vccs"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -31,7 +51,7 @@
     "dev": "nuxi dev playground",
     "build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-    "release": "pnpm run prepack && commit-and-tag-version --prerelease beta && pnpm publish --tag beta --access public",
+    "release": "node ../../tools/release.mjs --package nuxt-charts",
     "lint": "eslint .",
     "typecheck": "pnpm run test:types",
     "test": "vitest run",
@@ -65,8 +85,6 @@
     "@types/node": "latest",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vue/test-utils": "^2.4.11",
-    "changelogen": "^0.6.2",
-    "commit-and-tag-version": "^12.5.1",
     "eslint": "^9.39.2",
     "happy-dom": "^20.10.6",
     "nuxt": "^4.3.0",

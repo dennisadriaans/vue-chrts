@@ -6,20 +6,20 @@
   "scripts": {
     "build": "turbo run build",
     "build:vue": "turbo run build --filter=vue-chrts",
-    "build:site": "turbo run build --filter=website",
     "build:nuxt": "turbo run build --filter=nuxt-charts",
     "build:nuxt-legacy": "turbo run build --filter=nuxt-charts-legacy",
     "dev": "turbo run dev",
     "dev:nuxt": "turbo run dev --filter=nuxt-charts",
     "dev:nuxt-legacy": "turbo run dev --filter=nuxt-charts-legacy",
-    "dev:site": "turbo run dev --filter=website",
     "test": "turbo run test",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
-    "release:vue": "turbo run release --filter=vue-chrts",
-    "release:nuxt": "turbo run release --filter=nuxt-charts",
-    "release:nuxt-legacy": "turbo run release --filter=nuxt-charts-legacy",
-    "sync-versions": "node scripts/sync-versions.js"
+    "test:release": "node --test tools/release/release.test.mjs",
+    "release": "node tools/release.mjs",
+    "release:dry": "node tools/release.mjs --dry-run",
+    "release:vue": "node tools/release.mjs --package vue-chrts",
+    "release:nuxt": "node tools/release.mjs --package nuxt-charts",
+    "release:nuxt-legacy": "node tools/release.mjs --package nuxt-charts-legacy"
   },
   "packageManager": "pnpm@10.33.0",
   "devDependencies": {
