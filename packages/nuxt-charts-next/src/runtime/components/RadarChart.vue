@@ -14,9 +14,9 @@ import {
   PolarRadiusAxis,
   Radar,
   RadarChart as VccsRadarChart,
-  ResponsiveContainer,
   Tooltip,
 } from "vccs";
+import ChartContainer from "./internal/ChartContainer";
 import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
 import type { RadarChartProps } from "../types/charts";
@@ -40,7 +40,7 @@ const themeVars = computed(() => themeToVars(props.theme));
 
 <template>
   <div class="vue-chrts" :style="themeVars">
-  <ResponsiveContainer width="100%" :height="height">
+  <ChartContainer width="100%" :height="height">
     <VccsRadarChart :data="data">
       <PolarGrid stroke="var(--vc-grid-color)" />
       <PolarAngleAxis :data-key="angleKey" :tick-formatter="angleFormatter" />
@@ -80,6 +80,6 @@ const themeVars = computed(() => themeToVars(props.theme));
         </template>
       </Legend>
     </VccsRadarChart>
-  </ResponsiveContainer>
+  </ChartContainer>
   </div>
 </template>

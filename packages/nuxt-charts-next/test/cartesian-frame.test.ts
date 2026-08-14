@@ -33,12 +33,21 @@ vi.mock("vccs", () => {
     CartesianGrid: stub("CartesianGrid"),
     Legend: stub("Legend"),
     ReferenceLine: stub("ReferenceLine"),
-    ResponsiveContainer: stub("ResponsiveContainer"),
     Tooltip: stub("Tooltip"),
     XAxis: stub("XAxis"),
     YAxis: stub("YAxis"),
   };
 });
+
+// Our own sizing container also measures 0x0 here and only renders children
+// after the mount tick, so stub it the same way.
+vi.mock("../src/runtime/components/internal/ChartContainer", () => ({
+  default: {
+    name: "ChartContainer",
+    setup: (_: unknown, { slots }: { slots: Record<string, (() => unknown) | undefined> }) =>
+      () => h("div", { "data-stub": "ChartContainer" }, slots.default?.() as never),
+  },
+}));
 
 const container = {
   name: "ChartContainer",

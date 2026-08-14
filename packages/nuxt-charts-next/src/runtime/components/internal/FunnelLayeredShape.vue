@@ -106,14 +106,14 @@ export default { name: "FunnelLayeredShape" };
       :x2="geometry.startX"
       :y1="geometry.dividerStartY"
       :y2="geometry.dividerEndY"
-      :stroke="`hsl(var(--background, 0 0% 100%))`"
+      stroke="var(--vc-surface-bg)"
       :stroke-width="5"
     />
 
     <text
       :x="geometry.middleX"
       :y="geometry.topLabelY"
-      :fill="`hsl(var(--foreground, 222.2 84% 4.9%))`"
+      fill="var(--vc-axis-label-color)"
       :font-size="16"
       :font-weight="700"
       text-anchor="middle"
@@ -127,16 +127,16 @@ export default { name: "FunnelLayeredShape" };
       :width="geometry.badgeWidth"
       :height="30"
       :rx="15"
-      :fill="`hsl(var(--background, 0 0% 100%))`"
+      fill="var(--vc-surface-bg)"
       fill-opacity="0.82"
-      :stroke="`hsl(var(--border, 214.3 31.8% 91.4%))`"
+      stroke="var(--vc-axis-line-color)"
       stroke-opacity="0.7"
       :stroke-width="1"
     />
     <text
       :x="geometry.middleX"
       :y="geometry.centerY + 5"
-      :fill="`hsl(var(--foreground, 222.2 84% 4.9%))`"
+      fill="var(--vc-axis-label-color)"
       :font-size="14"
       :font-weight="600"
       text-anchor="middle"
@@ -147,7 +147,7 @@ export default { name: "FunnelLayeredShape" };
     <text
       :x="geometry.middleX"
       :y="geometry.bottomLabelY"
-      :fill="`hsl(var(--muted-foreground, 215.4 16.3% 46.9%))`"
+      fill="var(--vc-tick-color)"
       :font-size="15"
       :font-weight="500"
       text-anchor="middle"

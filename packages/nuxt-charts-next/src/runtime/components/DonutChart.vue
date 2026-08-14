@@ -9,7 +9,8 @@
  * `DonutType.Half` renders a semicircle gauge.
  */
 import { computed } from "vue";
-import { Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "vccs";
+import { Legend, Pie, PieChart, Tooltip } from "vccs";
+import ChartContainer from "./internal/ChartContainer";
 import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
 import type { DonutChartProps } from "../types/charts";
@@ -93,7 +94,7 @@ const legendWrapperStyle = computed(() =>
 
 <template>
   <div class="donut-chart vue-chrts" :style="{ position: 'relative', width: '100%', height: `${height ?? (radius ? radius * 2 : 200)}px`, ...themeVars }">
-    <ResponsiveContainer width="100%" height="100%">
+    <ChartContainer width="100%" height="100%">
       <PieChart>
         <Pie
           :data="segments"
@@ -120,7 +121,7 @@ const legendWrapperStyle = computed(() =>
           </template>
         </Legend>
       </PieChart>
-    </ResponsiveContainer>
+    </ChartContainer>
 
     <!-- Centered overlay for custom content (v2 parity: default slot). -->
     <div

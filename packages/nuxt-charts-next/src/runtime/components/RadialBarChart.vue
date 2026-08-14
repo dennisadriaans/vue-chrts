@@ -11,9 +11,9 @@ import {
   Legend,
   RadialBar,
   RadialBarChart as VccsRadialBarChart,
-  ResponsiveContainer,
   Tooltip,
 } from "vccs";
+import ChartContainer from "./internal/ChartContainer";
 import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
 import type { RadialBarChartProps } from "../types/charts";
@@ -44,7 +44,7 @@ const legendWrapperStyle = computed(() =>
 
 <template>
   <div class="vue-chrts" :style="themeVars">
-  <ResponsiveContainer width="100%" :height="height">
+  <ChartContainer width="100%" :height="height">
     <VccsRadialBarChart
       :data="bars"
       :inner-radius="innerRadius ?? '30%'"
@@ -71,6 +71,6 @@ const legendWrapperStyle = computed(() =>
         </template>
       </Legend>
     </VccsRadialBarChart>
-  </ResponsiveContainer>
+  </ChartContainer>
   </div>
 </template>

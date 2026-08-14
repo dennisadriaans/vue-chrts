@@ -9,5 +9,3 @@ allowBuilds:
   unrs-resolver: false
   vue-demi: false
   workerd: false
-patchedDependencies:
-  vccs@0.4.0: patches/vccs@0.4.0.patch
