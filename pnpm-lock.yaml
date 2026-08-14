@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  vccs@0.4.0:
+    hash: 6ae08315db00ba17d69dcb7030d515b5564ce0114bebc865d5d4aa05c48785d0
+    path: patches/vccs@0.4.0.patch
+
 importers:
 
   .:
@@ -104,7 +109,7 @@ importers:
         version: 2.3.0(@vueuse/core@14.3.0(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3))
       vccs:
         specifier: ^0.4.0
-        version: 0.4.0(motion-v@2.3.0(@vueuse/core@14.3.0(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3)))(redux@5.0.1)(vue@3.5.38(typescript@5.9.3))
+        version: 0.4.0(patch_hash=6ae08315db00ba17d69dcb7030d515b5564ce0114bebc865d5d4aa05c48785d0)(motion-v@2.3.0(@vueuse/core@14.3.0(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3)))(redux@5.0.1)(vue@3.5.38(typescript@5.9.3))
     devDependencies:
       '@nuxt/devtools':
         specifier: ^3.1.1
@@ -13262,7 +13267,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  vccs@0.4.0(motion-v@2.3.0(@vueuse/core@14.3.0(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3)))(redux@5.0.1)(vue@3.5.38(typescript@5.9.3)):
+  vccs@0.4.0(patch_hash=6ae08315db00ba17d69dcb7030d515b5564ce0114bebc865d5d4aa05c48785d0)(motion-v@2.3.0(@vueuse/core@14.3.0(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3)))(redux@5.0.1)(vue@3.5.38(typescript@5.9.3)):
     dependencies:
       '@reduxjs/toolkit': 2.12.0
       '@reduxjs/vue-redux': 1.0.1(redux@5.0.1)(vue@3.5.38(typescript@5.9.3))

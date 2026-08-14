@@ -1,16 +1,3 @@
-diff --git a/dist/es/container/ResponsiveContainer.vue_vue_type_script_setup_true_lang.mjs b/dist/es/container/ResponsiveContainer.vue_vue_type_script_setup_true_lang.mjs
-index 72e0a134c836ede6f5d240a2958263c23ac17b9f..4e81d35f84070043fd43f7e07c202a3109dfa9cd 100644
---- a/dist/es/container/ResponsiveContainer.vue_vue_type_script_setup_true_lang.mjs
-+++ b/dist/es/container/ResponsiveContainer.vue_vue_type_script_setup_true_lang.mjs
-@@ -136,7 +136,7 @@ var ResponsiveContainer_vue_vue_type_script_setup_true_lang_default = /* @__PURE
- 				ref: containerRef,
- 				class: normalizeClass(["vcharts-responsive-container", [props.class]]),
- 				style: normalizeStyle(containerStyle.value)
--			}, [(openBlock(), createBlock(resolveDynamicComponent(() => renderChildren())))], 14, _hoisted_1);
-+			}, renderChildren() ?? [], -2, _hoisted_1);
- 		};
- 	}
- });
 diff --git a/dist/es/components/Tooltip.mjs b/dist/es/components/Tooltip.mjs
 index 1111111111111111111111111111111111111111..2222222222222222222222222222222222222222 100644
 --- a/dist/es/components/Tooltip.mjs
