@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.0.0-beta.1](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.0.0-beta.0...nuxt-charts@3.0.0-beta.1) (2026-08-14)
+
+### Bug Fixes
+
+* support Nuxt UI/shadcn-vue color tokens, avoid custom-container remount loop ([f3051a6](https://github.com/dennisadriaans/vue-chrts/commit/f3051a604d039c913568bfc24bec0b47daf3b78d))
+
 ## [3.0.0-beta.0](https://github.com/dennisadriaans/vue-chrts/compare/v2.2.0...nuxt-charts@3.0.0-beta.0) (2026-08-14)
 
 First public beta of nuxt-charts v3. The package published as the experimental
