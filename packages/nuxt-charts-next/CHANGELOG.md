@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.0.0-beta.0
+## [3.0.0-beta.0](https://github.com/dennisadriaans/vue-chrts/compare/v2.2.0...nuxt-charts@3.0.0-beta.0) (2026-08-14)
 
 First public beta of nuxt-charts v3. The package published as the experimental
 `nuxt-charts-next` is now **`nuxt-charts@3`**; v2 continues as `nuxt-charts-legacy`.
