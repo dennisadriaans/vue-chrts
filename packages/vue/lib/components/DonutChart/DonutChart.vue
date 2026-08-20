@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="T extends {}">
 import { Donut } from "@unovis/ts";
-import { ref, useSlots, useTemplateRef, computed } from "vue";
+import { computed, useSlots } from "vue";
 import { DonutType, type DonutChartProps } from "./DonutChart";
+import { useHoverTooltip } from "../../composables/useHoverTooltip";
 
 import Tooltip from "../Tooltip.vue";
 
@@ -27,8 +28,7 @@ const props = withDefaults(defineProps<DonutChartProps<T>>(), {
 });
 
 const slots = useSlots();
-const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
-const hoverValues = ref();
+const { slotWrapperRef, hoverValues } = useHoverTooltip();
 
 const value = (d: number) => d;
 
@@ -94,6 +94,7 @@ const colors = (_: number, i: number) => {
       :margin="{}"
     >
       <VisTooltip
+        ref="tooltip"
         v-if="!hideTooltip"
         :horizontal-shift="20"
         :vertical-shift="20"

@@ -1,11 +1,12 @@
 <script setup lang="ts" generic="N extends SankeyInputNode, L extends SankeyInputLink">
-import { computed, ref, useSlots, useTemplateRef } from "vue";
+import { computed, useSlots } from "vue";
 import {
   SankeyInputNode,
   SankeyInputLink,
   SankeyNodeAlign,
   Sankey,
 } from "@unovis/ts";
+import { useHoverTooltip } from "../../composables/useHoverTooltip";
 
 import {
   VisSingleContainer,
@@ -51,8 +52,7 @@ const props = withDefaults(defineProps<SankeyChartProps<N, L>>(), {
 });
 
 const slots = useSlots();
-const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
-const hoverNode = ref<any>();
+const { slotWrapperRef, hoverValues: hoverNode } = useHoverTooltip<any>();
 
 const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
 
@@ -65,6 +65,20 @@ const legendAlignment = computed(() => {
 function onNodeHover(d: any) {
   hoverNode.value = d;
 }
+
+// Must be a stable object reference (not created inline in the template).
+// `@unovis/vue`'s VisTooltip wrapper deep-compares its forwarded props on every
+// render, and a *new* `triggers` object (with new function closures) on every
+// render — which happens whenever `data` changes — reads as "props changed",
+// causing it to call the underlying tooltip's `.render()` with no arguments,
+// which clears its content to "". That happens even with the mouse sitting
+// still, with no new hover at all.
+const tooltipTriggers = {
+  [Sankey.selectors.node]: (d: any) => {
+    onNodeHover(d);
+    return d ? slotWrapperRef.value?.innerHTML : "";
+  },
+};
 </script>
 
 <template>
@@ -82,16 +96,12 @@ function onNodeHover(d: any) {
       :duration="duration"
     >
       <VisTooltip
+        ref="tooltip"
         v-if="!hideTooltip"
         :followCursor="props.tooltip?.followCursor"
         :show-delay="props.tooltip?.showDelay"
         :hide-delay="props.tooltip?.hideDelay"
-        :triggers="{
-          [Sankey.selectors.node]: (d: any) => {
-            onNodeHover(d);
-            return d ? slotWrapperRef?.innerHTML : '';
-          },
-        }"
+        :triggers="tooltipTriggers"
       />
       <VisSankey
         :data="data"

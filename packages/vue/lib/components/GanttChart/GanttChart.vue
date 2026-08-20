@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { computed, ref, useSlots, useTemplateRef } from "vue";
+import { computed, useSlots } from "vue";
 import { Timeline } from "@unovis/ts";
 import { dateFormatter } from "../../utils";
+import { useHoverTooltip } from "../../composables/useHoverTooltip";
 import Tooltip from "../Tooltip.vue";
 
 import {
@@ -41,9 +42,7 @@ const emit = defineEmits<{
 }>();
 
 const slots = useSlots();
-const slotWrapper = useTemplateRef<HTMLDivElement>("slotWrapper");
-
-const slotValue = ref<T>();
+const { slotWrapperRef: slotWrapper, hoverValues: slotValue } = useHoverTooltip<T>();
 
 const isLegendTop = computed(() => props.legendPosition.startsWith("top"));
 
@@ -53,12 +52,24 @@ const legendAlignment = computed(() => {
   return "center";
 });
 
-const triggers = { [Timeline.selectors.label]: generateLabelTooltip };
-
 function generateLabelTooltip(d: T) {
   slotValue.value = d;
   emit("labelHover", d);
 }
+
+// Must be a stable object reference (not created inline in the template).
+// `@unovis/vue`'s VisTooltip wrapper deep-compares its forwarded props on every
+// render, and a *new* `triggers` object (with a new function closure) on every
+// render — which happens whenever the timeline data changes — reads as
+// "props changed", causing it to call the underlying tooltip's `.render()`
+// with no arguments, which clears its content to "". That happens even with
+// the mouse sitting still, with no new hover at all.
+const tooltipTriggers = {
+  [Timeline.selectors.label]: (d: T) => {
+    generateLabelTooltip(d);
+    return d ? slotWrapper.value?.innerHTML : "";
+  },
+};
 
 function handleTimelineClick(datum: T, index: number, event: MouseEvent) {
   emit("click", event, { index, item: datum });
@@ -107,16 +118,12 @@ const colors = computed(() => {
       />
 
       <VisTooltip
+        ref="tooltip"
         v-if="!hideTooltip"
         :followCursor="props.tooltip.followCursor"
         :show-delay="props.tooltip.showDelay"
         :hide-delay="props.tooltip.hideDelay"
-        :triggers="{
-          [Timeline.selectors.label]: (d: T) => {
-            generateLabelTooltip(d);
-            return d ? slotWrapper?.innerHTML : '';
-          },
-        }"
+        :triggers="tooltipTriggers"
       />
     <VisAxis
         type="x"

@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="T extends {}">
-import { computed, ref, useSlots, useTemplateRef } from "vue";
+import { computed, useSlots } from "vue";
 import { GroupedBar, Orientation, StackedBar } from "@unovis/ts";
 import { useStackedGrouped } from "./stackedGroupedUtils";
+import { useHoverTooltip } from "../../composables/useHoverTooltip";
 
 import {
   VisAxis,
@@ -45,8 +46,9 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
 });
 
 const slots = useSlots();
-const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
-const hoverValues = ref<T>();
+const { slotWrapperRef, hoverValues, setHoveredRow } = useHoverTooltip<T>(
+  () => props.data
+);
 
 if (props.valueLabel && !props.xAxis) {
   throw new Error(
@@ -88,6 +90,35 @@ const legendAlignment = computed(() => {
 function onCrosshairUpdate(d: T) {
   hoverValues.value = d;
 }
+
+// Must be a stable object reference (not created inline in the template).
+// `@unovis/vue`'s VisTooltip wrapper deep-compares its forwarded props on every
+// render, and a *new* `triggers` object (with new function closures) on every
+// render — which happens whenever `data`/`yAxis`/etc. change — reads as
+// "props changed", causing it to call the underlying tooltip's `.render()`
+// with no arguments, which clears its content to "". That happens even with
+// the mouse sitting still, with no new hover at all.
+// The `setHoveredRow` calls let `useHoverTooltip` keep the tooltip content
+// live if `data` changes while the mouse sits still over a bar (bars are
+// positioned by array index, `x: (_, i) => i`, same as Unovis itself uses —
+// `stackAndGrouped`'s derived data array isn't `props.data`, so no match is
+// found there and this is a harmless no-op for that mode).
+const tooltipTriggers = {
+  [GroupedBar.selectors.bar]: (d: T) => {
+    setHoveredRow(props.data, d);
+    onCrosshairUpdate(d);
+    return d ? slotWrapperRef.value?.innerHTML : "";
+  },
+  // Unovis's StackedBar (unlike GroupedBar) binds each bar to a D3
+  // stack-layout wrapper object (`{ datum: row, index, stacked, stackIndex }`),
+  // not the row itself — the real row lives under `.datum`.
+  [StackedBar.selectors.bar]: (wrapper: { datum: T }) => {
+    const row = wrapper?.datum ?? (wrapper as unknown as T);
+    setHoveredRow(props.data, row);
+    onCrosshairUpdate(row);
+    return row ? slotWrapperRef.value?.innerHTML : "";
+  },
+};
 
 const accessors = props.yAxis.map((i) => {
   return (d: any) => d[i];
@@ -176,20 +207,12 @@ const labelValue = (d: LabelDatum) =>
       />
 
       <VisTooltip
+        ref="tooltip"
         v-if="!hideTooltip"
         :followCursor="props.tooltip.followCursor"
         :show-delay="props.tooltip.showDelay"
         :hide-delay="props.tooltip.hideDelay"
-        :triggers="{
-          [GroupedBar.selectors.bar]: (d: T) => {
-            onCrosshairUpdate(d);
-            return d ? slotWrapperRef?.innerHTML : '';
-          },
-          [StackedBar.selectors.bar]: (d: T) => {
-            onCrosshairUpdate(d);
-            return d ? slotWrapperRef?.innerHTML : '';
-          },
-        }"
+        :triggers="tooltipTriggers"
       />
       <template v-if="stackAndGrouped">
         <VisStackedBar

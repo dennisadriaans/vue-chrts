@@ -6,6 +6,7 @@ import { TopoJSONMap, Position } from "@unovis/ts";
 import Tooltip from "../../Tooltip.vue";
 import { MapArea, MapLink, MapPoint } from "../types";
 import { LegendPosition } from "../../../enums";
+import { useHoverTooltip } from "../../../composables/useHoverTooltip";
 
 const props = withDefaults(defineProps<MapsData<T>>(), {
   zoomFactor: 1,
@@ -31,8 +32,7 @@ const emit = defineEmits<{
 }>();
 
 const slots: Slots = useSlots();
-const slotWrapperRef = useTemplateRef<HTMLDivElement>("slotWrapper");
-const hoverValues = ref<T>();
+const { slotWrapperRef, hoverValues } = useHoverTooltip<T>();
 
 const isLegendTop = computed(() => props.legendPosition?.startsWith("top"));
 
@@ -183,6 +183,7 @@ const mapsData = computed(() => props.data);
         }"
       />
       <VisTooltip
+        ref="tooltip"
         v-if="!props.hideTooltip"
         :triggers="tooltipTriggers"
       />
