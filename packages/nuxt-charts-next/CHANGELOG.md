@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.0.0-beta.2](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.0.0-beta.1...nuxt-charts@3.0.0-beta.2) (2026-08-28)
+
+### Bug Fixes
+
+* **test:** use type-only import for VueWrapper ([bbf2c5c](https://github.com/dennisadriaans/vue-chrts/commit/bbf2c5c755da8fbd1ea4d8f51ec024816a57c900))
+
 ## [3.0.0-beta.1](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.0.0-beta.0...nuxt-charts@3.0.0-beta.1) (2026-08-14)
 
 ### Bug Fixes
