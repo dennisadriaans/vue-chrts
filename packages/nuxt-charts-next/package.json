@@ -51,7 +51,7 @@
     "d3-shape": "^3.2.0",
     "d3-zoom": "^3.0.0",
     "motion-v": "^2.3.0",
-    "vccs": "^0.4.0"
+    "vccs": "^0.5.0"
   },
   "devDependencies": {
     "@nuxt/devtools": "^3.1.1",
@@ -60,10 +60,10 @@
     "@nuxt/kit": "^4.3.0",
     "@nuxt/module-builder": "^1.0.2",
     "@nuxt/schema": "^4.3.0",
-    "@nuxt/test-utils": "^3.23.0",
+    "@nuxt/test-utils": "^4.2.0",
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "latest",
-    "@vitejs/plugin-vue": "^5.2.4",
+    "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.4.11",
     "changelogen": "^0.6.2",
     "commit-and-tag-version": "^12.5.1",
@@ -73,6 +73,7 @@
     "tailwindcss": "^4.2.2",
     "typescript": "~5.9.3",
     "vitest": "^4.0.18",
+    "vue": "^3.5.42",
     "vue-tsc": "^3.2.4"
   },
   "packageManager": "pnpm@10.33.0",
