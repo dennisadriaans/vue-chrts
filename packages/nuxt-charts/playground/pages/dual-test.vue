@@ -11,7 +11,7 @@ import {
 } from '../data/DualChartData';
 
 
-function handleChartClick(event: MouseEvent, hoverValues: any) {
+function handleChartClick(event: MouseEvent, hoverValues?: DualChartDataItem) {
   console.log("DualChart clicked", hoverValues);
 }
 </script>
