@@ -156,7 +156,7 @@
 
   .vc-status-tracker {
     width: 100%;
-    color: var(--foreground, oklch(0.205 0 0));
+    color: var(--vc-axis-label-color, var(--ui-text-highlighted, var(--foreground, oklch(0.205 0 0))));
     font-family: inherit;
   }
 
@@ -180,7 +180,7 @@
   }
 
   .vc-status-tracker__summary {
-    color: var(--muted-foreground, oklch(0.556 0 0));
+    color: var(--vc-tick-color, var(--ui-text-muted, var(--muted-foreground, oklch(0.556 0 0))));
     font-variant-numeric: tabular-nums;
   }
 

@@ -17,9 +17,9 @@ import {
   FunnelChart as VccsFunnelChart,
   LabelList,
   Legend,
-  ResponsiveContainer,
   Tooltip,
 } from "vccs";
+import ChartContainer from "./internal/ChartContainer";
 import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
 import FunnelLayeredShape, {
@@ -95,7 +95,7 @@ function hideTooltip() {
     class="vc-funnel-layered vue-chrts"
     :style="{ height: `${height}px`, ...themeVars }"
   >
-    <ResponsiveContainer width="100%" height="100%">
+    <ChartContainer width="100%" height="100%">
       <VccsFunnelChart :margin="{ top: 16, right: 0, bottom: 8, left: 0 }">
         <Funnel
           :data="layeredData"
@@ -114,7 +114,7 @@ function hideTooltip() {
           </template>
         </Funnel>
       </VccsFunnelChart>
-    </ResponsiveContainer>
+    </ChartContainer>
 
     <div
       v-if="!hideTooltip && activeDatum"
@@ -133,7 +133,7 @@ function hideTooltip() {
   </div>
 
   <div v-else class="vue-chrts" :style="themeVars">
-  <ResponsiveContainer width="100%" :height="height">
+  <ChartContainer width="100%" :height="height">
     <VccsFunnelChart>
       <Funnel
         :data="stages"
@@ -157,6 +157,6 @@ function hideTooltip() {
         </template>
       </Legend>
     </VccsFunnelChart>
-  </ResponsiveContainer>
+  </ChartContainer>
   </div>
 </template>

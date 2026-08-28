@@ -33,11 +33,6 @@
     "publish": {
       "dependsOn": ["build", "test"],
       "cache": false
-    },
-    "release": {
-      "dependsOn": ["typecheck", "build"],
-      "cache": false,
-      "interactive": true
     }
   }
 }

@@ -13,11 +13,11 @@ import {
   CartesianGrid,
   Legend,
   ReferenceLine,
-  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "vccs";
+import ChartContainer from "./ChartContainer";
 import type { CartesianChartBaseProps } from "../../types/charts";
 import type { Orientation } from "../../enums";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../../utils/legend";
@@ -286,7 +286,7 @@ const resolvedYAxes = computed(() => {
 
 <template>
   <div class="vue-chrts" :style="rootStyle">
-  <ResponsiveContainer width="100%" :height="height">
+  <ChartContainer width="100%" :height="height">
     <component :is="container" v-bind="mergedContainerProps">
       <CartesianGrid
         v-if="showXGrid || showYGrid"
@@ -390,6 +390,6 @@ const resolvedYAxes = computed(() => {
         </template>
       </Legend>
     </component>
-  </ResponsiveContainer>
+  </ChartContainer>
   </div>
 </template>

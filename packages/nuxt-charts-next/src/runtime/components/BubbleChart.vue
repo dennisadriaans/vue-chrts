@@ -9,8 +9,9 @@
  */
 import { computed } from "vue";
 import {
-  CartesianGrid, Legend, ResponsiveContainer, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis,
+  CartesianGrid, Legend, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis,
 } from "vccs";
+import ChartContainer from "./internal/ChartContainer";
 import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
 import type { BubbleChartProps } from "../types/charts";
@@ -122,7 +123,7 @@ const groups = computed(() => {
 
 <template>
   <div class="vue-chrts" :style="themeVars">
-  <ResponsiveContainer width="100%" :height="height">
+  <ChartContainer width="100%" :height="height">
     <ScatterChart>
       <CartesianGrid
         v-if="(xGridLine ?? true) || (yGridLine ?? true)"
@@ -183,6 +184,6 @@ const groups = computed(() => {
         </template>
       </Legend>
     </ScatterChart>
-  </ResponsiveContainer>
+  </ChartContainer>
   </div>
 </template>
