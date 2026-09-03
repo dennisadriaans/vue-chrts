@@ -43,6 +43,19 @@ export const resolveImports = (config: ModuleOptions, resolverUrl: string) => {
       // but kept so old templates type-check), so keep them auto-importable.
       "MarkerConfig",
       "CrosshairConfig",
+      // Style variant unions, so a consumer can annotate a variant it stores or
+      // passes around instead of widening it to `string`.
+      "BarVariant",
+      "AreaFillVariant",
+      "StrokeVariant",
+      "DotVariant",
+      "DitherVariant",
+      "BackgroundVariant",
+      "LegendIndicatorVariant",
+      "TooltipVariant",
+      "TooltipRoundness",
+      "RadarVariant",
+      "RadialVariant",
     ],
   });
 };
