@@ -30,6 +30,7 @@ export const resolveImports = (config: ModuleOptions, resolverUrl: string) => {
       "RadarChartProps",
       "RadialBarChartProps",
       "FunnelChartProps",
+      "FunnelLabelSizes",
       "CandlestickChartProps",
       "StatusTrackerChartProps",
       "StatusTrackerDatum",

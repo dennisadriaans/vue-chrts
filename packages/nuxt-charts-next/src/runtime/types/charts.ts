@@ -526,6 +526,21 @@ export interface RadialBarChartProps<T = unknown> {
  * `<Funnel>`. Takes a positional value list aligned with `categories`, like
  * {@link DonutChartProps}.
  */
+/**
+ * Per-role label sizes for the funnel, in pixels. Roles left unset derive from
+ * `base`, and `base` itself falls back to the auto-fit size.
+ */
+export interface FunnelLabelSizes {
+  /** Base size the unset roles derive from. Omit to keep auto-fitting. */
+  base?: "auto" | "sm" | "md" | "lg" | number;
+  /** Stage value, above each stage. */
+  value?: number;
+  /** Percentage badge text. Also drives the badge pill's own size. */
+  percentage?: number;
+  /** Stage name, below each stage. */
+  name?: number;
+}
+
 export interface FunnelChartProps<T = unknown> {
   /** Stage values, in the same order as `categories`. Largest first reads top-down. */
   data: number[];
@@ -543,6 +558,25 @@ export interface FunnelChartProps<T = unknown> {
   lastShapeType?: "triangle" | "rectangle";
   /** Show the value label on each stage. Default true. */
   showValueLabel?: boolean;
+  /**
+   * `layered` only. Show the percentage-of-first-stage badge. Default true.
+   * A badge that cannot fit its stage is dropped regardless.
+   */
+  showPercentage?: boolean;
+  /**
+   * Size of the funnel's labels, in pixels.
+   *
+   * Size is a prop rather than a CSS token because the `layered` percentage
+   * badge is a real SVG rect sized around its text — CSS cannot feed a computed
+   * font size back into that geometry. Colour and weight *are* CSS tokens; see
+   * `theme.funnel`.
+   *
+   * `'auto'` (default) fits the labels to the plot height and per-stage width,
+   * so one chart stays legible in a small card and a full-width tile. Pass
+   * `'sm' | 'md' | 'lg'`, a pixel number, or a {@link FunnelLabelSizes} object
+   * to size each label role independently.
+   */
+  labelSize?: "auto" | "sm" | "md" | "lg" | number | FunnelLabelSizes;
   /** Hide the legend. */
   hideLegend?: boolean;
   /** Legend position. */

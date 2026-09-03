@@ -31,7 +31,10 @@ import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils
 import { toCssProperties } from "../utils/style";
 import { themeToVars } from "../utils/theme";
 
-const props = defineProps<FunnelChartProps<T>>();
+const props = withDefaults(defineProps<FunnelChartProps<T>>(), {
+  showValueLabel: true,
+  showPercentage: true,
+});
 
 const themeVars = computed(() => themeToVars(props.theme));
 
@@ -48,6 +51,27 @@ const stages = computed(() => {
 
 const isLayered = computed(() => props.variant === "layered");
 
+const showValueLabel = computed(() => props.showValueLabel ?? true);
+
+const NAMED_LABEL_SIZES = { sm: 10, md: 12, lg: 14 } as const;
+
+/** `undefined` means "auto-fit", which only the shape can resolve — it needs its own geometry. */
+function toPixels(size: "auto" | "sm" | "md" | "lg" | number | undefined) {
+  if (size === undefined || size === "auto") return undefined;
+  return typeof size === "number" ? size : NAMED_LABEL_SIZES[size];
+}
+
+const labelSizes = computed(() => {
+  const size = props.labelSize;
+  const perRole = typeof size === "object" ? size : undefined;
+  return {
+    base: toPixels(perRole ? perRole.base : size),
+    value: perRole?.value,
+    percentage: perRole?.percentage,
+    name: perRole?.name,
+  };
+});
+
 /** Enrich each stage with the geometry inputs {@link FunnelLayeredShape} needs. */
 const layeredData = computed(() => {
   const maxValue = stages.value[0]?.value ?? 0;
@@ -57,10 +81,17 @@ const layeredData = computed(() => {
     stageCount: stages.value.length,
     maxValue,
     nextValue: stages.value[stageIndex + 1]?.value ?? stage.value,
+    labelSizes: labelSizes.value,
+    showValue: showValueLabel.value,
+    showPercentage: props.showPercentage ?? true,
   }));
 });
 
-const showValueLabel = computed(() => props.showValueLabel ?? true);
+/** The default variant's `<LabelList>` has no badge geometry, so CSS can own its size. */
+const defaultLabelStyle = computed(() => {
+  const size = labelSizes.value.value ?? labelSizes.value.base;
+  return size === undefined ? undefined : { "--vc-funnel-value-size": `${size}px` };
+});
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
 const legendWrapperStyle = computed(() =>
   resolveLegendWrapperStyle(props.legendPosition, toCssProperties(props.legendStyle)),
@@ -83,7 +114,7 @@ function showTooltip(event: MouseEvent, datum: FunnelLayeredDatum) {
   activeDatum.value = datum;
   updateTooltipPosition(event);
 }
-function hideTooltip() {
+function clearTooltip() {
   activeDatum.value = null;
 }
 </script>
@@ -102,14 +133,22 @@ function hideTooltip() {
           data-key="value"
           name-key="name"
           last-shape-type="rectangle"
+          stroke="none"
           :is-animation-active="duration !== undefined && duration !== 0"
         >
           <template #shape="shapeProps">
+            <!--
+              Bind only what the shape reads. vccs also passes fill/stroke
+              (`stroke` defaults to `#fff`); those fall through onto the root
+              `<g>` and SVG-inherit onto every label, stroking the glyphs so
+              they read as extra-bold. CSS `font-weight` cannot undo that.
+            -->
             <FunnelLayeredShape
-              v-bind="shapeProps"
+              :payload="shapeProps.payload"
+              :parent-view-box="shapeProps.parentViewBox"
               @mouseenter="showTooltip"
               @mousemove="updateTooltipPosition"
-              @mouseleave="hideTooltip"
+              @mouseleave="clearTooltip"
             />
           </template>
         </Funnel>
@@ -117,7 +156,7 @@ function hideTooltip() {
     </ChartContainer>
 
     <div
-      v-if="!hideTooltip && activeDatum"
+      v-if="!props.hideTooltip && activeDatum"
       class="vc-funnel-layered__tooltip"
       :style="{ left: `${tooltipPosition.x}px`, top: `${tooltipPosition.y}px` }"
     >
@@ -132,7 +171,7 @@ function hideTooltip() {
     </div>
   </div>
 
-  <div v-else class="vue-chrts" :style="themeVars">
+  <div v-else class="vc-funnel vue-chrts" :style="{ ...themeVars, ...defaultLabelStyle }">
   <ChartContainer width="100%" :height="height">
     <VccsFunnelChart>
       <Funnel
