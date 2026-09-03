@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.0.0-beta.3](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.0.0-beta.2...nuxt-charts@3.0.0-beta.3) (2026-09-03)
+
+### Features
+
+* **nuxt-charts-next:** bubble chart loading skeleton, grid controls and cleanup ([2d7e135](https://github.com/dennisadriaans/vue-chrts/commit/2d7e1357cb21c0f83540f742322b739ec8b88d6b))
+* **nuxt-charts-next:** add style variants for fills, strokes, dots and chrome ([#148](https://github.com/dennisadriaans/vue-chrts/issues/148)) ([26ffe37](https://github.com/dennisadriaans/vue-chrts/commit/26ffe374165417fdcbf667b45a065d6b39212533))
+* **charts:** auto-fit funnel labels and expose theme tokens ([9139f61](https://github.com/dennisadriaans/vue-chrts/commit/9139f619d7359d83e216b9eb0f860a05c8699c2f))
+* **charts:** keep polar charts centred when a legend is present ([2c10946](https://github.com/dennisadriaans/vue-chrts/commit/2c10946dd6754cff389b77cc45fc265bd99025d1))
+* **charts:** add a tooltip slot on cartesian charts ([af43308](https://github.com/dennisadriaans/vue-chrts/commit/af4330809ab9561bb05ac2310d87934b9bc76b1c))
+* **charts:** space category ticks evenly for xNumTicks ([4bfb15b](https://github.com/dennisadriaans/vue-chrts/commit/4bfb15b13903d9380e04d9e8bc66ab730b74c54d))
+
+### Bug Fixes
+
+* **charts:** honour --vc-legend-inset on the status tracker legend ([0f6d711](https://github.com/dennisadriaans/vue-chrts/commit/0f6d71134bc1818476ab5fa30217f503d5f33e50))
+* **charts:** make bubble tooltips and hover target a single series ([ca528d3](https://github.com/dennisadriaans/vue-chrts/commit/ca528d36d8edfe8c19fce6bb744a618ee5f351e6))
+
 ## [3.0.0-beta.2](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.0.0-beta.1...nuxt-charts@3.0.0-beta.2) (2026-08-28)
 
 ### Bug Fixes
