@@ -65,6 +65,10 @@ function glowFor(dataKey: string): string | undefined {
 }
 
 const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
+
+defineSlots<{
+  tooltip?: (props: { values: T | undefined }) => unknown;
+}>();
 </script>
 
 <template>
@@ -80,6 +84,9 @@ const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis)
       `filter="url(#…)"` reference on each line resolves.
     -->
     <AreaVariantDefs v-if="glow" :series="paintedSeries" :scope="variantScope" glow />
+    <template v-if="$slots.tooltip" #tooltip="scope">
+      <slot name="tooltip" v-bind="scope" />
+    </template>
     <Line
       v-for="s in series"
       :key="s.dataKey"

@@ -47,6 +47,24 @@
     --vc-legend-color: var(--ui-text-muted, var(--muted-foreground, oklch(0.556 0 0)));
     --vc-legend-dot-size: 0.5rem;
 
+    /* ---- funnel labels ----
+       Colour and weight are tokens. Size is the `labelSize` prop, because the
+       layered percentage badge is an SVG rect sized around its own text — the
+       one token here, `--vc-funnel-value-size`, applies to the default
+       variant's label list, which has no such geometry. Colours inherit the
+       axis / tick tokens, which already resolve Nuxt UI first, so dark mode
+       follows for free. */
+    --vc-funnel-value-size: var(--vc-legend-size);
+    --vc-funnel-value-color: var(--vc-axis-label-color);
+    --vc-funnel-value-weight: 600;
+    --vc-funnel-label-color: var(--vc-tick-color);
+    --vc-funnel-label-weight: 500;
+    --vc-funnel-badge-bg: var(--vc-surface-bg);
+    --vc-funnel-badge-color: var(--vc-tick-color);
+    --vc-funnel-badge-border: var(--vc-axis-line-color);
+    --vc-funnel-badge-weight: 600;
+    --vc-funnel-badge-opacity: 0.82;
+
     /* ---- hover cursor ---- */
     --vc-hover-fill: color-mix(in oklab, var(--ui-text-highlighted, var(--foreground, oklch(0.205 0 0))) 6%, transparent);
     --vc-hover-stroke: transparent;

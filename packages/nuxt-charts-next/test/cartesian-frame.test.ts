@@ -150,3 +150,35 @@ describe("CartesianFrame y-axes", () => {
     expect(yAxes(mountFrame({ categories: { desktop: { name: "Desktop" } }, hideYAxis: true }))).toHaveLength(0);
   });
 });
+
+describe("CartesianFrame x-axis ticks", () => {
+  function xAxis(wrapper: ReturnType<typeof mountFrame>) {
+    return wrapper.find('[data-stub="XAxis"]');
+  }
+
+  it("passes equally spaced index ticks when xNumTicks is set", () => {
+    const data = Array.from({ length: 24 }, (_, i) => ({ x: i, desktop: i }));
+    const axis = xAxis(
+      mountFrame({
+        data,
+        categories: { desktop: { name: "Desktop" } },
+        xNumTicks: 6,
+      }),
+    );
+    expect(JSON.parse(axis.attributes("data-p-ticks") ?? "[]")).toEqual([0, 5, 9, 14, 18, 23]);
+    expect(axis.attributes("data-p-interval")).toBe("0");
+  });
+
+  it("passes equally spaced category values when xAxisKey and xNumTicks are set", () => {
+    const data = Array.from({ length: 6 }, (_, i) => ({ month: `m${i}`, desktop: i }));
+    const axis = xAxis(
+      mountFrame({
+        data,
+        categories: { desktop: { name: "Desktop" } },
+        xAxisKey: "month",
+        xNumTicks: 3,
+      }),
+    );
+    expect(JSON.parse(axis.attributes("data-p-ticks") ?? "[]")).toEqual(["m0", "m3", "m5"]);
+  });
+});

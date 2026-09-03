@@ -151,6 +151,10 @@ const frameClass = computed(() =>
 const showDots = computed(() => props.dotVariant !== undefined);
 
 const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
+
+defineSlots<{
+  tooltip?: (props: { values: T | undefined }) => unknown;
+}>();
 </script>
 
 <template>
@@ -163,6 +167,9 @@ const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis)
     skeleton-shape="wave"
     v-bind="props"
   >
+    <template v-if="$slots.tooltip" #tooltip="scope">
+      <slot name="tooltip" v-bind="scope" />
+    </template>
     <!--
       GradientDefs builds SVG nodes with `h()` so they land in the SVG namespace
       inside the chart surface. Do not wrap this in vccs `<Customized>`: that

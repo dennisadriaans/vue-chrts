@@ -11,6 +11,8 @@ import {
   resolveYAxisWidth,
   resolveYAxes,
   toTickProp,
+  getDistributedIndices,
+  equidistantCategoryTicks,
 } from "../src/runtime/utils/axis";
 import { toAxisDomain, toCssProperties } from "../src/runtime/utils/style";
 import {
@@ -270,6 +272,27 @@ describe("resolveAxisProps", () => {
         undefined,
       ).tick,
     ).toEqual({ fill: "#f00", fontSize: "12px", textAnchor: "end" });
+  });
+});
+
+describe("getDistributedIndices", () => {
+  it("spaces ticks evenly including first and last", () => {
+    expect(getDistributedIndices(24, 6)).toEqual([0, 5, 9, 14, 18, 23]);
+  });
+
+  it("returns every index when asking for at least that many ticks", () => {
+    expect(getDistributedIndices(3, 8)).toEqual([0, 1, 2]);
+  });
+});
+
+describe("equidistantCategoryTicks", () => {
+  it("uses indices when there is no category key", () => {
+    expect(equidistantCategoryTicks([{ a: 1 }, { a: 2 }, { a: 3 }], 2, undefined)).toEqual([0, 2]);
+  });
+
+  it("uses the category field at each index", () => {
+    const data = [{ month: "Jan" }, { month: "Feb" }, { month: "Mar" }];
+    expect(equidistantCategoryTicks(data, 2, "month")).toEqual(["Jan", "Mar"]);
   });
 });
 

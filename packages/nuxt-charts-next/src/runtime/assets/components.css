@@ -361,6 +361,50 @@
     opacity: 1;
   }
 
+  .vc-funnel .v-charts-label-list .v-charts-label {
+    fill: var(--vc-funnel-value-color, oklch(0.205 0 0));
+    font-size: var(--vc-funnel-value-size, 0.75rem);
+    font-weight: var(--vc-funnel-value-weight, 600);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .vc-funnel-layered-shape__divider {
+    stroke: var(--vc-surface-bg, oklch(1 0 0));
+  }
+
+  .vc-funnel-layered-shape__value,
+  .vc-funnel-layered-shape__badge-text,
+  .vc-funnel-layered-shape__name {
+    pointer-events: none;
+    user-select: none;
+    font-family: inherit;
+    stroke: none;
+  }
+
+  .vc-funnel-layered-shape__value {
+    fill: var(--vc-funnel-value-color, var(--vc-axis-label-color, oklch(0.205 0 0)));
+    font-weight: var(--vc-funnel-value-weight, 600);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .vc-funnel-layered-shape__badge {
+    fill: var(--vc-funnel-badge-bg, var(--vc-surface-bg, oklch(1 0 0)));
+    fill-opacity: var(--vc-funnel-badge-opacity, 0.82);
+    stroke: var(--vc-funnel-badge-border, var(--vc-axis-line-color, oklch(0.922 0 0)));
+    stroke-opacity: 0.7;
+  }
+
+  .vc-funnel-layered-shape__badge-text {
+    fill: var(--vc-funnel-badge-color, var(--vc-tick-color, oklch(0.556 0 0)));
+    font-weight: var(--vc-funnel-badge-weight, 600);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .vc-funnel-layered-shape__name {
+    fill: var(--vc-funnel-label-color, var(--vc-tick-color, oklch(0.556 0 0)));
+    font-weight: var(--vc-funnel-label-weight, 500);
+  }
+
   .vc-status-tracker {
     width: 100%;
     color: var(--vc-axis-label-color, var(--ui-text-highlighted, var(--foreground, oklch(0.205 0 0))));
@@ -437,7 +481,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem 1rem;
-    margin: 0.75rem 0 0;
+    margin: var(--vc-legend-inset, 0.75rem) 0 0;
     padding: 0;
     list-style: none;
     color: var(--vc-legend-color, oklch(0.556 0 0));

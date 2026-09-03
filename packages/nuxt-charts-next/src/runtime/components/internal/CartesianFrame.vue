@@ -23,6 +23,7 @@ import type { Orientation } from "../../enums";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../../utils/legend";
 import {
   AXIS_TICK_MARGIN,
+  equidistantCategoryTicks,
   resolveAxisProps,
   resolveYAxes,
   resolveXAxisHeight,
@@ -31,6 +32,7 @@ import {
   toTickFormatter,
   toTickProp,
   type VccsAxisInterval,
+  type VccsAxisTick,
 } from "../../utils/axis";
 import { categoriesToSeries } from "../../utils/categories";
 import { toAxisDomain, toCssProperties } from "../../utils/style";
@@ -66,6 +68,11 @@ const props = defineProps<
     percentAxis?: boolean;
   }
 >();
+
+const slots = defineSlots<{
+  default?: () => unknown;
+  tooltip?: (props: { values: T | undefined }) => unknown;
+}>();
 
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
 
@@ -161,6 +168,19 @@ const yAxis = computed(() =>
   resolveAxisProps(props.yExplicitTicks, props.yAxisConfig, props.minMaxTicksOnly),
 );
 
+/**
+ * Equal-spacing ticks for the category/index axis when `xNumTicks` is set.
+ * Explicit `xExplicitTicks` / `tickValues` always win.
+ */
+const categoryAxisTicks = computed((): VccsAxisTick[] | undefined => {
+  if (xAxis.value.ticks) return xAxis.value.ticks;
+  return equidistantCategoryTicks(props.data, props.xNumTicks, props.xAxisKey);
+});
+
+const hasEquidistantCategoryTicks = computed(
+  () => xAxis.value.ticks === undefined && categoryAxisTicks.value !== undefined,
+);
+
 /** `AxisConfig.tickLine` overrides the top-level `x/yTickLine` when set. */
 const showXTickLine = computed(() => props.xAxisConfig?.tickLine ?? props.xTickLine ?? false);
 const showYTickLine = computed(() => props.yAxisConfig?.tickLine ?? props.yTickLine ?? false);
@@ -243,6 +263,7 @@ function resolveCategoryAxisInterval(
   isCategoryAxis: boolean,
 ): VccsAxisInterval | undefined {
   if (configured !== undefined) return configured;
+  if (hasEquidistantCategoryTicks.value) return 0;
   if (isCategoryAxis && props.data.length <= SMALL_CATEGORY_AXIS_MAX) return 0;
   return undefined;
 }
@@ -250,14 +271,14 @@ function resolveCategoryAxisInterval(
 const xAxisInterval = computed(() =>
   resolveCategoryAxisInterval(
     layout.value === "vertical" ? yAxis.value.interval : xAxis.value.interval,
-    layout.value !== "vertical" && props.xAxisKey !== undefined,
+    layout.value !== "vertical",
   ),
 );
 
 const yAxisInterval = computed(() =>
   resolveCategoryAxisInterval(
     layout.value === "vertical" ? xAxis.value.interval : yAxis.value.interval,
-    layout.value === "vertical" && props.xAxisKey !== undefined,
+    layout.value === "vertical",
   ),
 );
 
@@ -271,8 +292,12 @@ const tooltipContent = computed(() => {
   const titleFormatter = props.tooltipTitleFormatter;
 
   return (tooltipProps: TooltipContentProps) => {
-    let label = tooltipProps.label;
     const row = tooltipProps.payload?.[0]?.payload as T | undefined;
+    if (slots.tooltip) {
+      return slots.tooltip({ values: row });
+    }
+
+    let label = tooltipProps.label;
 
     if (titleFormatter && row != null) {
       label = titleFormatter(row);
@@ -362,7 +387,7 @@ const resolvedYAxes = computed(() => {
         :tick-count="layout === 'vertical' ? yNumTicks : xNumTicks"
         :tick-formatter="layout === 'vertical' ? valueFormatter : categoryFormatter"
         :domain="layout === 'vertical' ? yAxisDomain : xAxisDomain"
-        :ticks="layout === 'vertical' ? yAxis.ticks : xAxis.ticks"
+        :ticks="layout === 'vertical' ? yAxis.ticks : categoryAxisTicks"
         :interval="layout === 'vertical' ? yAxisInterval : xAxisInterval"
         :label="xAxisTitle"
         :type="layout === 'vertical' ? 'number' : 'category'"
@@ -383,7 +408,7 @@ const resolvedYAxes = computed(() => {
         :tick-count="xNumTicks"
         :tick-formatter="categoryFormatter"
         :domain="xAxisDomain"
-        :ticks="xAxis.ticks"
+        :ticks="categoryAxisTicks"
         :interval="xAxisInterval"
         :label="yAxisTitle"
         type="category"

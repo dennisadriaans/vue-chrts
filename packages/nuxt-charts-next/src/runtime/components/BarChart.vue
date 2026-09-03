@@ -237,6 +237,10 @@ function barRadius(index: number): number | [number, number, number, number] {
   if (horizontal) return isLast ? [0, r, r, 0] : 0;
   return isLast ? [r, r, 0, 0] : 0;
 }
+
+defineSlots<{
+  tooltip?: (props: { values: T | undefined }) => unknown;
+}>();
 </script>
 
 <template>
@@ -260,6 +264,9 @@ function barRadius(index: number): number | [number, number, number, number] {
       :glow="glow === true"
       :buffer="bufferBar === true"
     />
+    <template v-if="$slots.tooltip" #tooltip="scope">
+      <slot name="tooltip" v-bind="scope" />
+    </template>
     <Bar
       v-for="(s, i) in series"
       :key="s.dataKey"

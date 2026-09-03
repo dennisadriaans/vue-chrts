@@ -200,6 +200,33 @@ export interface ChartTheme {
     /** Set `false` to hide the hover cursor entirely (tooltip still shows). */
     visible?: boolean;
   };
+  /**
+   * Funnel labels. Colour and weight only — label *size* is the `labelSize`
+   * prop, because the `layered` percentage badge is sized around its text.
+   *
+   * Roles: `value` = the stage value, `label` = the stage name, `badge` = the
+   * `layered` percentage pill.
+   */
+  funnel?: {
+    /** Stage value colour. Defaults to `--vc-axis-label-color`. Token: `--vc-funnel-value-color`. */
+    valueColor?: string;
+    /** Stage value weight. Token: `--vc-funnel-value-weight`. */
+    valueWeight?: number | string;
+    /** Stage name colour. Defaults to `--vc-tick-color`. Token: `--vc-funnel-label-color`. */
+    labelColor?: string;
+    /** Stage name weight. Token: `--vc-funnel-label-weight`. */
+    labelWeight?: number | string;
+    /** Percentage badge fill. Defaults to `--vc-surface-bg`. Token: `--vc-funnel-badge-bg`. */
+    badgeBg?: string;
+    /** Percentage badge fill opacity, `0`–`1`. Token: `--vc-funnel-badge-opacity`. */
+    badgeOpacity?: number;
+    /** Percentage badge text colour. Token: `--vc-funnel-badge-color`. */
+    badgeColor?: string;
+    /** Percentage badge text weight. Token: `--vc-funnel-badge-weight`. */
+    badgeWeight?: number | string;
+    /** Percentage badge border colour. Token: `--vc-funnel-badge-border`. */
+    badgeBorder?: string;
+  };
   /** Tooltip container. */
   tooltip?: {
     /** Background colour. Token: `--vc-tooltip-bg`. */

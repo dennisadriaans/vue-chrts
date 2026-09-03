@@ -9,7 +9,50 @@ export type VccsTickFormatter = (value: unknown, index: number) => string;
 export type VccsAxisTick = number | string;
 
 /** `vccs` axis `interval` values we use. */
-export type VccsAxisInterval = number | "preserveStartEnd";
+export type VccsAxisInterval =
+  | number
+  | "preserveStartEnd"
+  | "equidistantPreserveStart"
+  | "equidistantPreserveEnd";
+
+/**
+ * Evenly spaced indices covering `[0, length)`. Used so `xNumTicks` lands
+ * labels at equal plot intervals instead of vccs/d3 "nice" numbers.
+ */
+export function getDistributedIndices(length: number, numTicks: number): number[] {
+  if (numTicks <= 0 || length <= 0) return [];
+  if (numTicks >= length) return Array.from({ length }, (_, i) => i);
+  if (numTicks === 1) return [Math.floor((length - 1) / 2)];
+  if (numTicks === 2) return [0, length - 1];
+
+  const indices: number[] = [];
+  for (let i = 0; i < numTicks; i++) {
+    indices.push(Math.round((i * (length - 1)) / (numTicks - 1)));
+  }
+  return indices;
+}
+
+/**
+ * Explicit category/index tick values at equal spacing. `xAxisKey` charts use
+ * the field at each index; index-based area/line charts use the index itself
+ * (matching how `vccs` labels a category axis with no `dataKey`).
+ */
+export function equidistantCategoryTicks(
+  data: readonly unknown[],
+  numTicks: number | undefined,
+  xAxisKey: string | undefined,
+): VccsAxisTick[] | undefined {
+  if (numTicks == null || numTicks <= 0 || data.length === 0) return undefined;
+  const indices = getDistributedIndices(data.length, numTicks);
+  if (xAxisKey === undefined) return indices;
+  return indices.map((i) => {
+    const row = data[i] as Record<string, unknown> | undefined;
+    const value = row?.[xAxisKey];
+    if (value instanceof Date) return value.getTime();
+    if (typeof value === "number" || typeof value === "string") return value;
+    return String(value ?? i);
+  });
+}
 
 /**
  * Axis slot sizing tuned for gallery / dashboard charts. vccs defaults (Y width

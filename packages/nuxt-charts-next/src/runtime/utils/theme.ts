@@ -41,6 +41,16 @@ export function themeToVars(theme: ChartTheme | undefined): CSSProperties {
   set("--vc-hover-stroke", theme.hover?.stroke);
   set("--vc-hover-radius", theme.hover?.radius);
 
+  set("--vc-funnel-value-color", theme.funnel?.valueColor);
+  set("--vc-funnel-value-weight", theme.funnel?.valueWeight);
+  set("--vc-funnel-label-color", theme.funnel?.labelColor);
+  set("--vc-funnel-label-weight", theme.funnel?.labelWeight);
+  set("--vc-funnel-badge-bg", theme.funnel?.badgeBg);
+  set("--vc-funnel-badge-opacity", theme.funnel?.badgeOpacity);
+  set("--vc-funnel-badge-color", theme.funnel?.badgeColor);
+  set("--vc-funnel-badge-weight", theme.funnel?.badgeWeight);
+  set("--vc-funnel-badge-border", theme.funnel?.badgeBorder);
+
   set("--vc-tooltip-bg", theme.tooltip?.bg);
   set("--vc-tooltip-fg", theme.tooltip?.fg);
   set("--vc-tooltip-border", theme.tooltip?.border);
