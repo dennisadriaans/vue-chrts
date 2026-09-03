@@ -13,6 +13,7 @@ import {
 } from "vccs";
 import type { TooltipContentProps } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
+import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
 import type { BubbleChartProps } from "../types/charts";
@@ -192,10 +193,18 @@ const tooltipContent = computed(() => {
 
 <template>
   <div class="vue-chrts" :style="themeVars">
-  <ChartContainer width="100%" :height="height">
+  <ChartSkeleton
+    v-if="loading"
+    :height="height"
+    shape="bars"
+    :label="loadingLabel ?? 'Loading'"
+  />
+  <ChartContainer v-else width="100%" :height="height">
     <ScatterChart>
       <CartesianGrid
         v-if="(xGridLine ?? true) || (yGridLine ?? true)"
+        :horizontal="yGridLine ?? true"
+        :vertical="xGridLine ?? true"
         stroke="var(--vc-grid-color)"
         stroke-dasharray="var(--vc-grid-dash)"
         :stroke-width="'var(--vc-grid-width)'"

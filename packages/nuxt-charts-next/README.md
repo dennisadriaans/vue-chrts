@@ -1,6 +1,6 @@
 # nuxt-charts
 
-Beautiful chart components for Nuxt — Area, Bar, Line, Donut, Bubble, Radar, Radial Bar, Funnel, Candlestick and Status Tracker.
+Beautiful chart components for Nuxt — Area, Bar, Line, Donut, Bubble, Radar, Radial Bar, Funnel, Sankey, Candlestick and Status Tracker.
 
 Powered by [vccs](https://vue-charts.com) (Vue port of Recharts). Drop-in config-prop API from nuxt-charts v2.
 
@@ -29,6 +29,7 @@ export default defineNuxtConfig({
 | `RadarChart` | New in v3 |
 | `RadialBarChart` | New in v3 |
 | `FunnelChart` | New in v3 |
+| `SankeyChart` | New in v3 |
 | `CandlestickChart` | New in v3 |
 | `StatusTrackerChart` | New in v3 |
 
@@ -162,6 +163,7 @@ export default defineNuxtConfig({
 - Enums: `CurveType`, `LegendPosition`, `Orientation`, `DonutType`
 - Types: `AreaChartProps`, `BarChartProps`, `LineChartProps`, `BubbleChartProps`,
   `DonutChartProps`, `RadarChartProps`, `RadialBarChartProps`, `FunnelChartProps`,
+  `CandlestickChartProps`,
   `SankeyChartProps`, `SankeyInputNode`, `SankeyInputLink`,
   `StatusTrackerChartProps`, `StatusTrackerDatum`, `BulletLegendItemInterface`,
   `AxisConfig`, `TooltipConfig`, `ValueLabel`, `ReferenceLineConfig`

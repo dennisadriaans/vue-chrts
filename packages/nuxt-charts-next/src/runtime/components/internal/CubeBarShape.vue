@@ -36,9 +36,17 @@ const props = withDefaults(
     includeEmpty?: boolean;
   }>(),
   {
+    x: null,
+    y: null,
+    width: undefined,
+    height: undefined,
+    background: null,
+    fill: undefined,
     gap: DEFAULT_CUBE_GAP,
     radius: DEFAULT_CUBE_RADIUS,
     preferredSize: DEFAULT_CUBE_SIZE,
+    minSize: undefined,
+    minOpacity: undefined,
     emptyColor: DEFAULT_CUBE_EMPTY_COLOR,
     includeEmpty: true,
   },
