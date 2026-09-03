@@ -47,6 +47,16 @@ export interface ChartStyleProps {
   tooltipVariant?: TooltipVariant;
   /** Tooltip corner radius preset. Default `lg`. */
   tooltipRoundness?: TooltipRoundness;
+  /**
+   * Render a shimmering placeholder in place of the chart.
+   *
+   * It stands in for the chart rather than covering it: a real chart with no
+   * data draws its axes against an empty domain, which reads as "there is
+   * nothing here" instead of "this is still loading".
+   */
+  loading?: boolean;
+  /** Text in the loading pill. Set to `""` to show the silhouette alone. */
+  loadingLabel?: string;
 }
 
 /**
@@ -197,6 +207,11 @@ export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
   /** Stack the areas instead of overlaying them. */
   stacked?: boolean;
   /**
+   * With `stacked`, normalise each x position to 100% so the chart shows the
+   * mix rather than the totals. Ignored when the areas are overlaid.
+   */
+  percent?: boolean;
+  /**
    * SVG `stroke-dasharray` for dashed lines. Accepts the v2 `number[][]` form
    * (flattened to a dash pattern) or a ready CSS string like `"6 4"`.
    */
@@ -268,6 +283,11 @@ export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
   xAxis?: keyof T;
   /** Stack the bars instead of grouping them. */
   stacked?: boolean;
+  /**
+   * With `stacked`, normalise each category to 100% so the chart shows the mix
+   * rather than the totals. Ignored when the bars are grouped.
+   */
+  percent?: boolean;
   /** Bar orientation (vertical = column, horizontal = bar). */
   orientation?: Orientation;
   /** Rounded corner radius for bars in pixels. Default 2. */
@@ -343,6 +363,11 @@ export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
    * dense chart. Has no effect while the pointer is outside the plot.
    */
   hoverHighlight?: boolean;
+  /**
+   * Dim every bar except the tallest, so the peak reads at a glance. Combines
+   * with `hoverHighlight`: hovering then promotes the hovered column instead.
+   */
+  maxHighlight?: boolean;
   /** @deprecated Unovis-only; no effect. Use `stacked`. */
   stackAndGrouped?: boolean;
   /** @deprecated Unovis-only; no effect. */

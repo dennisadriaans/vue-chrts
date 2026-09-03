@@ -38,6 +38,7 @@ import { axisTickVars, resolveHoverRadius, resolveHoverVisible, themeToVars } fr
 import ChartTooltip from "./ChartTooltip.vue";
 import ChartLegend from "./ChartLegend.vue";
 import ChartBackground from "./ChartBackground";
+import ChartSkeleton from "./ChartSkeleton.vue";
 
 const props = defineProps<
   CartesianChartBaseProps<T> & {
@@ -56,6 +57,13 @@ const props = defineProps<
      * this so the swatches keep their colour — see `ChartLegend`.
      */
     legendColors?: Record<string, string>;
+    /** Silhouette the loading placeholder draws for this chart type. */
+    skeletonShape?: "bars" | "wave";
+    /**
+     * The value axis runs 0–1 because the series are normalised. Set so the
+     * ticks read as percentages rather than as raw fractions.
+     */
+    percentAxis?: boolean;
   }
 >();
 
@@ -124,9 +132,20 @@ const rawYFormatter = computed(() =>
 const categoryFormatter = computed(() =>
   withCategoryIndex(layout.value === "vertical" ? rawYFormatter.value : rawXFormatter.value),
 );
-const valueFormatter = computed(() =>
-  layout.value === "vertical" ? rawXFormatter.value : rawYFormatter.value,
-);
+/**
+ * Format a normalised 0–1 axis value as a whole percentage. Used only when no
+ * formatter of the caller's own is in play, so an explicit `yFormatter` still
+ * wins on a percent-stacked chart.
+ */
+function toPercentTick(value: unknown): string {
+  return `${Math.round(Number(value) * 100)}%`;
+}
+
+const valueFormatter = computed(() => {
+  const configured = layout.value === "vertical" ? rawXFormatter.value : rawYFormatter.value;
+  if (configured) return configured;
+  return props.percentAxis ? toPercentTick : undefined;
+});
 
 const xAxisDomain = computed(() => toAxisDomain(props.xDomain));
 const yAxisDomain = computed(() => toAxisDomain(props.yDomain));
@@ -302,7 +321,13 @@ const resolvedYAxes = computed(() => {
 
 <template>
   <div class="vue-chrts" :class="frameClass" :style="rootStyle">
-  <ChartContainer width="100%" :height="height">
+  <ChartSkeleton
+    v-if="loading"
+    :height="height"
+    :shape="skeletonShape ?? 'bars'"
+    :label="loadingLabel ?? 'Loading'"
+  />
+  <ChartContainer v-else width="100%" :height="height">
     <component :is="container" v-bind="mergedContainerProps">
       <!--
         First child on purpose: vccs has no z-index layer, so document order is

@@ -67,6 +67,31 @@ const hoveredIndex = ref<number | null>(null);
 const lastIndex = computed(() => props.data.length - 1);
 
 /**
+ * Row index holding the largest total across the plotted series, or `null` when
+ * `maxHighlight` is off. Summing the series means a grouped or stacked chart
+ * highlights the tallest *category*, which is what the eye reads as the peak.
+ */
+const maxIndex = computed<number | null>(() => {
+  if (!props.maxHighlight) return null;
+
+  let best = -1;
+  let bestTotal = Number.NEGATIVE_INFINITY;
+
+  props.data.forEach((row, index) => {
+    const total = series.value.reduce((sum, s) => {
+      const value = (row as Record<string, unknown>)[s.dataKey];
+      return sum + (typeof value === "number" ? value : 0);
+    }, 0);
+    if (total > bestTotal) {
+      bestTotal = total;
+      best = index;
+    }
+  });
+
+  return best >= 0 ? best : null;
+});
+
+/**
  * Adapt the v2 `valueLabel.label(d, index)` callback to the `vccs` `LabelList`
  * `valueAccessor(entry, index)`. v2 reads the value off `d.y`, so expose both
  * `y` and the raw `entry` fields to the user callback.
@@ -139,14 +164,25 @@ function glowFor(dataKey: string): string | undefined {
   return props.glow ? `url(#${variantId("glow", dataKey, variantScope)})` : undefined;
 }
 
+/** How far a de-emphasised bar drops back from the one being highlighted. */
+const DIMMED_OPACITY = 0.3;
+
 /**
- * Opacity for one bar under `hoverHighlight`: the hovered column keeps full
- * strength and the rest drop back. Every bar stays fully opaque while the
- * pointer is outside the plot, so the chart's resting state is unaffected.
+ * Opacity for one bar.
+ *
+ * Hover wins over `maxHighlight` while the pointer is in the plot, so pointing
+ * at a column always promotes that column rather than fighting the peak for
+ * attention. With neither active — or with the pointer outside the plot and no
+ * `maxHighlight` — every bar stays fully opaque.
  */
 function opacityFor(index: number | undefined): number {
-  if (!props.hoverHighlight || hoveredIndex.value === null) return 1;
-  return index === hoveredIndex.value ? 1 : 0.3;
+  if (props.hoverHighlight && hoveredIndex.value !== null) {
+    return index === hoveredIndex.value ? 1 : DIMMED_OPACITY;
+  }
+  if (maxIndex.value !== null) {
+    return index === maxIndex.value ? 1 : DIMMED_OPACITY;
+  }
+  return 1;
 }
 
 /**
@@ -169,13 +205,15 @@ function onBarLeave() {
 const stackIdFor = (yAxisId: AxisId) => (props.stacked ? `stack-${yAxisId}` : undefined);
 const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
 
-/** Forward spacing props onto the `vccs` chart container. */
+/** Forward spacing and stack-offset props onto the `vccs` chart container. */
 const chartContainerProps = computed(() => {
   const barGap = props.barGap ?? props.barPadding;
   const barCategoryGap = props.barCategoryGap ?? props.groupPadding;
   return {
     ...(barGap !== undefined ? { barGap } : {}),
     ...(barCategoryGap !== undefined ? { barCategoryGap } : {}),
+    // Normalising only means something once the series are summed into a stack.
+    ...(props.stacked && props.percent ? { stackOffset: "expand" } : {}),
   };
 });
 
@@ -206,6 +244,7 @@ function barRadius(index: number): number | [number, number, number, number] {
     :container="VccsBarChart"
     :x-axis-key="xAxisKey"
     :container-props="chartContainerProps"
+    :percent-axis="stacked === true && percent === true"
     :legend-colors="legendColors"
     v-bind="props"
   >

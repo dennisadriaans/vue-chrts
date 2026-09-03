@@ -72,6 +72,7 @@ const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis)
     :container="VccsLineChart"
     :x-axis-key="xAxisKey"
     :frame-class="frameClass"
+    skeleton-shape="wave"
     v-bind="props"
   >
     <!--

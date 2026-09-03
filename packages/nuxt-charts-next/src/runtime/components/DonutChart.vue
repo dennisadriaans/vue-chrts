@@ -11,6 +11,7 @@
 import { computed, useId } from "vue";
 import { Legend, Pie, PieChart, Tooltip } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
+import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
 import SegmentVariantDefs, { segmentGradientId } from "./internal/SegmentVariantDefs";
 import { tooltipContentFor } from "./internal/tooltipContent";
@@ -131,7 +132,13 @@ const legendWrapperStyle = computed(() =>
 
 <template>
   <div class="donut-chart vue-chrts" :style="{ position: 'relative', width: '100%', height: `${height ?? (radius ? radius * 2 : 200)}px`, ...themeVars }">
-    <ChartContainer width="100%" height="100%">
+    <ChartSkeleton
+      v-if="loading"
+      :height="height ?? 200"
+      shape="ring"
+      :label="loadingLabel ?? 'Loading'"
+    />
+    <ChartContainer v-else width="100%" height="100%">
       <PieChart>
         <!--
           Built with `h()` so the paints land in the SVG namespace and each

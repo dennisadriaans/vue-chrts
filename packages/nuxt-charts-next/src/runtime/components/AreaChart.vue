@@ -45,6 +45,14 @@ const series = computed(() =>
 const curve = computed(() => curveTypeToVccs(props.curveType));
 /** A shared stackId stacks the areas; per-series ids overlay them. */
 const stackId = computed(() => (props.stacked ? "stack" : undefined));
+
+/**
+ * Normalising each x position to 100% only means something once the series are
+ * summed into a stack, so `percent` yields to `stacked`.
+ */
+const chartContainerProps = computed(() =>
+  props.stacked && props.percent ? { stackOffset: "expand" } : {},
+);
 const fillOpacity = computed(() => (props.hideArea ? 0 : 0.6));
 
 /**
@@ -149,7 +157,10 @@ const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis)
   <CartesianFrame
     :container="VccsAreaChart"
     :x-axis-key="xAxisKey"
+    :container-props="chartContainerProps"
+    :percent-axis="stacked === true && percent === true"
     :frame-class="frameClass"
+    skeleton-shape="wave"
     v-bind="props"
   >
     <!--

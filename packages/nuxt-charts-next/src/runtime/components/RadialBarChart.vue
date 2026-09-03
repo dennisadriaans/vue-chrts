@@ -14,6 +14,7 @@ import {
   Tooltip,
 } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
+import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
 import { tooltipContentFor } from "./internal/tooltipContent";
 import type { RadialBarChartProps } from "../types/charts";
@@ -61,7 +62,13 @@ const legendWrapperStyle = computed(() =>
 
 <template>
   <div class="vue-chrts" :style="themeVars">
-  <ChartContainer width="100%" :height="height">
+    <ChartSkeleton
+      v-if="loading"
+      :height="height ?? 200"
+      shape="ring"
+      :label="loadingLabel ?? 'Loading'"
+    />
+    <ChartContainer v-else width="100%" :height="height">
     <VccsRadialBarChart
       :data="bars"
       :inner-radius="innerRadius ?? '30%'"

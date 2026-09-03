@@ -17,6 +17,7 @@ import {
   Tooltip,
 } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
+import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
 import ChartDot from "./internal/ChartDot";
 import { tooltipContentFor } from "./internal/tooltipContent";
@@ -56,7 +57,13 @@ const themeVars = computed(() => themeToVars(props.theme));
 
 <template>
   <div class="vue-chrts" :style="themeVars">
-  <ChartContainer width="100%" :height="height">
+    <ChartSkeleton
+      v-if="loading"
+      :height="height ?? 200"
+      shape="ring"
+      :label="loadingLabel ?? 'Loading'"
+    />
+    <ChartContainer v-else width="100%" :height="height">
     <VccsRadarChart :data="data">
       <PolarGrid stroke="var(--vc-grid-color)" :grid-type="gridType ?? 'polygon'" />
       <PolarAngleAxis :data-key="angleKey" :tick-formatter="angleFormatter" />

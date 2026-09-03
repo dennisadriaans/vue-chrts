@@ -22,6 +22,7 @@ const pair: Record<string, BulletLegendItemInterface> = {
   mobile: { name: "Mobile", color: "#e23670" },
 };
 const yAxisSingle: (keyof MonthRow)[] = ["desktop"];
+const yAxisPair: (keyof MonthRow)[] = ["desktop", "mobile"];
 
 const browsers: Record<string, BulletLegendItemInterface> = {
   chrome: { name: "Chrome", color: "#2662d9" },
@@ -103,6 +104,98 @@ const barVariants = ["solid", "cubes", ...PATTERNED_BAR_VARIANTS] as const;
             :radius="4"
             hover-highlight
             hide-legend
+          />
+        </figure>
+        <figure>
+          <figcaption>maxHighlight — the peak stands out</figcaption>
+          <BarChart
+            :data="monthly"
+            :categories="single"
+            :y-axis="yAxisSingle"
+            x-axis="month"
+            :height="200"
+            :radius="4"
+            max-highlight
+            hide-legend
+          />
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>Stacking</h2>
+      <div class="grid">
+        <figure>
+          <figcaption>stacked</figcaption>
+          <BarChart
+            :data="monthly"
+            :categories="pair"
+            :y-axis="yAxisPair"
+            x-axis="month"
+            :height="200"
+            :radius="4"
+            stacked
+          />
+        </figure>
+        <figure>
+          <figcaption>stacked + percent — the mix, not the totals</figcaption>
+          <BarChart
+            :data="monthly"
+            :categories="pair"
+            :y-axis="yAxisPair"
+            x-axis="month"
+            :height="200"
+            :radius="4"
+            stacked
+            percent
+          />
+        </figure>
+        <figure>
+          <figcaption>area, stacked + percent</figcaption>
+          <AreaChart
+            :data="monthly"
+            :categories="pair"
+            x-axis="month"
+            :height="200"
+            stacked
+            percent
+          />
+        </figure>
+      </div>
+    </section>
+
+    <section>
+      <h2>Loading</h2>
+      <div class="grid">
+        <figure>
+          <figcaption>bar chart</figcaption>
+          <BarChart
+            :data="monthly"
+            :categories="single"
+            :y-axis="yAxisSingle"
+            x-axis="month"
+            :height="200"
+            loading
+          />
+        </figure>
+        <figure>
+          <figcaption>line / area chart</figcaption>
+          <AreaChart
+            :data="monthly"
+            :categories="single"
+            x-axis="month"
+            :height="200"
+            loading
+          />
+        </figure>
+        <figure>
+          <figcaption>donut, loadingLabel=""</figcaption>
+          <DonutChart
+            :data="browserShare"
+            :categories="browsers"
+            :height="200"
+            loading
+            loading-label=""
           />
         </figure>
       </div>

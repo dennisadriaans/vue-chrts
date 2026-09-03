@@ -569,6 +569,135 @@ describe("polar chart variants", () => {
   });
 });
 
+describe("loading placeholder", () => {
+  it("renders no placeholder by default", async () => {
+    await mountBar();
+    expect(document.querySelector(".vc-skeleton")).toBeNull();
+  });
+
+  it("stands in for the chart rather than covering it", async () => {
+    await mountBar({ loading: true });
+    expect(document.querySelector(".vc-skeleton")).not.toBeNull();
+    // A real chart with no data draws axes against an empty domain, which reads
+    // as "there is nothing here" rather than "this is still loading".
+    expect(document.querySelector(".v-charts-bar-rectangle")).toBeNull();
+    expect(document.querySelector("svg .v-charts-xAxis")).toBeNull();
+  });
+
+  it("draws a bar silhouette for a bar chart", async () => {
+    await mountBar({ loading: true });
+    expect(document.querySelectorAll(".vc-skeleton__bar").length).toBeGreaterThan(0);
+    expect(document.querySelector(".vc-skeleton__shimmer")).not.toBeNull();
+  });
+
+  it("draws a curve silhouette for area and line charts", async () => {
+    await mountArea({ loading: true });
+    expect(document.querySelector(".vc-skeleton__wave path")).not.toBeNull();
+    expect(document.querySelector(".vc-skeleton__bar")).toBeNull();
+  });
+
+  it("draws a ring silhouette for a donut", async () => {
+    await mountChart(DonutChart, { data: [60, 40], categories: {}, loading: true });
+    expect(document.querySelector(".vc-skeleton__ring")).not.toBeNull();
+  });
+
+  it("is deterministic, so SSR and client markup agree", async () => {
+    await mountArea({ loading: true });
+    const first = document.querySelector(".vc-skeleton__wave path")!.getAttribute("d");
+    while (mounted.length) mounted.pop()!.unmount();
+    document.body.innerHTML = "";
+
+    await mountArea({ loading: true });
+    expect(document.querySelector(".vc-skeleton__wave path")!.getAttribute("d")).toBe(first);
+  });
+
+  it("announces itself to assistive technology", async () => {
+    await mountBar({ loading: true });
+    const skeleton = document.querySelector(".vc-skeleton")!;
+    expect(skeleton.getAttribute("role")).toBe("status");
+    expect(skeleton.getAttribute("aria-busy")).toBe("true");
+  });
+
+  it("shows the pill by default and drops it on an empty label", async () => {
+    await mountBar({ loading: true });
+    expect(document.querySelector(".vc-skeleton__pill")?.textContent).toContain("Loading");
+    while (mounted.length) mounted.pop()!.unmount();
+    document.body.innerHTML = "";
+
+    await mountBar({ loading: true, loadingLabel: "" });
+    expect(document.querySelector(".vc-skeleton__pill")).toBeNull();
+    expect(document.querySelector(".vc-skeleton")).not.toBeNull();
+  });
+});
+
+describe("bar highlight and stacking", () => {
+  /** Opacity of each rendered bar, in row order. */
+  const barOpacities = () =>
+    [...document.querySelectorAll(".v-charts-bar-rectangle [opacity]")].map((el) =>
+      el.getAttribute("opacity"),
+    );
+
+  it("dims every bar but the tallest under maxHighlight", async () => {
+    // Feb (140) is the peak of the shared fixture.
+    await mountBar({ maxHighlight: true });
+    expect(barOpacities()).toEqual(["0.3", "1", "0.3"]);
+  });
+
+  it("sums the series so a stack highlights the tallest category", async () => {
+    await mountBar({ maxHighlight: true, yAxis: ["desktop", "mobile"], stacked: true });
+    // Feb totals 230 against Jan's 160 and Mar's 190.
+    expect(barOpacities()).toEqual(["0.3", "1", "0.3", "0.3", "1", "0.3"]);
+  });
+
+  it("leaves every bar opaque without either highlight", async () => {
+    await mountBar();
+    expect(barOpacities()).toEqual(["1", "1", "1"]);
+  });
+
+  /**
+   * Rendered bar heights. `percent` is asserted through geometry rather than
+   * the container prop: `vccs` consumes `stackOffset` internally, so reading it
+   * back off the component proves nothing about what was actually drawn.
+   */
+  const barHeights = () =>
+    [...document.querySelectorAll(".v-charts-bar-rectangle path, .v-charts-bar-rectangle rect")]
+      .map((el) => Number(el.getAttribute("height")))
+      .filter((h) => Number.isFinite(h) && h > 0);
+
+  it("normalises every category to the same total under percent", async () => {
+    // Jan totals 160 and Feb 230, so unnormalised stacks differ in height.
+    await mountBar({ yAxis: ["desktop", "mobile"], stacked: true, percent: true });
+    const heights = barHeights();
+    expect(heights.length).toBe(6);
+
+    // Bars come out series-major: three Januaries…Marches of desktop, then of
+    // mobile. Each category's two segments must sum to the same full height.
+    const half = heights.length / 2;
+    const totals = heights.slice(0, half).map((h, i) => h + heights[half + i]!);
+    for (const total of totals) expect(total).toBeCloseTo(totals[0]!, 5);
+  });
+
+  it("leaves category totals proportional without percent", async () => {
+    await mountBar({ yAxis: ["desktop", "mobile"], stacked: true });
+    const heights = barHeights();
+    const half = heights.length / 2;
+    const totals = heights.slice(0, half).map((h, i) => h + heights[half + i]!);
+    // Feb is the tallest category, so the totals must differ.
+    expect(new Set(totals.map((t) => t.toFixed(3))).size).toBeGreaterThan(1);
+  });
+
+  it("ignores percent on grouped bars, where it would normalise nothing", async () => {
+    await mountBar({ yAxis: ["desktop", "mobile"], percent: true });
+    const grouped = barHeights();
+
+    while (mounted.length) mounted.pop()!.unmount();
+    document.body.innerHTML = "";
+
+    await mountBar({ yAxis: ["desktop", "mobile"] });
+    expect(grouped).toEqual(barHeights());
+  });
+});
+
 describe("tooltip variants", () => {
   /**
    * The tooltip only mounts on hover, which happy-dom's fake layout cannot
