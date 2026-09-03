@@ -10,6 +10,7 @@ const charts = [
   { to: "/radialbar", label: "Radial bar chart" },
   { to: "/candlestick", label: "Candlestick chart" },
   { to: "/status-tracker", label: "Status tracker chart" },
+  { to: "/variants", label: "Style variants — every treatment side by side" },
 ];
 </script>
 

@@ -15,13 +15,29 @@ interface LegendItem {
   inactive?: boolean;
 }
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     payload?: LegendItem[];
     variant?: LegendIndicatorVariant;
+    /**
+     * Flat colour per legend label, overriding what the chart engine reports.
+     *
+     * A series painted from a variant pattern reports its `fill` — a
+     * `url(#…)` SVG paint reference — as its legend colour. That is meaningless
+     * as a CSS background and would render the swatch invisible, so charts
+     * using a patterned fill pass the underlying colours through here.
+     */
+    colors?: Record<string, string>;
   }>(),
-  { payload: undefined, variant: "rounded-square" },
+  { payload: undefined, variant: "rounded-square", colors: undefined },
 );
+
+/** An SVG paint reference cannot paint a CSS background; fall back to the map. */
+function swatchColor(item: LegendItem): string | undefined {
+  const override = props.colors?.[item.value];
+  if (override) return override;
+  return item.color?.startsWith("url(") ? undefined : item.color;
+}
 </script>
 
 <template>
@@ -35,7 +51,7 @@ withDefaults(
       <span
         class="vc-legend__dot"
         :class="`vc-legend__dot--${variant}`"
-        :style="{ background: item.color }"
+        :style="{ background: swatchColor(item) }"
       />
       <span class="vc-legend__label">{{ item.value }}</span>
     </li>

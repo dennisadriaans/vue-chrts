@@ -51,6 +51,11 @@ const props = defineProps<
     orientation?: Orientation;
     /** Extra class on the chart root, used by CSS-driven effects like marching dashes. */
     frameClass?: string;
+    /**
+     * Flat colour per legend label. Charts painting from a variant pattern pass
+     * this so the swatches keep their colour — see `ChartLegend`.
+     */
+    legendColors?: Record<string, string>;
   }
 >();
 
@@ -406,7 +411,7 @@ const resolvedYAxes = computed(() => {
         :wrapper-style="legendWrapperStyle"
       >
         <template #content="slotProps">
-          <ChartLegend v-bind="slotProps" :variant="legendVariant" />
+          <ChartLegend v-bind="slotProps" :variant="legendVariant" :colors="legendColors" />
         </template>
       </Legend>
     </component>

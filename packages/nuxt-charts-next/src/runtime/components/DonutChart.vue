@@ -60,6 +60,15 @@ const paintedSegments = computed(() =>
   segments.value.map((s) => ({ dataKey: s.dataKey, color: s.color })),
 );
 
+/**
+ * Flat colour per legend label. A gradient segment reports its `fill` — a
+ * `url(#…)` paint reference — as its legend colour, which cannot paint a CSS
+ * swatch, so hand the legend the underlying colours instead.
+ */
+const legendColors = computed(() =>
+  Object.fromEntries(segments.value.map((s) => [s.name, s.color])),
+);
+
 const tooltipContent = computed(() =>
   tooltipContentFor(props.tooltipVariant, props.tooltipRoundness),
 );
@@ -156,7 +165,7 @@ const legendWrapperStyle = computed(() =>
           :wrapper-style="legendWrapperStyle"
         >
           <template #content="slotProps">
-            <ChartLegend v-bind="slotProps" :variant="legendVariant" />
+            <ChartLegend v-bind="slotProps" :variant="legendVariant" :colors="legendColors" />
           </template>
         </Legend>
       </PieChart>

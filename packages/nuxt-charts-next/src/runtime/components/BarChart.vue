@@ -112,6 +112,17 @@ const paintedSeries = computed(() =>
     .map((s) => ({ dataKey: s.dataKey, color: s.color as string })),
 );
 
+/**
+ * Flat colour per legend label. A patterned bar reports its `fill` — a
+ * `url(#…)` paint reference — as its legend colour, which cannot paint a CSS
+ * swatch, so hand the legend the underlying colours instead.
+ */
+const legendColors = computed(() =>
+  Object.fromEntries(
+    series.value.filter((s) => s.color).map((s) => [s.name, s.color as string]),
+  ),
+);
+
 /** Resolve the `fill` for one series: a variant pattern, or its flat colour. */
 function fillFor(dataKey: string, color: string | undefined): string | undefined {
   if (!isPatterned.value || color === undefined) return color;
@@ -195,6 +206,7 @@ function barRadius(index: number): number | [number, number, number, number] {
     :container="VccsBarChart"
     :x-axis-key="xAxisKey"
     :container-props="chartContainerProps"
+    :legend-colors="legendColors"
     v-bind="props"
   >
     <!--
