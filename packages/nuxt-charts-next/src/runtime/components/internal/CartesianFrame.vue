@@ -53,6 +53,11 @@ const props = defineProps<
   }
 >();
 
+const slots = defineSlots<{
+  default?: () => unknown;
+  tooltip?: (props: { values: T | undefined }) => unknown;
+}>();
+
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
 
 const showXGrid = computed(() => props.xGridLine ?? true);
@@ -257,8 +262,12 @@ const tooltipContent = computed(() => {
   const titleFormatter = props.tooltipTitleFormatter;
 
   return (tooltipProps: TooltipContentProps) => {
-    let label = tooltipProps.label;
     const row = tooltipProps.payload?.[0]?.payload as T | undefined;
+    if (slots.tooltip) {
+      return slots.tooltip({ values: row });
+    }
+
+    let label = tooltipProps.label;
 
     if (titleFormatter && row != null) {
       label = titleFormatter(row);

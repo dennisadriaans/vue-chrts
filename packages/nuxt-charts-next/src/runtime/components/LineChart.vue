@@ -30,10 +30,17 @@ const stackId = computed(() => (props.stacked ? "stack" : undefined));
 const dashArray = computed(() => toStrokeDasharray(props.lineDashArray));
 
 const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
+
+defineSlots<{
+  tooltip?: (props: { values: T | undefined }) => unknown;
+}>();
 </script>
 
 <template>
   <CartesianFrame :container="VccsLineChart" :x-axis-key="xAxisKey" v-bind="props">
+    <template v-if="$slots.tooltip" #tooltip="scope">
+      <slot name="tooltip" v-bind="scope" />
+    </template>
     <Line
       v-for="s in series"
       :key="s.dataKey"

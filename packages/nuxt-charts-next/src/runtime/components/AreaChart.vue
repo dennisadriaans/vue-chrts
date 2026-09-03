@@ -97,10 +97,17 @@ function fillFor(dataKey: string, color: string): string {
 }
 
 const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
+
+defineSlots<{
+  tooltip?: (props: { values: T | undefined }) => unknown;
+}>();
 </script>
 
 <template>
   <CartesianFrame :container="VccsAreaChart" :x-axis-key="xAxisKey" v-bind="props">
+    <template v-if="$slots.tooltip" #tooltip="scope">
+      <slot name="tooltip" v-bind="scope" />
+    </template>
     <!--
       GradientDefs builds SVG nodes with `h()` so they land in the SVG namespace
       inside the chart surface. Do not wrap this in vccs `<Customized>`: that
