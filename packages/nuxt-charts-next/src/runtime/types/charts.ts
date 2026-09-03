@@ -11,6 +11,18 @@
  */
 import type { CurveType, DonutType, LegendPosition, Orientation } from "../enums";
 import type { DitherVariant } from "../utils/dither";
+import type { BackgroundVariant } from "../utils/background";
+import type {
+  AreaFillVariant,
+  BarVariant,
+  DotVariant,
+  LegendIndicatorVariant,
+  RadarVariant,
+  RadialVariant,
+  StrokeVariant,
+  TooltipRoundness,
+  TooltipVariant,
+} from "../utils/variants";
 import type {
   AxisConfig,
   AxisId,
@@ -25,11 +37,24 @@ import type {
 } from "./shared";
 
 /**
+ * Chrome styling shared by every chart, cartesian or polar. Each field selects
+ * one of the built-in variants; omit them all for the shipped defaults.
+ */
+export interface ChartStyleProps {
+  /** Shape of the colour swatch beside each legend entry. Default `rounded-square`. */
+  legendVariant?: LegendIndicatorVariant;
+  /** Tooltip surface treatment. `frosted-glass` blurs what sits behind it. */
+  tooltipVariant?: TooltipVariant;
+  /** Tooltip corner radius preset. Default `lg`. */
+  tooltipRoundness?: TooltipRoundness;
+}
+
+/**
  * Props common to the cartesian charts (area, bar, line, bubble). Centralises
  * axis / legend / tooltip / grid options so each chart interface only adds its
  * own specifics.
  */
-export interface CartesianChartBaseProps<T> {
+export interface CartesianChartBaseProps<T> extends ChartStyleProps {
   /** The data to render. Each element is one data point. */
   data: T[];
   /** Chart height in pixels. */
@@ -130,6 +155,11 @@ export interface CartesianChartBaseProps<T> {
    * over the global `--vc-*` token defaults; omit to use the shipped theme.
    */
   theme?: ChartTheme;
+  /**
+   * Decorative texture painted behind the plot area, faded out toward the
+   * chart's edges. Omit for a plain background.
+   */
+  backgroundPattern?: BackgroundVariant;
 }
 
 export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
@@ -173,11 +203,33 @@ export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
   lineDashArray?: number[][] | string;
   /** Per-series marker (dot) configuration. Renders dots on the area outline. */
   markerConfig?: MarkerConfig;
+  /**
+   * Texture for the area fill. Layers over the plain colour-to-transparent
+   * fade: `gradient` (the default) keeps it, `solid` flattens it, and
+   * `dotted` / `lines` / `hatched` cut a texture out of the series colour.
+   *
+   * Ignored when `dither` is set — a dithered fill is its own texture.
+   */
+  variant?: AreaFillVariant;
+  /**
+   * Outline treatment. `dashed` uses a static `3 3` dash; `animated-dashed`
+   * marches the dashes along the path.
+   */
+  strokeVariant?: StrokeVariant;
+  /**
+   * Point markers drawn on the outline. Unlike `markerConfig` (which styles
+   * per series), this applies one built-in marker style to every series.
+   */
+  dotVariant?: DotVariant;
+  /** Base radius of a `dotVariant` marker in pixels. Default 3. */
+  dotSize?: number;
+  /** Wrap each series in a soft outer glow. */
+  glow?: boolean;
 }
 
 export type LineChartProps<T> = Omit<
   AreaChartProps<T>,
-  "hideArea" | "gradient" | "gradientStops" | "dither" | "ditherTile" | "ditherWash"
+  "hideArea" | "gradient" | "gradientStops" | "dither" | "ditherTile" | "ditherWash" | "variant"
 >;
 
 /**
@@ -242,12 +294,19 @@ export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
   /** Value-label config. */
   valueLabel?: ValueLabel;
   /**
-   * Bar render variant. `"solid"` is the default rectangle bar.
-   * `"cubes"` draws a vertical stack of rounded squares. Works with single,
-   * grouped, and stacked (`stacked`) series — for stacks, only the first
-   * series draws the ghost column; each series fills its own cube range.
+   * Bar render variant.
+   *
+   * `"solid"` is the default rectangle bar. `"cubes"` draws a vertical stack of
+   * rounded squares — it works with single, grouped, and stacked (`stacked`)
+   * series; for stacks only the first series draws the ghost column, and each
+   * series fills its own cube range.
+   *
+   * The remaining variants keep the rectangle and change how it is painted:
+   * `"hatched"` (diagonal stripes), `"duotone"` / `"duotone-reverse"` (a
+   * vertical split between a solid and a faded half), `"gradient"` (fading out
+   * toward the baseline), and `"stripped"` (a faint body under a solid cap).
    */
-  variant?: "solid" | "cubes";
+  variant?: BarVariant;
   /** Gap between cubes in px when `variant="cubes"`. Default 2. */
   cubeGap?: number;
   /** Corner radius per cube when `variant="cubes"`. Default 2. */
@@ -271,6 +330,19 @@ export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
   cubeMinOpacity?: number;
   /** Fill for empty/ghost cubes when `variant="cubes"`. */
   cubeEmptyColor?: string;
+  /** Wrap each bar in a soft outer glow. */
+  glow?: boolean;
+  /**
+   * Render the final bar as a projection: a hollow diagonal hatch with an
+   * outline, rather than a filled bar. Use it when the last period is still
+   * accruing and its value is not yet comparable to the others.
+   */
+  bufferBar?: boolean;
+  /**
+   * Dim every bar except the hovered one, so a single column stands out of a
+   * dense chart. Has no effect while the pointer is outside the plot.
+   */
+  hoverHighlight?: boolean;
   /** @deprecated Unovis-only; no effect. Use `stacked`. */
   stackAndGrouped?: boolean;
   /** @deprecated Unovis-only; no effect. */
@@ -371,13 +443,20 @@ export interface CandlestickChartProps<T> {
   tooltip?: TooltipConfig;
 }
 
-export interface DonutChartProps<T = unknown> {
+export interface DonutChartProps<T = unknown> extends ChartStyleProps {
   /** Segment values, in the same order as `categories`. */
   data: number[];
   /** Maps each segment to its legend representation (label, colour). */
   categories: Record<string, BulletLegendItemInterface>;
   /** Full ring or half-circle gauge. */
   type?: DonutType;
+  /**
+   * Segment treatment. `gradient` paints each segment with a diagonal ramp of
+   * its own colour instead of a flat fill. Omit for flat segments.
+   */
+  variant?: "flat" | "gradient";
+  /** Wrap each segment in a soft outer glow. */
+  glow?: boolean;
   /** Chart height in pixels. */
   height?: number;
   /**
@@ -423,7 +502,7 @@ export interface DonutChartProps<T = unknown> {
  * field used as the angle-axis label, and each key in `categories` is a numeric
  * series plotted as one overlaid polygon.
  */
-export interface RadarChartProps<T> {
+export interface RadarChartProps<T> extends ChartStyleProps {
   /** The data to render. Each element is one spoke / angle-axis entry. */
   data: T[];
   /** Chart height in pixels. */
@@ -432,6 +511,18 @@ export interface RadarChartProps<T> {
   dataKey: keyof T;
   /** Maps each numeric series key to its legend representation (label, colour). */
   categories: Record<string, BulletLegendItemInterface>;
+  /**
+   * Polygon treatment. `filled` (the default) paints each series' area;
+   * `lines` draws the outline only, which keeps several overlapping series
+   * readable.
+   */
+  variant?: RadarVariant;
+  /** Shape of the polar grid. `polygon` (the default) or `circle`. */
+  gridType?: "polygon" | "circle";
+  /** Point markers on each vertex. Omit for none. */
+  dotVariant?: DotVariant;
+  /** Base radius of a `dotVariant` marker in pixels. Default 3. */
+  dotSize?: number;
   /** Fill opacity of each radar polygon. Default 0.6. */
   fillOpacity?: number;
   /** Formats the angle-axis (spoke) labels. */
@@ -469,13 +560,19 @@ export interface RadarChartProps<T> {
  * `<RadialBar>`. Like {@link DonutChartProps} it takes a positional value list
  * aligned with `categories`.
  */
-export interface RadialBarChartProps<T = unknown> {
+export interface RadialBarChartProps<T = unknown> extends ChartStyleProps {
   /** Segment values, in the same order as `categories`. */
   data: number[];
   /** Maps each segment to its legend representation (label, colour). */
   categories: Record<string, BulletLegendItemInterface>;
   /** Chart height in pixels. */
   height: number;
+  /**
+   * Sweep of the track. `full` (the default) runs a complete turn; `semi`
+   * renders the upper semicircle as a gauge. Setting it is shorthand for the
+   * matching `startAngle` / `endAngle`, which still win when passed explicitly.
+   */
+  variant?: RadialVariant;
   /** Inner radius in pixels or percent string. Default `'30%'`. */
   innerRadius?: number | string;
   /** Outer radius in pixels or percent string. Default `'100%'`. */
@@ -514,7 +611,7 @@ export interface RadialBarChartProps<T = unknown> {
  * `<Funnel>`. Takes a positional value list aligned with `categories`, like
  * {@link DonutChartProps}.
  */
-export interface FunnelChartProps<T = unknown> {
+export interface FunnelChartProps<T = unknown> extends ChartStyleProps {
   /** Stage values, in the same order as `categories`. Largest first reads top-down. */
   data: number[];
   /** Maps each stage to its legend representation (label, colour). */

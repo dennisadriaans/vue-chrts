@@ -12,7 +12,7 @@ import {
   CartesianGrid, Legend, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis,
 } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
-import ChartTooltip from "./internal/ChartTooltip.vue";
+import { tooltipContentFor } from "./internal/tooltipContent";
 import ChartLegend from "./internal/ChartLegend.vue";
 import type { BubbleChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
@@ -40,6 +40,10 @@ const xKey = computed(() => resolveAccessor(props.xAccessor)!);
 const yKey = computed(() => resolveAccessor(props.yAccessor)!);
 const zKey = computed(() => resolveAccessor(props.sizeAccessor));
 const categoryKey = computed(() => String(props.categoryKey));
+
+const tooltipContent = computed(() =>
+  tooltipContentFor(props.tooltipVariant, props.tooltipRoundness),
+);
 
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
 const sizeRange = computed(() => {
@@ -171,7 +175,7 @@ const groups = computed(() => {
         :fill-opacity="opacity ?? 0.7"
       />
 
-      <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :cursor="cursor" :is-animation-active="false" />
+      <Tooltip v-if="!hideTooltip" :content="tooltipContent" :cursor="cursor" :is-animation-active="false" />
       <Legend
         v-if="!hideLegend"
         :align="legend.align"
@@ -180,7 +184,7 @@ const groups = computed(() => {
         :wrapper-style="legendWrapperStyle"
       >
         <template #content="slotProps">
-          <ChartLegend v-bind="slotProps" />
+          <ChartLegend v-bind="slotProps" :variant="legendVariant" />
         </template>
       </Legend>
     </ScatterChart>

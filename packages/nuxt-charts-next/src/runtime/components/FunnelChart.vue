@@ -20,7 +20,7 @@ import {
   Tooltip,
 } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
-import ChartTooltip from "./internal/ChartTooltip.vue";
+import { tooltipContentFor } from "./internal/tooltipContent";
 import ChartLegend from "./internal/ChartLegend.vue";
 import FunnelLayeredShape, {
   type FunnelLayeredDatum,
@@ -34,6 +34,10 @@ import { themeToVars } from "../utils/theme";
 const props = defineProps<FunnelChartProps<T>>();
 
 const themeVars = computed(() => themeToVars(props.theme));
+
+const tooltipContent = computed(() =>
+  tooltipContentFor(props.tooltipVariant, props.tooltipRoundness),
+);
 
 /** Zip the value array against the categories record (positional, matching Donut). */
 const stages = computed(() => {
@@ -144,7 +148,7 @@ function hideTooltip() {
       >
         <LabelList v-if="showValueLabel" data-key="value" position="right" />
       </Funnel>
-      <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :is-animation-active="false" />
+      <Tooltip v-if="!hideTooltip" :content="tooltipContent" :is-animation-active="false" />
       <Legend
         v-if="!hideLegend"
         :align="legend.align"
@@ -153,7 +157,7 @@ function hideTooltip() {
         :wrapper-style="legendWrapperStyle"
       >
         <template #content="slotProps">
-          <ChartLegend v-bind="slotProps" />
+          <ChartLegend v-bind="slotProps" :variant="legendVariant" />
         </template>
       </Legend>
     </VccsFunnelChart>

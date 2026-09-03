@@ -14,8 +14,8 @@ import {
   Tooltip,
 } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
-import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import { tooltipContentFor } from "./internal/tooltipContent";
 import type { RadialBarChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
@@ -36,6 +36,23 @@ const bars = computed(() => {
   }));
 });
 
+/**
+ * Sweep of the track. `variant="semi"` is shorthand for the upper semicircle;
+ * an explicit `startAngle` / `endAngle` still wins, so the shorthand can be set
+ * on a chart that then fine-tunes one end.
+ */
+const angles = computed(() => {
+  const semi = props.variant === "semi";
+  return {
+    startAngle: props.startAngle ?? (semi ? 180 : 90),
+    endAngle: props.endAngle ?? (semi ? 0 : -270),
+  };
+});
+
+const tooltipContent = computed(() =>
+  tooltipContentFor(props.tooltipVariant, props.tooltipRoundness),
+);
+
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
 const legendWrapperStyle = computed(() =>
   resolveLegendWrapperStyle(props.legendPosition, toCssProperties(props.legendStyle)),
@@ -49,8 +66,8 @@ const legendWrapperStyle = computed(() =>
       :data="bars"
       :inner-radius="innerRadius ?? '30%'"
       :outer-radius="outerRadius ?? '100%'"
-      :start-angle="startAngle ?? 90"
-      :end-angle="endAngle ?? -270"
+      :start-angle="angles.startAngle"
+      :end-angle="angles.endAngle"
     >
       <RadialBar
         data-key="value"
@@ -58,7 +75,7 @@ const legendWrapperStyle = computed(() =>
         :corner-radius="cornerRadius"
         :is-animation-active="duration !== undefined && duration !== 0"
       />
-      <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :is-animation-active="false" />
+      <Tooltip v-if="!hideTooltip" :content="tooltipContent" :is-animation-active="false" />
       <Legend
         v-if="!hideLegend"
         :align="legend.align"
@@ -67,7 +84,7 @@ const legendWrapperStyle = computed(() =>
         :wrapper-style="legendWrapperStyle"
       >
         <template #content="slotProps">
-          <ChartLegend v-bind="slotProps" />
+          <ChartLegend v-bind="slotProps" :variant="legendVariant" />
         </template>
       </Legend>
     </VccsRadialBarChart>

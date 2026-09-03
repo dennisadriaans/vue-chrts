@@ -17,6 +17,35 @@
     line-height: 1.5;
   }
 
+  /* ---- tooltip variants (`tooltipVariant` / `tooltipRoundness`) ---- */
+
+  /*
+   * Lets the chart show through the tooltip instead of hiding a slice of it.
+   * The background is stepped down to 70% alpha with `color-mix` so the blur
+   * has something to blur; a fully opaque panel would make it a no-op.
+   */
+  .vc-tooltip--frosted-glass {
+    background: color-mix(in oklab, var(--vc-tooltip-bg, oklch(1 0 0)) 70%, transparent);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .vc-tooltip--sm {
+    border-radius: 0.125rem;
+  }
+
+  .vc-tooltip--md {
+    border-radius: 0.375rem;
+  }
+
+  .vc-tooltip--lg {
+    border-radius: 0.5rem;
+  }
+
+  .vc-tooltip--xl {
+    border-radius: 0.75rem;
+  }
+
   .vc-tooltip__label {
     margin: 0 0 0.25rem;
     font-weight: 500;
@@ -87,6 +116,66 @@
     height: var(--vc-legend-dot-size, 0.5rem);
     border-radius: 9999px;
     flex-shrink: 0;
+  }
+
+  /* ---- legend indicator variants (`legendVariant`) ---- */
+
+  .vc-legend__dot--square {
+    border-radius: 0;
+  }
+
+  .vc-legend__dot--rounded-square {
+    border-radius: 2px;
+  }
+
+  .vc-legend__dot--circle {
+    border-radius: 9999px;
+  }
+
+  /*
+   * A vertical / horizontal tick instead of a dot. Sized off the same token so
+   * a caller scaling `--vc-legend-dot-size` scales every variant together.
+   */
+  .vc-legend__dot--vertical-bar {
+    width: calc(var(--vc-legend-dot-size, 0.5rem) * 0.5);
+    height: calc(var(--vc-legend-dot-size, 0.5rem) * 1.5);
+    border-radius: 2px;
+  }
+
+  .vc-legend__dot--horizontal-bar {
+    width: calc(var(--vc-legend-dot-size, 0.5rem) * 1.5);
+    height: calc(var(--vc-legend-dot-size, 0.5rem) * 0.5);
+    border-radius: 2px;
+  }
+
+  /*
+   * Outline variants. The two masks — one clipped to the content box, one to
+   * the whole element — are composited with `exclude`, leaving only the padding
+   * ring painted. This beats a CSS border because the ring follows the swatch's
+   * own border-radius and works just as well if the background is a gradient.
+   */
+  .vc-legend__dot--circle-outline,
+  .vc-legend__dot--rounded-square-outline {
+    width: calc(var(--vc-legend-dot-size, 0.5rem) * 1.25);
+    height: calc(var(--vc-legend-dot-size, 0.5rem) * 1.25);
+    padding: 1.5px;
+    box-sizing: border-box;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+  }
+
+  .vc-legend__dot--circle-outline {
+    border-radius: 9999px;
+  }
+
+  .vc-legend__dot--rounded-square-outline {
+    border-radius: 3px;
   }
 
   .vc-legend__label {

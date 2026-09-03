@@ -22,6 +22,9 @@
     --vc-axis-line-width: 1px;
     --vc-surface-bg: var(--ui-bg, var(--background, oklch(1 0 0)));
 
+    /* ---- decorative background texture (`backgroundPattern`) ---- */
+    --vc-bg-pattern-color: var(--vc-grid-color);
+
     /* ---- label typography (legend, ticks, axis titles, polar) ---- */
     --vc-legend-size: 0.75rem;
     --vc-legend-weight: 400;
@@ -76,6 +79,33 @@
     fill: var(--vc-tick-color);
     font-size: var(--vc-tick-size);
     font-weight: var(--vc-tick-weight);
+  }
+
+  /*
+   * `strokeVariant="animated-dashed"` — dashes marching along the outline.
+   *
+   * Driven from CSS rather than an SVG `<animate>` child because vccs renders
+   * the curve `<path>` itself and exposes no slot to nest nodes inside it. Only
+   * the stroke paths are targeted, so an area's fill is left alone. One cycle
+   * is 6 units, matching the `3 3` dash the variant sets.
+   */
+  .vue-chrts.vc-dash-animated .v-charts-area-curve,
+  .vue-chrts.vc-dash-animated .v-charts-line-curve {
+    animation: vc-dash-march 1s linear infinite;
+  }
+
+  @keyframes vc-dash-march {
+    to {
+      stroke-dashoffset: -6;
+    }
+  }
+
+  /* A marching stroke is decorative, so it stops for a reduced-motion request. */
+  @media (prefers-reduced-motion: reduce) {
+    .vue-chrts.vc-dash-animated .v-charts-area-curve,
+    .vue-chrts.vc-dash-animated .v-charts-line-curve {
+      animation: none;
+    }
   }
 
   :is(.dark, [data-theme="dark"]) .vue-chrts,

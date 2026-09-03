@@ -8,11 +8,13 @@
  * children (Pie does not use extractCellProps unlike Bar).
  * `DonutType.Half` renders a semicircle gauge.
  */
-import { computed } from "vue";
+import { computed, useId } from "vue";
 import { Legend, Pie, PieChart, Tooltip } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
-import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import SegmentVariantDefs, { segmentGradientId } from "./internal/SegmentVariantDefs";
+import { tooltipContentFor } from "./internal/tooltipContent";
+import { variantId } from "../utils/variants";
 import type { DonutChartProps } from "../types/charts";
 import { DonutType } from "../enums";
 import { categoriesToSeries } from "../utils/categories";
@@ -25,16 +27,42 @@ const props = defineProps<DonutChartProps<T>>();
 /** Per-chart `--vc-*` overrides for the legend / tooltip tokens. */
 const themeVars = computed(() => themeToVars(props.theme));
 
-/** Zip the value array against the categories record (positional, matching v2). */
+/** Scopes this chart's `<defs>` ids so several charts on a page never collide. */
+const variantScope = useId();
+
+const useGradient = computed(() => props.variant === "gradient");
+
+/**
+ * Zip the value array against the categories record (positional, matching v2).
+ *
+ * `dataKey` is the index rather than the label: labels come from user data and
+ * may repeat or contain characters an SVG id cannot carry, whereas the index is
+ * always unique and safe to build a `url(#…)` from.
+ */
 const segments = computed(() => {
   const cats = categoriesToSeries(props.categories);
-  return props.data.map((value, i) => ({
-    name: cats[i]?.name ?? String(i),
-    value,
-    // vccs reads `fill` directly from the data entry to color each sector
-    fill: cats[i]?.color ?? `var(--chart-color-${i})`,
-  }));
+  return props.data.map((value, i) => {
+    const color = cats[i]?.color ?? `var(--chart-color-${i})`;
+    return {
+      name: cats[i]?.name ?? String(i),
+      value,
+      dataKey: String(i),
+      color,
+      // vccs reads `fill` directly from the data entry to color each sector
+      fill: useGradient.value ? `url(#${segmentGradientId(String(i), variantScope)})` : color,
+      filter: props.glow ? `url(#${variantId("glow", String(i), variantScope)})` : undefined,
+    };
+  });
 });
+
+/** Segments reduced to what the `<defs>` need: a stable id and a real colour. */
+const paintedSegments = computed(() =>
+  segments.value.map((s) => ({ dataKey: s.dataKey, color: s.color })),
+);
+
+const tooltipContent = computed(() =>
+  tooltipContentFor(props.tooltipVariant, props.tooltipRoundness),
+);
 
 /** Default ring thickness (px) when `arcWidth` is not supplied. */
 const DEFAULT_ARC_WIDTH = 40;
@@ -96,6 +124,17 @@ const legendWrapperStyle = computed(() =>
   <div class="donut-chart vue-chrts" :style="{ position: 'relative', width: '100%', height: `${height ?? (radius ? radius * 2 : 200)}px`, ...themeVars }">
     <ChartContainer width="100%" height="100%">
       <PieChart>
+        <!--
+          Built with `h()` so the paints land in the SVG namespace and each
+          segment's `fill="url(#…)"` resolves.
+        -->
+        <SegmentVariantDefs
+          v-if="useGradient || glow"
+          :segments="paintedSegments"
+          :scope="variantScope"
+          :gradient="useGradient"
+          :glow="glow === true"
+        />
         <Pie
           :data="segments"
           data-key="value"
@@ -108,7 +147,7 @@ const legendWrapperStyle = computed(() =>
           :stroke="stroke ?? 'none'"
           :is-animation-active="duration !== undefined && duration !== 0"
         />
-        <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :is-animation-active="false" />
+        <Tooltip v-if="!hideTooltip" :content="tooltipContent" :is-animation-active="false" />
         <Legend
           v-if="!hideLegend"
           :align="legend.align"
@@ -117,7 +156,7 @@ const legendWrapperStyle = computed(() =>
           :wrapper-style="legendWrapperStyle"
         >
           <template #content="slotProps">
-            <ChartLegend v-bind="slotProps" />
+            <ChartLegend v-bind="slotProps" :variant="legendVariant" />
           </template>
         </Legend>
       </PieChart>
