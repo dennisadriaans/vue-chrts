@@ -226,6 +226,16 @@ export interface ChartTheme {
     badgeWeight?: number | string;
     /** Percentage badge border colour. Token: `--vc-funnel-badge-border`. */
     badgeBorder?: string;
+    /** Classic-shape value colour. Token: `--vc-funnel-inside-value-color`. */
+    insideValueColor?: string;
+    /** Classic-shape stage-name colour. Token: `--vc-funnel-inside-label-color`. */
+    insideLabelColor?: string;
+    /** Classic-shape resting opacity. Token: `--vc-funnel-shape-opacity`. */
+    shapeOpacity?: number;
+    /** Classic-shape hovered opacity. Token: `--vc-funnel-shape-hover-opacity`. */
+    shapeHoverOpacity?: number;
+    /** Classic-shape depth opacity. Token: `--vc-funnel-shadow-opacity`. */
+    shadowOpacity?: number;
   };
   /** Tooltip container. */
   tooltip?: {

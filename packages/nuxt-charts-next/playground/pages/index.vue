@@ -7,9 +7,11 @@ const charts = [
   { to: "/bubble", label: "Bubble chart" },
   { to: "/radar", label: "Radar chart" },
   { to: "/funnel", label: "Funnel chart" },
+  { to: "/sankey", label: "Sankey chart" },
   { to: "/radialbar", label: "Radial bar chart" },
   { to: "/candlestick", label: "Candlestick chart" },
   { to: "/status-tracker", label: "Status tracker chart" },
+  { to: "/variants", label: "Style variants — every treatment side by side" },
 ];
 </script>
 

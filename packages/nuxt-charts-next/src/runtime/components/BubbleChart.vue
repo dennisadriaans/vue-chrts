@@ -179,7 +179,13 @@ const tooltipContent = computed(() => {
       };
     });
 
-    return h(ChartTooltip, { ...tooltipProps, label: category, payload });
+    return h(ChartTooltip, {
+      ...tooltipProps,
+      label: category,
+      payload,
+      variant: props.tooltipVariant,
+      roundness: props.tooltipRoundness,
+    });
   };
 });
 </script>
@@ -247,7 +253,7 @@ const tooltipContent = computed(() => {
         :wrapper-style="legendWrapperStyle"
       >
         <template #content="slotProps">
-          <ChartLegend v-bind="slotProps" />
+          <ChartLegend v-bind="slotProps" :variant="legendVariant" />
         </template>
       </Legend>
     </ScatterChart>

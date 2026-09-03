@@ -15,13 +15,13 @@ import { computed, ref, useTemplateRef } from "vue";
 import {
   Funnel,
   FunnelChart as VccsFunnelChart,
-  LabelList,
   Legend,
-  Tooltip,
 } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
-import ChartTooltip from "./internal/ChartTooltip.vue";
+import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import FunnelClassicShape from "./internal/FunnelClassicShape.vue";
+import FunnelTooltip from "./internal/FunnelTooltip.vue";
 import FunnelLayeredShape, {
   type FunnelLayeredDatum,
 } from "./internal/FunnelLayeredShape.vue";
@@ -33,8 +33,18 @@ import { themeToVars } from "../utils/theme";
 
 const props = withDefaults(defineProps<FunnelChartProps<T>>(), {
   showValueLabel: true,
+  showStageLabel: true,
   showPercentage: true,
+  stageGap: 4,
 });
+
+defineSlots<{
+  shape(props: Record<string, unknown> & {
+    onMouseenter: typeof showTooltip;
+    onMousemove: typeof updateTooltipPosition;
+    onMouseleave: typeof clearTooltip;
+  }): unknown;
+}>();
 
 const themeVars = computed(() => themeToVars(props.theme));
 
@@ -44,6 +54,7 @@ const stages = computed(() => {
   return props.data.map((value, i) => ({
     name: cats[i]?.name ?? String(i),
     value,
+    formattedValue: props.valueFormatter?.(value, i),
     fill: cats[i]?.color ?? `var(--chart-color-${i})`,
     color: cats[i]?.color ?? `var(--chart-color-${i})`,
   }));
@@ -65,7 +76,7 @@ const labelSizes = computed(() => {
   const size = props.labelSize;
   const perRole = typeof size === "object" ? size : undefined;
   return {
-    base: toPixels(perRole ? perRole.base : size),
+    base: toPixels(typeof size === "object" ? size.base : size),
     value: perRole?.value,
     percentage: perRole?.percentage,
     name: perRole?.name,
@@ -84,13 +95,20 @@ const layeredData = computed(() => {
     labelSizes: labelSizes.value,
     showValue: showValueLabel.value,
     showPercentage: props.showPercentage ?? true,
+    showStageLabel: props.showStageLabel ?? true,
   }));
 });
 
-/** The default variant's `<LabelList>` has no badge geometry, so CSS can own its size. */
-const defaultLabelStyle = computed(() => {
-  const size = labelSizes.value.value ?? labelSizes.value.base;
-  return size === undefined ? undefined : { "--vc-funnel-value-size": `${size}px` };
+const classicData = computed(() => {
+  const maxValue = stages.value[0]?.value ?? 0;
+  return stages.value.map((stage) => ({
+    ...stage,
+    maxValue,
+    labelSizes: labelSizes.value,
+    showValue: showValueLabel.value,
+    showStageLabel: props.showStageLabel ?? true,
+    stageGap: props.stageGap,
+  }));
 });
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
 const legendWrapperStyle = computed(() =>
@@ -126,7 +144,13 @@ function clearTooltip() {
     class="vc-funnel-layered vue-chrts"
     :style="{ height: `${height}px`, ...themeVars }"
   >
-    <ChartContainer width="100%" height="100%">
+    <ChartSkeleton
+      v-if="loading"
+      :height="height"
+      shape="bars"
+      :label="loadingLabel ?? 'Loading'"
+    />
+    <ChartContainer v-else width="100%" height="100%">
       <VccsFunnelChart :margin="{ top: 16, right: 0, bottom: 8, left: 0 }">
         <Funnel
           :data="layeredData"
@@ -143,47 +167,75 @@ function clearTooltip() {
               `<g>` and SVG-inherit onto every label, stroking the glyphs so
               they read as extra-bold. CSS `font-weight` cannot undo that.
             -->
-            <FunnelLayeredShape
-              :payload="shapeProps.payload"
-              :parent-view-box="shapeProps.parentViewBox"
-              @mouseenter="showTooltip"
-              @mousemove="updateTooltipPosition"
-              @mouseleave="clearTooltip"
-            />
+            <slot
+              name="shape"
+              v-bind="shapeProps"
+              :on-mouseenter="showTooltip"
+              :on-mousemove="updateTooltipPosition"
+              :on-mouseleave="clearTooltip"
+            >
+              <FunnelLayeredShape
+                :payload="shapeProps.payload"
+                :parent-view-box="shapeProps.parentViewBox"
+                @mouseenter="showTooltip"
+                @mousemove="updateTooltipPosition"
+                @mouseleave="clearTooltip"
+              />
+            </slot>
           </template>
         </Funnel>
       </VccsFunnelChart>
     </ChartContainer>
 
-    <div
+    <FunnelTooltip
       v-if="!props.hideTooltip && activeDatum"
-      class="vc-funnel-layered__tooltip"
-      :style="{ left: `${tooltipPosition.x}px`, top: `${tooltipPosition.y}px` }"
-    >
-      <span
-        class="vc-funnel-layered__dot"
-        :style="{ background: activeDatum.color }"
-      />
-      <span class="vc-funnel-layered__name">{{ activeDatum.name }}</span>
-      <strong class="vc-funnel-layered__value">{{
-        activeDatum.value.toLocaleString()
-      }}</strong>
-    </div>
+      :datum="activeDatum"
+      :x="tooltipPosition.x"
+      :y="tooltipPosition.y"
+      :variant="tooltipVariant"
+      :roundness="tooltipRoundness"
+    />
   </div>
 
-  <div v-else class="vc-funnel vue-chrts" :style="{ ...themeVars, ...defaultLabelStyle }">
-  <ChartContainer width="100%" :height="height">
+  <div v-else ref="chartContainer" class="vc-funnel vue-chrts" :style="themeVars">
+    <ChartSkeleton
+      v-if="loading"
+      :height="height"
+      shape="bars"
+      :label="loadingLabel ?? 'Loading'"
+    />
+    <ChartContainer v-else width="100%" :height="height">
     <VccsFunnelChart>
       <Funnel
-        :data="stages"
+        :data="classicData"
         data-key="value"
         name-key="name"
         :last-shape-type="lastShapeType ?? 'triangle'"
+        stroke="none"
         :is-animation-active="duration !== undefined && duration !== 0"
       >
-        <LabelList v-if="showValueLabel" data-key="value" position="right" />
+        <template #shape="shapeProps">
+          <slot
+            name="shape"
+            v-bind="shapeProps"
+            :on-mouseenter="showTooltip"
+            :on-mousemove="updateTooltipPosition"
+            :on-mouseleave="clearTooltip"
+          >
+            <FunnelClassicShape
+              :x="shapeProps.x"
+              :y="shapeProps.y"
+              :upper-width="shapeProps.upperWidth"
+              :lower-width="shapeProps.lowerWidth"
+              :height="shapeProps.height"
+              :payload="shapeProps.payload"
+              @mouseenter="showTooltip"
+              @mousemove="updateTooltipPosition"
+              @mouseleave="clearTooltip"
+            />
+          </slot>
+        </template>
       </Funnel>
-      <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :is-animation-active="false" />
       <Legend
         v-if="!hideLegend"
         :align="legend.align"
@@ -192,10 +244,18 @@ function clearTooltip() {
         :wrapper-style="legendWrapperStyle"
       >
         <template #content="slotProps">
-          <ChartLegend v-bind="slotProps" />
+          <ChartLegend v-bind="slotProps" :variant="legendVariant" />
         </template>
       </Legend>
     </VccsFunnelChart>
   </ChartContainer>
+    <FunnelTooltip
+      v-if="!props.hideTooltip && activeDatum"
+      :datum="activeDatum"
+      :x="tooltipPosition.x"
+      :y="tooltipPosition.y"
+      :variant="tooltipVariant"
+      :roundness="tooltipRoundness"
+    />
   </div>
 </template>

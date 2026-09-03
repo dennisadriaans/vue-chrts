@@ -7,7 +7,7 @@
  * (`<Area>` / `<Bar>` / `<Line>` / `<Scatter>`) to the default slot. This keeps
  * every chart adapter small and the axis/legend/tooltip wiring in one place.
  */
-import { computed, h, type Component } from "vue";
+import { computed, h, useId, type Component } from "vue";
 import type { TooltipContentProps } from "vccs";
 import {
   CartesianGrid,
@@ -39,6 +39,8 @@ import { toAxisDomain, toCssProperties } from "../../utils/style";
 import { axisTickVars, resolveHoverRadius, resolveHoverVisible, themeToVars } from "../../utils/theme";
 import ChartTooltip from "./ChartTooltip.vue";
 import ChartLegend from "./ChartLegend.vue";
+import ChartBackground from "./ChartBackground";
+import ChartSkeleton from "./ChartSkeleton.vue";
 
 const props = defineProps<
   CartesianChartBaseProps<T> & {
@@ -50,6 +52,20 @@ const props = defineProps<
     xAxisKey?: string;
     /** Bar/area orientation; drives the container `layout`. */
     orientation?: Orientation;
+    /** Extra class on the chart root, used by CSS-driven effects like marching dashes. */
+    frameClass?: string;
+    /**
+     * Flat colour per legend label. Charts painting from a variant pattern pass
+     * this so the swatches keep their colour — see `ChartLegend`.
+     */
+    legendColors?: Record<string, string>;
+    /** Silhouette the loading placeholder draws for this chart type. */
+    skeletonShape?: "bars" | "wave";
+    /**
+     * The value axis runs 0–1 because the series are normalised. Set so the
+     * ticks read as percentages rather than as raw fractions.
+     */
+    percentAxis?: boolean;
   }
 >();
 
@@ -59,6 +75,9 @@ const slots = defineSlots<{
 }>();
 
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
+
+/** Scopes the background pattern's ids so charts on one page never collide. */
+const backgroundScope = useId();
 
 const showXGrid = computed(() => props.xGridLine ?? true);
 const showYGrid = computed(() => props.yGridLine ?? true);
@@ -120,9 +139,20 @@ const rawYFormatter = computed(() =>
 const categoryFormatter = computed(() =>
   withCategoryIndex(layout.value === "vertical" ? rawYFormatter.value : rawXFormatter.value),
 );
-const valueFormatter = computed(() =>
-  layout.value === "vertical" ? rawXFormatter.value : rawYFormatter.value,
-);
+/**
+ * Format a normalised 0–1 axis value as a whole percentage. Used only when no
+ * formatter of the caller's own is in play, so an explicit `yFormatter` still
+ * wins on a percent-stacked chart.
+ */
+function toPercentTick(value: unknown): string {
+  return `${Math.round(Number(value) * 100)}%`;
+}
+
+const valueFormatter = computed(() => {
+  const configured = layout.value === "vertical" ? rawXFormatter.value : rawYFormatter.value;
+  if (configured) return configured;
+  return props.percentAxis ? toPercentTick : undefined;
+});
 
 const xAxisDomain = computed(() => toAxisDomain(props.xDomain));
 const yAxisDomain = computed(() => toAxisDomain(props.yDomain));
@@ -282,7 +312,12 @@ const tooltipContent = computed(() => {
       label = formatLabel(label, Number.isNaN(index) ? 0 : index);
     }
 
-    return h(ChartTooltip, { ...tooltipProps, label });
+    return h(ChartTooltip, {
+      ...tooltipProps,
+      label,
+      variant: props.tooltipVariant,
+      roundness: props.tooltipRoundness,
+    });
   };
 });
 
@@ -310,9 +345,24 @@ const resolvedYAxes = computed(() => {
 </script>
 
 <template>
-  <div class="vue-chrts" :style="rootStyle">
-  <ChartContainer width="100%" :height="height">
+  <div class="vue-chrts" :class="frameClass" :style="rootStyle">
+  <ChartSkeleton
+    v-if="loading"
+    :height="height"
+    :shape="skeletonShape ?? 'bars'"
+    :label="loadingLabel ?? 'Loading'"
+  />
+  <ChartContainer v-else width="100%" :height="height">
     <component :is="container" v-bind="mergedContainerProps">
+      <!--
+        First child on purpose: vccs has no z-index layer, so document order is
+        the stacking order and the texture must be painted before anything else.
+      -->
+      <ChartBackground
+        v-if="backgroundPattern"
+        :variant="backgroundPattern"
+        :scope="backgroundScope"
+      />
       <CartesianGrid
         v-if="showXGrid || showYGrid"
         :horizontal="showYGrid"
@@ -411,7 +461,7 @@ const resolvedYAxes = computed(() => {
         :wrapper-style="legendWrapperStyle"
       >
         <template #content="slotProps">
-          <ChartLegend v-bind="slotProps" />
+          <ChartLegend v-bind="slotProps" :variant="legendVariant" :colors="legendColors" />
         </template>
       </Legend>
     </component>
