@@ -6,7 +6,7 @@
  * `categories`. Each value becomes one concentric bar in the `vccs`
  * `<RadialBarChart>`; colours come from `categories`.
  */
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import {
   Legend,
   RadialBar,
@@ -16,6 +16,7 @@ import {
 import ChartContainer from "./internal/ChartContainer";
 import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import PolarCenterSync from "./internal/PolarCenterSync";
 import type { RadialBarChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
@@ -40,6 +41,13 @@ const legend = computed(() => legendPositionToLegendProps(props.legendPosition))
 const legendWrapperStyle = computed(() =>
   resolveLegendWrapperStyle(props.legendPosition, toCssProperties(props.legendStyle)),
 );
+
+/** Legend-aware centre, reported by `<PolarCenterSync>` once the offset settles. */
+const center = ref<{ cx: number; cy: number }>();
+const onCenter = (next: { cx: number; cy: number }) => {
+  if (center.value?.cx === next.cx && center.value?.cy === next.cy) return;
+  center.value = next;
+};
 </script>
 
 <template>
@@ -51,7 +59,10 @@ const legendWrapperStyle = computed(() =>
       :outer-radius="outerRadius ?? '100%'"
       :start-angle="startAngle ?? 90"
       :end-angle="endAngle ?? -270"
+      :cx="center?.cx"
+      :cy="center?.cy"
     >
+      <PolarCenterSync :on-center="onCenter" />
       <RadialBar
         data-key="value"
         :background="background ?? true"

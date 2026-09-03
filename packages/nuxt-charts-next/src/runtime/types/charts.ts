@@ -453,6 +453,18 @@ export interface RadarChartProps<T> {
    * axis is drawn. Default 90, i.e. straight up from the centre.
    */
   radiusAxisAngle?: number;
+  /**
+   * Radius of the outer polygon, in pixels or as a percentage of the plot box.
+   * Defaults to the largest radius that still leaves a fixed pixel inset for
+   * the spoke labels, so a tall chart no longer wastes an empty ring on them.
+   */
+  outerRadius?: number | string;
+  /**
+   * Gap in pixels between the outer polygon and the spoke labels. Default 18.
+   */
+  angleAxisTickSize?: number;
+  /** Chart margin in pixels. Defaults to 12 on every side. */
+  margin?: { top?: number; right?: number; bottom?: number; left?: number };
   /** Tooltip behaviour config. */
   tooltip?: TooltipConfig;
   /**
