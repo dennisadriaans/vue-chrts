@@ -25,7 +25,7 @@ function formatValue(value: unknown): string {
       {{ label }}
     </p>
     <ul class="vc-tooltip__list">
-      <li v-for="item in items" :key="item.dataKey as string" class="vc-tooltip__item">
+      <li v-for="(item, index) in items" :key="index" class="vc-tooltip__item">
         <span
           class="vc-tooltip__dot"
           :style="{ background: item.color ?? item.fill ?? item.stroke }"

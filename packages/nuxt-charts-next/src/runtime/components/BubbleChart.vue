@@ -7,10 +7,11 @@
  * `<Scatter>` series per distinct value of `categoryKey` (colour-coded via
  * `categories`).
  */
-import { computed } from "vue";
+import { computed, h } from "vue";
 import {
   CartesianGrid, Legend, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis,
 } from "vccs";
+import type { TooltipContentProps } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
 import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
@@ -30,16 +31,42 @@ import { axisTickVars, resolveHoverRadius, resolveHoverVisible, themeToVars } fr
 
 const props = defineProps<BubbleChartProps<T>>();
 
+const slots = defineSlots<{
+  tooltip?: (props: { values: T | undefined }) => unknown;
+}>();
+
 /** Keep function accessors intact — `String(fn)` breaks v2 site/block usage. */
 function resolveAccessor(accessor: BubbleChartProps<T>["xAccessor"] | undefined) {
   if (accessor === undefined) return undefined;
   return typeof accessor === "function" ? accessor : String(accessor);
 }
 
+/**
+ * Human-readable name for an accessor, used as the axis/tooltip label.
+ *
+ * `vccs` falls back to `String(dataKey)`, which prints the whole function source
+ * (`(d) => d.month`) for the v2 function accessors. Field names survive
+ * minification, so a single-expression accessor is read back from its source;
+ * anything else falls back to the axis name.
+ */
+function accessorName(
+  accessor: BubbleChartProps<T>["xAccessor"] | undefined,
+  fallback: string,
+) {
+  if (accessor === undefined) return fallback;
+  if (typeof accessor !== "function") return String(accessor);
+  const match = /(?:=>|return)\s*[\w$]+(?:\?\.|\.)([\w$]+)\s*;?\s*\}?\s*$/.exec(String(accessor));
+  return match?.[1] ?? fallback;
+}
+
 const xKey = computed(() => resolveAccessor(props.xAccessor)!);
 const yKey = computed(() => resolveAccessor(props.yAccessor)!);
 const zKey = computed(() => resolveAccessor(props.sizeAccessor));
 const categoryKey = computed(() => String(props.categoryKey));
+
+const xName = computed(() => props.xLabel ?? accessorName(props.xAccessor, "x"));
+const yName = computed(() => props.yLabel ?? accessorName(props.yAccessor, "y"));
+const zName = computed(() => accessorName(props.sizeAccessor, "size"));
 
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
 const sizeRange = computed(() => {
@@ -100,11 +127,14 @@ const cursor = computed(() =>
     : false,
 );
 
+const colorByCategory = computed(() => {
+  const map = new Map<string, string | undefined>();
+  for (const s of categoriesToSeries(props.categories)) map.set(s.dataKey, s.color);
+  return map;
+});
+
 /** Split the rows into one Scatter series per categoryKey value, coloured from `categories`. */
 const groups = computed(() => {
-  const colorByCat = new Map<string, string | undefined>();
-  for (const s of categoriesToSeries(props.categories)) colorByCat.set(s.dataKey, s.color);
-
   const byCategory = new Map<string, T[]>();
   for (const row of props.data) {
     const cat = String(row[categoryKey.value]);
@@ -116,8 +146,41 @@ const groups = computed(() => {
   return Array.from(byCategory.entries()).map(([name, data]) => ({
     name,
     data,
-    color: colorByCat.get(name),
+    color: colorByCategory.value.get(name),
   }));
+});
+
+/**
+ * `vccs` builds one scatter tooltip row per axis, named `String(axis.dataKey)`
+ * and stripped of the series colour. Re-label the rows from the accessors, run
+ * the axis formatters over the values, and title the tooltip with the category.
+ */
+const tooltipContent = computed(() => {
+  const fields = [
+    { key: xKey.value, name: xName.value, format: xTickFormatter.value },
+    { key: yKey.value, name: yName.value, format: yTickFormatter.value },
+    ...(zKey.value ? [{ key: zKey.value, name: zName.value, format: undefined }] : []),
+  ];
+
+  return (tooltipProps: TooltipContentProps) => {
+    const row = tooltipProps.payload?.[0]?.payload as T | undefined;
+    if (slots.tooltip) return slots.tooltip({ values: row });
+
+    const category = row != null ? String(row[categoryKey.value]) : undefined;
+    const color = category != null ? colorByCategory.value.get(category) : undefined;
+
+    const payload = (tooltipProps.payload ?? []).map((entry) => {
+      const field = fields.find((f) => f.key === entry.dataKey);
+      return {
+        ...entry,
+        color,
+        name: field?.name ?? entry.name,
+        value: field?.format ? field.format(entry.value, 0) : entry.value,
+      };
+    });
+
+    return h(ChartTooltip, { ...tooltipProps, label: category, payload });
+  };
 });
 </script>
 
@@ -131,11 +194,12 @@ const groups = computed(() => {
         stroke-dasharray="var(--vc-grid-dash)"
         :stroke-width="'var(--vc-grid-width)'"
       />
+      <!-- Axes stay mounted when hidden: their `dataKey` is what maps rows to x/y. -->
       <XAxis
-        v-if="!hideXAxis"
         type="number"
         :data-key="xKey"
-        :name="xLabel"
+        :hide="hideXAxis"
+        :name="xName"
         :height="xAxisHeight"
         :tick="xTickProp"
         :tick-margin="AXIS_TICK_MARGIN.x"
@@ -147,10 +211,10 @@ const groups = computed(() => {
         :interval="xAxis.interval"
       />
       <YAxis
-        v-if="!hideYAxis"
         type="number"
         :data-key="yKey"
-        :name="yLabel"
+        :hide="hideYAxis"
+        :name="yName"
         :width="yAxisWidth"
         :tick="yTickProp"
         :tick-margin="AXIS_TICK_MARGIN.y"
@@ -160,18 +224,21 @@ const groups = computed(() => {
         :domain="yAxisDomain"
         :interval="yAxis.interval"
       />
-      <ZAxis v-if="zKey" type="number" :data-key="zKey" :range="sizeRange" />
+      <ZAxis v-if="zKey" type="number" :data-key="zKey" :name="zName" :range="sizeRange" />
 
+      <!-- Distinct `dataKey` per series: `vccs` filters the item tooltip and the -->
+      <!-- active-symbol highlight by it, so shared keys show every series at once. -->
       <Scatter
         v-for="g in groups"
         :key="g.name"
+        :data-key="g.name"
         :name="g.name"
         :data="g.data"
         :fill="g.color"
         :fill-opacity="opacity ?? 0.7"
       />
 
-      <Tooltip v-if="!hideTooltip" :content="ChartTooltip" :cursor="cursor" :is-animation-active="false" />
+      <Tooltip v-if="!hideTooltip" :content="tooltipContent" :cursor="cursor" :is-animation-active="false" />
       <Legend
         v-if="!hideLegend"
         :align="legend.align"
