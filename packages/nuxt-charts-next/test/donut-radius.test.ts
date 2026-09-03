@@ -80,4 +80,10 @@ describe("DonutChart radius", () => {
     await mountDonut({ radius: 0, arcWidth: 30, type: DonutType.Half });
     expect(sectorPaths().length).toBe(3);
   });
+
+  it("supports rounded segments and custom gauge angles", async () => {
+    await mountDonut({ cornerRadius: 10, startAngle: -30, endAngle: 210, padAngle: 4 });
+    expect(sectorPaths().length).toBe(3);
+    expect(sectorPaths()[0]?.getAttribute("d")).toContain("A10,10");
+  });
 });

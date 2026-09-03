@@ -13,6 +13,20 @@
  * specificity fights.
  */
 @layer vue-chrts {
+  /*
+   * vccs makes its interactive chart surface focusable. Browsers paint that
+   * focus as a rectangular outline after a pointer click, which reads as an
+   * unintended border around the entire chart. Charts handle interaction
+   * visually through their cursor, tooltip, and highlighted marks, so keep
+   * the chart surface free of native focus chrome in every focus state.
+   */
+  .vue-chrts:focus,
+  .vue-chrts:focus-visible,
+  .vue-chrts :focus,
+  .vue-chrts :focus-visible {
+    outline: none;
+  }
+
   .vue-chrts {
     /* ---- grid + domain (axis) lines ---- */
     --vc-grid-color: var(--ui-border, var(--border, oklch(0.922 0 0)));

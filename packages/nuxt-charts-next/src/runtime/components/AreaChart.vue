@@ -14,11 +14,12 @@ import { computed, useId } from "vue";
 import { Area, AreaChart as VccsAreaChart } from "vccs";
 import CartesianFrame from "./internal/CartesianFrame.vue";
 import GradientDefs from "./internal/GradientDefs";
+import StrokeGradientDefs from "./internal/StrokeGradientDefs";
 import type { AreaChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
 import { curveTypeToVccs } from "../utils/curve";
 import { markerToDot, normalizeMarkerConfig, toStrokeDasharray } from "../utils/marker";
-import { DEFAULT_GRADIENT_STOPS, gradientId } from "../utils/gradient";
+import { DEFAULT_GRADIENT_STOPS, gradientId, strokeGradientId } from "../utils/gradient";
 import DitherDefs from "./internal/DitherDefs";
 import AreaVariantDefs, { areaFillId } from "./internal/AreaVariantDefs";
 import ChartDot from "./internal/ChartDot";
@@ -125,6 +126,12 @@ function fillFor(dataKey: string, color: string): string {
   return color;
 }
 
+function strokeFor(dataKey: string, color: string): string {
+  return props.strokeGradient?.length
+    ? `url(#${strokeGradientId(dataKey, gradientScope)})`
+    : color;
+}
+
 /** `url(#…)` of the outer-glow filter, or `undefined` when the series does not glow. */
 function glowFor(dataKey: string): string | undefined {
   return props.glow ? `url(#${variantId("glow", dataKey, gradientScope)})` : undefined;
@@ -182,6 +189,12 @@ defineSlots<{
       :stops="gradientStops"
       :scope="gradientScope"
     />
+    <StrokeGradientDefs
+      v-if="strokeGradient?.length"
+      :series="paintedSeries"
+      :stops="strokeGradient"
+      :scope="gradientScope"
+    />
     <!-- Same namespace/`Customized` constraints as GradientDefs above. -->
     <DitherDefs
       v-if="useDither"
@@ -207,7 +220,7 @@ defineSlots<{
       :y-axis-id="s.yAxisId"
       :type="curve"
       :stack-id="stackId"
-      :stroke="s.color"
+      :stroke="strokeFor(s.dataKey, s.color)"
       :fill="fillFor(s.dataKey, s.color)"
       :fill-opacity="useGradientFill || useDither || useFillVariant ? 1 : fillOpacity"
       :stroke-width="lineWidth ?? 2"

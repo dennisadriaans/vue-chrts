@@ -215,12 +215,43 @@ const barVariants = ["solid", "cubes", ...PATTERNED_BAR_VARIANTS] as const;
             hide-legend
           />
         </figure>
+        <figure>
+          <figcaption>custom gradientStops</figcaption>
+          <AreaChart
+            :data="monthly"
+            :categories="single"
+            x-axis="month"
+            :height="200"
+            :gradient-stops="[
+              { offset: '0%', stopOpacity: 0.9 },
+              { offset: '45%', stopOpacity: 0.35 },
+              { offset: '100%', stopOpacity: 0 },
+            ]"
+            hide-legend
+          />
+        </figure>
       </div>
     </section>
 
     <section>
       <h2>Strokes</h2>
       <div class="grid">
+        <figure>
+          <figcaption>strokeGradient — gradient follows the line</figcaption>
+          <LineChart
+            :data="monthly"
+            :categories="single"
+            x-axis="month"
+            :height="200"
+            :line-width="4"
+            :stroke-gradient="[
+              { offset: '0%', color: '#2563eb' },
+              { offset: '50%', color: '#a855f7' },
+              { offset: '100%', color: '#f43f5e' },
+            ]"
+            hide-legend
+          />
+        </figure>
         <figure v-for="variant in STROKE_VARIANTS" :key="variant">
           <figcaption>strokeVariant="{{ variant }}"</figcaption>
           <LineChart
@@ -352,6 +383,26 @@ const barVariants = ["solid", "cubes", ...PATTERNED_BAR_VARIANTS] as const;
             :height="260"
             grid-type="circle"
             dot-variant="border"
+          />
+        </figure>
+        <figure>
+          <figcaption>variant="gradient" — inside to outside</figcaption>
+          <RadarChart
+            :data="monthly"
+            :categories="pair"
+            data-key="month"
+            :height="260"
+            variant="gradient"
+          />
+        </figure>
+        <figure>
+          <figcaption>variant="gradient-reverse" — outside to inside</figcaption>
+          <RadarChart
+            :data="monthly"
+            :categories="pair"
+            data-key="month"
+            :height="260"
+            variant="gradient-reverse"
           />
         </figure>
       </div>

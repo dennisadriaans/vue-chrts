@@ -118,11 +118,16 @@ const outerRadius = computed(() => radii.value.outerRadius);
 const innerRadius = computed(() => radii.value.innerRadius);
 
 /** Half donut renders the top semicircle as a gauge. */
-const angles = computed(() =>
-  props.type === DonutType.Half
+const angles = computed(() => {
+  const defaults = props.type === DonutType.Half
     ? { startAngle: 180, endAngle: 0 }
-    : { startAngle: 0, endAngle: 360 },
-);
+    : { startAngle: 0, endAngle: 360 };
+
+  return {
+    startAngle: props.startAngle ?? defaults.startAngle,
+    endAngle: props.endAngle ?? defaults.endAngle,
+  };
+});
 
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
 const legendWrapperStyle = computed(() =>
@@ -160,6 +165,7 @@ const legendWrapperStyle = computed(() =>
           :start-angle="angles.startAngle"
           :end-angle="angles.endAngle"
           :padding-angle="padAngle ?? 0"
+          :corner-radius="cornerRadius ?? 0"
           :stroke="stroke ?? 'none'"
           :is-animation-active="duration !== undefined && duration !== 0"
         />

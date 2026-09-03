@@ -10,6 +10,8 @@ import BarChart from "../src/runtime/components/BarChart.vue";
 import LineChart from "../src/runtime/components/LineChart.vue";
 import DonutChart from "../src/runtime/components/DonutChart.vue";
 import RadarChart from "../src/runtime/components/RadarChart.vue";
+import { radarGradientId } from "../src/runtime/components/internal/RadarGradientDefs";
+import { strokeGradientId } from "../src/runtime/utils/gradient";
 import RadialBarChart from "../src/runtime/components/RadialBarChart.vue";
 import { BACKGROUND_PATTERNS, BACKGROUND_VARIANTS } from "../src/runtime/utils/background";
 import {
@@ -257,6 +259,11 @@ describe("AreaChart fill variants", () => {
 });
 
 describe("stroke variants", () => {
+  const strokeGradient = [
+    { offset: "0%", color: "#2563eb" },
+    { offset: "100%", color: "#f43f5e", stopOpacity: 0.8 },
+  ];
+
   it("leaves the outline solid by default", async () => {
     const wrapper = await mountLine();
     expect(seriesProps(wrapper, Line)[0]?.["stroke-dasharray"]).toBeUndefined();
@@ -285,6 +292,25 @@ describe("stroke variants", () => {
     const wrapper = await mountArea({ strokeVariant: "animated-dashed" });
     expect(wrapper.element.className).toContain("vc-dash-animated");
     expect(seriesProps(wrapper, Area)[0]?.["stroke-dasharray"]).toBe("3 3");
+  });
+
+  it("paints a line with a resolvable horizontal colour gradient", async () => {
+    const wrapper = await mountLine({ strokeGradient });
+    const id = strokeGradientId("desktop", "v-0");
+    const gradient = document.getElementById(id)!;
+    expect(seriesProps(wrapper, Line)[0]?.stroke).toBe(`url(#${id})`);
+    expect(gradient.getAttribute("x2")).toBe("1");
+    expect([...gradient.querySelectorAll("stop")].map((stop) => stop.getAttribute("stop-color")))
+      .toEqual(["#2563eb", "#f43f5e"]);
+    expect(danglingReferences()).toEqual([]);
+  });
+
+  it("supports the same gradient on an area outline", async () => {
+    const wrapper = await mountArea({ strokeGradient });
+    const id = strokeGradientId("desktop", "v-0");
+    expect(seriesProps(wrapper, Area)[0]?.stroke).toBe(`url(#${id})`);
+    expect(document.getElementById(id)).not.toBeNull();
+    expect(danglingReferences()).toEqual([]);
   });
 
   it("maps each variant to its dash pattern", () => {
@@ -511,6 +537,20 @@ describe("polar chart variants", () => {
       fillOpacity: 0.25,
     });
     expect(radarFillOpacities()).toEqual(["0.25", "0.25"]);
+  });
+
+  it.each([
+    ["gradient", ["0.6", "0"]],
+    ["gradient-reverse", ["0", "0.6"]],
+  ] as const)("paints the radar %s from the centre in the requested direction", async (variant, opacities) => {
+    await mountChart(RadarChart, { data, categories, dataKey: "month", variant });
+
+    const gradient = document.getElementById(radarGradientId("desktop", "v-0"))!;
+    expect(gradient.tagName.toLowerCase()).toBe("radialgradient");
+    expect([...gradient.querySelectorAll("stop")].map((stop) => stop.getAttribute("stop-opacity")))
+      .toEqual(opacities);
+    expect(radarFillOpacities()).toEqual(["1", "1"]);
+    expect(danglingReferences()).toEqual([]);
   });
 
   it("switches the polar grid to concentric circles", async () => {

@@ -11,6 +11,7 @@
  */
 import type { CurveType, DonutType, LegendPosition, Orientation } from "../enums";
 import type { DitherVariant } from "../utils/dither";
+import type { StrokeGradientStop } from "../utils/gradient";
 import type { BackgroundVariant } from "../utils/background";
 import type {
   AreaFillVariant,
@@ -204,6 +205,11 @@ export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
   ditherWash?: number;
   /** Line width in pixels. Default 2. */
   lineWidth?: number;
+  /**
+   * Paint the line or area outline with a horizontal, multicolour gradient.
+   * The same ramp is applied independently to each series.
+   */
+  strokeGradient?: StrokeGradientStop[];
   /** Stack the areas instead of overlaying them. */
   stacked?: boolean;
   /**
@@ -493,6 +499,12 @@ export interface DonutChartProps<T = unknown> extends ChartStyleProps {
   arcWidth?: number;
   /** Angular padding between segments, in degrees. */
   padAngle?: number;
+  /** Rounded corner radius for each segment in pixels. */
+  cornerRadius?: number;
+  /** Start angle in degrees. Overrides the angle implied by `type`. */
+  startAngle?: number;
+  /** End angle in degrees. Overrides the angle implied by `type`. */
+  endAngle?: number;
   /**
    * Outline colour drawn around each segment. Defaults to `'none'`; pass a
    * colour to separate segments with a border (e.g. the card background).
@@ -538,8 +550,8 @@ export interface RadarChartProps<T> extends ChartStyleProps {
   categories: Record<string, BulletLegendItemInterface>;
   /**
    * Polygon treatment. `filled` (the default) paints each series' area;
-   * `lines` draws the outline only, which keeps several overlapping series
-   * readable.
+   * `lines` draws the outline only. `gradient` fades from the centre outward,
+   * while `gradient-reverse` fades from the outside toward the centre.
    */
   variant?: RadarVariant;
   /** Shape of the polar grid. `polygon` (the default) or `circle`. */
@@ -680,6 +692,12 @@ export interface FunnelChartProps<T = unknown> extends ChartStyleProps {
   lastShapeType?: "triangle" | "rectangle";
   /** Show the value label on each stage. Default true. */
   showValueLabel?: boolean;
+  /** Show the stage name inside each shape when it fits. Default true. */
+  showStageLabel?: boolean;
+  /** Vertical gap between classic funnel stages in pixels. Default 4. */
+  stageGap?: number;
+  /** Format values rendered inside shapes and in the tooltip. */
+  valueFormatter?: (value: number, index: number) => string;
   /**
    * `layered` only. Show the percentage-of-first-stage badge. Default true.
    * A badge that cannot fit its stage is dropped regardless.
@@ -780,6 +798,7 @@ export interface StatusTrackerChartProps<T extends StatusTrackerDatum = StatusTr
 /** A Sankey node. Extend with your own fields. */
 export interface SankeyInputNode {
   id?: string | number;
+  name?: string;
   [key: string]: unknown;
 }
 
@@ -796,7 +815,7 @@ export type SankeyNodeAlign = "justify" | "left" | "right" | "center";
 export interface SankeyChartProps<
   N extends SankeyInputNode = SankeyInputNode,
   L extends SankeyInputLink = SankeyInputLink,
-> {
+> extends ChartStyleProps {
   /** Nodes and links describing the flow. */
   data: { nodes: N[]; links: L[] };
   /** Chart height in pixels. */

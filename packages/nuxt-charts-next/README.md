@@ -82,7 +82,7 @@ as it did before. The playground's `/variants` page shows them side by side.
 |---|---|---|
 | `variant` | `BarChart` | `solid` (default), `cubes`, `hatched`, `duotone`, `duotone-reverse`, `gradient`, `stripped` |
 | `variant` | `AreaChart` | `gradient`, `gradient-reverse`, `solid`, `dotted`, `lines`, `hatched` |
-| `variant` | `RadarChart` | `filled` (default), `lines` |
+| `variant` | `RadarChart` | `filled` (default), `lines`, `gradient` (inside to outside), `gradient-reverse` (outside to inside) |
 | `variant` | `RadialBarChart` | `full` (default), `semi` |
 | `variant` | `DonutChart` | `flat` (default), `gradient` |
 
@@ -139,8 +139,6 @@ several charts on one page never collide.
 
 ### Deferred / removed
 
-- **`SankeyChart`** — deferred: the published `vccs` release does not yet export
-  a Sankey chart. Returns once `vccs` ships it.
 - **`DualChart`** — planned for v3.1 (maps onto the `vccs` `ComposedChart`).
 - **`GanttChart`, `DagreGraph`, `Maps`** — removed in v3. They were Unovis /
   d3-geo specific and have no `vccs` equivalent.
@@ -164,6 +162,7 @@ export default defineNuxtConfig({
 - Enums: `CurveType`, `LegendPosition`, `Orientation`, `DonutType`
 - Types: `AreaChartProps`, `BarChartProps`, `LineChartProps`, `BubbleChartProps`,
   `DonutChartProps`, `RadarChartProps`, `RadialBarChartProps`, `FunnelChartProps`,
+  `SankeyChartProps`, `SankeyInputNode`, `SankeyInputLink`,
   `StatusTrackerChartProps`, `StatusTrackerDatum`, `BulletLegendItemInterface`,
   `AxisConfig`, `TooltipConfig`, `ValueLabel`, `ReferenceLineConfig`
 - Style variant unions: `BarVariant`, `AreaFillVariant`, `StrokeVariant`,
@@ -172,7 +171,7 @@ export default defineNuxtConfig({
 
 ## Migrating from v2
 
-See the [Upgrade to v3](https://nuxtcharts.com/docs/getting-started/upgrade-to-v3) guide. Specialty charts (maps, gantt, dual, sankey, dagre) are not in v3 yet — stay on `nuxt-charts@2` if you need them.
+See the [Upgrade to v3](https://nuxtcharts.com/docs/getting-started/upgrade-to-v3) guide. Specialty charts (maps, gantt, dual, dagre) are not in v3 yet — stay on `nuxt-charts@2` if you need them.
 
 ## License
 

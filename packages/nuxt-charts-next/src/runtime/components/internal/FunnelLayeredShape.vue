@@ -14,7 +14,12 @@
  */
 import { computed } from "vue";
 
-export type FunnelLayeredDatum = { name: string; value: number; color: string };
+export type FunnelLayeredDatum = {
+  name: string;
+  value: number;
+  color: string;
+  formattedValue?: string;
+};
 
 type LayeredShapePayload = FunnelLayeredDatum & {
   stageIndex: number;
@@ -30,6 +35,7 @@ type LayeredShapePayload = FunnelLayeredDatum & {
   };
   showValue?: boolean;
   showPercentage?: boolean;
+  showStageLabel?: boolean;
 };
 
 type ViewBox = { x?: number; y?: number; width?: number; height?: number };
@@ -181,7 +187,7 @@ export default { name: "FunnelLayeredShape", inheritAttrs: false };
       stroke="none"
       text-anchor="middle"
     >
-      {{ payload.value.toLocaleString() }}
+      {{ payload.formattedValue ?? payload.value.toLocaleString() }}
     </text>
 
     <template v-if="geometry.showBadge">
@@ -208,6 +214,7 @@ export default { name: "FunnelLayeredShape", inheritAttrs: false };
     </template>
 
     <text
+      v-if="payload.showStageLabel !== false"
       class="vc-funnel-layered-shape__name"
       :x="geometry.middleX"
       :y="geometry.bottomLabelY"

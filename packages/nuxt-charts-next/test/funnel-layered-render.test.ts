@@ -64,6 +64,10 @@ async function mountFunnel(props: Record<string, unknown> = {}) {
   return wrapper;
 }
 
+async function mountClassicFunnel(props: Record<string, unknown> = {}) {
+  return mountFunnel({ variant: "default", ...props });
+}
+
 const LABEL_SELECTOR =
   ".vc-funnel-layered-shape__value, .vc-funnel-layered-shape__badge-text, .vc-funnel-layered-shape__name";
 
@@ -101,5 +105,51 @@ describe("FunnelChart variant=layered labels", () => {
     expect(
       document.querySelector(".vc-funnel-layered-shape__name")?.getAttribute("font-weight"),
     ).toBe("var(--vc-funnel-label-weight)");
+  });
+});
+
+describe("FunnelChart variant=default presentation", () => {
+  it("renders the polished custom shape for every stage", async () => {
+    await mountClassicFunnel();
+    expect(document.querySelectorAll(".vc-funnel-classic-shape").length).toBe(4);
+    expect(document.querySelectorAll(".vc-funnel-classic-shape__body").length).toBe(4);
+    expect(document.querySelectorAll(".vc-funnel-classic-shape__value").length).toBeGreaterThan(0);
+  });
+
+  it("keeps custom shapes when the last stage is rectangular", async () => {
+    await mountClassicFunnel({ lastShapeType: "rectangle" });
+    expect(document.querySelectorAll(".vc-funnel-classic-shape").length).toBe(4);
+  });
+
+  it("honours showValueLabel", async () => {
+    await mountClassicFunnel({ showValueLabel: false });
+    expect(document.querySelectorAll(".vc-funnel-classic-shape__value").length).toBe(0);
+  });
+
+  it("shows the hovered stage value and matching colour", async () => {
+    const wrapper = await mountClassicFunnel();
+    await wrapper.find(".vc-funnel-classic-shape").trigger("mouseenter", {
+      clientX: 120,
+      clientY: 80,
+    });
+    await flushPromises();
+
+    const tooltip = wrapper.find(".vc-funnel-layered__tooltip");
+    expect(tooltip.text()).toContain("Visits");
+    expect(tooltip.text()).toContain("8,200");
+    expect(tooltip.find(".vc-funnel-layered__dot").attributes("style")).toContain("#2662d9");
+  });
+
+  it("uses valueFormatter for shape labels and tooltips", async () => {
+    const wrapper = await mountClassicFunnel({
+      valueFormatter: (value: number) => `$${value}`,
+    });
+    expect(wrapper.find(".vc-funnel-classic-shape__value").text()).toBe("$8200");
+
+    await wrapper.find(".vc-funnel-classic-shape").trigger("mouseenter", {
+      clientX: 120,
+      clientY: 80,
+    });
+    expect(wrapper.find(".vc-funnel-layered__tooltip").text()).toContain("$8200");
   });
 });

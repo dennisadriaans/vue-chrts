@@ -9,12 +9,14 @@ import { computed, useId } from "vue";
 import { Line, LineChart as VccsLineChart } from "vccs";
 import CartesianFrame from "./internal/CartesianFrame.vue";
 import AreaVariantDefs from "./internal/AreaVariantDefs";
+import StrokeGradientDefs from "./internal/StrokeGradientDefs";
 import ChartDot from "./internal/ChartDot";
 import type { LineChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
 import { curveTypeToVccs } from "../utils/curve";
 import { markerToDot, normalizeMarkerConfig, toStrokeDasharray } from "../utils/marker";
 import { strokeDasharrayFor, variantId } from "../utils/variants";
+import { strokeGradientId } from "../utils/gradient";
 
 const props = defineProps<LineChartProps<T>>();
 
@@ -64,6 +66,12 @@ function glowFor(dataKey: string): string | undefined {
   return props.glow ? `url(#${variantId("glow", dataKey, variantScope)})` : undefined;
 }
 
+function strokeFor(dataKey: string, color: string): string {
+  return props.strokeGradient?.length
+    ? `url(#${strokeGradientId(dataKey, variantScope)})`
+    : color;
+}
+
 const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
 
 defineSlots<{
@@ -84,6 +92,12 @@ defineSlots<{
       `filter="url(#…)"` reference on each line resolves.
     -->
     <AreaVariantDefs v-if="glow" :series="paintedSeries" :scope="variantScope" glow />
+    <StrokeGradientDefs
+      v-if="strokeGradient?.length"
+      :series="paintedSeries"
+      :stops="strokeGradient"
+      :scope="variantScope"
+    />
     <template v-if="$slots.tooltip" #tooltip="scope">
       <slot name="tooltip" v-bind="scope" />
     </template>
@@ -95,7 +109,7 @@ defineSlots<{
       :y-axis-id="s.yAxisId"
       :type="curve"
       :stack-id="stackId"
-      :stroke="s.color"
+      :stroke="strokeFor(s.dataKey, s.color)"
       :stroke-width="lineWidth ?? 2"
       :stroke-dasharray="dashArray"
       :filter="glowFor(s.dataKey)"

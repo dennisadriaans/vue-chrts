@@ -13,6 +13,18 @@ export interface GradientStop {
   stopOpacity: number;
 }
 
+/** One stop in a horizontal gradient used to paint a line or area outline. */
+export interface StrokeGradientStop {
+  offset: string;
+  color: string;
+  stopOpacity?: number;
+}
+
+/** Build the scoped id referenced by a gradient-painted series outline. */
+export function strokeGradientId(dataKey: string, scope: string): string {
+  return gradientId(`stroke-${dataKey}`, scope);
+}
+
 /** Default vertical fade used for the area fill when no explicit stops are given. */
 export const DEFAULT_GRADIENT_STOPS: GradientStop[] = [
   { offset: "0%", stopOpacity: 0.6 },

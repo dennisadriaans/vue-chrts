@@ -2,8 +2,6 @@ import { addComponent, createResolver } from "@nuxt/kit";
 import type { ModuleOptions } from "../module";
 
 /** Component name -> runtime adapter file (relative to src/runtime/components). */
-// SankeyChart is deferred to iteration 2: vccs@0.4.0 (latest published) has no
-// Sankey export. The adapter lives in components/_deferred/ until vccs ships it.
 const COMPONENTS = {
   AreaChart: "AreaChart",
   BarChart: "BarChart",
@@ -13,6 +11,7 @@ const COMPONENTS = {
   RadarChart: "RadarChart",
   RadialBarChart: "RadialBarChart",
   FunnelChart: "FunnelChart",
+  SankeyChart: "SankeyChart",
   CandlestickChart: "CandlestickChart",
   StatusTrackerChart: "StatusTrackerChart",
 } as const;

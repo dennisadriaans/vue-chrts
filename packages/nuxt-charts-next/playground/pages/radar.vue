@@ -30,5 +30,49 @@ const categories: Record<string, BulletLegendItemInterface> = {
       :legend-position="LegendPosition.BottomCenter"
       hide-radius-axis
     />
+
+    <h2>Radar Chart - Outline with Dots</h2>
+    <RadarChart
+      :data="radar"
+      :categories="categories"
+      data-key="metric"
+      :height="360"
+      :legend-position="LegendPosition.BottomCenter"
+      variant="lines"
+      dot-variant="colored-border"
+      :dot-size="4"
+    />
+
+    <h2>Radar Chart - Circular Grid</h2>
+    <RadarChart
+      :data="radar"
+      :categories="categories"
+      data-key="metric"
+      :height="360"
+      :legend-position="LegendPosition.BottomCenter"
+      grid-type="circle"
+      :fill-opacity="0.25"
+      hide-radius-axis
+    />
+
+    <h2>Radar Chart - Custom Axes and Markers</h2>
+    <RadarChart
+      :data="radar"
+      :categories="categories"
+      data-key="metric"
+      :height="400"
+      :legend-position="LegendPosition.BottomCenter"
+      legend-variant="circle-outline"
+      grid-type="circle"
+      dot-variant="ping"
+      :dot-size="5"
+      :fill-opacity="0.18"
+      :radius-axis-angle="45"
+      outer-radius="62%"
+      :angle-axis-tick-size="24"
+      tooltip-variant="frosted-glass"
+      tooltip-roundness="xl"
+      :angle-formatter="(value) => String(value).toUpperCase()"
+    />
   </main>
 </template>

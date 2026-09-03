@@ -135,7 +135,15 @@ export type TooltipVariant = "default" | "frosted-glass";
 export type TooltipRoundness = "sm" | "md" | "lg" | "xl";
 
 /** Fill treatment for a radar polygon: a filled area, or its outline only. */
-export type RadarVariant = "filled" | "lines";
+/**
+ * Radar polygon treatment.
+ *
+ * - `filled` — flat, translucent series colour.
+ * - `lines` — outline only.
+ * - `gradient` — strongest at the centre and fading toward the outside.
+ * - `gradient-reverse` — transparent at the centre and strongest outside.
+ */
+export type RadarVariant = "filled" | "lines" | "gradient" | "gradient-reverse";
 
 /** Sweep of a radial bar chart: a full turn, or a semicircle gauge. */
 export type RadialVariant = "full" | "semi";

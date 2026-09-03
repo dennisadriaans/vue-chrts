@@ -6,7 +6,7 @@
  * bound to `dataKey` (the spoke labels) and a `<PolarRadiusAxis>`, plus one
  * `<Radar>` polygon per series defined in `categories`.
  */
-import { computed, ref } from "vue";
+import { computed, ref, useId } from "vue";
 import {
   Legend,
   PolarAngleAxis,
@@ -22,6 +22,7 @@ import ChartLegend from "./internal/ChartLegend.vue";
 import ChartDot from "./internal/ChartDot";
 import { tooltipContentFor } from "./internal/tooltipContent";
 import PolarCenterSync from "./internal/PolarCenterSync";
+import RadarGradientDefs, { radarGradientId } from "./internal/RadarGradientDefs";
 import type { RadarChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
@@ -29,6 +30,7 @@ import { toCssProperties } from "../utils/style";
 import { themeToVars } from "../utils/theme";
 
 const props = defineProps<RadarChartProps<T>>();
+const gradientScope = useId();
 
 /** One radar polygon per visible series in `categories`. */
 const series = computed(() => categoriesToSeries(props.categories).filter((s) => !s.hidden));
@@ -38,8 +40,16 @@ const series = computed(() => categoriesToSeries(props.categories).filter((s) =>
  * three or more filled polygons the lower ones disappear under the upper ones.
  */
 const polygonFillOpacity = computed(() =>
-  props.variant === "lines" ? 0 : (props.fillOpacity ?? 0.6),
+  props.variant === "lines" ? 0 : isGradient.value ? 1 : (props.fillOpacity ?? 0.6),
 );
+
+const isGradient = computed(
+  () => props.variant === "gradient" || props.variant === "gradient-reverse",
+);
+
+function polygonFill(dataKey: string, color: string): string {
+  return isGradient.value ? `url(#${radarGradientId(dataKey, gradientScope)})` : color;
+}
 
 /** Truthy `dot` is what makes `vccs` call the `#dot` slot at all. */
 const showDots = computed(() => props.dotVariant !== undefined);
@@ -113,6 +123,13 @@ const resolvedOuterRadius = computed(() => {
       :margin="margin ?? { top: 12, right: 12, bottom: 12, left: 12 }"
     >
       <PolarCenterSync :on-center="onCenter" />
+      <RadarGradientDefs
+        v-if="isGradient"
+        :series="series"
+        :variant="variant === 'gradient-reverse' ? 'gradient-reverse' : 'gradient'"
+        :scope="gradientScope"
+        :opacity="fillOpacity ?? 0.6"
+      />
       <PolarGrid stroke="var(--vc-grid-color)" :grid-type="gridType ?? 'polygon'" />
       <PolarAngleAxis
         :data-key="angleKey"
@@ -138,7 +155,7 @@ const resolvedOuterRadius = computed(() => {
         :data-key="s.dataKey"
         :name="s.name"
         :stroke="s.color"
-        :fill="s.color"
+        :fill="polygonFill(s.dataKey, s.color)"
         :fill-opacity="polygonFillOpacity"
         :dot="showDots"
         :is-animation-active="duration !== undefined && duration !== 0"

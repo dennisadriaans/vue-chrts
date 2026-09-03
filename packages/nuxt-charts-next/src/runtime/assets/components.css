@@ -318,6 +318,10 @@
     width: 100%;
   }
 
+  .vc-funnel {
+    position: relative;
+  }
+
   .vc-funnel-layered__tooltip {
     position: absolute;
     transform: translate(-50%, calc(-100% - 10px));
@@ -366,6 +370,51 @@
     font-size: var(--vc-funnel-value-size, 0.75rem);
     font-weight: var(--vc-funnel-value-weight, 600);
     font-variant-numeric: tabular-nums;
+  }
+
+  .vc-funnel-classic-shape {
+    cursor: default;
+  }
+
+  .vc-funnel-classic-shape__shadow {
+    opacity: var(--vc-funnel-shadow-opacity, 0.16);
+  }
+
+  .vc-funnel-classic-shape__body {
+    opacity: var(--vc-funnel-shape-opacity, 0.92);
+    transition: opacity 150ms ease;
+  }
+
+  .vc-funnel-classic-shape__highlight {
+    fill: none;
+    stroke: rgb(255 255 255 / 0.24);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .vc-funnel-classic-shape:hover .vc-funnel-classic-shape__body {
+    opacity: var(--vc-funnel-shape-hover-opacity, 1);
+  }
+
+  .vc-funnel-classic-shape__value,
+  .vc-funnel-classic-shape__name {
+    pointer-events: none;
+    user-select: none;
+    font-family: inherit;
+    paint-order: stroke;
+    stroke: rgb(0 0 0 / 0.12);
+    stroke-width: 2px;
+    stroke-linejoin: round;
+  }
+
+  .vc-funnel-classic-shape__value {
+    fill: var(--vc-funnel-inside-value-color, white);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .vc-funnel-classic-shape__name {
+    fill: var(--vc-funnel-inside-label-color, white);
+    opacity: 0.78;
   }
 
   .vc-funnel-layered-shape__divider {

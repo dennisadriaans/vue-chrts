@@ -50,6 +50,11 @@ export function themeToVars(theme: ChartTheme | undefined): CSSProperties {
   set("--vc-funnel-badge-color", theme.funnel?.badgeColor);
   set("--vc-funnel-badge-weight", theme.funnel?.badgeWeight);
   set("--vc-funnel-badge-border", theme.funnel?.badgeBorder);
+  set("--vc-funnel-inside-value-color", theme.funnel?.insideValueColor);
+  set("--vc-funnel-inside-label-color", theme.funnel?.insideLabelColor);
+  set("--vc-funnel-shape-opacity", theme.funnel?.shapeOpacity);
+  set("--vc-funnel-shape-hover-opacity", theme.funnel?.shapeHoverOpacity);
+  set("--vc-funnel-shadow-opacity", theme.funnel?.shadowOpacity);
 
   set("--vc-tooltip-bg", theme.tooltip?.bg);
   set("--vc-tooltip-fg", theme.tooltip?.fg);
