@@ -392,6 +392,7 @@ const resolvedYAxes = computed(() => {
         v-if="showXGrid || showYGrid"
         :horizontal="showYGrid"
         :vertical="showXGrid"
+        :sync-with-ticks="true"
         :stroke="gridStroke"
         stroke-dasharray="var(--vc-grid-dash)"
         :stroke-width="'var(--vc-grid-width)'"

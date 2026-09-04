@@ -20,6 +20,10 @@ export function themeToVars(theme: ChartTheme | undefined): CSSProperties {
     if (value !== undefined) vars[name] = String(value);
   };
 
+  theme.colors?.slice(0, 8).forEach((color, index) => {
+    set(`--vc-series-${index}`, color);
+  });
+
   set("--vc-grid-color", theme.grid?.color);
   set("--vc-grid-dash", theme.grid?.dash);
   set("--vc-grid-width", theme.grid?.width);

@@ -27,7 +27,7 @@ export interface SeriesDescriptor {
   dataKey: string;
   /** Display name shown in legend / tooltip. */
   name: string;
-  /** Resolved colour. Falls back to `var(--chart-color-N)` for CSS-var theming. */
+  /** Resolved colour. Falls back to the library's design-system-aware series token. */
   color: string;
   /** Whether the series is hidden. */
   hidden: boolean;
@@ -37,11 +37,12 @@ export interface SeriesDescriptor {
 
 /**
  * Normalise a `BulletLegendItemInterface` colour into a single colour string.
- * Falls back to `var(--chart-color-N)` so callers can theme all charts via CSS.
+ * Falls back to `--vc-series-N`. Those tokens inherit Nuxt UI semantic colors,
+ * while preserving `--chart-color-N` and standalone fallbacks.
  */
 function resolveColor(color: BulletLegendItemInterface["color"], index: number): string {
-  if (Array.isArray(color)) return color[0] ?? `var(--chart-color-${index})`;
-  return color ?? `var(--chart-color-${index})`;
+  if (Array.isArray(color)) return color[0] ?? `var(--vc-series-${index % 8})`;
+  return color ?? `var(--vc-series-${index % 8})`;
 }
 
 /**

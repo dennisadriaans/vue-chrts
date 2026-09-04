@@ -50,7 +50,7 @@ const segments = computed(() => {
   warnDataLimit("DonutChart", normalized.length, limit);
   const values = sampleData(normalized, limit);
   return values.map(({ row, value, sourceIndex, name }) => {
-    const color = cats[sourceIndex]?.color ?? `var(--chart-color-${sourceIndex})`;
+    const color = cats[sourceIndex]?.color ?? `var(--vc-series-${sourceIndex % 8})`;
     return {
       ...(row && typeof row === "object" ? row : {}),
       name,

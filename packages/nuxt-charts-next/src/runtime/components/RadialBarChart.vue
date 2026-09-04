@@ -24,7 +24,7 @@ import type { RadialBarChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
 import { toCssProperties } from "../utils/style";
-import { themeToVars } from "../utils/theme";
+import { resolveHoverVisible, themeToVars } from "../utils/theme";
 import { DEFAULT_MAX_DATA_POINTS, normalizeNamedValues, sampleData, warnDataLimit } from "../utils/data";
 
 const props = withDefaults(defineProps<RadialBarChartProps<T>>(), { accessibleDataTable: true });
@@ -41,7 +41,7 @@ const bars = computed(() => {
     ...(row && typeof row === "object" ? row : {}),
     name,
     value,
-    fill: cats[sourceIndex]?.color ?? `var(--chart-color-${sourceIndex})`,
+    fill: cats[sourceIndex]?.color ?? `var(--vc-series-${sourceIndex % 8})`,
   }));
 });
 
@@ -62,6 +62,35 @@ const tooltipContent = computed(() =>
   tooltipContentFor(props.tooltipVariant, props.tooltipRoundness, props.tooltipTitleFormatter as ((data: unknown) => string | number) | undefined),
 );
 const accessibleRows = computed(() => bars.value.map((bar) => ({ label: bar.name, values: [{ label: "Value", value: bar.value }] })));
+
+/** Keep the ring highlight active when only the floating tooltip is hidden. */
+const hiddenTooltipContent = () => null;
+
+const radiusInPixels = (radius: number | string, fallback: number) => {
+  if (typeof radius === "number") return radius;
+  const percentage = Number.parseFloat(radius);
+  return Number.isFinite(percentage) ? (props.height / 2) * percentage / 100 : fallback;
+};
+
+/**
+ * vccs draws its default radial cursor as a one-pixel line. Size the stroke to
+ * the radial category band so hovering reads as a muted background ring.
+ */
+const hoverStrokeWidth = computed(() => {
+  const outer = radiusInPixels(props.outerRadius ?? "100%", props.height / 2);
+  const inner = radiusInPixels(props.innerRadius ?? "30%", props.height * 0.15);
+  return Math.max(((outer - inner) / Math.max(bars.value.length, 1)) * 0.9, 1);
+});
+
+const cursor = computed(() =>
+  resolveHoverVisible(props.theme)
+    ? {
+        fill: "none",
+        stroke: "var(--vc-hover-fill)",
+        strokeWidth: hoverStrokeWidth.value,
+      }
+    : false,
+);
 
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
 const legendWrapperStyle = computed(() =>
@@ -104,7 +133,11 @@ const onCenter = (next: { cx: number; cy: number }) => {
         :is-animation-active="duration !== undefined && duration !== 0"
         :transition="{ duration: (duration ?? 400) / 1000, ease: 'easeOut' }"
       />
-      <Tooltip v-if="!hideTooltip" :content="tooltipContent" :is-animation-active="false" />
+      <Tooltip
+        :content="hideTooltip ? hiddenTooltipContent : tooltipContent"
+        :cursor="cursor"
+        :is-animation-active="false"
+      />
       <Legend
         v-if="!hideLegend"
         :align="legend.align"

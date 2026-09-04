@@ -61,14 +61,14 @@ const nodeLabel = (node: unknown) => {
 };
 
 const resolvedNodeColor = (node: unknown) =>
-  props.nodeColor?.(node as N) ?? "var(--chart-color-0)";
+  props.nodeColor?.(node as N) ?? "var(--vc-series-0)";
 
 const resolvedLinkColor = (link: unknown) => {
   const layoutLink = link as L & { __source?: string | number };
   const inputLink = layoutLink.__source === undefined
     ? layoutLink
     : { ...layoutLink, source: layoutLink.__source };
-  return props.linkColor?.(inputLink as L) ?? "var(--chart-color-0)";
+  return props.linkColor?.(inputLink as L) ?? "var(--vc-series-0)";
 };
 
 function handleMouseEnter(item: unknown, type: "node" | "link") {
@@ -157,7 +157,7 @@ const accessibleRows = computed(() => chartData.value.links.map((link) => ({
               :width="nodeProps.width"
               :height="nodeProps.height"
               :fill="resolvedNodeColor(nodeProps.payload)"
-              stroke="var(--vc-surface, #fff)"
+              stroke="var(--vc-surface-bg, #fff)"
             />
             <text
               :x="nodeProps.payload.depth === 0 ? nodeProps.x - 8 : nodeProps.x + nodeProps.width + 8"

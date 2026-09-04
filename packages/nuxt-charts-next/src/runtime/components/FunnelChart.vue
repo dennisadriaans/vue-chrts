@@ -63,8 +63,8 @@ const stages = computed(() => {
     name,
     value,
     formattedValue: props.valueFormatter?.(value, sourceIndex),
-    fill: cats[sourceIndex]?.color ?? `var(--chart-color-${sourceIndex})`,
-    color: cats[sourceIndex]?.color ?? `var(--chart-color-${sourceIndex})`,
+    fill: cats[sourceIndex]?.color ?? `var(--vc-series-${sourceIndex % 8})`,
+    color: cats[sourceIndex]?.color ?? `var(--vc-series-${sourceIndex % 8})`,
   }));
 });
 const accessibleRows = computed(() => stages.value.map((stage) => ({ label: stage.name, values: [{ label: "Value", value: stage.formattedValue ?? stage.value }] })));

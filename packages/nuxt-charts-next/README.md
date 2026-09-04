@@ -4,6 +4,11 @@ Beautiful chart components for Nuxt — Area, Bar, Line, Donut, Bubble, Radar, R
 
 Powered by [vccs](https://vue-charts.com) (Vue port of Recharts). Drop-in config-prop API from nuxt-charts v2.
 
+Nuxt UI v4 is a first-class, zero-config integration: chart series, surfaces,
+text, borders, radius, typography, and dark mode inherit its semantic design
+tokens. Nuxt UI is not a dependency; every token has a standalone fallback, so
+the same components work in any Nuxt project.
+
 ## Install
 
 ```bash
@@ -178,6 +183,25 @@ SVG charts render at most 2,000 data rows by default. Larger inputs are sampled
 evenly (preserving both endpoints) and emit one development warning. Override
 this with `maxDataPoints`, but use pre-aggregation for genuinely dense data:
 SVG creates DOM work per mark, so raising the limit can block the UI.
+
+## Theming
+
+With Nuxt UI, no chart-specific setup is required. Categories without an
+explicit `color` use `--ui-primary`, `--ui-secondary`, `--ui-success`,
+`--ui-info`, `--ui-warning`, and `--ui-error`; chart chrome follows Nuxt UI's
+background, text, border, radius, and font tokens.
+
+Without Nuxt UI, built-in light and dark defaults are used. Customize globally
+with `--vc-*` variables (or the backwards-compatible `--chart-color-0` through
+`--chart-color-7`), and customize one chart with the `theme` prop:
+
+```vue
+<LineChart
+  :data="data"
+  :categories="categories"
+  :theme="{ colors: ['var(--brand)', 'var(--accent)'] }"
+/>
+```
 
 ## Auto-imported enums & types
 

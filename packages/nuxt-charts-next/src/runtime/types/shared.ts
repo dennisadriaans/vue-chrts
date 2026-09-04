@@ -140,6 +140,11 @@ export interface ChartPadding {
  * scale legend, axis ticks, axis titles, and radar labels together.
  */
 export interface ChartTheme {
+  /**
+   * Per-chart series palette. Entries override `--vc-series-0` through
+   * `--vc-series-7`; omitted entries continue to inherit host design tokens.
+   */
+  colors?: string[];
   /** Grid + axis (domain) lines. */
   grid?: {
     /** Line colour. Token: `--vc-grid-color`. */
