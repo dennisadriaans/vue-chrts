@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.0.0-beta.4](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.0.0-beta.3...nuxt-charts@3.0.0-beta.4) (2026-09-04)
+
+### Features
+
+* **nuxt-charts-next:** harden chart data handling ([b7850de](https://github.com/dennisadriaans/vue-chrts/commit/b7850de0e6d77d5d3e88a8b3017a2c63a89a473b))
+
 ## [3.0.0-beta.3](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.0.0-beta.2...nuxt-charts@3.0.0-beta.3) (2026-09-03)
 
 ### Features
