@@ -35,6 +35,9 @@
     --vc-axis-line-color: var(--ui-border, var(--border, oklch(0.922 0 0)));
     --vc-axis-line-width: 1px;
     --vc-surface-bg: var(--ui-bg, var(--background, oklch(1 0 0)));
+    --vc-reference-line-color: var(--ui-text-muted, var(--muted-foreground, oklch(0.556 0 0)));
+    --vc-candle-up: var(--ui-success, oklch(0.696 0.17 162.48));
+    --vc-candle-down: var(--ui-error, oklch(0.637 0.237 25.331));
 
     /* ---- decorative background texture (`backgroundPattern`) ---- */
     --vc-bg-pattern-color: var(--vc-grid-color);

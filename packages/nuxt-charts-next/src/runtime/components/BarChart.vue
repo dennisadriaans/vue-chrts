@@ -34,6 +34,7 @@ import {
 import { PATTERNED_BAR_VARIANTS, variantId } from "../utils/variants";
 
 const props = withDefaults(defineProps<BarChartProps<T>>(), {
+  accessibleDataTable: true,
   variant: "solid",
   cubeGap: DEFAULT_CUBE_GAP,
   cubeRadius: DEFAULT_CUBE_RADIUS,
@@ -278,6 +279,7 @@ defineSlots<{
       :radius="isCubes ? 0 : barRadius(i)"
       :hide="s.hidden"
       :is-animation-active="duration !== undefined && duration !== 0"
+      :transition="{ duration: (duration ?? 400) / 1000, ease: 'easeOut' }"
     >
       <!--
         Always register `#shape`. vccs reads `slots.shape` once in Bar setup, so a

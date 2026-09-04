@@ -91,18 +91,6 @@ export interface AxisConfig {
 }
 
 /**
- * Tooltip behaviour options. Mapped onto `vccs` `<Tooltip>`.
- */
-export interface TooltipConfig {
-  /** Hide delay in milliseconds. */
-  hideDelay?: number;
-  /** Show delay in milliseconds. */
-  showDelay?: number;
-  /** If `true`, the tooltip follows the cursor. */
-  followCursor?: boolean;
-}
-
-/**
  * @deprecated Unovis-only. `vccs` has no crosshair primitive; retained as an
  * inert type so v2 templates keep type-checking. Has no effect.
  */

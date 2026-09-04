@@ -16,6 +16,8 @@ import {
 import ChartContainer from "./internal/ChartContainer";
 import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import ChartEmptyState from "./internal/ChartEmptyState.vue";
+import ChartAccessibility from "./internal/ChartAccessibility.vue";
 import { tooltipContentFor } from "./internal/tooltipContent";
 import PolarCenterSync from "./internal/PolarCenterSync";
 import type { RadialBarChartProps } from "../types/charts";
@@ -23,18 +25,23 @@ import { categoriesToSeries } from "../utils/categories";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
 import { toCssProperties } from "../utils/style";
 import { themeToVars } from "../utils/theme";
+import { DEFAULT_MAX_DATA_POINTS, normalizeNamedValues, sampleData, warnDataLimit } from "../utils/data";
 
-const props = defineProps<RadialBarChartProps<T>>();
+const props = withDefaults(defineProps<RadialBarChartProps<T>>(), { accessibleDataTable: true });
 
 const themeVars = computed(() => themeToVars(props.theme));
 
 /** Zip the value array against the categories record (positional, matching Donut). */
 const bars = computed(() => {
   const cats = categoriesToSeries(props.categories);
-  return props.data.map((value, i) => ({
-    name: cats[i]?.name ?? String(i),
+  const normalized = normalizeNamedValues(props.data, cats.map((cat) => String(cat.name)), props.nameKey, props.valueKey);
+  const limit = props.maxDataPoints ?? DEFAULT_MAX_DATA_POINTS;
+  warnDataLimit("RadialBarChart", normalized.length, limit);
+  return sampleData(normalized, limit).map(({ row, value, sourceIndex, name }) => ({
+    ...(row && typeof row === "object" ? row : {}),
+    name,
     value,
-    fill: cats[i]?.color ?? `var(--chart-color-${i})`,
+    fill: cats[sourceIndex]?.color ?? `var(--chart-color-${sourceIndex})`,
   }));
 });
 
@@ -52,8 +59,9 @@ const angles = computed(() => {
 });
 
 const tooltipContent = computed(() =>
-  tooltipContentFor(props.tooltipVariant, props.tooltipRoundness),
+  tooltipContentFor(props.tooltipVariant, props.tooltipRoundness, props.tooltipTitleFormatter as ((data: unknown) => string | number) | undefined),
 );
+const accessibleRows = computed(() => bars.value.map((bar) => ({ label: bar.name, values: [{ label: "Value", value: bar.value }] })));
 
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
 const legendWrapperStyle = computed(() =>
@@ -69,13 +77,15 @@ const onCenter = (next: { cx: number; cy: number }) => {
 </script>
 
 <template>
-  <div class="vue-chrts" :style="themeVars">
+  <div class="vue-chrts" role="group" :aria-label="ariaLabel ?? 'Radial bar chart'" :style="themeVars">
+    <ChartAccessibility :label="ariaLabel ?? 'Radial bar chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
     <ChartSkeleton
       v-if="loading"
       :height="height ?? 200"
       shape="ring"
       :label="loadingLabel ?? 'Loading'"
     />
+    <ChartEmptyState v-else-if="error || bars.length === 0" :height="height" :message="error || emptyLabel" />
     <ChartContainer v-else width="100%" :height="height">
     <VccsRadialBarChart
       :data="bars"
@@ -92,6 +102,7 @@ const onCenter = (next: { cx: number; cy: number }) => {
         :background="background ?? true"
         :corner-radius="cornerRadius"
         :is-animation-active="duration !== undefined && duration !== 0"
+        :transition="{ duration: (duration ?? 400) / 1000, ease: 'easeOut' }"
       />
       <Tooltip v-if="!hideTooltip" :content="tooltipContent" :is-animation-active="false" />
       <Legend

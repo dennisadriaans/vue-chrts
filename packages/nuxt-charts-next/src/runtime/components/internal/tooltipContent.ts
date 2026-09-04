@@ -14,7 +14,11 @@ import type { TooltipRoundness, TooltipVariant } from "../../utils/variants";
 export function tooltipContentFor(
   variant: TooltipVariant | undefined,
   roundness: TooltipRoundness | undefined,
+  titleFormatter?: (data: unknown) => string | number,
 ) {
-  return (tooltipProps: TooltipContentProps) =>
-    h(ChartTooltip, { ...tooltipProps, variant, roundness });
+  return (tooltipProps: TooltipContentProps) => {
+    const row = tooltipProps.payload?.[0]?.payload;
+    const label = titleFormatter && row != null ? titleFormatter(row) : tooltipProps.label;
+    return h(ChartTooltip, { ...tooltipProps, label, variant, roundness });
+  };
 }

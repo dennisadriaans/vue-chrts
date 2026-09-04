@@ -5,8 +5,14 @@ import type {
   StatusTrackerDatum,
 } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
+import ChartAccessibility from "./internal/ChartAccessibility.vue";
+import ChartEmptyState from "./internal/ChartEmptyState.vue";
+import ChartSkeleton from "./internal/ChartSkeleton.vue";
+import { toFiniteNumber } from "../utils/data";
+import { formatNumber } from "../utils/format";
 
 const props = withDefaults(defineProps<StatusTrackerChartProps<T>>(), {
+  accessibleDataTable: true,
   height: 28,
   barWidth: 8,
   barGap: 3,
@@ -61,11 +67,11 @@ const visibleBars = computed(() => {
       const dataIndex = start + visibleIndex;
       const status = props.statusAccessor?.(datum, dataIndex) ?? datum.status;
       const category = categoryMap.value.get(status);
-      const value = props.valueAccessor?.(datum, dataIndex) ?? datum.value;
+      const value = toFiniteNumber(props.valueAccessor?.(datum, dataIndex) ?? datum.value);
       const label = props.labelAccessor?.(datum, dataIndex) ?? datum.label ?? category?.name ?? status;
       const formattedValue =
         typeof value === "number"
-          ? props.valueFormatter?.(value, datum, dataIndex) ?? value.toLocaleString()
+          ? props.valueFormatter?.(value, datum, dataIndex) ?? formatNumber(value)
           : undefined;
 
       return {
@@ -90,10 +96,15 @@ const barStyle = computed(() => ({
 }));
 
 const ariaLabel = computed(() => {
+  if (props.ariaLabel) return props.ariaLabel;
   const prefix = props.title ? `${props.title}: ` : "";
   const samples = props.data.length === 1 ? "1 status sample" : `${props.data.length} status samples`;
   return `${prefix}${samples}`;
 });
+const accessibleRows = computed(() => visibleBars.value.filter((bar) => !bar.isEmpty).map((bar) => ({
+  label: bar.label,
+  values: [{ label: "Status", value: bar.status }],
+})));
 
 function updateContainerWidth() {
   containerWidth.value = containerRef.value?.offsetWidth ?? 0;
@@ -114,6 +125,7 @@ onUnmounted(() => {
 
 <template>
   <section class="vc-status-tracker vue-chrts" :aria-label="ariaLabel">
+    <ChartAccessibility :label="ariaLabel" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
     <header v-if="!hideHeader && (title || summary !== undefined)" class="vc-status-tracker__header">
       <h3 v-if="title" class="vc-status-tracker__title">
         {{ title }}
@@ -123,11 +135,13 @@ onUnmounted(() => {
       </p>
     </header>
 
+    <ChartSkeleton v-if="loading" :height="height" shape="bars" :label="loadingLabel ?? 'Loading'" />
+    <ChartEmptyState v-else-if="error || data.length === 0" :height="height" :message="error || emptyLabel" />
     <div
+      v-else
       ref="containerRef"
       class="vc-status-tracker__track"
-      role="img"
-      :aria-label="ariaLabel"
+      role="list"
       :style="trackerStyle"
     >
       <span
@@ -142,15 +156,17 @@ onUnmounted(() => {
         :style="{ ...barStyle, backgroundColor: bar.color }"
         :title="hideTooltip ? undefined : bar.title"
         :aria-label="bar.title"
+        :tabindex="bar.isEmpty ? undefined : 0"
+        role="listitem"
       />
     </div>
 
-    <div v-if="startLabel || endLabel" class="vc-status-tracker__labels">
+    <div v-if="!loading && !error && data.length && (startLabel || endLabel)" class="vc-status-tracker__labels">
       <span>{{ startLabel }}</span>
       <span>{{ endLabel }}</span>
     </div>
 
-    <ul v-if="!hideLegend && legendItems.length" class="vc-status-tracker__legend">
+    <ul v-if="!loading && !error && data.length && !hideLegend && legendItems.length" class="vc-status-tracker__legend">
       <li v-for="item in legendItems" :key="item.dataKey" class="vc-status-tracker__legend-item">
         <span class="vc-status-tracker__legend-dot" :style="{ backgroundColor: item.color }" />
         <span>{{ item.name }}</span>

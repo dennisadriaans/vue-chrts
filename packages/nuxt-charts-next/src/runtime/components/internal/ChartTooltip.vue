@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatNumber } from "../../utils/format";
 import { computed } from "vue";
 import type { TooltipContentProps } from "vccs";
 import type { TooltipRoundness, TooltipVariant } from "../../utils/variants";
@@ -19,7 +20,7 @@ const items = computed(() =>
 );
 
 function formatValue(value: unknown): string {
-  if (typeof value === "number") return value.toLocaleString();
+  if (typeof value === "number") return formatNumber(value);
   return String(value);
 }
 </script>

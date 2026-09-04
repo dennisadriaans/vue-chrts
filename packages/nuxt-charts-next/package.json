@@ -47,9 +47,9 @@
     "dist"
   ],
   "scripts": {
-    "prepack": "nuxt-module-build build",
+    "prepack": "nuxt-module-build build && node scripts/clean-declarations.mjs",
     "dev": "nuxi dev playground",
-    "build": "nuxt-module-build build",
+    "build": "nuxt-module-build build && node scripts/clean-declarations.mjs",
     "build:playground": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "release": "node ../../tools/release.mjs --package nuxt-charts",

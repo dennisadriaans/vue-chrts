@@ -13,6 +13,8 @@ import { Legend, Pie, PieChart, Tooltip } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
 import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import ChartEmptyState from "./internal/ChartEmptyState.vue";
+import ChartAccessibility from "./internal/ChartAccessibility.vue";
 import SegmentVariantDefs, { segmentGradientId } from "./internal/SegmentVariantDefs";
 import { tooltipContentFor } from "./internal/tooltipContent";
 import { variantId } from "../utils/variants";
@@ -22,8 +24,9 @@ import { categoriesToSeries } from "../utils/categories";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
 import { toCssProperties } from "../utils/style";
 import { themeToVars } from "../utils/theme";
+import { DEFAULT_MAX_DATA_POINTS, normalizeNamedValues, sampleData, warnDataLimit } from "../utils/data";
 
-const props = defineProps<DonutChartProps<T>>();
+const props = withDefaults(defineProps<DonutChartProps<T>>(), { accessibleDataTable: true });
 
 /** Per-chart `--vc-*` overrides for the legend / tooltip tokens. */
 const themeVars = computed(() => themeToVars(props.theme));
@@ -42,16 +45,21 @@ const useGradient = computed(() => props.variant === "gradient");
  */
 const segments = computed(() => {
   const cats = categoriesToSeries(props.categories);
-  return props.data.map((value, i) => {
-    const color = cats[i]?.color ?? `var(--chart-color-${i})`;
+  const normalized = normalizeNamedValues(props.data, cats.map((cat) => String(cat.name)), props.nameKey, props.valueKey);
+  const limit = props.maxDataPoints ?? DEFAULT_MAX_DATA_POINTS;
+  warnDataLimit("DonutChart", normalized.length, limit);
+  const values = sampleData(normalized, limit);
+  return values.map(({ row, value, sourceIndex, name }) => {
+    const color = cats[sourceIndex]?.color ?? `var(--chart-color-${sourceIndex})`;
     return {
-      name: cats[i]?.name ?? String(i),
+      ...(row && typeof row === "object" ? row : {}),
+      name,
       value,
-      dataKey: String(i),
+      dataKey: String(sourceIndex),
       color,
       // vccs reads `fill` directly from the data entry to color each sector
-      fill: useGradient.value ? `url(#${segmentGradientId(String(i), variantScope)})` : color,
-      filter: props.glow ? `url(#${variantId("glow", String(i), variantScope)})` : undefined,
+      fill: useGradient.value ? `url(#${segmentGradientId(String(sourceIndex), variantScope)})` : color,
+      filter: props.glow ? `url(#${variantId("glow", String(sourceIndex), variantScope)})` : undefined,
     };
   });
 });
@@ -71,8 +79,9 @@ const legendColors = computed(() =>
 );
 
 const tooltipContent = computed(() =>
-  tooltipContentFor(props.tooltipVariant, props.tooltipRoundness),
+  tooltipContentFor(props.tooltipVariant, props.tooltipRoundness, props.tooltipTitleFormatter as ((data: unknown) => string | number) | undefined),
 );
+const accessibleRows = computed(() => segments.value.map((segment) => ({ label: segment.name, values: [{ label: "Value", value: segment.value }] })));
 
 /** Default ring thickness (px) when `arcWidth` is not supplied. */
 const DEFAULT_ARC_WIDTH = 40;
@@ -136,13 +145,15 @@ const legendWrapperStyle = computed(() =>
 </script>
 
 <template>
-  <div class="donut-chart vue-chrts" :style="{ position: 'relative', width: '100%', height: `${height ?? (radius ? radius * 2 : 200)}px`, ...themeVars }">
+  <div class="donut-chart vue-chrts" role="group" :aria-label="ariaLabel ?? 'Donut chart'" :style="{ position: 'relative', width: '100%', height: `${height ?? (radius ? radius * 2 : 200)}px`, ...themeVars }">
+    <ChartAccessibility :label="ariaLabel ?? 'Donut chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
     <ChartSkeleton
       v-if="loading"
       :height="height ?? 200"
       shape="ring"
       :label="loadingLabel ?? 'Loading'"
     />
+    <ChartEmptyState v-else-if="error || segments.length === 0" :height="height ?? 200" :message="error || emptyLabel" />
     <ChartContainer v-else width="100%" height="100%">
       <PieChart>
         <!--
@@ -168,6 +179,7 @@ const legendWrapperStyle = computed(() =>
           :corner-radius="cornerRadius ?? 0"
           :stroke="stroke ?? 'none'"
           :is-animation-active="duration !== undefined && duration !== 0"
+          :transition="{ duration: (duration ?? 1200) / 1000, ease: 'easeOut' }"
         />
         <Tooltip v-if="!hideTooltip" :content="tooltipContent" :is-animation-active="false" />
         <Legend

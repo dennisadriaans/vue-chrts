@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatNumber } from "../../utils/format";
 import type { TooltipRoundness, TooltipVariant } from "../../utils/variants";
 
 defineProps<{
@@ -22,7 +23,7 @@ defineProps<{
     <span class="vc-funnel-layered__dot" :style="{ background: datum.color }" />
     <span class="vc-funnel-layered__name">{{ datum.name }}</span>
     <strong class="vc-funnel-layered__value">
-      {{ datum.formattedValue ?? datum.value.toLocaleString() }}
+      {{ datum.formattedValue ?? formatNumber(datum.value) }}
     </strong>
   </div>
 </template>

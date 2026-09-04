@@ -13,9 +13,14 @@
  */
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from "vue";
 import CandlestickTooltip from "./internal/CandlestickTooltip.vue";
+import ChartEmptyState from "./internal/ChartEmptyState.vue";
+import ChartAccessibility from "./internal/ChartAccessibility.vue";
+import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import type { CandlestickChartProps } from "../types/charts";
+import { DEFAULT_MAX_DATA_POINTS, sampleData, toFiniteNumber, warnDataLimit } from "../utils/data";
+import { formatNumber } from "../utils/format";
 
-const props = defineProps<CandlestickChartProps<T>>();
+const props = withDefaults(defineProps<CandlestickChartProps<T>>(), { accessibleDataTable: true });
 
 // ─── Accessors & options ──────────────────────────────────────────────────────
 
@@ -26,8 +31,8 @@ const lowKey = computed(() => String(props.lowAccessor ?? "low"));
 const closeKey = computed(() => String(props.closeAccessor ?? "close"));
 const volumeKey = computed(() => String(props.volumeAccessor ?? "volume"));
 
-const upColor = computed(() => props.upColor ?? "#10b981");
-const downColor = computed(() => props.downColor ?? "#ef4444");
+const upColor = computed(() => props.upColor ?? "var(--vc-candle-up)");
+const downColor = computed(() => props.downColor ?? "var(--vc-candle-down)");
 const showVolume = computed(() => props.showVolume ?? false);
 const maxCandleWidth = computed(() => props.candleWidth ?? 18);
 const wickWidth = computed(() => props.wickWidth ?? 1.5);
@@ -36,6 +41,7 @@ const xGridLine = computed(() => props.xGridLine ?? false);
 const yNumTicks = computed(() => props.yNumTicks ?? 5);
 
 interface Candle {
+  raw: T;
   label: string | number;
   open: number;
   high: number;
@@ -45,24 +51,33 @@ interface Candle {
 }
 
 /** Normalise rows to the OHLC shape the candle layer + tooltip consume. */
-const candles = computed<Candle[]>(() =>
-  props.data.map((row) => ({
-    label: row[xKey.value] as string | number,
-    open: Number(row[openKey.value]),
-    high: Number(row[highKey.value]),
-    low: Number(row[lowKey.value]),
-    close: Number(row[closeKey.value]),
-    volume:
-      props.volumeAccessor || volumeKey.value in row
-        ? Number(row[volumeKey.value])
-        : undefined,
-  })),
-);
+const candles = computed<Candle[]>(() => {
+  const normalized = props.data.flatMap((row) => {
+    const open = toFiniteNumber(row[openKey.value]);
+    const high = toFiniteNumber(row[highKey.value]);
+    const low = toFiniteNumber(row[lowKey.value]);
+    const close = toFiniteNumber(row[closeKey.value]);
+    if (open === undefined || high === undefined || low === undefined || close === undefined) return [];
+    if (low > Math.min(open, close) || high < Math.max(open, close) || low > high) return [];
+    const volume = toFiniteNumber(row[volumeKey.value]);
+    return [{ raw: row, label: String(row[xKey.value] ?? ""), open, high, low, close, volume }];
+  });
+  const limit = props.maxDataPoints ?? DEFAULT_MAX_DATA_POINTS;
+  warnDataLimit("CandlestickChart", normalized.length, limit);
+  return sampleData(normalized, limit);
+});
+const accessibleRows = computed(() => candles.value.map((candle) => ({
+  label: String(candle.label),
+  values: ["open", "high", "low", "close", "volume"].flatMap((key) => {
+    const value = candle[key as keyof Candle];
+    return typeof value === "number" ? [{ label: key, value: fmtPrice(value) }] : [];
+  }),
+})));
 
 // ─── Layout ───────────────────────────────────────────────────────────────────
 
 const containerRef = useTemplateRef<HTMLDivElement>("containerRef");
-const W = ref(600);
+const W = ref(0);
 const H = computed(() => props.height);
 
 const PAD = computed(() => ({
@@ -179,7 +194,7 @@ const xTicks = computed(() => {
 });
 
 function fmtPrice(value: number): string {
-  return props.yFormatter ? props.yFormatter(value) : value.toLocaleString();
+  return props.yFormatter ? props.yFormatter(value) : formatNumber(value);
 }
 
 // ─── Hover / tooltip ──────────────────────────────────────────────────────────
@@ -212,6 +227,16 @@ function onMouseLeave() {
   activeIndex.value = null;
 }
 
+function onKeydown(event: KeyboardEvent) {
+  if (!candles.value.length) return;
+  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight" && event.key !== "Home" && event.key !== "End") return;
+  event.preventDefault();
+  const current = activeIndex.value ?? 0;
+  activeIndex.value = event.key === "Home" ? 0
+    : event.key === "End" ? candles.value.length - 1
+      : Math.min(Math.max(current + (event.key === "ArrowRight" ? 1 : -1), 0), candles.value.length - 1);
+}
+
 // ─── Resize ───────────────────────────────────────────────────────────────────
 
 let ro: ResizeObserver | undefined;
@@ -219,7 +244,7 @@ onMounted(() => {
   if (!containerRef.value) return;
   ro = new ResizeObserver((entries) => {
     const cr = entries[0]?.contentRect;
-    if (cr?.width) W.value = cr.width;
+    if (cr) W.value = Math.max(0, cr.width);
   });
   ro.observe(containerRef.value);
 });
@@ -230,10 +255,17 @@ onBeforeUnmount(() => ro?.disconnect());
   <div
     ref="containerRef"
     class="vc-candlestick-chart vue-chrts"
+    role="group"
+    :aria-label="ariaLabel ?? 'Candlestick chart'"
+    tabindex="0"
     @mousemove="onMouseMove"
     @mouseleave="onMouseLeave"
+    @keydown="onKeydown"
   >
-    <svg :width="W" :height="H" class="vc-candlestick-chart__svg">
+    <ChartAccessibility :label="ariaLabel ?? 'Candlestick chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
+    <ChartSkeleton v-if="loading" :height="height" shape="bars" :label="loadingLabel ?? 'Loading'" />
+    <ChartEmptyState v-else-if="error || candles.length === 0" :height="height" :message="error || emptyLabel" />
+    <svg v-else :width="W" :height="H" class="vc-candlestick-chart__svg" aria-hidden="true">
       <!-- Grid -->
       <template v-if="yGridLine">
         <line
@@ -305,7 +337,7 @@ onBeforeUnmount(() => ro?.disconnect());
           :width="c.halfW * 2"
           :height="c.bodyH"
           :rx="Math.min(2, c.halfW / 2)"
-          :fill="c.rising ? c.color : 'var(--chart-bg, #ffffff)'"
+          :fill="c.rising ? c.color : 'var(--vc-surface-bg)'"
           :stroke="c.color"
           :stroke-width="activeIndex === i ? 2.5 : 1.5"
         />
@@ -375,6 +407,7 @@ onBeforeUnmount(() => ro?.disconnect());
           :up-color="upColor"
           :down-color="downColor"
           :value-formatter="yFormatter"
+          :title="tooltipTitleFormatter ? tooltipTitleFormatter(activeCandle.raw) : activeCandle.label"
         />
       </div>
     </Teleport>

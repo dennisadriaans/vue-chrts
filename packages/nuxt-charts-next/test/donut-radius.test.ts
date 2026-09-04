@@ -60,6 +60,30 @@ function sectorPaths() {
 }
 
 describe("DonutChart radius", () => {
+  it("filters non-finite values and exposes an accessible data table", async () => {
+    const wrapper = await mountDonut({ data: [10, Number.NaN, Infinity], ariaLabel: "Revenue split" });
+    expect(wrapper.attributes("aria-label")).toBe("Revenue split");
+    expect(wrapper.find("table").text()).toContain("Product");
+    expect(wrapper.find("table").text()).not.toContain("Services");
+    expect(wrapper.html()).not.toMatch(/(?:NaN|Infinity)/);
+  });
+
+  it("renders an intentional empty state when every value is invalid", async () => {
+    const wrapper = await mountDonut({ data: [Number.NaN, Infinity], emptyLabel: "Nothing usable" });
+    expect(wrapper.find("[role='status']").text()).toBe("Nothing usable");
+    expect(wrapper.find("svg").exists()).toBe(false);
+  });
+
+  it("accepts record-based data without relying on category insertion order", async () => {
+    const wrapper = await mountDonut({
+      data: [{ label: "Direct", amount: 42 }],
+      nameKey: "label",
+      valueKey: "amount",
+    });
+    expect(wrapper.find("table").text()).toContain("Direct");
+    expect(wrapper.find("table").text()).toContain("42");
+  });
+
   it("auto-fits and renders visible sectors when radius is 0 (v2-style call sites)", async () => {
     await mountDonut({ radius: 0, arcWidth: 40, type: DonutType.Full });
     // One sector per data entry — the regression was zero sectors (invisible ring).

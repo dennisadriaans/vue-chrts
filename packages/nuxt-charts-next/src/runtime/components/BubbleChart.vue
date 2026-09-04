@@ -16,6 +16,8 @@ import ChartContainer from "./internal/ChartContainer";
 import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import ChartEmptyState from "./internal/ChartEmptyState.vue";
+import ChartAccessibility from "./internal/ChartAccessibility.vue";
 import type { BubbleChartProps } from "../types/charts";
 import { categoriesToSeries } from "../utils/categories";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
@@ -29,8 +31,9 @@ import {
 } from "../utils/axis";
 import { toAxisDomain, toCssProperties } from "../utils/style";
 import { axisTickVars, resolveHoverRadius, resolveHoverVisible, themeToVars } from "../utils/theme";
+import { DEFAULT_MAX_DATA_POINTS, sampleData, toFiniteNumber, warnDataLimit } from "../utils/data";
 
-const props = defineProps<BubbleChartProps<T>>();
+const props = withDefaults(defineProps<BubbleChartProps<T>>(), { accessibleDataTable: true });
 
 const slots = defineSlots<{
   tooltip?: (props: { values: T | undefined }) => unknown;
@@ -134,10 +137,32 @@ const colorByCategory = computed(() => {
   return map;
 });
 
+function accessorValue(row: T, accessor: BubbleChartProps<T>["xAccessor"] | undefined) {
+  return typeof accessor === "function" ? accessor(row) : accessor === undefined ? undefined : row[accessor];
+}
+const chartData = computed(() => {
+  const normalized = props.data.filter((row) =>
+    toFiniteNumber(accessorValue(row, props.xAccessor)) !== undefined
+    && toFiniteNumber(accessorValue(row, props.yAccessor)) !== undefined
+    && (props.sizeAccessor === undefined || toFiniteNumber(accessorValue(row, props.sizeAccessor)) !== undefined),
+  );
+  const limit = props.maxDataPoints ?? DEFAULT_MAX_DATA_POINTS;
+  warnDataLimit("BubbleChart", normalized.length, limit);
+  return sampleData(normalized, limit);
+});
+const accessibleRows = computed(() => chartData.value.map((row, index) => ({
+  label: String(row[categoryKey.value] ?? index + 1),
+  values: [
+    { label: xName.value, value: accessorValue(row, props.xAccessor) },
+    { label: yName.value, value: accessorValue(row, props.yAccessor) },
+    ...(props.sizeAccessor === undefined ? [] : [{ label: zName.value, value: accessorValue(row, props.sizeAccessor) }]),
+  ],
+})));
+
 /** Split the rows into one Scatter series per categoryKey value, coloured from `categories`. */
 const groups = computed(() => {
   const byCategory = new Map<string, T[]>();
-  for (const row of props.data) {
+  for (const row of chartData.value) {
     const cat = String(row[categoryKey.value]);
     const bucket = byCategory.get(cat);
     if (bucket) bucket.push(row);
@@ -182,7 +207,7 @@ const tooltipContent = computed(() => {
 
     return h(ChartTooltip, {
       ...tooltipProps,
-      label: category,
+      label: props.tooltipTitleFormatter && row ? props.tooltipTitleFormatter(row) : category,
       payload,
       variant: props.tooltipVariant,
       roundness: props.tooltipRoundness,
@@ -192,13 +217,15 @@ const tooltipContent = computed(() => {
 </script>
 
 <template>
-  <div class="vue-chrts" :style="themeVars">
+  <div class="vue-chrts" role="group" :aria-label="ariaLabel ?? 'Bubble chart'" :style="themeVars">
+  <ChartAccessibility :label="ariaLabel ?? 'Bubble chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
   <ChartSkeleton
     v-if="loading"
     :height="height"
     shape="bars"
     :label="loadingLabel ?? 'Loading'"
   />
+  <ChartEmptyState v-else-if="error || chartData.length === 0" :height="height" :message="error || emptyLabel" />
   <ChartContainer v-else width="100%" :height="height">
     <ScatterChart>
       <CartesianGrid
@@ -251,6 +278,8 @@ const tooltipContent = computed(() => {
         :data="g.data"
         :fill="g.color"
         :fill-opacity="opacity ?? 0.7"
+        :is-animation-active="duration !== undefined && duration !== 0"
+        :transition="{ duration: (duration ?? 400) / 1000, ease: 'easeOut' }"
       />
 
       <Tooltip v-if="!hideTooltip" :content="tooltipContent" :cursor="cursor" :is-animation-active="false" />

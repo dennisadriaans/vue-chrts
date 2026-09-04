@@ -30,6 +30,7 @@ import { strokeDasharrayFor, variantId } from "../utils/variants";
 // it to `true` explicitly so the area keeps its fade-out fill unless opted out.
 const props = withDefaults(defineProps<AreaChartProps<T>>(), {
   gradient: true,
+  accessibleDataTable: true,
 });
 
 const gradientScope = useId();
@@ -229,6 +230,7 @@ defineSlots<{
       :dot="showDots || (s.dot as boolean)"
       :hide="s.hidden"
       :is-animation-active="duration !== undefined && duration !== 0"
+      :transition="{ duration: (duration ?? 800) / 1000, ease: 'easeOut' }"
     >
       <template v-if="showDots" #dot="dotProps">
         <ChartDot

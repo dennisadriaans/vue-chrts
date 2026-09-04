@@ -21,6 +21,7 @@ import {
   toStrokeDasharray,
 } from "../src/runtime/utils/marker";
 import { gradientId } from "../src/runtime/utils/gradient";
+import { normalizeNamedValues, normalizeNumericRows, sampleData, toFiniteNumber } from "../src/runtime/utils/data";
 
 describe("curveTypeToVccs", () => {
   it("maps every CurveType member to a non-empty vccs curve", () => {
@@ -38,6 +39,39 @@ describe("curveTypeToVccs", () => {
   it("passes through direct equivalents", () => {
     expect(curveTypeToVccs(CurveType.Step)).toBe("step");
     expect(curveTypeToVccs(CurveType.MonotoneX)).toBe("monotoneX");
+  });
+});
+
+describe("data safety", () => {
+  it("accepts finite numbers and numeric strings only", () => {
+    expect([null, undefined, "", Number.NaN, Infinity, -Infinity].map(toFiniteNumber)).toEqual([
+      undefined, undefined, undefined, undefined, undefined, undefined,
+    ]);
+    expect(toFiniteNumber("12.5")).toBe(12.5);
+    expect(toFiniteNumber(0)).toBe(0);
+  });
+
+  it("drops malformed numeric rows instead of coercing them to zero", () => {
+    expect(normalizeNumericRows([
+      { label: "ok", value: "2" },
+      { label: "bad", value: Number.NaN },
+      { label: "missing" },
+    ], ["value"])).toEqual([{ label: "ok", value: 2 }]);
+  });
+
+  it("retains category association when invalid positional values are removed", () => {
+    expect(normalizeNamedValues([10, Number.NaN, 30], ["A", "B", "C"]))
+      .toMatchObject([{ name: "A", value: 10 }, { name: "C", value: 30 }]);
+  });
+
+  it("supports record-based named values", () => {
+    const rows = [{ name: "A", amount: 2 }, { name: "B", amount: Infinity }];
+    expect(normalizeNamedValues(rows, [], "name", "amount"))
+      .toMatchObject([{ name: "A", value: 2, row: rows[0] }]);
+  });
+
+  it("samples deterministically while preserving both endpoints", () => {
+    expect(sampleData([0, 1, 2, 3, 4], 3)).toEqual([0, 2, 4]);
   });
 });
 

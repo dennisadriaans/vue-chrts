@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatNumber } from "../../utils/format";
 import { computed } from "vue";
 
 type ClassicShapePayload = {
@@ -108,7 +109,7 @@ export default { name: "FunnelClassicShape", inheritAttrs: false };
       stroke="none"
       text-anchor="middle"
     >
-      {{ payload.formattedValue ?? payload.value.toLocaleString() }}
+      {{ payload.formattedValue ?? formatNumber(payload.value) }}
     </text>
     <text
       v-if="geometry.showName"

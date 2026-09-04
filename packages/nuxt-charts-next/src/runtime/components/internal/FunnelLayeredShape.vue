@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatNumber } from "../../utils/format";
 /**
  * One curved, nested funnel stage for the {@link FunnelChart} `layered` variant.
  * Rendered through the `vccs` `#shape` slot. Draws three stacked paths (depth),
@@ -187,7 +188,7 @@ export default { name: "FunnelLayeredShape", inheritAttrs: false };
       stroke="none"
       text-anchor="middle"
     >
-      {{ payload.formattedValue ?? payload.value.toLocaleString() }}
+      {{ payload.formattedValue ?? formatNumber(payload.value) }}
     </text>
 
     <template v-if="geometry.showBadge">

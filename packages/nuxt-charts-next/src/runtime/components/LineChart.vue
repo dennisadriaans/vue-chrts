@@ -18,7 +18,7 @@ import { markerToDot, normalizeMarkerConfig, toStrokeDasharray } from "../utils/
 import { strokeDasharrayFor, variantId } from "../utils/variants";
 import { strokeGradientId } from "../utils/gradient";
 
-const props = defineProps<LineChartProps<T>>();
+const props = withDefaults(defineProps<LineChartProps<T>>(), { accessibleDataTable: true });
 
 /** Scopes this chart's `<defs>` ids so several charts on a page never collide. */
 const variantScope = useId();
@@ -116,6 +116,7 @@ defineSlots<{
       :dot="showDots || (s.dot as boolean)"
       :hide="s.hidden"
       :is-animation-active="duration !== undefined && duration !== 0"
+      :transition="{ duration: (duration ?? 800) / 1000, ease: 'easeOut' }"
     >
       <template v-if="showDots" #dot="dotProps">
         <ChartDot

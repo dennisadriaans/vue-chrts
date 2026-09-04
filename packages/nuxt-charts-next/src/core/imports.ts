@@ -40,7 +40,6 @@ export const resolveImports = (config: ModuleOptions, resolverUrl: string) => {
       "StatusTrackerDatum",
       "BulletLegendItemInterface",
       "AxisConfig",
-      "TooltipConfig",
       "ValueLabel",
       "ReferenceLineConfig",
       // v2 parity: these auto-imported in nuxt-charts v2. The types still exist

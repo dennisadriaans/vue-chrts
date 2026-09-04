@@ -41,6 +41,9 @@ import ChartTooltip from "./ChartTooltip.vue";
 import ChartLegend from "./ChartLegend.vue";
 import ChartBackground from "./ChartBackground";
 import ChartSkeleton from "./ChartSkeleton.vue";
+import ChartEmptyState from "./ChartEmptyState.vue";
+import ChartAccessibility from "./ChartAccessibility.vue";
+import { DEFAULT_MAX_DATA_POINTS, normalizeNumericRows, sampleData, warnDataLimit } from "../../utils/data";
 
 const props = defineProps<
   CartesianChartBaseProps<T> & {
@@ -68,6 +71,26 @@ const props = defineProps<
     percentAxis?: boolean;
   }
 >();
+
+const numericKeys = computed(() => Object.keys(props.categories) as (keyof T)[]);
+const normalizedData = computed(() => normalizeNumericRows(props.data, numericKeys.value));
+const dataLimit = computed(() => props.maxDataPoints ?? DEFAULT_MAX_DATA_POINTS);
+const chartData = computed(() => {
+  warnDataLimit("Cartesian chart", normalizedData.value.length, dataLimit.value);
+  return sampleData(normalizedData.value, dataLimit.value);
+});
+const accessibleRows = computed(() => {
+  const series = categoriesToSeries(props.categories);
+  return chartData.value.map((row, index) => ({
+    label: props.xAxisKey === undefined
+      ? String(index + 1)
+      : String((row as Record<string, unknown>)[props.xAxisKey] ?? index + 1),
+    values: series.map((item) => ({
+      label: String(item.name),
+      value: (row as Record<string, unknown>)[item.dataKey],
+    })),
+  }));
+});
 
 const slots = defineSlots<{
   default?: () => unknown;
@@ -97,7 +120,7 @@ const showYGrid = computed(() => props.yGridLine ?? true);
 const categoryIndexByValue = computed(() => {
   const map = new Map<unknown, number>();
   if (props.xAxisKey === undefined) return map;
-  props.data.forEach((row, i) => {
+  chartData.value.forEach((row, i) => {
     map.set((row as Record<string, unknown>)[props.xAxisKey as string], i);
   });
   return map;
@@ -174,7 +197,7 @@ const yAxis = computed(() =>
  */
 const categoryAxisTicks = computed((): VccsAxisTick[] | undefined => {
   if (xAxis.value.ticks) return xAxis.value.ticks;
-  return equidistantCategoryTicks(props.data, props.xNumTicks, props.xAxisKey);
+  return equidistantCategoryTicks(chartData.value, props.xNumTicks, props.xAxisKey);
 });
 
 const hasEquidistantCategoryTicks = computed(
@@ -247,7 +270,7 @@ const xTickLineProp = computed(() => (showXTickLine.value ? tickLineStyle : fals
 const yTickLineProp = computed(() => (showYTickLine.value ? tickLineStyle : false));
 
 const mergedContainerProps = computed(() => ({
-  data: props.data,
+  data: chartData.value,
   layout: layout.value,
   syncId: props.syncId,
   ...props.containerProps,
@@ -264,7 +287,7 @@ function resolveCategoryAxisInterval(
 ): VccsAxisInterval | undefined {
   if (configured !== undefined) return configured;
   if (hasEquidistantCategoryTicks.value) return 0;
-  if (isCategoryAxis && props.data.length <= SMALL_CATEGORY_AXIS_MAX) return 0;
+  if (isCategoryAxis && chartData.value.length <= SMALL_CATEGORY_AXIS_MAX) return 0;
   return undefined;
 }
 
@@ -302,7 +325,7 @@ const tooltipContent = computed(() => {
     if (titleFormatter && row != null) {
       label = titleFormatter(row);
     } else if (formatLabel != null && label !== undefined && label !== "") {
-      const rowIndex = row != null ? props.data.indexOf(row) : -1;
+      const rowIndex = row != null ? chartData.value.indexOf(row) : -1;
       const index =
         rowIndex >= 0
           ? rowIndex
@@ -345,14 +368,16 @@ const resolvedYAxes = computed(() => {
 </script>
 
 <template>
-  <div class="vue-chrts" :class="frameClass" :style="rootStyle">
+  <div class="vue-chrts" :class="frameClass" :style="rootStyle" role="group" :aria-label="ariaLabel ?? 'Chart'">
+  <ChartAccessibility :label="ariaLabel ?? 'Chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
   <ChartSkeleton
     v-if="loading"
     :height="height"
     :shape="skeletonShape ?? 'bars'"
     :label="loadingLabel ?? 'Loading'"
   />
-  <ChartContainer v-else width="100%" :height="height">
+  <ChartEmptyState v-else-if="error || chartData.length === 0" :height="height" :message="error || emptyLabel" />
+  <ChartContainer v-if="!loading && !error" width="100%" :height="height" :aria-hidden="chartData.length === 0">
     <component :is="container" v-bind="mergedContainerProps">
       <!--
         First child on purpose: vccs has no z-index layer, so document order is
@@ -441,7 +466,7 @@ const resolvedYAxes = computed(() => {
         :key="i"
         :x="line.x"
         :y="line.y"
-        :stroke="line.color ?? '#888'"
+        :stroke="line.color ?? 'var(--vc-reference-line-color)'"
         :stroke-width="line.strokeWidth ?? 1"
         :stroke-dasharray="line.strokeDasharray"
         :label="line.label"

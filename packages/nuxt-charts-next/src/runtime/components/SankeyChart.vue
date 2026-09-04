@@ -4,14 +4,18 @@ import { Sankey, Tooltip, type TooltipContentProps } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
 import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartTooltip from "./internal/ChartTooltip.vue";
+import ChartEmptyState from "./internal/ChartEmptyState.vue";
+import ChartAccessibility from "./internal/ChartAccessibility.vue";
 import type {
   SankeyChartProps,
   SankeyInputLink,
   SankeyInputNode,
 } from "../types/charts";
 import { themeToVars } from "../utils/theme";
+import { DEFAULT_MAX_DATA_POINTS, sampleData, toFiniteNumber, warnDataLimit } from "../utils/data";
 
 const props = withDefaults(defineProps<SankeyChartProps<N, L>>(), {
+  accessibleDataTable: true,
   nodeWidth: 10,
   nodePadding: 10,
   iterations: 32,
@@ -92,30 +96,45 @@ const chartData = computed(() => {
   const resolveEndpoint = (endpoint: string | number) =>
     ids.has(endpoint) ? ids.get(endpoint)! : endpoint;
 
-  return {
-    nodes,
-    links: props.data.links.map((link) => ({
+  const links = props.data.links.flatMap((link) => {
+    const value = toFiniteNumber(props.linkValue?.(link) ?? link.value ?? 0);
+    if (value === undefined || value < 0) return [];
+    return [{
       ...link,
       __source: link.source,
       source: resolveEndpoint(link.source),
       target: resolveEndpoint(link.target),
-      value: props.linkValue?.(link) ?? link.value ?? 0,
-    })),
+      value,
+    }];
+  });
+  const limit = props.maxDataPoints ?? DEFAULT_MAX_DATA_POINTS;
+  warnDataLimit("SankeyChart", links.length, limit);
+  return {
+    nodes,
+    links: sampleData(links, limit),
   };
 });
+const accessibleRows = computed(() => chartData.value.links.map((link) => ({
+  label: `${String(link.__source)} to ${String(link.target)}`,
+  values: [{ label: "Value", value: link.value }],
+})));
 </script>
 
 <template>
   <div
     class="vc-sankey vue-chrts"
+    role="group"
+    :aria-label="ariaLabel ?? 'Sankey chart'"
     :style="{ position: 'relative', width: '100%', height: `${height}px`, ...themeVars }"
   >
+    <ChartAccessibility :label="ariaLabel ?? 'Sankey chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
     <ChartSkeleton
       v-if="loading"
       :height="height"
       shape="bars"
       :label="loadingLabel ?? 'Loading'"
     />
+    <ChartEmptyState v-else-if="error || chartData.links.length === 0" :height="height" :message="error || emptyLabel" />
     <ChartContainer v-else width="100%" height="100%">
       <Sankey
         :data="chartData"

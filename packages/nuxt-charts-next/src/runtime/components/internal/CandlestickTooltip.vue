@@ -8,6 +8,7 @@
  * decoupled from any charting engine — just presentation.
  */
 import { computed } from "vue";
+import { formatNumber } from "../../utils/format";
 
 interface Row {
   label: string | number;
@@ -23,6 +24,7 @@ const props = defineProps<{
   upColor: string;
   downColor: string;
   valueFormatter?: (value: number) => string;
+  title?: string | number;
 }>();
 
 const directionColor = computed(() =>
@@ -30,7 +32,7 @@ const directionColor = computed(() =>
 );
 
 function fmt(value: number): string {
-  return props.valueFormatter ? props.valueFormatter(value) : value.toLocaleString();
+  return props.valueFormatter ? props.valueFormatter(value) : formatNumber(value);
 }
 
 const rows = computed(() => {
@@ -41,7 +43,7 @@ const rows = computed(() => {
     { name: "Low", value: fmt(r.low), color: props.downColor },
     { name: "Close", value: fmt(r.close), color: directionColor.value },
     ...(r.volume != null && !Number.isNaN(r.volume)
-      ? [{ name: "Volume", value: r.volume.toLocaleString(), color: "var(--vc-tooltip-muted, oklch(0.556 0 0))" }]
+      ? [{ name: "Volume", value: formatNumber(r.volume), color: "var(--vc-tooltip-muted, oklch(0.556 0 0))" }]
       : []),
   ];
 });
@@ -49,7 +51,7 @@ const rows = computed(() => {
 
 <template>
   <div class="vc-tooltip">
-    <p class="vc-tooltip__label">{{ row.label }}</p>
+    <p class="vc-tooltip__label">{{ title ?? row.label }}</p>
     <ul class="vc-tooltip__list">
       <li v-for="item in rows" :key="item.name" class="vc-tooltip__item">
         <span class="vc-tooltip__dot" :style="{ background: item.color }" />

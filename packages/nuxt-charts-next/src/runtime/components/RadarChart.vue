@@ -19,6 +19,8 @@ import {
 import ChartContainer from "./internal/ChartContainer";
 import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import ChartEmptyState from "./internal/ChartEmptyState.vue";
+import ChartAccessibility from "./internal/ChartAccessibility.vue";
 import ChartDot from "./internal/ChartDot";
 import { tooltipContentFor } from "./internal/tooltipContent";
 import PolarCenterSync from "./internal/PolarCenterSync";
@@ -28,12 +30,23 @@ import { categoriesToSeries } from "../utils/categories";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
 import { toCssProperties } from "../utils/style";
 import { themeToVars } from "../utils/theme";
+import { DEFAULT_MAX_DATA_POINTS, normalizeNumericRows, sampleData, warnDataLimit } from "../utils/data";
 
-const props = defineProps<RadarChartProps<T>>();
+const props = withDefaults(defineProps<RadarChartProps<T>>(), { accessibleDataTable: true });
 const gradientScope = useId();
 
 /** One radar polygon per visible series in `categories`. */
 const series = computed(() => categoriesToSeries(props.categories).filter((s) => !s.hidden));
+const chartData = computed(() => {
+  const normalized = normalizeNumericRows(props.data, series.value.map((item) => item.dataKey) as (keyof T)[]);
+  const limit = props.maxDataPoints ?? DEFAULT_MAX_DATA_POINTS;
+  warnDataLimit("RadarChart", normalized.length, limit);
+  return sampleData(normalized, limit);
+});
+const accessibleRows = computed(() => chartData.value.map((row, index) => ({
+  label: String(row[props.dataKey] ?? index + 1),
+  values: series.value.map((item) => ({ label: String(item.name), value: row[item.dataKey] })),
+})));
 
 /**
  * `lines` drops the fill so several overlapping series stay readable — with
@@ -55,7 +68,7 @@ function polygonFill(dataKey: string, color: string): string {
 const showDots = computed(() => props.dotVariant !== undefined);
 
 const tooltipContent = computed(() =>
-  tooltipContentFor(props.tooltipVariant, props.tooltipRoundness),
+  tooltipContentFor(props.tooltipVariant, props.tooltipRoundness, props.tooltipTitleFormatter as ((data: unknown) => string | number) | undefined),
 );
 
 const angleKey = computed(() => String(props.dataKey));
@@ -107,16 +120,18 @@ const resolvedOuterRadius = computed(() => {
 </script>
 
 <template>
-  <div class="vue-chrts" :style="themeVars">
+  <div class="vue-chrts" role="group" :aria-label="ariaLabel ?? 'Radar chart'" :style="themeVars">
+    <ChartAccessibility :label="ariaLabel ?? 'Radar chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
     <ChartSkeleton
       v-if="loading"
       :height="height ?? 200"
       shape="ring"
       :label="loadingLabel ?? 'Loading'"
     />
+    <ChartEmptyState v-else-if="error || chartData.length === 0" :height="height" :message="error || emptyLabel" />
     <ChartContainer v-else width="100%" :height="height">
     <VccsRadarChart
-      :data="data"
+      :data="chartData"
       :outer-radius="resolvedOuterRadius"
       :cx="center?.cx"
       :cy="center?.cy"
@@ -159,6 +174,7 @@ const resolvedOuterRadius = computed(() => {
         :fill-opacity="polygonFillOpacity"
         :dot="showDots"
         :is-animation-active="duration !== undefined && duration !== 0"
+        :transition="{ duration: (duration ?? 800) / 1000, ease: 'easeOut' }"
       >
         <template v-if="showDots" #dot="dotProps">
           <ChartDot

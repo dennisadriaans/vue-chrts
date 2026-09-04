@@ -32,16 +32,32 @@ import type {
   ChartTheme,
   CrosshairConfig,
   MarkerConfig,
-  TooltipConfig,
   YAxisConfig,
   axisFormatter,
 } from "./shared";
+
+/** Keys whose declared value is numeric (nullable/optional numeric fields included). */
+export type NumericKeys<T> = {
+  [K in keyof T]-?: NonNullable<T[K]> extends number ? K : never
+}[keyof T];
 
 /**
  * Chrome styling shared by every chart, cartesian or polar. Each field selects
  * one of the built-in variants; omit them all for the shipped defaults.
  */
 export interface ChartStyleProps {
+  /** Accessible name for the chart. Falls back to a chart-type label. */
+  ariaLabel?: string;
+  /** Longer screen-reader description of the chart's purpose or trend. */
+  ariaDescription?: string;
+  /** Render a visually-hidden data table. Default true. */
+  accessibleDataTable?: boolean;
+  /** Maximum rows rendered as SVG/DOM marks. Default 2,000. */
+  maxDataPoints?: number;
+  /** Message shown when no valid plotted values remain. */
+  emptyLabel?: string;
+  /** Error message rendered in place of the chart. */
+  error?: string;
   /** Shape of the colour swatch beside each legend entry. Default `rounded-square`. */
   legendVariant?: LegendIndicatorVariant;
   /** Tooltip surface treatment. `frosted-glass` blurs what sits behind it. */
@@ -144,8 +160,6 @@ export interface CartesianChartBaseProps<T> extends ChartStyleProps {
    * top-level `yLabel` / `yDomain` / `yAxisConfig` props.
    */
   yAxes?: Record<AxisId, YAxisConfig>;
-  /** Tooltip behaviour config. */
-  tooltip?: TooltipConfig;
   /** Reference lines drawn across the plot area. New in v3. */
   referenceLines?: ReferenceLineConfig[];
   /**
@@ -284,7 +298,7 @@ export interface ValueLabel {
 
 export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
   /** The data keys (series) plotted on the value axis. */
-  yAxis: (keyof T)[];
+  yAxis: NumericKeys<T>[];
   /** The data key used for the category axis. */
   xAxis?: keyof T;
   /** Stack the bars instead of grouping them. */
@@ -387,9 +401,12 @@ export interface SizeOptions {
 }
 
 /** v2 accepted Unovis-style function accessors; v3 also accepts row field keys. */
-export type BubbleAccessor<T> = keyof T | ((datum: T) => number | string | Date | null | undefined);
+export type BubbleAccessor<T> = NumericKeys<T> | ((datum: T) => number | null | undefined);
 
-export interface BubbleChartProps<T> extends CartesianChartBaseProps<T> {
+export type BubbleChartProps<T> = Omit<
+  CartesianChartBaseProps<T>,
+  "backgroundPattern" | "referenceLines" | "syncId" | "yAxes" | "yExplicitTicks"
+> & {
   /** Data key or accessor for the bubble's x value. */
   xAccessor: BubbleAccessor<T>;
   /** Data key or accessor for the bubble's y value. */
@@ -407,7 +424,7 @@ export interface BubbleChartProps<T> extends CartesianChartBaseProps<T> {
   opacity?: number;
   /** Options controlling bubble sizes. */
   sizeOptions?: SizeOptions;
-}
+};
 
 /**
  * Candlestick (OHLC) chart props. New in v3 — no `vccs` primitive exists, so the
@@ -419,7 +436,7 @@ export interface BubbleChartProps<T> extends CartesianChartBaseProps<T> {
  * accessors read `label`/`open`/`high`/`low`/`close`/`volume`, so a row shaped
  * like `{ label, open, high, low, close, volume? }` works with no config.
  */
-export interface CandlestickChartProps<T> {
+export interface CandlestickChartProps<T> extends ChartStyleProps {
   /** The data to render. Each element is one candle. */
   data: T[];
   /** Chart height in pixels. */
@@ -427,18 +444,18 @@ export interface CandlestickChartProps<T> {
   /** Row field used for the x (category) axis label. Default `"label"`. */
   xAccessor?: keyof T;
   /** Row field for the open price. Default `"open"`. */
-  openAccessor?: keyof T;
+  openAccessor?: NumericKeys<T>;
   /** Row field for the high price. Default `"high"`. */
-  highAccessor?: keyof T;
+  highAccessor?: NumericKeys<T>;
   /** Row field for the low price. Default `"low"`. */
-  lowAccessor?: keyof T;
+  lowAccessor?: NumericKeys<T>;
   /** Row field for the close price. Default `"close"`. */
-  closeAccessor?: keyof T;
+  closeAccessor?: NumericKeys<T>;
   /** Optional row field for the traded volume. Default `"volume"`. */
-  volumeAccessor?: keyof T;
-  /** Colour for rising candles (close ≥ open). Default `#10b981`. */
+  volumeAccessor?: NumericKeys<T>;
+  /** Colour for rising candles. Defaults to the `--vc-candle-up` theme token. */
   upColor?: string;
-  /** Colour for falling candles (close < open). Default `#ef4444`. */
+  /** Colour for falling candles. Defaults to the `--vc-candle-down` theme token. */
   downColor?: string;
   /** Max candle body width in pixels. Default 18. */
   candleWidth?: number;
@@ -470,13 +487,15 @@ export interface CandlestickChartProps<T> {
   hideYAxis?: boolean;
   /** Hide the tooltip. */
   hideTooltip?: boolean;
-  /** Tooltip behaviour config. */
-  tooltip?: TooltipConfig;
 }
 
 export interface DonutChartProps<T = unknown> extends ChartStyleProps {
-  /** Segment values, in the same order as `categories`. */
-  data: number[];
+  /** Record data (preferred), or positional values retained for v2 compatibility. */
+  data: T[] | number[];
+  /** Record field containing the segment label. */
+  nameKey?: keyof T;
+  /** Record field containing the numeric segment value. Required for record data. */
+  valueKey?: keyof T;
   /** Maps each segment to its legend representation (label, colour). */
   categories: Record<string, BulletLegendItemInterface>;
   /** Full ring or half-circle gauge. */
@@ -520,8 +539,6 @@ export interface DonutChartProps<T = unknown> extends ChartStyleProps {
   hideTooltip?: boolean;
   /** Custom formatter for tooltip titles. */
   tooltipTitleFormatter?: (data: T) => string | number;
-  /** Tooltip behaviour config. */
-  tooltip?: TooltipConfig;
   /**
    * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
    * global `--vc-*` token defaults; omit to use the shipped theme.
@@ -593,8 +610,6 @@ export interface RadarChartProps<T> extends ChartStyleProps {
   angleAxisTickSize?: number;
   /** Chart margin in pixels. Defaults to 12 on every side. */
   margin?: { top?: number; right?: number; bottom?: number; left?: number };
-  /** Tooltip behaviour config. */
-  tooltip?: TooltipConfig;
   /**
    * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
    * global `--vc-*` token defaults; omit to use the shipped theme.
@@ -610,8 +625,10 @@ export interface RadarChartProps<T> extends ChartStyleProps {
  * aligned with `categories`.
  */
 export interface RadialBarChartProps<T = unknown> extends ChartStyleProps {
-  /** Segment values, in the same order as `categories`. */
-  data: number[];
+  /** Record data (preferred), or positional values retained for v2 compatibility. */
+  data: T[] | number[];
+  nameKey?: keyof T;
+  valueKey?: keyof T;
   /** Maps each segment to its legend representation (label, colour). */
   categories: Record<string, BulletLegendItemInterface>;
   /** Chart height in pixels. */
@@ -644,8 +661,6 @@ export interface RadialBarChartProps<T = unknown> extends ChartStyleProps {
   hideTooltip?: boolean;
   /** Custom formatter for tooltip titles. */
   tooltipTitleFormatter?: (data: T) => string | number;
-  /** Tooltip behaviour config. */
-  tooltip?: TooltipConfig;
   /**
    * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
    * global `--vc-*` token defaults; omit to use the shipped theme.
@@ -676,8 +691,10 @@ export interface FunnelLabelSizes {
 }
 
 export interface FunnelChartProps<T = unknown> extends ChartStyleProps {
-  /** Stage values, in the same order as `categories`. Largest first reads top-down. */
-  data: number[];
+  /** Record data (preferred), or positional values retained for v2 compatibility. */
+  data: T[] | number[];
+  nameKey?: keyof T;
+  valueKey?: keyof T;
   /** Maps each stage to its legend representation (label, colour). */
   categories: Record<string, BulletLegendItemInterface>;
   /** Chart height in pixels. */
@@ -727,8 +744,6 @@ export interface FunnelChartProps<T = unknown> extends ChartStyleProps {
   hideTooltip?: boolean;
   /** Custom formatter for tooltip titles. */
   tooltipTitleFormatter?: (data: T) => string | number;
-  /** Tooltip behaviour config. */
-  tooltip?: TooltipConfig;
   /**
    * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
    * global `--vc-*` token defaults; omit to use the shipped theme.
@@ -752,7 +767,7 @@ export interface StatusTrackerDatum {
  * `data` is expected oldest-to-newest. When the container cannot fit every bar,
  * older records are dropped and the newest records stay visible on the right.
  */
-export interface StatusTrackerChartProps<T extends StatusTrackerDatum = StatusTrackerDatum> {
+export interface StatusTrackerChartProps<T extends StatusTrackerDatum = StatusTrackerDatum> extends ChartStyleProps {
   /** Status samples ordered oldest-to-newest. */
   data: T[];
   /** Maps each status key to its display label and colour. */
@@ -848,8 +863,6 @@ export interface SankeyChartProps<
   iterations?: number;
   /** Hide the tooltip. */
   hideTooltip?: boolean;
-  /** Tooltip behaviour config. */
-  tooltip?: TooltipConfig;
   /**
    * Per-chart appearance overrides (legend, hover, tooltip). Layers over the
    * global `--vc-*` token defaults; omit to use the shipped theme.

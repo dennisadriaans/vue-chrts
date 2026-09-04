@@ -20,6 +20,8 @@ import {
 import ChartContainer from "./internal/ChartContainer";
 import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import ChartEmptyState from "./internal/ChartEmptyState.vue";
+import ChartAccessibility from "./internal/ChartAccessibility.vue";
 import FunnelClassicShape from "./internal/FunnelClassicShape.vue";
 import FunnelTooltip from "./internal/FunnelTooltip.vue";
 import FunnelLayeredShape, {
@@ -30,8 +32,10 @@ import { categoriesToSeries } from "../utils/categories";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
 import { toCssProperties } from "../utils/style";
 import { themeToVars } from "../utils/theme";
+import { DEFAULT_MAX_DATA_POINTS, normalizeNamedValues, sampleData, warnDataLimit } from "../utils/data";
 
 const props = withDefaults(defineProps<FunnelChartProps<T>>(), {
+  accessibleDataTable: true,
   showValueLabel: true,
   showStageLabel: true,
   showPercentage: true,
@@ -51,14 +55,19 @@ const themeVars = computed(() => themeToVars(props.theme));
 /** Zip the value array against the categories record (positional, matching Donut). */
 const stages = computed(() => {
   const cats = categoriesToSeries(props.categories);
-  return props.data.map((value, i) => ({
-    name: cats[i]?.name ?? String(i),
+  const normalized = normalizeNamedValues(props.data, cats.map((cat) => String(cat.name)), props.nameKey, props.valueKey);
+  const limit = props.maxDataPoints ?? DEFAULT_MAX_DATA_POINTS;
+  warnDataLimit("FunnelChart", normalized.length, limit);
+  return sampleData(normalized, limit).map(({ row, value, sourceIndex, name }) => ({
+    ...(row && typeof row === "object" ? row : {}),
+    name,
     value,
-    formattedValue: props.valueFormatter?.(value, i),
-    fill: cats[i]?.color ?? `var(--chart-color-${i})`,
-    color: cats[i]?.color ?? `var(--chart-color-${i})`,
+    formattedValue: props.valueFormatter?.(value, sourceIndex),
+    fill: cats[sourceIndex]?.color ?? `var(--chart-color-${sourceIndex})`,
+    color: cats[sourceIndex]?.color ?? `var(--chart-color-${sourceIndex})`,
   }));
 });
+const accessibleRows = computed(() => stages.value.map((stage) => ({ label: stage.name, values: [{ label: "Value", value: stage.formattedValue ?? stage.value }] })));
 
 const isLayered = computed(() => props.variant === "layered");
 
@@ -129,7 +138,9 @@ function updateTooltipPosition(event: MouseEvent) {
   };
 }
 function showTooltip(event: MouseEvent, datum: FunnelLayeredDatum) {
-  activeDatum.value = datum;
+  activeDatum.value = props.tooltipTitleFormatter
+    ? { ...datum, name: String(props.tooltipTitleFormatter(datum as T)) }
+    : datum;
   updateTooltipPosition(event);
 }
 function clearTooltip() {
@@ -142,14 +153,18 @@ function clearTooltip() {
     v-if="isLayered"
     ref="chartContainer"
     class="vc-funnel-layered vue-chrts"
+    role="group"
+    :aria-label="ariaLabel ?? 'Funnel chart'"
     :style="{ height: `${height}px`, ...themeVars }"
   >
+    <ChartAccessibility :label="ariaLabel ?? 'Funnel chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
     <ChartSkeleton
       v-if="loading"
       :height="height"
       shape="bars"
       :label="loadingLabel ?? 'Loading'"
     />
+    <ChartEmptyState v-else-if="error || stages.length === 0" :height="height" :message="error || emptyLabel" />
     <ChartContainer v-else width="100%" height="100%">
       <VccsFunnelChart :margin="{ top: 16, right: 0, bottom: 8, left: 0 }">
         <Funnel
@@ -159,6 +174,7 @@ function clearTooltip() {
           last-shape-type="rectangle"
           stroke="none"
           :is-animation-active="duration !== undefined && duration !== 0"
+          :transition="{ duration: (duration ?? 800) / 1000, ease: 'easeOut' }"
         >
           <template #shape="shapeProps">
             <!--
@@ -197,13 +213,15 @@ function clearTooltip() {
     />
   </div>
 
-  <div v-else ref="chartContainer" class="vc-funnel vue-chrts" :style="themeVars">
+  <div v-else ref="chartContainer" class="vc-funnel vue-chrts" role="group" :aria-label="ariaLabel ?? 'Funnel chart'" :style="themeVars">
+    <ChartAccessibility :label="ariaLabel ?? 'Funnel chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
     <ChartSkeleton
       v-if="loading"
       :height="height"
       shape="bars"
       :label="loadingLabel ?? 'Loading'"
     />
+    <ChartEmptyState v-else-if="error || stages.length === 0" :height="height" :message="error || emptyLabel" />
     <ChartContainer v-else width="100%" :height="height">
     <VccsFunnelChart>
       <Funnel
@@ -213,6 +231,7 @@ function clearTooltip() {
         :last-shape-type="lastShapeType ?? 'triangle'"
         stroke="none"
         :is-animation-active="duration !== undefined && duration !== 0"
+        :transition="{ duration: (duration ?? 800) / 1000, ease: 'easeOut' }"
       >
         <template #shape="shapeProps">
           <slot

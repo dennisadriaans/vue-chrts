@@ -158,6 +158,27 @@ export default defineNuxtConfig({
 })
 ```
 
+## Data safety, accessibility, and limits
+
+This package is Nuxt-only. Vue/Vite applications should use the separate
+`vue-chrts` package.
+
+All numeric chart input is validated before it reaches a scale or SVG
+attribute. `null`, missing values, `NaN`, and positive/negative infinity are
+treated as gaps; a chart with no valid values shows `emptyLabel` (default:
+`"No valid data"`). Donut, Radial Bar, and Funnel accept record data with
+`nameKey` and `valueKey`; positional numeric arrays remain supported for v2
+compatibility.
+
+Every chart accepts `ariaLabel`, `ariaDescription`, and
+`accessibleDataTable`. The visually hidden table is enabled by default and is
+the keyboard/screen-reader equivalent of pointer-only SVG tooltips.
+
+SVG charts render at most 2,000 data rows by default. Larger inputs are sampled
+evenly (preserving both endpoints) and emit one development warning. Override
+this with `maxDataPoints`, but use pre-aggregation for genuinely dense data:
+SVG creates DOM work per mark, so raising the limit can block the UI.
+
 ## Auto-imported enums & types
 
 - Enums: `CurveType`, `LegendPosition`, `Orientation`, `DonutType`
@@ -166,7 +187,7 @@ export default defineNuxtConfig({
   `CandlestickChartProps`,
   `SankeyChartProps`, `SankeyInputNode`, `SankeyInputLink`,
   `StatusTrackerChartProps`, `StatusTrackerDatum`, `BulletLegendItemInterface`,
-  `AxisConfig`, `TooltipConfig`, `ValueLabel`, `ReferenceLineConfig`
+  `AxisConfig`, `ValueLabel`, `ReferenceLineConfig`, `NumericKeys`
 - Style variant unions: `BarVariant`, `AreaFillVariant`, `StrokeVariant`,
   `DotVariant`, `DitherVariant`, `BackgroundVariant`, `LegendIndicatorVariant`,
   `TooltipVariant`, `TooltipRoundness`, `RadarVariant`, `RadialVariant`
