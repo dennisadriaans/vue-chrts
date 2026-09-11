@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.0.0](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.0.0-beta.4...nuxt-charts@3.0.0) (2026-09-11)
+
+### Features
+
+* **nuxt-charts:** integrate Nuxt UI theme tokens ([fbcb9e8](https://github.com/dennisadriaans/vue-chrts/commit/fbcb9e8573b4ce10ada723fb045fb265815b2c8d))
+
 ## [3.0.0-beta.4](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.0.0-beta.3...nuxt-charts@3.0.0-beta.4) (2026-09-04)
 
 ### Features
