@@ -34,23 +34,34 @@ const value = (d: number) => d;
 
 const isHalf = computed(() => props.type === DonutType.Half);
 
-function onCrosshairUpdate(d: T): string {
-  const keyName = Object.values(props.categories)[(d as any).index].name;
+/**
+ * Returns the live slot wrapper element rather than an HTML string.
+ *
+ * Unovis calls this trigger synchronously, so reading
+ * `slotWrapperRef.innerHTML` here would snapshot the DOM *before* Vue has
+ * re-rendered for the `hoverValues` assignment above — the tooltip would lag
+ * one interaction behind (and be empty on the very first one). That is
+ * invisible on desktop, where `mousemove` fires repeatedly and the DOM catches
+ * up, but on touch a single tap is a single event, so every tap shows the
+ * previous tap's label. `Tooltip.render()` accepts an `HTMLElement` and adopts
+ * it into the tooltip container, and Vue keeps patching that element after it
+ * has been moved, so the contents stay in sync with `hoverValues`.
+ */
+function onCrosshairUpdate(d: T): HTMLElement | string {
+  const category = categoriesArray.value[(d as any).index];
+  if (!category) return "";
+
+  const keyName = category.name;
   hoverValues.value = {
     label: keyName,
     [keyName]: (d as any).data,
   };
-  return generateTooltipContent();
-}
 
-function generateTooltipContent(): string {
-  if (typeof window === "undefined") {
-    return "";
-  }
-  if (slotWrapperRef.value) {
-    return slotWrapperRef.value.innerHTML;
-  }
-  return "";
+  if (typeof window === "undefined" || !slotWrapperRef.value) return "";
+  // The wrapper is hidden while it sits in the chart's own DOM; once unovis
+  // owns it, it must be visible.
+  slotWrapperRef.value.style.display = "";
+  return slotWrapperRef.value;
 }
 
 const isLegendTop = computed(() => props.legendPosition.includes("top"));
