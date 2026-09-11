@@ -89,6 +89,22 @@ function onCrosshairUpdate(d: T) {
   hoverValues.value = d;
 }
 
+/**
+ * Unovis binds a `StackedBarDataRecord` wrapper to each stacked bar path
+ * (`{ datum, index, stacked, stackIndex, isEnding }`), not the data row itself.
+ * Its `_mapEventDatum` unwraps that for component events, but `Tooltip` reads
+ * the raw d3 datum straight off the element, so the wrapper reaches us here and
+ * the tooltip receives an object with none of the category keys on it.
+ *
+ * `GroupedBar` binds the row directly, so this is a no-op there.
+ */
+function unwrapBarDatum(d: T): T {
+  const record = d as { datum?: T } | undefined;
+  return record && typeof record === "object" && "datum" in record && record.datum
+    ? (record.datum as T)
+    : d;
+}
+
 const accessors = computed(() =>
   props.yAxis.map((i) => (d: any) => d[i])
 );
@@ -190,8 +206,9 @@ const labelValue = (d: LabelDatum) =>
             return d ? slotWrapperRef?.innerHTML : '';
           },
           [StackedBar.selectors.bar]: (d: T) => {
-            onCrosshairUpdate(d);
-            return d ? slotWrapperRef?.innerHTML : '';
+            const row = unwrapBarDatum(d);
+            onCrosshairUpdate(row);
+            return row ? slotWrapperRef?.innerHTML : '';
           },
         }"
       />
