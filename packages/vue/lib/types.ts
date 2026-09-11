@@ -1,3 +1,5 @@
+import type { Position } from "@unovis/ts";
+
 
 export interface BulletLegendItemInterface {
   name: string | number;
@@ -62,6 +64,15 @@ export interface TooltipConfig {
    * If `true`, the tooltip will follow the cursor.
    */
   followCursor?: boolean;
+  /**
+   * Horizontal placement relative to the cursor. Default: `Position.Auto`,
+   * which lets the tooltip flip to the other side near a container edge.
+   */
+  horizontalPlacement?: Position;
+  /**
+   * Vertical placement relative to the cursor. Default: `Position.Auto`.
+   */
+  verticalPlacement?: Position;
 }
 
 export type { MapRegion, MapPin } from "./components/Maps/DottedMap/types";

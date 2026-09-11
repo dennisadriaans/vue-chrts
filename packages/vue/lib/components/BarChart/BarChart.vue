@@ -90,6 +90,22 @@ function onCrosshairUpdate(d: T) {
 }
 
 /**
+ * Unovis binds a `StackedBarDataRecord` wrapper to each stacked bar path
+ * (`{ datum, index, stacked, stackIndex, isEnding }`), not the data row itself.
+ * Its `_mapEventDatum` unwraps that for component events, but `Tooltip` reads
+ * the raw d3 datum straight off the element, so the wrapper reaches us here and
+ * the tooltip receives an object with none of the category keys on it.
+ *
+ * `GroupedBar` binds the row directly, so this is a no-op there.
+ */
+function unwrapBarDatum(d: T): T {
+  const record = d as { datum?: T } | undefined;
+  return record && typeof record === "object" && "datum" in record && record.datum
+    ? (record.datum as T)
+    : d;
+}
+
+/**
  * Returns the live slot wrapper element rather than an HTML string.
  *
  * Unovis calls this trigger synchronously on `mousemove`, so reading
@@ -101,8 +117,9 @@ function onCrosshairUpdate(d: T) {
  * sync with `hoverValues`.
  */
 function tooltipContent(d: T): HTMLElement | string {
-  onCrosshairUpdate(d);
-  if (!d || !slotWrapperRef.value) return "";
+  const row = unwrapBarDatum(d);
+  onCrosshairUpdate(row);
+  if (!row || !slotWrapperRef.value) return "";
   // The wrapper is hidden while it sits in the chart's own DOM; once unovis
   // owns it, it must be visible.
   slotWrapperRef.value.style.display = "";

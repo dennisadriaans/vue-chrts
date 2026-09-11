@@ -187,8 +187,8 @@ function onCrosshairUpdate(d: T): string {
     >
       <VisTooltip
         v-if="!hideTooltip"
-        :horizontal-placement="Position.Right"
-        :vertical-placement="Position.Top"
+        :horizontal-placement="props.tooltip.horizontalPlacement ?? Position.Auto"
+        :vertical-placement="props.tooltip.verticalPlacement ?? Position.Auto"
         :follow-cursor="props.tooltip.followCursor"
         :show-delay="props.tooltip.showDelay"
         :hide-delay="props.tooltip.hideDelay"
