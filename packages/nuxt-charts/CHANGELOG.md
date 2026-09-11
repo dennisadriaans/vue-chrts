@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.2.2](https://github.com/dennisadriaans/vue-chrts/compare/v2.2.1...nuxt-charts-legacy@2.2.2) (2026-09-11)
+
+### Bug Fixes
+
+* **legacy:** clear lint errors in playground ([1615e93](https://github.com/dennisadriaans/vue-chrts/commit/1615e93160dc7d28ddf2f07d6fd02ca415e1a53e))
+* update meta data nuxt charts ([958c27d](https://github.com/dennisadriaans/vue-chrts/commit/958c27d6fdd5cb811183d1e2def71fb4a54b6924))
+* clean up old files and prepare release script ([9dfac7d](https://github.com/dennisadriaans/vue-chrts/commit/9dfac7d2e0c31fa30a89f0f4a7fa28265252b9f0))
+
 ## [2.2.1](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts-v2.2.1-beta.0...nuxt-charts-v2.2.1) (2026-07-23)
 
 ## [2.2.1-beta.0](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts-v2.1.5-test.0...nuxt-charts-v2.2.1-beta.0) (2026-07-23)
