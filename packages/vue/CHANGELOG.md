@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file. See [commit
 
 ## Unreleased
 
+## [2.2.3](https://github.com/dennisadriaans/vue-chrts/compare/vue-chrts@2.2.2...vue-chrts@2.2.3) (2026-09-11)
+
 ### Dependencies
 
 * bump `@unovis/ts` and `@unovis/vue` to ^1.7.0

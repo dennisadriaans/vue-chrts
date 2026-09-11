@@ -1,6 +1,6 @@
 {
   "name": "vue-chrts",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Vue 3 chart components built on Unovis — Area, Bar, Line, Donut, Sparkline and TopoJSON map",
   "license": "MIT",
   "author": "Dennis Adriaansen <adriaansendennis@gmail.com>",
