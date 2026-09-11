@@ -89,6 +89,26 @@ function onCrosshairUpdate(d: T) {
   hoverValues.value = d;
 }
 
+/**
+ * Returns the live slot wrapper element rather than an HTML string.
+ *
+ * Unovis calls this trigger synchronously on `mousemove`, so reading
+ * `slotWrapperRef.innerHTML` here would snapshot the DOM *before* Vue has
+ * re-rendered for the `hoverValues` assignment above — the tooltip would lag
+ * one hover behind (and be empty on the very first hover). `Tooltip.render()`
+ * accepts an `HTMLElement` and adopts it into the tooltip container, and Vue
+ * keeps patching that element after it has been moved, so the contents stay in
+ * sync with `hoverValues`.
+ */
+function tooltipContent(d: T): HTMLElement | string {
+  onCrosshairUpdate(d);
+  if (!d || !slotWrapperRef.value) return "";
+  // The wrapper is hidden while it sits in the chart's own DOM; once unovis
+  // owns it, it must be visible.
+  slotWrapperRef.value.style.display = "";
+  return slotWrapperRef.value;
+}
+
 const accessors = computed(() =>
   props.yAxis.map((i) => (d: any) => d[i])
 );
@@ -185,14 +205,8 @@ const labelValue = (d: LabelDatum) =>
         :show-delay="props.tooltip.showDelay"
         :hide-delay="props.tooltip.hideDelay"
         :triggers="{
-          [GroupedBar.selectors.bar]: (d: T) => {
-            onCrosshairUpdate(d);
-            return d ? slotWrapperRef?.innerHTML : '';
-          },
-          [StackedBar.selectors.bar]: (d: T) => {
-            onCrosshairUpdate(d);
-            return d ? slotWrapperRef?.innerHTML : '';
-          },
+          [GroupedBar.selectors.bar]: (d: T) => tooltipContent(d),
+          [StackedBar.selectors.bar]: (d: T) => tooltipContent(d),
         }"
       />
       <template v-if="stackAndGrouped">
