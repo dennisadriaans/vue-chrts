@@ -34,3 +34,6 @@ export {
   WorldMapSimplestTopoJSON,
   WorldMapTopoJSON,
 } from '@unovis/ts/maps';
+
+// Re-export Position so consumers can set tooltip placement without installing @unovis/ts
+export { Position } from '@unovis/ts';
