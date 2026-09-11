@@ -2,8 +2,6 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
-## Unreleased
-
 ## [2.2.3](https://github.com/dennisadriaans/vue-chrts/compare/vue-chrts@2.2.2...vue-chrts@2.2.3) (2026-09-11)
 
 ### Dependencies
