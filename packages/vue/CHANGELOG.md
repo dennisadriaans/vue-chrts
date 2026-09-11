@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## Unreleased
+
+### Dependencies
+
+* bump `@unovis/ts` and `@unovis/vue` to ^1.7.0
+
 ## [2.2.2](https://github.com/dennisadriaans/vue-chrts/compare/v2.2.1...vue-chrts@2.2.2) (2026-09-11)
 
 ### Bug Fixes
