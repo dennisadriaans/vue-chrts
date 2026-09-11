@@ -146,8 +146,8 @@ function onCrosshairUpdateWithContent(d: T): string {
             return d ? slotWrapperRef?.innerHTML : '';
           },
         }"
-        :horizontal-placement="Position.Right"
-        :vertical-placement="Position.Top"
+        :horizontal-placement="props.tooltip.horizontalPlacement ?? Position.Auto"
+        :vertical-placement="props.tooltip.verticalPlacement ?? Position.Auto"
       />
 
       <!-- Bar Chart Component -->
