@@ -1,7 +1,11 @@
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
-  modules: ["../src/module"],
+  modules: ["@nuxt/ui", "../src/module"],
+
+  // Flat component names: `components/dots/DotColumnChart.vue` registers as
+  // `<DotColumnChart>` rather than `<DotsDotColumnChart>`.
+  components: [{ path: "~/components", pathPrefix: false }],
 
   css: ["~/assets/main.css"],
   vite: {

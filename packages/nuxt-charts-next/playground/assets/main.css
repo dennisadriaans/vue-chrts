@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@nuxt/ui";
 @source "../app.vue";
 @source "../pages";
 @source "../../src";
@@ -16,4 +17,10 @@
 
 body {
   margin: 0;
+  background: var(--ui-bg);
+  color: var(--ui-text);
+}
+
+.dark {
+  --ui-bg: var(--color-neutral-950);
 }
