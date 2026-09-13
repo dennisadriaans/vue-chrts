@@ -12,6 +12,9 @@ const charts = [
   { to: "/candlestick", label: "Candlestick chart" },
   { to: "/status-tracker", label: "Status tracker chart" },
   { to: "/variants", label: "Style variants — every treatment side by side" },
+  { to: "/cards", label: "Cards — full-bleed hourly traffic dashboard" },
+  { to: "/dots", label: "Dot-only charts — monochrome circle-built gallery" },
+  { to: "/data-chart", label: "Data-aware charts — spec-driven aggregation over raw rows" },
 ];
 </script>
 
