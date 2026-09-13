@@ -24,6 +24,7 @@ import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../../ut
 import {
   AXIS_TICK_MARGIN,
   equidistantCategoryTicks,
+  niceTickValues,
   resolveAxisProps,
   resolveYAxes,
   resolveXAxisHeight,
@@ -31,10 +32,12 @@ import {
   toAxisLabel,
   toTickFormatter,
   toTickProp,
+  type ResolvedYAxis,
   type VccsAxisInterval,
   type VccsAxisTick,
 } from "../../utils/axis";
-import { categoriesToSeries } from "../../utils/categories";
+import { categoriesToSeries, normalizeAxisId } from "../../utils/categories";
+import type { AxisId } from "../../types/shared";
 import { toAxisDomain, toCssProperties } from "../../utils/style";
 import { axisTickVars, resolveHoverRadius, resolveHoverVisible, themeToVars } from "../../utils/theme";
 import ChartTooltip from "./ChartTooltip.vue";
@@ -69,6 +72,11 @@ const props = defineProps<
      * ticks read as percentages rather than as raw fractions.
      */
     percentAxis?: boolean;
+    /**
+     * Series are summed into one stack, so the value axis runs to the stacked
+     * total rather than the largest single series. Only affects axis sizing.
+     */
+    valueStacked?: boolean;
   }
 >();
 
@@ -222,10 +230,102 @@ const isCategoryYAxis = computed(
   () => layout.value === "vertical" && props.xAxisKey !== undefined,
 );
 
+/**
+ * The value-axis labels vccs is expected to draw, used only to size the axis
+ * slot. Explicit ticks win; otherwise the domain is reconstructed from the data
+ * (summing series when they stack) and run through the same d3 tick step vccs
+ * uses, so the estimate covers the top tick that sits above the data maximum.
+ */
+function sampleLabelsFor(
+  keys: readonly string[],
+  format: ReturnType<typeof toTickFormatter>,
+  explicitTicks: readonly VccsAxisTick[] | undefined,
+  domain: readonly [number, number] | undefined,
+): string[] | undefined {
+  const toLabel = (value: number, index: number) =>
+    format ? String(format(value, index)) : String(value);
+
+  if (explicitTicks?.length) return explicitTicks.map((tick, i) => toLabel(Number(tick), i));
+  if (!keys.length || !chartData.value.length) return undefined;
+
+  let min = 0;
+  let max = 0;
+  for (const row of chartData.value) {
+    const record = row as Record<string, unknown>;
+    let positive = 0;
+    let negative = 0;
+    for (const key of keys) {
+      const value = Number(record[key]);
+      if (!Number.isFinite(value)) continue;
+      if (props.valueStacked) {
+        if (value >= 0) positive += value;
+        else negative += value;
+      } else {
+        positive = Math.max(positive, value);
+        negative = Math.min(negative, value);
+      }
+    }
+    max = Math.max(max, positive);
+    min = Math.min(min, negative);
+  }
+
+  if (domain) {
+    min = domain[0];
+    max = domain[1];
+  }
+
+  const ticks = niceTickValues(min, max);
+  return ticks.length ? ticks.map(toLabel) : undefined;
+}
+
+/** Series data keys grouped by the y-axis they are plotted against. */
+const seriesKeysByAxis = computed(() => {
+  const map = new Map<AxisId, string[]>();
+  for (const series of categoriesToSeries(props.categories)) {
+    const id = normalizeAxisId(series.yAxisId);
+    const keys = map.get(id);
+    if (keys) keys.push(series.dataKey);
+    else map.set(id, [series.dataKey]);
+  }
+  return map;
+});
+
+const valueAxisSampleLabels = computed(() => {
+  if (isCategoryYAxis.value || props.percentAxis) return undefined;
+  return sampleLabelsFor(
+    numericKeys.value as string[],
+    valueFormatter.value,
+    layout.value === "vertical" ? xAxis.value.ticks : yAxis.value.ticks,
+    yAxisDomain.value,
+  );
+});
+
 const xAxisHeight = computed(() => resolveXAxisHeight({ hasTitle: !!xAxisTitle.value }));
 const yAxisWidth = computed(() =>
-  resolveYAxisWidth({ hasTitle: !!yAxisTitle.value, isCategoryAxis: isCategoryYAxis.value }),
+  resolveYAxisWidth({
+    hasTitle: !!yAxisTitle.value,
+    isCategoryAxis: isCategoryYAxis.value,
+    sampleLabels: valueAxisSampleLabels.value,
+    tickMargin: AXIS_TICK_MARGIN.y,
+  }),
 );
+
+/**
+ * Each y-axis is sized from only the series plotted against it, so a large
+ * secondary scale cannot pad the primary axis with dead space.
+ */
+function widthForAxis(axis: ResolvedYAxis): number {
+  if (props.percentAxis) {
+    return resolveYAxisWidth({ hasTitle: !!axis.label, isCategoryAxis: false });
+  }
+  const keys = seriesKeysByAxis.value.get(normalizeAxisId(axis.id)) ?? [];
+  return resolveYAxisWidth({
+    hasTitle: !!axis.label,
+    isCategoryAxis: false,
+    sampleLabels: sampleLabelsFor(keys, axis.tickFormatter, axis.ticks, axis.domain),
+    tickMargin: AXIS_TICK_MARGIN.y,
+  });
+}
 
 /** Per-chart theme + per-axis tick colour/size overrides as inline `--vc-*` vars on the root. */
 const rootStyle = computed(() => ({
@@ -446,7 +546,7 @@ const resolvedYAxes = computed(() => {
         :y-axis-id="axis.id"
         :orientation="axis.orientation"
         :hide="axis.hide"
-        :width="yAxisWidth"
+        :width="widthForAxis(axis)"
         :tick="toTickProp(axis.tick)"
         :tick-margin="AXIS_TICK_MARGIN.y"
         :tick-line="axis.tickLine ? yTickLineProp : false"

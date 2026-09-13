@@ -171,6 +171,7 @@ defineSlots<{
     :x-axis-key="xAxisKey"
     :container-props="chartContainerProps"
     :percent-axis="stacked === true && percent === true"
+    :value-stacked="stacked === true"
     :frame-class="frameClass"
     skeleton-shape="wave"
     v-bind="props"

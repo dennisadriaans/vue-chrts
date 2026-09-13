@@ -67,13 +67,96 @@ export const AXIS_SLOT = {
   titledXHeight: 52,
 } as const;
 
+/**
+ * Upper bound on the y-axis slot. Past this a long label has to wrap or clip
+ * rather than eat the plot area.
+ */
+const MAX_NUMERIC_Y_WIDTH = 96;
+
+/** Mean glyph advance as a fraction of font size, for the tick font stack. */
+const GLYPH_ADVANCE_RATIO = 0.6;
+/** Digits and separators in a tabular-figure font are wider than the mean. */
+const DIGIT_ADVANCE_RATIO = 0.62;
+
+/** Default `--vc-tick-size` (0.75rem) in px, used when no size is resolved. */
+const DEFAULT_TICK_FONT_PX = 12;
+
+/**
+ * Approximate rendered width of a tick label. A canvas measure would be exact
+ * but the axis slot is needed during setup, before the chart (or, in SSR, any
+ * DOM at all) exists — so width is estimated from glyph counts instead.
+ */
+export function estimateTickLabelWidth(label: string, fontPx = DEFAULT_TICK_FONT_PX): number {
+  let width = 0;
+  for (const char of label) {
+    // Digits, separators and currency marks carry most of the width in a value
+    // axis, and sit wider than the all-glyph mean.
+    width += /[0-9.,\s$€£¥%+-]/.test(char) ? DIGIT_ADVANCE_RATIO : GLYPH_ADVANCE_RATIO;
+  }
+  return width * fontPx;
+}
+
 export function resolveYAxisWidth(options: {
   hasTitle: boolean;
   isCategoryAxis: boolean;
+  /** Formatted sample of the widest ticks the value axis is likely to show. */
+  sampleLabels?: readonly string[];
+  tickFontPx?: number;
+  /** Gap between the plot edge and the label, so it is not counted as space. */
+  tickMargin?: number;
 }): number {
   if (options.hasTitle) return AXIS_SLOT.titledYWidth;
   if (options.isCategoryAxis) return AXIS_SLOT.categoryYWidth;
-  return AXIS_SLOT.numericYWidth;
+
+  const labels = options.sampleLabels;
+  if (!labels?.length) return AXIS_SLOT.numericYWidth;
+
+  let widest = 0;
+  for (const label of labels) {
+    widest = Math.max(widest, estimateTickLabelWidth(label, options.tickFontPx));
+  }
+
+  // vccs lays the label out inside the slot, inset by tickMargin from the plot.
+  const needed = Math.ceil(widest + (options.tickMargin ?? 0));
+  return Math.min(Math.max(AXIS_SLOT.numericYWidth, needed), MAX_NUMERIC_Y_WIDTH);
+}
+
+/**
+ * The "nice" round tick values d3 (and so vccs) picks for a numeric domain.
+ * Mirrors d3-array's `ticks` step selection so the axis slot can be sized from
+ * the labels that will actually be drawn — the top tick usually sits above the
+ * data maximum, and is the widest.
+ */
+export function niceTickValues(min: number, max: number, count = 5): number[] {
+  if (!Number.isFinite(min) || !Number.isFinite(max)) return [];
+  if (min === max) return [min];
+  if (count <= 0) return [];
+
+  const step = tickIncrement(min, max, count);
+  if (!Number.isFinite(step) || step === 0) return [min, max];
+
+  const start = Math.ceil(min / step) * step;
+  const stop = Math.floor(max / step) * step;
+  const ticks: number[] = [];
+  for (let value = start, i = 0; value <= stop + step / 2; value += step, i++) {
+    // Re-derive from the index so repeated addition cannot drift.
+    ticks.push(start + i * step);
+    if (ticks.length > 100) break;
+  }
+  return ticks;
+}
+
+/** d3-array's tick step: a 1, 2, 5 or 10 multiple of a power of ten. */
+function tickIncrement(min: number, max: number, count: number): number {
+  const rawStep = (max - min) / count;
+  const power = Math.floor(Math.log10(rawStep));
+  const magnitude = Math.pow(10, power);
+  const normalized = rawStep / magnitude;
+
+  if (normalized >= 7.5) return 10 * magnitude;
+  if (normalized >= 3) return 5 * magnitude;
+  if (normalized >= 1.5) return 2 * magnitude;
+  return magnitude;
 }
 
 export function resolveXAxisHeight(options: { hasTitle: boolean }): number {

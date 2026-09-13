@@ -250,6 +250,7 @@ defineSlots<{
     :x-axis-key="xAxisKey"
     :container-props="chartContainerProps"
     :percent-axis="stacked === true && percent === true"
+    :value-stacked="stacked === true"
     :legend-colors="legendColors"
     v-bind="props"
   >

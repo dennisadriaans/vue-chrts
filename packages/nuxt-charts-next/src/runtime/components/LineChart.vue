@@ -86,6 +86,7 @@ defineSlots<{
     :frame-class="frameClass"
     skeleton-shape="wave"
     v-bind="props"
+    :value-stacked="stacked === true"
   >
     <!--
       Built with `h()` so the filter lands in the SVG namespace and the
