@@ -14,6 +14,9 @@ const COMPONENTS = {
   SankeyChart: "SankeyChart",
   CandlestickChart: "CandlestickChart",
   StatusTrackerChart: "StatusTrackerChart",
+  // Data-aware primitive: renders a serializable `ChartSpec` over raw rows by
+  // delegating to the adapters above.
+  DataChart: "DataChart",
 } as const;
 
 export type ComponentName = keyof typeof COMPONENTS;

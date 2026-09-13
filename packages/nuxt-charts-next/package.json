@@ -1,7 +1,7 @@
 {
   "name": "nuxt-charts",
   "version": "3.0.0",
-  "description": "Beautiful chart components for Nuxt (vccs engine) — Area, Bar, Line, Donut, Bubble, Radar, Radial Bar, Funnel, Sankey, Candlestick, Status Tracker",
+  "description": "Beautiful chart components for Nuxt (vccs engine) \u2014 Area, Bar, Line, Donut, Bubble, Radar, Radial Bar, Funnel, Sankey, Candlestick, Status Tracker",
   "license": "MIT",
   "author": "Dennis Adriaansen <adriaansendennis@gmail.com>",
   "homepage": "https://nuxtcharts.com",
@@ -39,6 +39,11 @@
       "types": "./dist/runtime/enums.d.ts",
       "import": "./dist/runtime/enums.js",
       "default": "./dist/runtime/enums.js"
+    },
+    "./spec": {
+      "types": "./dist/runtime/spec/index.d.ts",
+      "import": "./dist/runtime/spec/index.js",
+      "default": "./dist/runtime/spec/index.js"
     }
   },
   "main": "./dist/module.mjs",

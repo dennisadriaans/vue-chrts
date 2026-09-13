@@ -62,4 +62,28 @@ export const resolveImports = (config: ModuleOptions, resolverUrl: string) => {
       "RadialVariant",
     ],
   });
+
+  // The data layer. `ChartSpec` and friends are types, but the transform and
+  // CSV helpers are real functions a consumer calls directly (in a server
+  // route, or to compute a header total beside the chart).
+  addImportsSources({
+    from: resolve("./runtime/spec"),
+    imports: ["transform", "toCsv", "validateSpec", "seriesLabel", "formatBucket"],
+  });
+
+  addImportsSources({
+    from: resolve("./runtime/spec"),
+    type: true,
+    imports: [
+      "ChartSpec",
+      "SpecChartType",
+      "SpecAggregate",
+      "SpecInterval",
+      "SpecCompare",
+      "SpecDimensions",
+      "SpecTransform",
+      "SpecDatum",
+      "TransformResult",
+    ],
+  });
 };

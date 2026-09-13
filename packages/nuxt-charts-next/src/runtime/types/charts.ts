@@ -13,6 +13,7 @@ import type { CurveType, DonutType, LegendPosition, Orientation } from "../enums
 import type { DitherVariant } from "../utils/dither";
 import type { StrokeGradientStop } from "../utils/gradient";
 import type { BackgroundVariant } from "../utils/background";
+import type { ChartSpec } from "../spec/types";
 import type {
   AreaFillVariant,
   BarVariant,
@@ -870,4 +871,33 @@ export interface SankeyChartProps<
   theme?: ChartTheme;
   /** Animation duration in milliseconds. */
   duration?: number;
+}
+
+/**
+ * Props for `<DataChart>`, the data-aware primitive.
+ *
+ * Unlike the other chart interfaces, this one takes *raw* rows plus a
+ * {@link ChartSpec} rather than pre-aggregated data and a `categories` map —
+ * the spec is what decides which fields become series and buckets.
+ */
+export interface DataChartProps<T> extends ChartStyleProps {
+  /** Raw application rows. Aggregated according to `spec`. */
+  data: T[];
+  /** What to plot. Fully serializable — see {@link ChartSpec}. */
+  spec: ChartSpec;
+  /** Chart height in pixels. Default 260. */
+  height?: number;
+  /** Locale for axis bucket labels. Defaults to the browser's. */
+  locale?: string;
+  /** Hide the legend. */
+  hideLegend?: boolean;
+  /** Stack series instead of overlaying / grouping them. */
+  stacked?: boolean;
+  /** Per-chart appearance overrides, forwarded to the renderer. */
+  theme?: ChartTheme;
+  /**
+   * Formats y-axis ticks. A function, so it deliberately lives on the props
+   * rather than in the spec — keeping the spec itself JSON-serializable.
+   */
+  valueFormatter?: (value: number) => string;
 }
