@@ -8,3 +8,4 @@ export * from "./types";
 export * from "./transform";
 export * from "./resolve";
 export * from "./csv";
+export * from "./metric";
