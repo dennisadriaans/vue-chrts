@@ -13,7 +13,8 @@ import type { CurveType, DonutType, LegendPosition, Orientation } from "../enums
 import type { DitherVariant } from "../utils/dither";
 import type { StrokeGradientStop } from "../utils/gradient";
 import type { BackgroundVariant } from "../utils/background";
-import type { ChartSpec } from "../spec/types";
+import type { ChartSpec, SpecAggregate, SpecChartType, SpecCompare, SpecInterval } from "../spec/types";
+import type { MetricFormat, MetricRange } from "../spec/metric";
 import type {
   AreaFillVariant,
   BarVariant,
@@ -900,4 +901,112 @@ export interface DataChartProps<T> extends ChartStyleProps {
    * rather than in the spec — keeping the spec itself JSON-serializable.
    */
   valueFormatter?: (value: number) => string;
+}
+
+/**
+ * Props for `<MetricChart>`, the analytics component.
+ *
+ * Where {@link DataChartProps} takes a spec and renders it, this one takes the
+ * *question* — which field, aggregated how, over what window, compared against
+ * what — and assembles the spec itself. The extra props over `DataChart` are
+ * all about the chrome a metric needs around the plot: a headline value, a
+ * delta, a range selector, and the export affordances.
+ */
+export interface MetricChartProps<T> extends ChartStyleProps {
+  /** Raw application rows. Aggregated according to the props below. */
+  data: T[];
+
+  /** Metric name, rendered as the card's heading. */
+  title?: string;
+  /** Optional supporting line under the title. */
+  description?: string;
+
+  /** Field plotted on the x axis. Must hold dates for a temporal metric. */
+  x: string;
+  /** Field aggregated onto the y axis. Optional only for `count`. */
+  y?: string;
+  /**
+   * Field whose distinct values split the plot into separate series.
+   *
+   * Mutually exclusive with `compare`: both claim the series dimension, so
+   * asking for a split suppresses the comparison rather than stacking them.
+   */
+  series?: string;
+
+  /** How rows sharing a bucket are collapsed. Default `sum`. */
+  aggregate?: SpecAggregate;
+  /**
+   * Bucket width. Omit to let the selected range choose one that keeps the
+   * number of marks readable.
+   */
+  interval?: SpecInterval;
+  /** Plot a shifted baseline and compute the delta against it. */
+  compare?: SpecCompare;
+
+  /** Chart form. Default `line`. */
+  type?: SpecChartType;
+
+  /** Number rendering for the headline, axis and tooltip. Default `number`. */
+  format?: MetricFormat;
+  /** ISO 4217 code for the `currency` format. Default `EUR`. */
+  currency?: string;
+  /** Locale for every number and date. Defaults to the browser's. */
+  locale?: string;
+  /** Extra `Intl.NumberFormat` options, merged over the format's defaults. */
+  formatOptions?: Intl.NumberFormatOptions;
+  /**
+   * Full control over the headline and axis text, bypassing `format`.
+   *
+   * A function, so it stays on the props rather than in the spec.
+   */
+  valueFormatter?: (value: number) => string;
+
+  /**
+   * Treat a fall as the good outcome, so the delta colours invert.
+   *
+   * The right default for latency, error rates, churn and cost — anything
+   * where "down" is the win.
+   */
+  inverseSentiment?: boolean;
+
+  /**
+   * Selectable windows. Default 7D / 30D / 3M / 1Y.
+   *
+   * Pass an empty array to hide the selector and plot `range` alone.
+   */
+  ranges?: readonly MetricRange[];
+  /** Selected range key. Use `v-model:range` to control it. */
+  range?: string;
+  /**
+   * Explicit window, overriding the range selector's arithmetic.
+   *
+   * Use when the window comes from elsewhere on the page (a shared date
+   * picker) rather than from this component's own buttons.
+   */
+  window?: { from: string; to: string };
+  /**
+   * Date the windows count back from. Defaults to now.
+   *
+   * Pinning it makes a demo, a screenshot or a test render the same chart
+   * every time instead of drifting with the clock.
+   */
+  anchor?: string | number | Date;
+
+  /** Chart height in pixels. Default 220. */
+  height?: number;
+  /** Stack series instead of overlaying them. */
+  stacked?: boolean;
+  /** Hide the chart's own legend. */
+  hideLegend?: boolean;
+  /** Per-chart appearance overrides, forwarded to the renderer. */
+  theme?: ChartTheme;
+
+  /** Offer a toggle that swaps the chart for its data table. */
+  showTable?: boolean;
+  /** Offer a CSV download of the aggregated rows. */
+  exportable?: boolean;
+  /** Filename for the CSV download. Defaults to a slug of the title. */
+  exportFilename?: string;
+  /** Hide the headline value and delta, leaving the title and the plot. */
+  hideValue?: boolean;
 }
