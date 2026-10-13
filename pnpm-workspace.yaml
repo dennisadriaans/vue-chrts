@@ -1,5 +1,6 @@
 packages:
   - 'packages/*'
+  - 'examples/*'
 allowBuilds:
   '@parcel/watcher': false
   better-sqlite3: true
