@@ -11,9 +11,19 @@
  * the rectangle and paint it from a generated `<defs>` fill
  * ({@link BarVariantDefs}). All of them support single, grouped and stacked
  * series.
+ *
+ * A category with `type: "line"` is drawn as a `<Line>` instead, so a rate or
+ * trend can sit over the bars — typically on its own axis via `yAxis`.
  */
 import { computed, ref, useId } from "vue";
-import { Bar, BarChart as VccsBarChart, LabelList, Rectangle } from "vccs";
+import {
+  Bar,
+  BarChart as VccsBarChart,
+  ComposedChart,
+  LabelList,
+  Line,
+  Rectangle,
+} from "vccs";
 import CartesianFrame from "./internal/CartesianFrame.vue";
 import CubeBarShape from "./internal/CubeBarShape.vue";
 import VariantBarShape from "./internal/VariantBarShape.vue";
@@ -117,7 +127,7 @@ const categoryByKey = computed(() => {
 });
 
 /** One descriptor per `yAxis` value key, enriched from `categories`. */
-const series = computed(() =>
+const allSeries = computed(() =>
   props.yAxis.map((key) => {
     const k = String(key);
     const cat = categoryByKey.value.get(k);
@@ -127,9 +137,19 @@ const series = computed(() =>
       color: cat?.color,
       hidden: cat?.hidden ?? false,
       yAxisId: cat?.yAxisId ?? PRIMARY_Y_AXIS_ID,
+      isLine: props.categories[k]?.type === "line",
     };
   }),
 );
+
+/** Series drawn as bars; every bar-specific feature works on these only. */
+const series = computed(() => allSeries.value.filter((s) => !s.isLine));
+
+/** Series drawn as lines over the bars. */
+const lineSeries = computed(() => allSeries.value.filter((s) => s.isLine));
+
+/** `vccs` only draws a `<Line>` inside a line or composed chart container. */
+const chartContainer = computed(() => (lineSeries.value.length ? ComposedChart : VccsBarChart));
 
 /** Series narrowed to those with a resolved colour, which the `<defs>` need. */
 const paintedSeries = computed(() =>
@@ -145,7 +165,7 @@ const paintedSeries = computed(() =>
  */
 const legendColors = computed(() =>
   Object.fromEntries(
-    series.value.filter((s) => s.color).map((s) => [s.name, s.color as string]),
+    allSeries.value.filter((s) => s.color).map((s) => [s.name, s.color as string]),
   ),
 );
 
@@ -246,7 +266,7 @@ defineSlots<{
 
 <template>
   <CartesianFrame
-    :container="VccsBarChart"
+    :container="chartContainer"
     :x-axis-key="xAxisKey"
     :container-props="chartContainerProps"
     :percent-axis="stacked === true && percent === true"
@@ -338,5 +358,19 @@ defineSlots<{
         :fill="valueLabel.color ?? 'currentColor'"
       />
     </Bar>
+    <Line
+      v-for="s in lineSeries"
+      :key="s.dataKey"
+      :data-key="s.dataKey"
+      :name="s.name"
+      :y-axis-id="s.yAxisId"
+      type="monotone"
+      :stroke="s.color"
+      :stroke-width="2"
+      :dot="false"
+      :hide="s.hidden"
+      :is-animation-active="duration !== undefined && duration !== 0"
+      :transition="{ duration: (duration ?? 400) / 1000, ease: 'easeOut' }"
+    />
   </CartesianFrame>
 </template>
