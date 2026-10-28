@@ -4,8 +4,7 @@ import { feature } from "topojson-client";
 import type { Feature, FeatureCollection, Geometry, Polygon, MultiPolygon } from "geojson";
 import type { Topology, GeometryObject } from "topojson-specification";
 import world from "../data/world.json";
-import type { MapAccessor, MapBaseProps, MapGeometry, MapProjection, MapRegion, MapRegionName } from "../types/maps";
-import type { MapInteractionKind } from "../types/maps";
+import type { MapAccessor, MapBaseProps, MapGeometry, MapInteractionKind, MapProjection, MapRegion, MapRegionName } from "../types/maps";
 
 export interface MapMark {
   key: string;

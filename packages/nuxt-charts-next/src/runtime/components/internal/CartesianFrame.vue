@@ -406,6 +406,22 @@ const yAxisInterval = computed(() =>
 );
 
 /**
+ * Tooltip value formatter per series, taken from its `yAxes` entry so each
+ * value reads in its own axis' units. Series on an axis without a declared
+ * formatter keep the default number formatting.
+ */
+function tooltipFormattersFor(rowIndex: number) {
+  if (!props.yAxes) return undefined;
+  const formatters: Record<string, (value: unknown) => string> = {};
+  for (const series of categoriesToSeries(props.categories)) {
+    const config = props.yAxes[series.yAxisId];
+    const format = toTickFormatter(config?.formatter ?? config?.tickFormat);
+    if (format) formatters[series.dataKey] = (value) => format(value, rowIndex);
+  }
+  return formatters;
+}
+
+/**
  * `vccs` passes the raw category tick value as the tooltip label; axis ticks
  * go through `categoryFormatter` separately. Mirror that formatter here so
  * index-based `xFormatter` callbacks (v2 parity) affect the tooltip title too.
@@ -421,11 +437,11 @@ const tooltipContent = computed(() => {
     }
 
     let label = tooltipProps.label;
+    const rowIndex = row != null ? chartData.value.indexOf(row) : -1;
 
     if (titleFormatter && row != null) {
       label = titleFormatter(row);
     } else if (formatLabel != null && label !== undefined && label !== "") {
-      const rowIndex = row != null ? chartData.value.indexOf(row) : -1;
       const index =
         rowIndex >= 0
           ? rowIndex
@@ -440,6 +456,7 @@ const tooltipContent = computed(() => {
       label,
       variant: props.tooltipVariant,
       roundness: props.tooltipRoundness,
+      formatters: tooltipFormattersFor(Math.max(rowIndex, 0)),
     });
   };
 });

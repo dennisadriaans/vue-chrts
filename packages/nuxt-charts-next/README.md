@@ -122,6 +122,33 @@ Each axis accepts `orientation`, `label`, `domain`, `numTicks`, `formatter`,
 the top-level `yLabel` / `yDomain` / `yAxisConfig` props. Supported on
 `LineChart`, `AreaChart` and `BarChart` (vertical orientation).
 
+An axis `formatter` also formats its series' tooltip values, so each value
+reads in its own units. Gridlines follow the primary axis.
+
+### Bar + line series (preview)
+
+> [!WARNING]
+> Preview: this API may change in a minor release. Feedback welcome.
+
+In a `BarChart`, set `type: "line"` on a category to draw it as a line over the
+bars — e.g. revenue bars on the left, a conversion rate line on the right:
+
+```ts
+const categories = {
+  revenue: { name: "Revenue" },
+  conversion: { name: "Conversion", yAxis: "pct", type: "line" },
+};
+
+const yAxes = {
+  0: { formatter: (v) => `€${v / 1000}k` },
+  pct: { orientation: "right", domain: [0, 5], formatter: (v) => `${v}%` },
+};
+```
+
+- Vertical orientation only; on a horizontal `BarChart` the category stays a bar.
+- Lines are drawn after the bars, unstacked, with `monotone` curves and no dots.
+- Bar-only options (`variant`, `stacked`, `valueLabel`, `radius`) don't apply to lines.
+
 ## Style variants
 
 Every treatment below is opt-in — a chart that sets none of them renders exactly

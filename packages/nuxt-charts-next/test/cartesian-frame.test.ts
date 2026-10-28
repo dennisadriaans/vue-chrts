@@ -182,3 +182,40 @@ describe("CartesianFrame x-axis ticks", () => {
     expect(JSON.parse(axis.attributes("data-p-ticks") ?? "[]")).toEqual(["m0", "m3", "m5"]);
   });
 });
+
+describe("CartesianFrame tooltip", () => {
+  /** Render the frame's tooltip `content` for one hovered row. */
+  function tooltipText(props: Record<string, unknown>) {
+    const row = { x: "a", revenue: 12000, rate: 2.5 };
+    const frame = mountFrame({ data: [row], ...props });
+    const content = frame.findComponent({ name: "Tooltip" }).vm.$attrs.content as (p: unknown) => unknown;
+    const payload = [
+      { dataKey: "revenue", name: "Revenue", value: 12000, payload: row },
+      { dataKey: "rate", name: "Rate", value: 2.5, payload: row },
+    ];
+    return mount({ render: () => content({ active: true, label: "a", payload }) }).text();
+  }
+
+  const categories = {
+    revenue: { name: "Revenue" },
+    rate: { name: "Rate", yAxis: "pct" },
+  };
+
+  it("formats each value with its own axis' formatter", () => {
+    const text = tooltipText({
+      categories,
+      yAxes: {
+        0: { formatter: (v: number) => `€${v}` },
+        pct: { orientation: "right", formatter: (v: number) => `${v}%` },
+      },
+    });
+    expect(text).toContain("€12000");
+    expect(text).toContain("2.5%");
+  });
+
+  it("keeps default number formatting for axes without a formatter", () => {
+    const text = tooltipText({ categories, yAxes: { pct: { formatter: (v: number) => `${v}%` } } });
+    expect(text).not.toContain("€");
+    expect(text).toContain("2.5%");
+  });
+});
