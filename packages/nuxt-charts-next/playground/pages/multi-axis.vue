@@ -39,7 +39,7 @@ const salesCategories: Record<string, BulletLegendItemInterface> = {
 
 const salesAxes: Record<string, YAxisConfig> = {
   0: { label: "Revenue", formatter: (v) => `€${Number(v) / 1000}k` },
-  pct: { orientation: "right", label: "Conversion", domain: [0, 5], formatter: (v) => `${v}%` },
+  pct: { orientation: "right", label: "Conversion", domain: [0, 5], numTicks: 6, formatter: (v) => `${v}%` },
 };
 </script>
 
@@ -67,7 +67,7 @@ const salesAxes: Record<string, YAxisConfig> = {
       x-axis="month"
     />
 
-    <h2>Revenue bars (€) with a conversion line (%) on the right axis</h2>
+    <h2>Revenue bars (€) with a conversion line (%) on the right axis (preview)</h2>
     <BarChart
       :data="sales"
       :categories="salesCategories"

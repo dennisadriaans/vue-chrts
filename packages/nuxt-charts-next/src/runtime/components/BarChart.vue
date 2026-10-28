@@ -12,8 +12,9 @@
  * ({@link BarVariantDefs}). All of them support single, grouped and stacked
  * series.
  *
- * A category with `type: "line"` is drawn as a `<Line>` instead, so a rate or
- * trend can sit over the bars — typically on its own axis via `yAxis`.
+ * Preview: a category with `type: "line"` is drawn as a `<Line>` instead, so a
+ * rate or trend can sit over the bars — typically on its own axis via `yAxis`.
+ * Vertical orientation only; horizontal charts keep drawing it as a bar.
  */
 import { computed, ref, useId } from "vue";
 import {
@@ -137,7 +138,7 @@ const allSeries = computed(() =>
       color: cat?.color,
       hidden: cat?.hidden ?? false,
       yAxisId: cat?.yAxisId ?? PRIMARY_Y_AXIS_ID,
-      isLine: props.categories[k]?.type === "line",
+      isLine: props.categories[k]?.type === "line" && props.orientation !== "horizontal",
     };
   }),
 );

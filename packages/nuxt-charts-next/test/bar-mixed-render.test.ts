@@ -37,7 +37,7 @@ const data = [
   { month: "Mar", revenue: 15000, conversion: 2.8 },
 ];
 
-async function mountBar(categories: Record<string, unknown>) {
+async function mountBar(categories: Record<string, unknown>, extraProps: Record<string, unknown> = {}) {
   const wrapper = mount(BarChart as never, {
     props: {
       data,
@@ -47,6 +47,7 @@ async function mountBar(categories: Record<string, unknown>) {
       xAxis: "month",
       height: 300,
       hideLegend: true,
+      ...extraProps,
     },
     attachTo: document.body,
   } as never) as VueWrapper;
@@ -73,6 +74,18 @@ describe("BarChart mixed bar + line series", () => {
       revenue: { name: "Revenue", color: "#2662d9" },
       conversion: { name: "Conversion", color: "#e23670", yAxis: "pct" },
     });
+    expect(document.querySelectorAll(".v-charts-bar-rectangle").length).toBe(data.length * 2);
+    expect(document.querySelectorAll(".v-charts-line-curve").length).toBe(0);
+  });
+
+  it("keeps a `type: 'line'` category as a bar on horizontal charts", async () => {
+    await mountBar(
+      {
+        revenue: { name: "Revenue", color: "#2662d9" },
+        conversion: { name: "Conversion", color: "#e23670", type: "line" },
+      },
+      { orientation: "horizontal", yAxes: undefined },
+    );
     expect(document.querySelectorAll(".v-charts-bar-rectangle").length).toBe(data.length * 2);
     expect(document.querySelectorAll(".v-charts-line-curve").length).toBe(0);
   });

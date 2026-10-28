@@ -26,7 +26,10 @@ export interface BulletLegendItemInterface {
   yAxis?: AxisId;
   /**
    * `BarChart` only: draw this series as a line instead of a bar, e.g. a rate
-   * plotted on a secondary axis over the bars. Default `bar`.
+   * plotted on a secondary axis over the bars. Default `bar`. Vertical
+   * orientation only; ignored on horizontal charts.
+   *
+   * @experimental Preview — the API may change in a minor release.
    */
   type?: "bar" | "line";
 }
