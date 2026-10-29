@@ -12,7 +12,7 @@
 import type { CurveType, DonutType, LegendPosition, Orientation } from "../enums";
 import type { DitherVariant } from "../utils/dither";
 import type { StrokeGradientStop } from "../utils/gradient";
-import type { BackgroundVariant } from "../utils/background";
+import type { BackgroundArea, BackgroundVariant } from "../utils/background";
 import type { ChartSpec, SpecAggregate, SpecChartType, SpecCompare, SpecInterval } from "../spec/types";
 import type { MetricFormat, MetricRange } from "../spec/metric";
 import type {
@@ -188,13 +188,22 @@ export interface CartesianChartBaseProps<T> extends ChartStyleProps {
    */
   backgroundPattern?: BackgroundVariant;
   /**
-   * Fade `backgroundPattern` out toward the chart's edges.
+   * How `backgroundPattern` fades out.
    *
-   * Turn off for a crisp texture that fills the plot area edge to edge, such as
-   * a dot grid standing in for grid lines.
+   * `true` leaves a soft wash in the middle of the chart. A number fades only
+   * the outer band of that many pixels, so a dot grid stays crisp behind the
+   * data yet still dissolves at its edges. `false` keeps it crisp edge to edge.
    * @default true
    */
-  backgroundFade?: boolean;
+  backgroundFade?: boolean | number;
+  /**
+   * Where `backgroundPattern` is painted.
+   *
+   * `"plot"` stops the texture at the axis lines, so it never runs under tick
+   * labels or the legend.
+   * @default "chart"
+   */
+  backgroundArea?: BackgroundArea;
 }
 
 export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
@@ -432,7 +441,7 @@ export type BubbleAccessor<T> = NumericKeys<T> | ((datum: T) => number | null | 
 
 export type BubbleChartProps<T> = Omit<
   CartesianChartBaseProps<T>,
-  "backgroundPattern" | "backgroundFade" | "referenceLines" | "syncId" | "yAxes" | "yExplicitTicks"
+  "backgroundPattern" | "backgroundFade" | "backgroundArea" | "referenceLines" | "syncId" | "yAxes" | "yExplicitTicks"
 > & {
   /** Data key or accessor for the bubble's x value. */
   xAccessor: BubbleAccessor<T>;

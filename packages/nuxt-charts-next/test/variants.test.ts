@@ -460,6 +460,36 @@ describe("chart background patterns", () => {
     expect(danglingReferences()).toEqual([]);
   });
 
+  it("anchors the texture to the plot, which `padding` insets", async () => {
+    await mountBar({ backgroundPattern: "dots", padding: { top: 30, right: 0, bottom: 0, left: 0 } });
+    expect(document.querySelector(".vc-chart-background pattern")!.getAttribute("y")).toBe("30");
+  });
+
+  it("stops the texture at the axes with `backgroundArea: \"plot\"`", async () => {
+    await mountBar({
+      backgroundPattern: "dots",
+      backgroundArea: "plot",
+      padding: { top: 30, right: 0, bottom: 0, left: 0 },
+    });
+    const rect = document.querySelector(".vc-chart-background > rect")!;
+    expect(rect.getAttribute("y")).toBe("30");
+  });
+
+  it("fades only an outer band when `backgroundFade` is a number", async () => {
+    await mountBar({
+      backgroundPattern: "dots",
+      backgroundArea: "plot",
+      backgroundFade: 24,
+      padding: { top: 30, right: 0, bottom: 0, left: 0 },
+    });
+    const rect = document.querySelector(".vc-chart-background > rect")!;
+    const maskId = /url\(#([^)]+)\)/.exec(rect.getAttribute("mask")!)![1]!;
+    // Inset by half the band, so the blur ramps from the plot edge inward.
+    const maskRect = document.getElementById(maskId)!.querySelector("rect")!;
+    expect(maskRect.getAttribute("y")).toBe("42");
+    expect(danglingReferences()).toEqual([]);
+  });
+
   it("takes its colour from a token, so it follows the theme", async () => {
     await mountArea({ backgroundPattern: "dots" });
     const layer = document.querySelector(".vc-chart-background") as HTMLElement;

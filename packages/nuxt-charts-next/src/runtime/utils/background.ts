@@ -8,6 +8,9 @@
  * light / dark mode without any of this code knowing about themes.
  */
 
+/** Where a background texture is painted: the whole canvas, or only inside the axes. */
+export type BackgroundArea = "chart" | "plot";
+
 /** Built-in background textures. */
 export type BackgroundVariant =
   | "dots"
