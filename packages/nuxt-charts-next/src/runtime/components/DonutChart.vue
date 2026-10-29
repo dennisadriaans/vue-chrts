@@ -8,13 +8,14 @@
  * children (Pie does not use extractCellProps unlike Bar).
  * `DonutType.Half` renders a semicircle gauge.
  */
-import { computed, useId } from "vue";
+import { computed, shallowRef, useId } from "vue";
 import { Legend, Pie, PieChart, Tooltip } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
 import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
 import ChartEmptyState from "./internal/ChartEmptyState.vue";
 import ChartAccessibility from "./internal/ChartAccessibility.vue";
+import PolarCenterSync, { type PolarPlotArea } from "./internal/PolarCenterSync";
 import SegmentVariantDefs, { segmentGradientId } from "./internal/SegmentVariantDefs";
 import { tooltipContentFor } from "./internal/tooltipContent";
 import { variantId } from "../utils/variants";
@@ -88,30 +89,33 @@ const DEFAULT_ARC_WIDTH = 40;
 /** Fraction of the available radius the ring fills in auto-fit mode. */
 const AUTO_OUTER_FRACTION = 0.9;
 
-/**
- * Resolve outer/inner radius. When `radius` is omitted or `0` we auto-fit the
- * ring to the container (v2 parity, and what every gallery example expects):
- *  - with a known `height`, derive exact pixel radii so `arcWidth` is honoured
- *    as a true pixel thickness;
- *  - without a height, fall back to percentage radii so vccs sizes to its box.
- * A positive `radius` pins an explicit pixel outer radius (playground usage).
- */
+/** Plot dimensions after margins and the measured legend have been reserved. */
+const plotArea = shallowRef<PolarPlotArea>();
+const onCenter = (next: PolarPlotArea) => {
+  const current = plotArea.value;
+  if (
+    current?.cx === next.cx
+    && current.cy === next.cy
+    && current.width === next.width
+    && current.height === next.height
+  ) return;
+  plotArea.value = next;
+};
+
+/** Auto-fit inside the plot, keeping `arcWidth` in pixels as the legend wraps. */
 const radii = computed(() => {
   const arcWidth = props.arcWidth ?? DEFAULT_ARC_WIDTH;
 
-  // Explicit pixel outer radius.
   if (props.radius && props.radius > 0) {
     return {
-      outerRadius: props.radius as number | string,
-      innerRadius: Math.max(props.radius - arcWidth, 0) as number | string,
+      outerRadius: props.radius,
+      innerRadius: Math.max(props.radius - arcWidth, 0),
     };
   }
 
-  // Auto-fit with a known height → exact pixel radii, so `arcWidth` is honoured
-  // as a true pixel thickness. A full ring is bounded by half the height; a half
-  // gauge (top semicircle) is bounded by the full height.
-  if (props.height && props.height > 0) {
-    const bound = props.type === DonutType.Half ? props.height : props.height / 2;
+  if (plotArea.value) {
+    const { width, height, maxRadius } = plotArea.value;
+    const bound = props.type === DonutType.Half ? Math.min(width / 2, height) : maxRadius;
     const outerRadius = bound * AUTO_OUTER_FRACTION;
     return {
       outerRadius,
@@ -119,12 +123,33 @@ const radii = computed(() => {
     };
   }
 
-  // Auto-fit without a usable height → percentage radii so vccs sizes to its box.
+  // The plot reports its size when ChartContainer mounts.
   return { outerRadius: "90%", innerRadius: "60%" };
 });
 
 const outerRadius = computed(() => radii.value.outerRadius);
 const innerRadius = computed(() => radii.value.innerRadius);
+
+/** Pie coordinates are relative to the plot; overlay coordinates are absolute. */
+const halfCenterOffset = computed(() =>
+  props.type === DonutType.Half && typeof outerRadius.value === "number"
+    ? outerRadius.value / 2
+    : 0,
+);
+const pieCenterY = computed(() => plotArea.value
+  ? plotArea.value.height / 2 + halfCenterOffset.value
+  : "50%",
+);
+const centerStyle = computed(() => {
+  if (!plotArea.value) return { left: "50%", top: "50%" };
+  const innerOffset = props.type === DonutType.Half && typeof innerRadius.value === "number"
+    ? innerRadius.value / 2
+    : 0;
+  return {
+    left: `${plotArea.value.cx}px`,
+    top: `${plotArea.value.cy + halfCenterOffset.value - innerOffset}px`,
+  };
+});
 
 /** Half donut renders the top semicircle as a gauge. */
 const angles = computed(() => {
@@ -156,6 +181,7 @@ const legendWrapperStyle = computed(() =>
     <ChartEmptyState v-else-if="error || segments.length === 0" :height="height ?? 200" :message="error || emptyLabel" />
     <ChartContainer v-else width="100%" height="100%">
       <PieChart>
+        <PolarCenterSync :on-center="onCenter" />
         <!--
           Built with `h()` so the paints land in the SVG namespace and each
           segment's `fill="url(#…)"` resolves.
@@ -171,6 +197,7 @@ const legendWrapperStyle = computed(() =>
           :data="segments"
           data-key="value"
           name-key="name"
+          :cy="pieCenterY"
           :inner-radius="innerRadius"
           :outer-radius="outerRadius"
           :start-angle="angles.startAngle"
@@ -202,8 +229,7 @@ const legendWrapperStyle = computed(() =>
       class="donut-chart__center"
       :style="{
         position: 'absolute',
-        top: '50%',
-        left: '50%',
+        ...centerStyle,
         transform: 'translate(-50%, -50%)',
         pointerEvents: 'none',
       }"

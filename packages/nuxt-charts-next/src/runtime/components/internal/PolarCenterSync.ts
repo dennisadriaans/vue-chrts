@@ -1,6 +1,14 @@
 import { defineComponent, watch, type PropType } from "vue";
 import { useOffset } from "vccs";
 
+export interface PolarPlotArea {
+  cx: number;
+  cy: number;
+  width: number;
+  height: number;
+  maxRadius: number;
+}
+
 /**
  * Reports the legend-aware plot-area centre and radius budget back to a polar
  * chart root.
@@ -22,9 +30,7 @@ export default defineComponent({
   name: "PolarCenterSync",
   props: {
     onCenter: {
-      type: Function as PropType<
-        (center: { cx: number; cy: number; maxRadius: number }) => void
-      >,
+      type: Function as PropType<(center: PolarPlotArea) => void>,
       required: true,
     },
   },
@@ -38,6 +44,8 @@ export default defineComponent({
         props.onCenter({
           cx: next.left + next.width / 2,
           cy: next.top + next.height / 2,
+          width: next.width,
+          height: next.height,
           maxRadius: Math.min(next.width, next.height) / 2,
         });
       },
