@@ -132,10 +132,11 @@ function configureZoom() {
   if (!svg.value) return;
   const element = select(svg.value);
   element.on(".zoom", null);
+  const pan = props.panPadding ?? 0;
   behavior = zoom<SVGSVGElement, unknown>()
     .extent([[0, 0], props.size])
     .scaleExtent([limits.value[0]!, limits.value[1]!])
-    .translateExtent([[0, 0], props.size])
+    .translateExtent([[-pan, -pan], [props.size[0] + pan, props.size[1] + pan]])
     .clickDistance(4)
     .filter(event => !props.disableZoom && (!event.ctrlKey || event.type === "wheel") && !event.button && (event.type !== "wheel" || props.zoomOnScroll === true))
     .on("zoom", (event: D3ZoomEvent<SVGSVGElement, unknown>) => {
@@ -188,7 +189,7 @@ function onKey(event: KeyboardEvent) {
 watch(svg, element => {
   if (element) { configureZoom(); apply(initial()); }
 });
-watch(() => [props.disableZoom, props.zoomOnScroll, props.zoomExtent], configureZoom, { deep: true });
+watch(() => [props.disableZoom, props.zoomOnScroll, props.zoomExtent, props.panPadding], configureZoom, { deep: true });
 watch(() => [props.zoomFactor, props.size], () => { configureZoom(); if (svg.value) apply(initial()); }, { deep: true });
 watch(() => props.marks, () => { hovered.value = undefined; });
 onMounted(() => {

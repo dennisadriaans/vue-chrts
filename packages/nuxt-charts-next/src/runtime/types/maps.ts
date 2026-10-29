@@ -106,6 +106,8 @@ export interface MapBaseProps extends ChartStyleProps {
   zoomExtent?: [number, number];
   /** Wheel zoom is opt-in so a map does not capture normal page scrolling. */
   zoomOnScroll?: boolean;
+  /** Pixels the map can be dragged past its edges, so it can be nudged even when fully zoomed out. Default 0. */
+  panPadding?: number;
   zoomDuration?: number;
   duration?: number;
   showControls?: boolean;
