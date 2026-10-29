@@ -33,6 +33,8 @@ const props = withDefaults(
     color?: string;
     /** Draws the floating cap strip above the body. */
     capped?: boolean;
+    /** Strokes the bar in `color`, as `hatched-outline` does. */
+    outlined?: boolean;
     /** Renders this bar as a projection: hollow hatch plus an outline. */
     isBuffer?: boolean;
     /** Paint for a projection bar's hollow hatch. */
@@ -67,6 +69,8 @@ const CAP_HEIGHT = 2;
  */
 const bodyHeight = computed(() => Math.max(0, (props.height ?? 0) - 3));
 
+const hasOutline = computed(() => props.isBuffer || props.outlined);
+
 const bodyFill = computed(() =>
   props.isBuffer ? (props.bufferFill ?? props.fill) : props.fill,
 );
@@ -87,8 +91,8 @@ const showCap = computed(
       :radius="radius"
       :fill="bodyFill"
       :filter="filter"
-      :stroke="isBuffer ? color : undefined"
-      :stroke-width="isBuffer ? 1 : undefined"
+      :stroke="hasOutline ? color : undefined"
+      :stroke-width="hasOutline ? 1 : undefined"
     />
     <rect
       v-if="showCap"

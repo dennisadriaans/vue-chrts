@@ -160,6 +160,29 @@ describe("BarChart style variants", () => {
     expect(mobile.querySelector("rect")?.getAttribute("fill")).toBe("#e23670");
   });
 
+  it("lets a category override the chart variant for its own series", async () => {
+    await mountBar({
+      yAxis: ["desktop", "mobile"],
+      categories: {
+        ...categories,
+        desktop: { ...categories.desktop, variant: "hatched-outline" },
+      },
+    });
+
+    const hatchId = variantId("hatched-outline", "desktop", "v-0");
+    expect(document.getElementById(hatchId)?.tagName.toLowerCase()).toBe("pattern");
+    expect(document.getElementById(variantId("hatched-outline", "mobile", "v-0"))).toBeNull();
+
+    const bars = [
+      ...document.querySelectorAll(".v-charts-bar-rectangle path, .v-charts-bar-rectangle rect"),
+    ];
+    const hatched = bars.filter((el) => el.getAttribute("fill") === `url(#${hatchId})`);
+    expect(hatched.length).toBeGreaterThan(0);
+    expect(hatched.every((el) => el.getAttribute("stroke") === "#2662d9")).toBe(true);
+    expect(bars.some((el) => el.getAttribute("fill") === "#e23670")).toBe(true);
+    expect(danglingReferences()).toEqual([]);
+  });
+
   it("splits a duotone bar at its own midpoint, not on a tiling grid", async () => {
     await mountBar({ variant: "duotone" });
 

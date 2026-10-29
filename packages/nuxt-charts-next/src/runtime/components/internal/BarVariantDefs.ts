@@ -1,7 +1,7 @@
 import { defineComponent, h, type PropType, type VNode } from "vue";
 import { variantId, type BarVariant } from "../../utils/variants";
 
-type SeriesItem = { dataKey: string; color: string };
+type SeriesItem = { dataKey: string; color: string; variant: BarVariant };
 
 /**
  * Emits the `<defs>` paints a patterned bar variant references.
@@ -21,8 +21,8 @@ type SeriesItem = { dataKey: string; color: string };
 export default defineComponent({
   name: "BarVariantDefs",
   props: {
+    /** Series to paint, each with the variant it resolved to. */
     series: { type: Array as PropType<SeriesItem[]>, required: true },
-    variant: { type: String as PropType<BarVariant>, required: true },
     scope: { type: String, required: true },
     /** Also emit the outer-glow filter each series can reference. */
     glow: { type: Boolean, default: false },
@@ -33,7 +33,7 @@ export default defineComponent({
     const children: VNode[] = [];
 
     for (const series of props.series) {
-      children.push(...paintsFor(props.variant, series, props.scope));
+      children.push(...paintsFor(series.variant, series, props.scope));
       if (props.buffer) children.push(...bufferPaints(series, props.scope));
       if (props.glow) children.push(glowFilter(series.dataKey, props.scope));
     }
@@ -83,6 +83,8 @@ function paintsFor(variant: BarVariant, series: SeriesItem, scope: string): VNod
   switch (variant) {
     case "hatched":
       return hatchedPaints(series, scope);
+    case "hatched-outline":
+      return hatchedOutlinePaints(series, scope);
     case "duotone":
       return duotonePaints(series, scope, false);
     case "duotone-reverse":
@@ -121,6 +123,30 @@ function hatchedPaints(series: SeriesItem, scope: string): VNode[] {
   );
 
   return maskedFill("hatched", series, scope, texture, textureId);
+}
+
+/**
+ * Dense hairlines with no ground. `BarChart` strokes the bar in the series
+ * colour, so the outline carries the value edge and the hatch carries texture.
+ */
+function hatchedOutlinePaints(series: SeriesItem, scope: string): VNode[] {
+  const textureId = variantId("hatched-outline-texture", series.dataKey, scope);
+  const texture = h(
+    "pattern",
+    {
+      id: textureId,
+      key: textureId,
+      x: 0,
+      y: 0,
+      width: 3.5,
+      height: 3.5,
+      patternUnits: "userSpaceOnUse",
+      patternTransform: "rotate(45)",
+    },
+    [h("rect", { width: 1.5, height: 3.5, fill: "white" })],
+  );
+
+  return maskedFill("hatched-outline", series, scope, texture, textureId);
 }
 
 /**
