@@ -245,7 +245,7 @@ defineExpose({
             @keydown.space.prevent.stop="emit('click', mark, $event)"
           >
             <slot :name="mark.kind" :values="mark.values" :x="mark.x" :y="mark.y" :path="mark.path" :color="mark.color" :radius="mark.radius" :scale="transform.k">
-              <path v-if="mark.path" :d="mark.path" :fill="mark.kind === 'link' ? 'none' : mark.color" :stroke="mark.stroke" :stroke-width="mark.strokeWidth" :stroke-dasharray="mark.dasharray" vector-effect="non-scaling-stroke" />
+              <path v-if="mark.path" :d="mark.path" :fill="mark.kind === 'link' ? 'none' : mark.color" :stroke="mark.stroke" :stroke-width="mark.strokeWidth" :stroke-dasharray="mark.dasharray" :opacity="mark.opacity" vector-effect="non-scaling-stroke" />
               <polygon v-else-if="mark.polygon" :points="mark.polygon" :fill="mark.color" :stroke="mark.stroke" :stroke-width="mark.strokeWidth" :stroke-opacity="mark.strokeOpacity" />
               <circle v-else :cx="mark.x" :cy="mark.y" :r="mark.kind === 'point' || mark.kind === 'pin' ? (mark.radius ?? 5) / transform.k : mark.radius" :fill="mark.color" :stroke="mark.stroke" :stroke-width="mark.strokeWidth" :stroke-opacity="mark.strokeOpacity" vector-effect="non-scaling-stroke" />
               <text v-if="mark.showLabel && mark.label" :x="mark.x" :y="mark.y" :transform="`translate(${mark.x}, ${mark.y}) scale(${1 / transform.k}) translate(${-mark.x!}, ${-mark.y!})`" :dy="-(mark.radius ?? 5) - 6" text-anchor="middle" class="vc-map__label">{{ mark.label }}</text>

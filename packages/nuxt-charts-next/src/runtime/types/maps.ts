@@ -134,6 +134,9 @@ export interface TopoJSONMapProps<A extends MapArea = MapArea, P extends MapPoin
   areaCursor?: MapAccessor<MapFeature<A>, string>;
   areaStroke?: MapAccessor<MapFeature<A>, string>;
   areaStrokeWidth?: MapAccessor<MapFeature<A>, number>;
+  areaOpacity?: MapAccessor<MapFeature<A>, number>;
+  /** Draw this area above its neighbours so a highlight stroke is not covered. */
+  activeArea?: string | number;
   /** Numeric field/accessor for an automatically scaled choropleth. */
   value?: keyof A | ((area: MapFeature<A>) => number | undefined);
   colorScale?: (value: number) => string;
