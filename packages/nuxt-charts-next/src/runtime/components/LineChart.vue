@@ -18,7 +18,7 @@ import { markerToDot, normalizeMarkerConfig, toStrokeDasharray } from "../utils/
 import { strokeDasharrayFor, variantId } from "../utils/variants";
 import { strokeGradientId } from "../utils/gradient";
 
-const props = withDefaults(defineProps<LineChartProps<T>>(), { accessibleDataTable: true });
+const props = withDefaults(defineProps<LineChartProps<T>>(), { accessibleDataTable: true, backgroundFade: true });
 
 /** Scopes this chart's `<defs>` ids so several charts on a page never collide. */
 const variantScope = useId();

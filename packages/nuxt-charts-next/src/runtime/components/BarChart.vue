@@ -35,6 +35,7 @@ import { PATTERNED_BAR_VARIANTS, variantId } from "../utils/variants";
 
 const props = withDefaults(defineProps<BarChartProps<T>>(), {
   accessibleDataTable: true,
+  backgroundFade: true,
   variant: "solid",
   cubeGap: DEFAULT_CUBE_GAP,
   cubeRadius: DEFAULT_CUBE_RADIUS,

@@ -31,6 +31,7 @@ import { strokeDasharrayFor, variantId } from "../utils/variants";
 const props = withDefaults(defineProps<AreaChartProps<T>>(), {
   gradient: true,
   accessibleDataTable: true,
+  backgroundFade: true,
 });
 
 const gradientScope = useId();

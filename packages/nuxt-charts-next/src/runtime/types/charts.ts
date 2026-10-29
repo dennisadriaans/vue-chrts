@@ -187,6 +187,14 @@ export interface CartesianChartBaseProps<T> extends ChartStyleProps {
    * chart's edges. Omit for a plain background.
    */
   backgroundPattern?: BackgroundVariant;
+  /**
+   * Fade `backgroundPattern` out toward the chart's edges.
+   *
+   * Turn off for a crisp texture that fills the plot area edge to edge, such as
+   * a dot grid standing in for grid lines.
+   * @default true
+   */
+  backgroundFade?: boolean;
 }
 
 export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
@@ -407,7 +415,7 @@ export type BubbleAccessor<T> = NumericKeys<T> | ((datum: T) => number | null | 
 
 export type BubbleChartProps<T> = Omit<
   CartesianChartBaseProps<T>,
-  "backgroundPattern" | "referenceLines" | "syncId" | "yAxes" | "yExplicitTicks"
+  "backgroundPattern" | "backgroundFade" | "referenceLines" | "syncId" | "yAxes" | "yExplicitTicks"
 > & {
   /** Data key or accessor for the bubble's x value. */
   xAccessor: BubbleAccessor<T>;

@@ -429,6 +429,14 @@ describe("chart background patterns", () => {
     expect(maskRect.getAttribute("filter")).toMatch(/^url\(#/);
   });
 
+  it("paints the texture edge to edge when the fade is off", async () => {
+    await mountBar({ backgroundPattern: "dots", backgroundFade: false });
+    const layer = document.querySelector(".vc-chart-background")!;
+    expect(layer.querySelector("rect")!.hasAttribute("mask")).toBe(false);
+    expect(layer.querySelector("mask")).toBeNull();
+    expect(danglingReferences()).toEqual([]);
+  });
+
   it("takes its colour from a token, so it follows the theme", async () => {
     await mountArea({ backgroundPattern: "dots" });
     const layer = document.querySelector(".vc-chart-background") as HTMLElement;

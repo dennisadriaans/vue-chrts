@@ -487,6 +487,7 @@ const resolvedYAxes = computed(() => {
         v-if="backgroundPattern"
         :variant="backgroundPattern"
         :scope="backgroundScope"
+        :fade="backgroundFade !== false"
       />
       <CartesianGrid
         v-if="showXGrid || showYGrid"
