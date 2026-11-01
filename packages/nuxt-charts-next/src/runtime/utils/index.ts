@@ -6,3 +6,4 @@ export * from "./style";
 export * from "./cubes";
 export * from "./data";
 export * from "./format";
+export * from "./heatmap";

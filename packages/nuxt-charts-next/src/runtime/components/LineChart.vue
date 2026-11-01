@@ -112,7 +112,7 @@ defineSlots<{
       :stack-id="stackId"
       :stroke="strokeFor(s.dataKey, s.color)"
       :stroke-width="lineWidth ?? 2"
-      :stroke-dasharray="dashArray"
+      :stroke-dasharray="s.dashArray ?? dashArray"
       :filter="glowFor(s.dataKey)"
       :dot="showDots || (s.dot as boolean)"
       :hide="s.hidden"

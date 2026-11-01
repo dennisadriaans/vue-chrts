@@ -19,9 +19,15 @@ const COMPONENTS = {
   // Data-aware primitive: renders a serializable `ChartSpec` over raw rows by
   // delegating to the adapters above.
   DataChart: "DataChart",
+  // Analytics card over raw rows: headline, delta, range selector, table and CSV export.
+  MetricChart: "MetricChart",
+  HeatmapChart: "HeatmapChart",
 } as const;
 
 export type ComponentName = keyof typeof COMPONENTS;
+
+/** Components that render without measuring the DOM, so they are safe to server-render. */
+const SSR_COMPONENTS = new Set<ComponentName>(["DottedMap", "TopoJSONMap", "HeatmapChart"]);
 
 /**
  * Register the adapter components with Nuxt.
@@ -43,7 +49,7 @@ export const resolveComponents = (config: ModuleOptions, resolverUrl: string) =>
     addComponent({
       name: `${prefix}${name}`,
       filePath: resolve(`./runtime/components/${COMPONENTS[name]}.vue`),
-      mode: name === "DottedMap" || name === "TopoJSONMap" ? "all" : "client",
+      mode: SSR_COMPONENTS.has(name) ? "all" : "client",
       global,
     });
   }
