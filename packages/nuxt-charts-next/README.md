@@ -131,7 +131,7 @@ as it did before. The playground's `/variants` page shows them side by side.
 
 | Prop | Chart | Values |
 |---|---|---|
-| `variant` | `BarChart` | `solid` (default), `cubes`, `hatched`, `duotone`, `duotone-reverse`, `gradient`, `stripped` |
+| `variant` | `BarChart` | `solid` (default), `cubes`, `hatched`, `hatched-outline`, `duotone`, `duotone-reverse`, `gradient`, `stripped` |
 | `variant` | `AreaChart` | `gradient`, `gradient-reverse`, `solid`, `dotted`, `lines`, `hatched` |
 | `variant` | `RadarChart` | `filled` (default), `lines`, `gradient` (inside to outside), `gradient-reverse` (outside to inside) |
 | `variant` | `RadialBarChart` | `full` (default), `semi` |
@@ -139,6 +139,16 @@ as it did before. The playground's `/variants` page shows them side by side.
 
 On `AreaChart` the fill treatments layer over the v2 `gradient` fade and yield to
 `dither`, which is a texture of its own.
+
+On `BarChart` a category can set its own `variant`, overriding the chart's for
+that series:
+
+```ts
+const categories = {
+  organic: { name: "Organic", color: "#2662d9", variant: "hatched-outline" },
+  direct: { name: "Direct", color: "#e23670" },
+} satisfies Record<string, BarCategory>;
+```
 
 ### Series detail
 

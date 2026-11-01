@@ -298,7 +298,27 @@ export interface ValueLabel {
   labelFontSize?: number;
 }
 
+/**
+ * One bar series' legend entry, plus an optional style of its own.
+ *
+ * Lets one series stand apart from the rest, such as a hatched comparison bar
+ * beside solid ones, without splitting the data across two charts.
+ */
+export interface BarCategory extends BulletLegendItemInterface {
+  /**
+   * Bar render variant for this series only.
+   *
+   * @default the chart's `variant`
+   */
+  variant?: BarVariant;
+}
+
 export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
+  /**
+   * Maps each series key to its legend entry, colour and optional `variant`.
+   * The keys are the data properties plotted as bars.
+   */
+  categories: Record<string, BarCategory>;
   /** The data keys (series) plotted on the value axis. */
   yAxis: NumericKeys<T>[];
   /** The data key used for the category axis. */
@@ -344,9 +364,12 @@ export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
    * series fills its own cube range.
    *
    * The remaining variants keep the rectangle and change how it is painted:
-   * `"hatched"` (diagonal stripes), `"duotone"` / `"duotone-reverse"` (a
-   * vertical split between a solid and a faded half), `"gradient"` (fading out
-   * toward the baseline), and `"stripped"` (a faint body under a solid cap).
+   * `"hatched"` (diagonal stripes), `"hatched-outline"` (a hollow hatch inside
+   * an outline), `"duotone"` / `"duotone-reverse"` (a vertical split between a
+   * solid and a faded half), `"gradient"` (fading out toward the baseline), and
+   * `"stripped"` (a faint body under a solid cap).
+   *
+   * A category's own `variant` overrides this for that series.
    */
   variant?: BarVariant;
   /** Gap between cubes in px when `variant="cubes"`. Default 2. */
