@@ -10,6 +10,7 @@
  * `gradient` fade. Each is opt-in, so a chart that sets none of them renders
  * exactly as it did before any of this existed.
  */
+import { useChartUi } from "../composables/useChartUi";
 import { computed, useId } from "vue";
 import { Area, AreaChart as VccsAreaChart } from "vccs";
 import CartesianFrame from "./internal/CartesianFrame.vue";
@@ -32,6 +33,7 @@ const props = withDefaults(defineProps<AreaChartProps<T>>(), {
   gradient: true,
   accessibleDataTable: true,
 });
+useChartUi("areaChart", props);
 
 const gradientScope = useId();
 const markers = computed(() => normalizeMarkerConfig(props.markerConfig));

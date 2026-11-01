@@ -9,6 +9,7 @@
  * Generics (`T`, `N`, `L`) flow the user's row type through, giving `keyof T`
  * autocomplete on axis keys and typed formatters.
  */
+import type { ChartClassValue, ChartUi } from "../theme";
 import type { CurveType, DonutType, LegendPosition, Orientation } from "../enums";
 import type { DitherVariant } from "../utils/dither";
 import type { StrokeGradientStop } from "../utils/gradient";
@@ -48,6 +49,23 @@ export type NumericKeys<T> = {
  * one of the built-in variants; omit them all for the shipped defaults.
  */
 export interface ChartStyleProps {
+  /**
+   * Per-slot classes, merged with tailwind-merge exactly like a Nuxt UI
+   * component's `ui` prop: `:ui="{ tooltip: 'rounded-lg', legendLabel: 'text-default' }"`.
+   * Slot names match Nuxt UI's `UChart` where they overlap. Theme-wide
+   * defaults go in `app.config.ts` under `nuxtCharts.chart` (all charts) or
+   * `nuxtCharts.<component>`; `ui.chart.slots` is inherited too.
+   */
+  ui?: ChartUi;
+  /** Classes for the root element, merged after `ui.root`. */
+  class?: ChartClassValue;
+  /**
+   * Series palette, as in Nuxt UI's `UChart`. Accepts theme colour names
+   * (`primary`, `secondary`, `success`, …, `neutral`) or any CSS colour.
+   * Defaults to `--ui-chart-1` … `--ui-chart-6`. A category's own `color`
+   * still wins for that series.
+   */
+  colors?: string[];
   /** Accessible name for the chart. Falls back to a chart-type label. */
   ariaLabel?: string;
   /** Longer screen-reader description of the chart's purpose or trend. */

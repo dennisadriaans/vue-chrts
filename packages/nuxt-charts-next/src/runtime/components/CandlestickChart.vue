@@ -11,6 +11,7 @@
  * components: accessors name the OHLC fields (defaulting to
  * `label`/`open`/`high`/`low`/`close`/`volume`), and formatters/colours are props.
  */
+import { useChartUi } from "../composables/useChartUi";
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from "vue";
 import CandlestickTooltip from "./internal/CandlestickTooltip.vue";
 import ChartEmptyState from "./internal/ChartEmptyState.vue";
@@ -21,6 +22,7 @@ import { DEFAULT_MAX_DATA_POINTS, sampleData, toFiniteNumber, warnDataLimit } fr
 import { formatNumber } from "../utils/format";
 
 const props = withDefaults(defineProps<CandlestickChartProps<T>>(), { accessibleDataTable: true });
+const ui = useChartUi("candlestickChart", props);
 
 // ─── Accessors & options ──────────────────────────────────────────────────────
 
@@ -254,7 +256,7 @@ onBeforeUnmount(() => ro?.disconnect());
 <template>
   <div
     ref="containerRef"
-    class="vc-candlestick-chart vue-chrts"
+    class="vc-candlestick-chart vue-chrts" :class="ui.rootClass"
     role="group"
     :aria-label="ariaLabel ?? 'Candlestick chart'"
     tabindex="0"

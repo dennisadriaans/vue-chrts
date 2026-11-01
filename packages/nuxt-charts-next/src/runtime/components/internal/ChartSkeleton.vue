@@ -14,6 +14,9 @@
  * no `<defs>` ids to scope, and so it inherits the chart's colour tokens.
  */
 import { computed } from "vue";
+import { injectChartUi } from "../../composables/useChartUi";
+
+const ui = injectChartUi();
 
 const props = withDefaults(
   defineProps<{
@@ -75,7 +78,7 @@ const wavePath = computed(() => {
 </script>
 
 <template>
-  <div class="vc-skeleton" :style="{ height: `${height}px` }" role="status" aria-busy="true">
+  <div data-slot="skeleton" class="vc-skeleton" :class="ui.slot('skeleton')" :style="{ height: `${height}px` }" role="status" aria-busy="true">
     <div v-if="shape === 'bars'" class="vc-skeleton__bars">
       <div
         v-for="(h, i) in barHeights"
@@ -100,7 +103,7 @@ const wavePath = computed(() => {
     <!-- Sweeps across whichever silhouette is showing. -->
     <div class="vc-skeleton__shimmer" aria-hidden="true" />
 
-    <div v-if="label" class="vc-skeleton__pill">
+    <div v-if="label" data-slot="skeletonLabel" class="vc-skeleton__pill" :class="ui.slot('skeletonLabel')">
       <span class="vc-skeleton__spinner" aria-hidden="true" />
       <span>{{ label }}</span>
     </div>

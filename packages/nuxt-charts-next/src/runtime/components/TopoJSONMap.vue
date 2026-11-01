@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="A extends MapArea = MapArea, P extends MapPoint = MapPoint, L extends MapLink<P> = MapLink<P>">
+import { useChartUi } from "../composables/useChartUi";
 import { computed, nextTick, shallowRef, watch } from "vue";
 import { geoGraticule10, geoPath } from "d3-geo";
 import type { FeatureCollection } from "geojson";
@@ -9,6 +10,7 @@ import { sampleData } from "../utils/data";
 import MapCanvas from "./internal/MapCanvas.vue";
 
 const props = defineProps<TopoJSONMapProps<A, P, L>>();
+useChartUi("topoJsonMap", props);
 defineSlots<{
   tooltip?: (props: MapTooltipSlot<A, P, L>) => unknown;
   feature?: (props: MapMarkSlot<MapFeature<A>>) => unknown;

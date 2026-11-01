@@ -1,3 +1,4 @@
+import { nuxtUi, themeColors } from "#nuxt-charts";
 import type { AxisId, BulletLegendItemInterface } from "../types/shared";
 
 /** Id of the implicit primary y-axis, matching the `vccs` default. */
@@ -35,14 +36,64 @@ export interface SeriesDescriptor {
   yAxisId: AxisId;
 }
 
+/** Size of the default palette: `--vc-series-0` … `--vc-series-5` (= `--ui-chart-1` … `--ui-chart-6`). */
+export const PALETTE_SIZE = 6;
+
+/** How much each repeat of the palette keeps of its colour, matching Nuxt UI's `UChart`. */
+const REPEAT_STRENGTH = 0.65;
+
 /**
- * Normalise a `BulletLegendItemInterface` colour into a single colour string.
- * Falls back to `--vc-series-N`. Those tokens inherit Nuxt UI semantic colors,
- * while preserving `--chart-color-N` and standalone fallbacks.
+ * Resolve a colour the way Nuxt UI does: a theme colour name (`primary`,
+ * `success`, any colour added in `ui.theme.colors`) becomes `var(--ui-<name>)`,
+ * `neutral` becomes `var(--ui-bg-inverted)`, and anything else — a CSS colour
+ * or `var(...)` — passes through unchanged. Without Nuxt UI, the default names
+ * map onto the standalone palette tokens.
+ */
+export function resolveThemeColor(color: string): string;
+export function resolveThemeColor(color: string | undefined): string | undefined;
+export function resolveThemeColor(color: string | undefined): string | undefined {
+  if (!color) return color;
+  if (!nuxtUi) return STANDALONE_THEME_COLORS[color] ?? color;
+  if (color === "neutral") return "var(--ui-bg-inverted)";
+  return themeColors.includes(color) ? `var(--ui-${color})` : color;
+}
+
+/**
+ * Nuxt UI's default colour names, mapped onto the standalone tokens so a
+ * template written for Nuxt UI still paints sensibly without it.
+ */
+const STANDALONE_THEME_COLORS: Record<string, string> = {
+  primary: "var(--vc-series-0)",
+  secondary: "var(--vc-series-1)",
+  success: "var(--vc-candle-up)",
+  info: "var(--vc-series-5)",
+  warning: "var(--vc-series-3)",
+  error: "var(--vc-candle-down)",
+  neutral: "var(--vc-axis-label-color)",
+};
+
+/**
+ * Default colour of the `index`-th series. The first six are the palette
+ * tokens; later series repeat the palette mixed toward the surface, one step
+ * lighter per repeat — unless a caller-supplied palette defines
+ * `--vc-series-<index>` itself (see `themeToVars`).
+ */
+export function defaultSeriesColor(index: number): string {
+  const slot = index % PALETTE_SIZE;
+  const round = Math.floor(index / PALETTE_SIZE);
+  const base = `var(--vc-series-${slot})`;
+  if (round === 0) return base;
+  const strength = Math.round(100 * REPEAT_STRENGTH ** round);
+  return `var(--vc-series-${index}, color-mix(in oklab, ${base} ${strength}%, var(--vc-surface-bg)))`;
+}
+
+/**
+ * Normalise a `BulletLegendItemInterface` colour into a single colour string,
+ * falling back to the palette (see {@link defaultSeriesColor}).
  */
 function resolveColor(color: BulletLegendItemInterface["color"], index: number): string {
-  if (Array.isArray(color)) return color[0] ?? `var(--vc-series-${index % 8})`;
-  return color ?? `var(--vc-series-${index % 8})`;
+  const own = Array.isArray(color) ? color[0] : color;
+  return resolveThemeColor(own) ?? defaultSeriesColor(index);
 }
 
 /**

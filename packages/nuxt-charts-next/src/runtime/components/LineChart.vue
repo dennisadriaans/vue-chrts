@@ -5,6 +5,7 @@
  * Accepts the `nuxt-charts` v2 `LineChartProps` config API and composes the
  * `vccs` `<LineChart>` + one `<Line>` per category.
  */
+import { useChartUi } from "../composables/useChartUi";
 import { computed, useId } from "vue";
 import { Line, LineChart as VccsLineChart } from "vccs";
 import CartesianFrame from "./internal/CartesianFrame.vue";
@@ -19,6 +20,7 @@ import { strokeDasharrayFor, variantId } from "../utils/variants";
 import { strokeGradientId } from "../utils/gradient";
 
 const props = withDefaults(defineProps<LineChartProps<T>>(), { accessibleDataTable: true });
+useChartUi("lineChart", props);
 
 /** Scopes this chart's `<defs>` ids so several charts on a page never collide. */
 const variantScope = useId();

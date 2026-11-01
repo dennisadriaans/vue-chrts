@@ -89,13 +89,13 @@ importers:
         version: 3.0.0
       motion-v:
         specifier: ^2.3.0
-        version: 2.3.0(@vueuse/core@14.3.0(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
+        version: 2.3.0(@vueuse/core@14.4.0(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
       topojson-client:
         specifier: ^3.1.0
         version: 3.1.0
       vccs:
         specifier: ^0.5.0
-        version: 0.5.0(motion-v@2.3.0(@vueuse/core@14.3.0(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3)))(redux@5.0.1)(vue@3.5.42(typescript@5.9.3))
+        version: 0.5.0(motion-v@2.3.0(@vueuse/core@14.4.0(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3)))(redux@5.0.1)(vue@3.5.42(typescript@5.9.3))
     devDependencies:
       '@nuxt/devtools':
         specifier: ^3.1.1
@@ -148,6 +148,12 @@ importers:
       nuxt:
         specifier: ^4.3.0
         version: 4.3.0(@emnapi/core@1.10.0)(@emnapi/runtime@1.11.1)(@libsql/client@0.15.15)(@parcel/watcher@2.5.6)(@types/node@26.2.0)(@vue/compiler-sfc@3.5.42)(better-sqlite3@12.11.1)(cac@6.7.14)(db0@0.3.4(@libsql/client@0.15.15)(better-sqlite3@12.11.1)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260620.1)(@libsql/client@0.15.15)(better-sqlite3@12.11.1)))(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260620.1)(@libsql/client@0.15.15)(better-sqlite3@12.11.1))(eslint@9.39.4(jiti@2.7.0))(ioredis@5.11.1)(lightningcss@1.32.0)(magicast@0.5.3)(optionator@0.9.4)(rollup@4.62.2)(srvx@0.11.17)(terser@5.48.0)(typescript@5.9.3)(vite@7.3.5(@types/node@26.2.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))(vue-tsc@3.3.5(typescript@5.9.3))(yaml@2.9.0)
+      tailwind-merge:
+        specifier: ^3.7.0
+        version: 3.7.0
+      tailwind-variants:
+        specifier: ^3.3.1
+        version: 3.3.1(tailwind-merge@3.7.0)(tailwindcss@4.3.1)
       tailwindcss:
         specifier: ^4.2.2
         version: 4.3.1
@@ -3574,11 +3580,6 @@ packages:
     peerDependencies:
       vue: ^3.5.0
 
-  '@vueuse/core@14.3.0':
-    resolution: {integrity: sha512-aHfz47g0ZhMtTVHmIzMVpJy8ePhhOy68GY5bv110+5DVtZ+W7BsOx+m61UNQqfrWyPztIHIanWa3E2tib3NFIw==}
-    peerDependencies:
-      vue: ^3.5.0
-
   '@vueuse/core@14.4.0':
     resolution: {integrity: sha512-X4WHz1HlCzCBoYXesUkifzzWBAcZgXG8Fi5iNPQg/epdzOB3gu8Fawj3hvuwYR1nGcXGnvxwYYcUC/71++svtQ==}
     peerDependencies:
@@ -3632,9 +3633,6 @@ packages:
   '@vueuse/metadata@13.9.0':
     resolution: {integrity: sha512-1AFRvuiGphfF7yWixZa0KwjYH8ulyjDCC0aFgrGRz8+P4kvDFSdXLVfTk5xAN9wEuD1J6z4/myMoYbnHoX07zg==}
 
-  '@vueuse/metadata@14.3.0':
-    resolution: {integrity: sha512-BwxmbAzwAVF50+MW57GXOUEV61nFBGnlBvrTqj49PqWJu3uw7hdu72ztXeZ33RdZtDY6kO+bfCAE1PCn88Tktw==}
-
   '@vueuse/metadata@14.4.0':
     resolution: {integrity: sha512-swx/255R6JyHZFJhx845iz5CRWDZdCfvkZOpACWc5+c5WHcG24mv8gUT1WIdFQaHt6dq79rvILd9QnCWiyVm9g==}
 
@@ -3643,11 +3641,6 @@ packages:
 
   '@vueuse/shared@13.9.0':
     resolution: {integrity: sha512-e89uuTLMh0U5cZ9iDpEI2senqPGfbPRTHM/0AaQkcxnpqjkZqDYP8rpfm7edOz8s+pOCOROEy1PIveSW8+fL5g==}
-    peerDependencies:
-      vue: ^3.5.0
-
-  '@vueuse/shared@14.3.0':
-    resolution: {integrity: sha512-bZpge9eSXwa4ToSiqJ7j6KRwhAsneMFoSz3LMWKQDkqimm3D/tbFlrklrs/IOqC8tEcYmXQZJ6N0UrjhBirVCg==}
     peerDependencies:
       vue: ^3.5.0
 
@@ -11461,13 +11454,6 @@ snapshots:
       '@vueuse/shared': 13.9.0(vue@3.5.42(typescript@5.9.3))
       vue: 3.5.42(typescript@5.9.3)
 
-  '@vueuse/core@14.3.0(vue@3.5.42(typescript@5.9.3))':
-    dependencies:
-      '@types/web-bluetooth': 0.0.21
-      '@vueuse/metadata': 14.3.0
-      '@vueuse/shared': 14.3.0(vue@3.5.42(typescript@5.9.3))
-      vue: 3.5.42(typescript@5.9.3)
-
   '@vueuse/core@14.4.0(vue@3.5.42(typescript@5.9.3))':
     dependencies:
       '@types/web-bluetooth': 0.0.21
@@ -11488,8 +11474,6 @@ snapshots:
 
   '@vueuse/metadata@13.9.0': {}
 
-  '@vueuse/metadata@14.3.0': {}
-
   '@vueuse/metadata@14.4.0': {}
 
   '@vueuse/shared@10.11.1(vue@3.5.42(typescript@5.9.3))':
@@ -11504,10 +11488,6 @@ snapshots:
       vue: 3.5.42(typescript@5.7.3)
 
   '@vueuse/shared@13.9.0(vue@3.5.42(typescript@5.9.3))':
-    dependencies:
-      vue: 3.5.42(typescript@5.9.3)
-
-  '@vueuse/shared@14.3.0(vue@3.5.42(typescript@5.9.3))':
     dependencies:
       vue: 3.5.42(typescript@5.9.3)
 
@@ -13573,9 +13553,9 @@ snapshots:
 
   motion-utils@13.0.0: {}
 
-  motion-v@2.3.0(@vueuse/core@14.3.0(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3)):
+  motion-v@2.3.0(@vueuse/core@14.4.0(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3)):
     dependencies:
-      '@vueuse/core': 14.3.0(vue@3.5.42(typescript@5.9.3))
+      '@vueuse/core': 14.4.0(vue@3.5.42(typescript@5.9.3))
       framer-motion: 12.40.0
       hey-listen: 1.0.8
       motion-dom: 12.40.0
@@ -15519,7 +15499,7 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
 
-  vccs@0.5.0(motion-v@2.3.0(@vueuse/core@14.3.0(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3)))(redux@5.0.1)(vue@3.5.42(typescript@5.9.3)):
+  vccs@0.5.0(motion-v@2.3.0(@vueuse/core@14.4.0(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3)))(redux@5.0.1)(vue@3.5.42(typescript@5.9.3)):
     dependencies:
       '@reduxjs/toolkit': 2.12.0
       '@reduxjs/vue-redux': 1.0.1(redux@5.0.1)(vue@3.5.42(typescript@5.9.3))
@@ -15531,7 +15511,7 @@ snapshots:
       eventemitter3: 5.0.4
       immer: 10.2.0
       lodash-es: 4.18.1
-      motion-v: 2.3.0(@vueuse/core@14.3.0(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
+      motion-v: 2.3.0(@vueuse/core@14.4.0(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
       victory-vendor: 37.3.6
       vue: 3.5.42(typescript@5.9.3)
     transitivePeerDependencies:

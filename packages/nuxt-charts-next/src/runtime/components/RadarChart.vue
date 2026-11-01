@@ -6,6 +6,7 @@
  * bound to `dataKey` (the spoke labels) and a `<PolarRadiusAxis>`, plus one
  * `<Radar>` polygon per series defined in `categories`.
  */
+import { useChartUi } from "../composables/useChartUi";
 import { computed, ref, useId } from "vue";
 import {
   Legend,
@@ -33,6 +34,7 @@ import { themeToVars } from "../utils/theme";
 import { DEFAULT_MAX_DATA_POINTS, normalizeNumericRows, sampleData, warnDataLimit } from "../utils/data";
 
 const props = withDefaults(defineProps<RadarChartProps<T>>(), { accessibleDataTable: true });
+const ui = useChartUi("radarChart", props);
 const gradientScope = useId();
 
 /** One radar polygon per visible series in `categories`. */
@@ -76,7 +78,7 @@ const legend = computed(() => legendPositionToLegendProps(props.legendPosition))
 const legendWrapperStyle = computed(() =>
   resolveLegendWrapperStyle(props.legendPosition, toCssProperties(props.legendStyle)),
 );
-const themeVars = computed(() => themeToVars(props.theme));
+const themeVars = computed(() => themeToVars(props.theme, props.colors));
 
 const resolvedTickSize = computed(() => props.angleAxisTickSize ?? 18);
 
@@ -120,7 +122,7 @@ const resolvedOuterRadius = computed(() => {
 </script>
 
 <template>
-  <div class="vue-chrts" role="group" :aria-label="ariaLabel ?? 'Radar chart'" :style="themeVars">
+  <div class="vue-chrts" :class="ui.rootClass" role="group" :aria-label="ariaLabel ?? 'Radar chart'" :style="themeVars">
     <ChartAccessibility :label="ariaLabel ?? 'Radar chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
     <ChartSkeleton
       v-if="loading"

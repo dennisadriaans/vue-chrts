@@ -4,10 +4,12 @@ Beautiful chart and map components for Nuxt — Area, Bar, Line, Donut, Bubble, 
 
 Powered by [vccs](https://vue-charts.com) (Vue port of Recharts). Drop-in config-prop API from nuxt-charts v2.
 
-Nuxt UI v4 is a first-class, zero-config integration: chart series, surfaces,
-text, borders, radius, typography, and dark mode inherit its semantic design
-tokens. Nuxt UI is not a dependency; every token has a standalone fallback, so
-the same components work in any Nuxt project.
+Nuxt UI-native: with `@nuxt/ui` installed, every chart is styled the Nuxt UI
+way — a tailwind-variants theme per component, a `ui` prop and `class` merged
+with tailwind-merge, `app.config.ts` overrides, Nuxt UI's `--ui-chart-1…6`
+palette and theme colour names (`primary`, `success`, …). The defaults match
+Nuxt UI's own `UChart`, so both can sit side by side. Nuxt UI stays optional:
+without it, the same components use a built-in stylesheet.
 
 ## Install
 
@@ -230,22 +232,96 @@ SVG creates DOM work per mark, so raising the limit can block the UI.
 
 ## Theming
 
-With Nuxt UI, no chart-specific setup is required. Categories without an
-explicit `color` use `--ui-primary`, `--ui-secondary`, `--ui-success`,
-`--ui-info`, `--ui-warning`, and `--ui-error`; chart chrome follows Nuxt UI's
-background, text, border, radius, and font tokens.
+### With Nuxt UI (recommended)
 
-Without Nuxt UI, built-in light and dark defaults are used. Customize globally
-with `--vc-*` variables (or the backwards-compatible `--chart-color-0` through
-`--chart-color-7`), and customize one chart with the `theme` prop:
+Zero config. The module detects `@nuxt/ui`, resolves themes with Nuxt UI's own
+`tv`, and registers its theme files as a Tailwind `@source` of Nuxt UI's
+stylesheet — nothing to add to your CSS.
+
+**Colours.** Series use Nuxt UI's chart palette, `--ui-chart-1` … `--ui-chart-6`
+(the palette `UChart` uses); series past the sixth repeat it, mixed toward the
+background. Recolour every chart by overriding those variables, one chart with
+`colors`, one series with its category `color`. Theme colour names resolve to
+Nuxt UI tokens:
+
+```vue
+<BarChart
+  :data="data"
+  :categories="{ desktop: { name: 'Desktop' }, mobile: { name: 'Mobile', color: 'neutral' } }"
+  :colors="['primary', 'warning']"
+/>
+```
+
+**Slots.** Like any Nuxt UI component, pass classes per slot with `ui` (merged
+with tailwind-merge, replacer functions supported) and root classes with
+`class`:
 
 ```vue
 <LineChart
   :data="data"
   :categories="categories"
-  :theme="{ colors: ['var(--brand)', 'var(--accent)'] }"
+  class="h-72"
+  :ui="{ tooltip: 'rounded-lg shadow-lg', legendLabel: 'text-default' }"
 />
 ```
+
+Shared slots: `root`, `tooltip`, `tooltipTitle`, `tooltipList`, `tooltipRow`,
+`tooltipIndicator`, `tooltipLabel`, `tooltipValue`, `tooltipInline`, `legend`,
+`legendItem`, `legendIndicator`, `legendLabel`, `empty`, `skeleton`,
+`skeletonLabel`. `StatusTrackerChart` adds `header`, `title`, `summary`,
+`track`, `bar`, `labels`, `statusLegend*`; `MetricChart` adds `header`,
+`title`, `description`, `value`, `delta`, `ranges`, `range`, `actions`,
+`action`, `table`, …. Rendered elements carry `data-slot="<name>"`. The
+tooltip slot names are the same as `UChart`'s.
+
+**App config.** Theme-wide overrides use the Nuxt UI component-theme shape
+(`slots`, `variants`, `defaultVariants`, `compoundVariants`) under
+`nuxtCharts` — `chart` applies to every chart, per-component keys layer on top.
+Your `ui.chart` (Nuxt UI's `UChart`) slots are inherited first, so one override
+styles both chart families:
+
+```ts
+// app.config.ts
+export default defineAppConfig({
+  ui: {
+    chart: { slots: { tooltip: 'rounded-md' } }, // UChart *and* nuxt-charts
+  },
+  nuxtCharts: {
+    chart: { slots: { legendLabel: 'text-toned' } }, // every nuxt-charts chart
+    donutChart: { slots: { root: 'mx-auto max-w-sm' } }, // one component
+  },
+})
+```
+
+Keys: `chart`, `areaChart`, `barChart`, `lineChart`, `donutChart`,
+`bubbleChart`, `radarChart`, `radialBarChart`, `funnelChart`, `sankeyChart`,
+`candlestickChart`, `statusTrackerChart`, `metricChart`, `dottedMap`,
+`topoJsonMap`. Nested charts inherit their parent's `ui` (except `root`), so
+`<MetricChart :ui="{ tooltip: '…' }">` reaches the chart it renders.
+
+**SVG internals** (ticks, grid, axis titles, funnel labels) are painted by
+`--vc-*` engine tokens that resolve to Nuxt UI tokens — the same split `UChart`
+uses with TanStack Charts' `--ts-chart-*`. Override one with a utility on the
+root: `:ui="{ root: '[--vc-grid-color:var(--ui-border-muted)]' }"`.
+
+### Without Nuxt UI
+
+The components use a built-in light/dark stylesheet; `ui` / `class` still
+apply any classes you pass. Customize with `--vc-*` variables (`--vc-series-0`
+… `--vc-series-5`, `--vc-tooltip-bg`, …) and per chart with `colors` or the
+`theme` prop.
+
+### Upgrading from 3.1
+
+- The default palette is now `--ui-chart-1…6` (was `--ui-primary`,
+  `--ui-secondary`, `--ui-success`, `--ui-info`, `--ui-warning`, `--ui-error`),
+  matching `UChart`.
+- `--chart-color-0` … `--chart-color-7` are no longer read. Override
+  `--ui-chart-N` (Nuxt UI) or `--vc-series-N` instead.
+- `--vc-series-6` / `--vc-series-7` are gone; series past the sixth repeat the
+  palette.
+- Chart CSS is now injected *before* your stylesheet so Tailwind utilities
+  override it; plain unlayered CSS still wins as before.
 
 ## Auto-imported enums & types
 

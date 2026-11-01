@@ -85,6 +85,9 @@ export const resolveImports = (config: ModuleOptions, resolverUrl: string) => {
       "MapTooltipSlot",
       "DottedMapTooltipSlot",
       "PrecomputedMap",
+      "ChartUi",
+      "ChartSlot",
+      "NuxtChartsAppConfig",
     ],
   });
 

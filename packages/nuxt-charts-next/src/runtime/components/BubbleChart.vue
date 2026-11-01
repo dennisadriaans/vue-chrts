@@ -7,6 +7,7 @@
  * `<Scatter>` series per distinct value of `categoryKey` (colour-coded via
  * `categories`).
  */
+import { useChartUi } from "../composables/useChartUi";
 import { computed, h } from "vue";
 import {
   CartesianGrid, Legend, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis,
@@ -34,6 +35,7 @@ import { axisTickVars, resolveHoverRadius, resolveHoverVisible, themeToVars } fr
 import { DEFAULT_MAX_DATA_POINTS, sampleData, toFiniteNumber, warnDataLimit } from "../utils/data";
 
 const props = withDefaults(defineProps<BubbleChartProps<T>>(), { accessibleDataTable: true });
+const ui = useChartUi("bubbleChart", props);
 
 const slots = defineSlots<{
   tooltip?: (props: { values: T | undefined }) => unknown;
@@ -105,7 +107,7 @@ const yAxisWidth = computed(() =>
 );
 
 const themeVars = computed(() => ({
-  ...themeToVars(props.theme),
+  ...themeToVars(props.theme, props.colors),
   ...axisTickVars("x", xAxis.value.tick),
   ...axisTickVars("y", yAxis.value.tick),
 }));
@@ -217,7 +219,7 @@ const tooltipContent = computed(() => {
 </script>
 
 <template>
-  <div class="vue-chrts" role="group" :aria-label="ariaLabel ?? 'Bubble chart'" :style="themeVars">
+  <div class="vue-chrts" :class="ui.rootClass" role="group" :aria-label="ariaLabel ?? 'Bubble chart'" :style="themeVars">
   <ChartAccessibility :label="ariaLabel ?? 'Bubble chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
   <ChartSkeleton
     v-if="loading"

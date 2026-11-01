@@ -1,16 +1,23 @@
 /**
- * nuxt-charts v3 design tokens.
+ * nuxt-charts engine tokens.
  *
- * Every chart renders inside a `.vue-chrts` root. These `--vc-*` tokens are the
- * public theming API — set them globally, per-chart via the `theme` prop, or
- * override in your own CSS. HTML chrome (tooltip, legend) is styled in the
- * compiled `components.css`; this file owns tokens plus vccs SVG internals
- * (cartesian ticks, axis titles, polar labels) that Tailwind cannot reach.
+ * Every chart renders inside a `.vue-chrts` root. The `--vc-*` tokens are the
+ * chart *engine's* paint API — the equivalent of TanStack Charts'
+ * `--ts-chart-*` that Nuxt UI's `UChart` drives — and they paint the SVG
+ * internals (series, ticks, grid, axis titles, polar labels).
  *
- * Defaults resolve against the host's token layer when present — Nuxt UI v4
- * (`--ui-*`) first, then shadcn-vue (`--popover`, `--border`, …), then a
- * literal. Wrapped in `@layer vue-chrts` so host rules override without
- * specificity fights.
+ * With Nuxt UI they resolve straight to Nuxt UI tokens: the series palette is
+ * `--ui-chart-1` … `--ui-chart-6` (the same palette `UChart` uses), surfaces
+ * and text are `--ui-bg`, `--ui-border`, `--ui-text-*`. HTML chrome (tooltip,
+ * legend, states) is styled by the component themes (`runtime/theme`) with
+ * Nuxt UI utilities and is customised with the `ui` prop or `app.config`.
+ * Override a token with a utility on the root, e.g.
+ * `:ui="{ root: '[--vc-grid-color:var(--ui-border-muted)]' }"`.
+ *
+ * Without Nuxt UI each token falls back to a standalone literal (shadcn-vue's
+ * `--border` / `--popover` … are honoured in between). Everything sits in
+ * `@layer vue-chrts`, which the module declares before Tailwind's layers, so
+ * any utility overrides it.
  */
 @layer vue-chrts {
   /*
@@ -31,19 +38,18 @@
     --vc-map-feature-color: var(--ui-bg-accented, var(--vc-grid-color));
     --vc-map-boundary-color: var(--ui-border-accented, var(--vc-surface-bg));
     --vc-map-dot-color: var(--ui-text-dimmed, var(--vc-tick-color));
-    /* ---- host design-system bridge ----
-       Nuxt UI v4 is the preferred zero-config integration. Each value still
-       falls through to the legacy chart palette and finally a standalone
-       literal, so Nuxt UI remains optional. */
+    /* ---- series palette ----
+       Nuxt UI's chart palette (4.12+), so series match `UChart`. Recolour
+       every chart at once by overriding `--ui-chart-N`; one chart with the
+       `colors` prop. Series past the sixth repeat the palette, mixed toward
+       the surface (as `UChart` does). Fallbacks are Nuxt UI's own values. */
     --vc-font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
-    --vc-series-0: var(--chart-color-0, var(--ui-primary, oklch(0.63 0.18 155)));
-    --vc-series-1: var(--chart-color-1, var(--ui-secondary, oklch(0.62 0.19 255)));
-    --vc-series-2: var(--chart-color-2, var(--ui-success, oklch(0.64 0.17 145)));
-    --vc-series-3: var(--chart-color-3, var(--ui-info, oklch(0.68 0.15 235)));
-    --vc-series-4: var(--chart-color-4, var(--ui-warning, oklch(0.75 0.16 75)));
-    --vc-series-5: var(--chart-color-5, var(--ui-error, oklch(0.63 0.22 25)));
-    --vc-series-6: var(--chart-color-6, oklch(0.66 0.18 305));
-    --vc-series-7: var(--chart-color-7, oklch(0.7 0.15 195));
+    --vc-series-0: var(--ui-chart-1, var(--ui-primary, oklch(0.63 0.18 155)));
+    --vc-series-1: var(--ui-chart-2, oklch(62.3% 0.214 259.815));
+    --vc-series-2: var(--ui-chart-3, oklch(60.6% 0.25 292.717));
+    --vc-series-3: var(--ui-chart-4, oklch(76.9% 0.188 70.08));
+    --vc-series-4: var(--ui-chart-5, oklch(64.5% 0.246 16.439));
+    --vc-series-5: var(--ui-chart-6, oklch(71.5% 0.143 215.221));
     font-family: var(--vc-font-family);
 
     /* ---- grid + domain (axis) lines ---- */
@@ -163,6 +169,11 @@
 
   :is(.dark, [data-theme="dark"]) .vue-chrts,
   .vue-chrts:is(.dark, [data-theme="dark"], .dark *, [data-theme="dark"] *) {
+    --vc-series-1: var(--ui-chart-2, oklch(70.7% 0.165 254.624));
+    --vc-series-2: var(--ui-chart-3, oklch(70.2% 0.183 293.541));
+    --vc-series-3: var(--ui-chart-4, oklch(82.8% 0.189 84.429));
+    --vc-series-4: var(--ui-chart-5, oklch(71.2% 0.194 13.428));
+    --vc-series-5: var(--ui-chart-6, oklch(78.9% 0.154 211.53));
     --vc-grid-color: var(--ui-border, var(--border, oklch(0.269 0 0)));
     --vc-axis-line-color: var(--ui-border, var(--border, oklch(0.269 0 0)));
     --vc-surface-bg: var(--ui-bg, var(--background, oklch(0.145 0 0)));

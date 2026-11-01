@@ -11,6 +11,7 @@
  *   (see {@link FunnelLayeredShape}) with on-shape labels and a positioned
  *   tooltip.
  */
+import { useChartUi } from "../composables/useChartUi";
 import { computed, ref, useTemplateRef } from "vue";
 import {
   Funnel,
@@ -28,7 +29,7 @@ import FunnelLayeredShape, {
   type FunnelLayeredDatum,
 } from "./internal/FunnelLayeredShape.vue";
 import type { FunnelChartProps } from "../types/charts";
-import { categoriesToSeries } from "../utils/categories";
+import { categoriesToSeries, defaultSeriesColor } from "../utils/categories";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
 import { toCssProperties } from "../utils/style";
 import { themeToVars } from "../utils/theme";
@@ -41,6 +42,7 @@ const props = withDefaults(defineProps<FunnelChartProps<T>>(), {
   showPercentage: true,
   stageGap: 4,
 });
+const ui = useChartUi("funnelChart", props);
 
 defineSlots<{
   shape(props: Record<string, unknown> & {
@@ -50,7 +52,7 @@ defineSlots<{
   }): unknown;
 }>();
 
-const themeVars = computed(() => themeToVars(props.theme));
+const themeVars = computed(() => themeToVars(props.theme, props.colors));
 
 /** Zip the value array against the categories record (positional, matching Donut). */
 const stages = computed(() => {
@@ -63,8 +65,8 @@ const stages = computed(() => {
     name,
     value,
     formattedValue: props.valueFormatter?.(value, sourceIndex),
-    fill: cats[sourceIndex]?.color ?? `var(--vc-series-${sourceIndex % 8})`,
-    color: cats[sourceIndex]?.color ?? `var(--vc-series-${sourceIndex % 8})`,
+    fill: cats[sourceIndex]?.color ?? defaultSeriesColor(sourceIndex),
+    color: cats[sourceIndex]?.color ?? defaultSeriesColor(sourceIndex),
   }));
 });
 const accessibleRows = computed(() => stages.value.map((stage) => ({ label: stage.name, values: [{ label: "Value", value: stage.formattedValue ?? stage.value }] })));
@@ -152,7 +154,7 @@ function clearTooltip() {
   <div
     v-if="isLayered"
     ref="chartContainer"
-    class="vc-funnel-layered vue-chrts"
+    class="vc-funnel-layered vue-chrts" :class="ui.rootClass"
     role="group"
     :aria-label="ariaLabel ?? 'Funnel chart'"
     :style="{ height: `${height}px`, ...themeVars }"
@@ -213,7 +215,7 @@ function clearTooltip() {
     />
   </div>
 
-  <div v-else ref="chartContainer" class="vc-funnel vue-chrts" role="group" :aria-label="ariaLabel ?? 'Funnel chart'" :style="themeVars">
+  <div v-else ref="chartContainer" class="vc-funnel vue-chrts" :class="ui.rootClass" role="group" :aria-label="ariaLabel ?? 'Funnel chart'" :style="themeVars">
     <ChartAccessibility :label="ariaLabel ?? 'Funnel chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
     <ChartSkeleton
       v-if="loading"

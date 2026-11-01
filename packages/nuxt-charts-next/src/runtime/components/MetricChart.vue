@@ -33,6 +33,7 @@
  * />
  * ```
  */
+import { useChartUi } from "../composables/useChartUi";
 import { computed, ref, useId, watch } from "vue";
 import DataChart from "./DataChart.vue";
 import { transform } from "../spec/transform";
@@ -56,6 +57,7 @@ const props = withDefaults(defineProps<MetricChartProps<T>>(), {
   height: 220,
   aggregate: "sum",
 });
+const ui = useChartUi("metricChart", props);
 
 /**
  * Selected range key.
@@ -320,15 +322,17 @@ defineSlots<{
 
 <template>
   <section
+    data-slot="root"
     class="vc-metric"
+    :class="ui.rootClass"
     :aria-labelledby="title ? titleId : undefined"
     :aria-busy="loading ? 'true' : undefined"
   >
-    <header class="vc-metric__header">
+    <header data-slot="header" class="vc-metric__header" :class="ui.slot('header')">
       <slot name="header">
-        <div class="vc-metric__heading">
-          <h3 v-if="title" :id="titleId" class="vc-metric__title">{{ title }}</h3>
-          <p v-if="description" class="vc-metric__description">{{ description }}</p>
+        <div data-slot="heading" class="vc-metric__heading" :class="ui.slot('heading')">
+          <h3 v-if="title" :id="titleId" data-slot="title" class="vc-metric__title" :class="ui.slot('title')">{{ title }}</h3>
+          <p v-if="description" data-slot="description" class="vc-metric__description" :class="ui.slot('description')">{{ description }}</p>
         </div>
 
         <slot
@@ -337,29 +341,31 @@ defineSlots<{
           :formatted="headlineText"
           :change="result.change"
         >
-          <div v-if="!hideValue" class="vc-metric__value-row">
+          <div v-if="!hideValue" data-slot="valueRow" class="vc-metric__value-row" :class="ui.slot('valueRow')">
             <!--
               The skeleton stands in for the number rather than showing a stale
               or zero total while data is in flight: a headline that renders
               "€0" and then jumps is worse than one that visibly waits.
             -->
-            <div v-if="loading" class="vc-metric__value-skeleton" aria-hidden="true" />
+            <div v-if="loading" data-slot="valueSkeleton" class="vc-metric__value-skeleton" :class="ui.slot('valueSkeleton')" aria-hidden="true" />
             <template v-else>
-              <p :id="valueId" class="vc-metric__value" :aria-label="valueLabel">
+              <p :id="valueId" data-slot="value" class="vc-metric__value" :class="ui.slot('value')" :aria-label="valueLabel">
                 {{ headlineText }}
               </p>
               <p
                 v-if="delta"
+                data-slot="delta"
                 class="vc-metric__delta"
+                :class="ui.slot('delta')"
                 :data-sentiment="delta.sentiment"
                 aria-hidden="true"
               >
-                <span class="vc-metric__delta-arrow">{{
+                <span data-slot="deltaArrow" class="vc-metric__delta-arrow" :class="ui.slot('deltaArrow')">{{
                   delta.direction === "up" ? "↑" : delta.direction === "down" ? "↓" : "→"
                 }}</span>
                 <span>{{ delta.text }}</span>
-                <span v-if="absoluteChange" class="vc-metric__delta-absolute">({{ absoluteChange }})</span>
-                <span class="vc-metric__delta-label">{{ compareLabel }}</span>
+                <span v-if="absoluteChange" data-slot="deltaAbsolute" class="vc-metric__delta-absolute" :class="ui.slot('deltaAbsolute')">({{ absoluteChange }})</span>
+                <span data-slot="deltaLabel" class="vc-metric__delta-label" :class="ui.slot('deltaLabel')">{{ compareLabel }}</span>
               </p>
             </template>
           </div>
@@ -372,8 +378,8 @@ defineSlots<{
       never disagree about how much vertical space the card takes — a card that
       grows on toggle shoves everything below it down the page.
     -->
-    <div v-if="showingTable" class="vc-metric__table-wrap" :style="{ minHeight: `${height}px` }">
-      <table class="vc-metric__table">
+    <div v-if="showingTable" data-slot="tableWrapper" class="vc-metric__table-wrap" :class="ui.slot('tableWrapper')" :style="{ minHeight: `${height}px` }">
+      <table data-slot="table" class="vc-metric__table" :class="ui.slot('table')">
         <caption class="vc-sr-only">{{ title ?? "Metric data" }}</caption>
         <thead>
           <tr>
@@ -399,6 +405,7 @@ defineSlots<{
       :stacked="stacked"
       :hide-legend="hideLegend ?? (!compare && !series)"
       :theme="theme"
+      :colors="colors"
       :value-formatter="formatValue"
       :loading="loading"
       :loading-label="loadingLabel"
@@ -413,15 +420,17 @@ defineSlots<{
       :tooltip-roundness="tooltipRoundness"
     />
 
-    <footer v-if="ranges.length || showTable || exportable || $slots.actions" class="vc-metric__footer">
+    <footer v-if="ranges.length || showTable || exportable || $slots.actions" data-slot="footer" class="vc-metric__footer" :class="ui.slot('footer')">
       <!--
         A radiogroup rather than a row of buttons: the ranges are one mutually
         exclusive choice, and that is what lets a screen reader announce
         "30D, selected, 2 of 4" instead of four unrelated buttons.
       -->
       <div
-        v-if="ranges.length && !window"
+        v-if="ranges.length && !props.window"
+        data-slot="ranges"
         class="vc-metric__ranges"
+        :class="ui.slot('ranges')"
         role="radiogroup"
         aria-label="Time range"
       >
@@ -430,7 +439,9 @@ defineSlots<{
           :key="range.key"
           type="button"
           role="radio"
+          data-slot="range"
           class="vc-metric__range"
+          :class="ui.slot('range')"
           :aria-checked="range.key === activeRange?.key"
           :aria-label="range.title ?? range.label"
           :data-active="range.key === activeRange?.key ? 'true' : undefined"
@@ -440,12 +451,14 @@ defineSlots<{
         </button>
       </div>
 
-      <div class="vc-metric__actions">
+      <div data-slot="actions" class="vc-metric__actions" :class="ui.slot('actions')">
         <slot name="actions" />
         <button
           v-if="showTable"
           type="button"
+          data-slot="action"
           class="vc-metric__action"
+          :class="ui.slot('action')"
           :aria-pressed="showingTable"
           @click="showingTable = !showingTable"
         >
@@ -454,7 +467,9 @@ defineSlots<{
         <button
           v-if="exportable"
           type="button"
+          data-slot="action"
           class="vc-metric__action"
+          :class="ui.slot('action')"
           :disabled="isEmpty"
           @click="exportCsv"
         >

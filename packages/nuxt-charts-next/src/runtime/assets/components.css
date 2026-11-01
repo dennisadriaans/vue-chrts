@@ -563,11 +563,13 @@
   border: 0 !important;
 }
 
-.vc-empty-state {
-  display: grid;
-  place-items: center;
-  color: var(--vc-tick-color);
-  font-size: var(--vc-legend-size);
+@layer vue-chrts {
+  .vc-empty-state {
+    display: grid;
+    place-items: center;
+    color: var(--vc-tick-color);
+    font-size: var(--vc-legend-size);
+  }
 }
 /* Geographic charts share the existing tooltip, legend, and theme tokens. */
 @layer vue-chrts {

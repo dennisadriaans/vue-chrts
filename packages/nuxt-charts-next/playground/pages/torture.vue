@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const categories = {
-  value: { name: "Pathological value", color: "var(--chart-color-0)" },
+  value: { name: "Pathological value", color: "primary" },
 };
 const pathological = [
   { label: "zero", value: 0 },
