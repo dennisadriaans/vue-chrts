@@ -1,7 +1,7 @@
 import { defineComponent, h, type PropType, type VNode } from "vue";
 import { variantId, type BarVariant } from "../../utils/variants";
 
-type SeriesItem = { dataKey: string; color: string };
+type SeriesItem = { dataKey: string; color: string; variant: BarVariant };
 
 /**
  * Emits the `<defs>` paints a patterned bar variant references.
@@ -22,7 +22,6 @@ export default defineComponent({
   name: "BarVariantDefs",
   props: {
     series: { type: Array as PropType<SeriesItem[]>, required: true },
-    variant: { type: String as PropType<BarVariant>, required: true },
     scope: { type: String, required: true },
     /** Also emit the outer-glow filter each series can reference. */
     glow: { type: Boolean, default: false },
@@ -33,8 +32,8 @@ export default defineComponent({
     const children: VNode[] = [];
 
     for (const series of props.series) {
-      children.push(...paintsFor(props.variant, series, props.scope));
-      if (props.buffer) children.push(...bufferPaints(series, props.scope));
+      children.push(...paintsFor(series.variant, series, props.scope));
+      if (props.buffer) children.push(...hollowHatchPaints("buffer", series, props.scope));
       if (props.glow) children.push(glowFilter(series.dataKey, props.scope));
     }
 
@@ -83,6 +82,8 @@ function paintsFor(variant: BarVariant, series: SeriesItem, scope: string): VNod
   switch (variant) {
     case "hatched":
       return hatchedPaints(series, scope);
+    case "hatched-outline":
+      return hollowHatchPaints("hatched-outline", series, scope);
     case "duotone":
       return duotonePaints(series, scope, false);
     case "duotone-reverse":
@@ -212,11 +213,11 @@ function strippedPaints(series: SeriesItem, scope: string): VNode[] {
 }
 
 /**
- * Hollow diagonal hatch — lines only, no ground — used to mark the final bar as
- * a projection rather than a recorded value.
+ * Hollow diagonal hatch — lines only, no ground. `VariantBarShape` adds the
+ * outline that keeps the bar's edge readable.
  */
-function bufferPaints(series: SeriesItem, scope: string): VNode[] {
-  const textureId = variantId("buffer-texture", series.dataKey, scope);
+function hollowHatchPaints(kind: string, series: SeriesItem, scope: string): VNode[] {
+  const textureId = variantId(`${kind}-texture`, series.dataKey, scope);
   const texture = h(
     "pattern",
     {
@@ -235,7 +236,7 @@ function bufferPaints(series: SeriesItem, scope: string): VNode[] {
     ],
   );
 
-  return maskedFill("buffer", series, scope, texture, textureId);
+  return maskedFill(kind, series, scope, texture, textureId);
 }
 
 /**

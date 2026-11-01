@@ -10,7 +10,7 @@
  * cube-grid column ({@link CubeBarShape}), while the patterned variants keep
  * the rectangle and paint it from a generated `<defs>` fill
  * ({@link BarVariantDefs}). All of them support single, grouped and stacked
- * series.
+ * series, and a category's own `variant` overrides the chart's for that series.
  */
 import { computed, ref, useId } from "vue";
 import { Bar, BarChart as VccsBarChart, LabelList, Rectangle } from "vccs";
@@ -31,7 +31,7 @@ import {
   DEFAULT_CUBE_RADIUS,
   DEFAULT_CUBE_SIZE,
 } from "../utils/cubes";
-import { PATTERNED_BAR_VARIANTS, variantId } from "../utils/variants";
+import { PATTERNED_BAR_VARIANTS, variantId, type BarVariant } from "../utils/variants";
 
 const props = withDefaults(defineProps<BarChartProps<T>>(), {
   accessibleDataTable: true,
@@ -45,18 +45,18 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
 /** Scopes this chart's `<defs>` ids so several charts on a page never collide. */
 const variantScope = useId();
 
-const isCubes = computed(() => props.variant === "cubes");
-/** Whether the bars paint from a generated pattern rather than a flat colour. */
-const isPatterned = computed(() => PATTERNED_BAR_VARIANTS.includes(props.variant));
-const isStripped = computed(() => props.variant === "stripped");
-
 /**
  * A custom `#shape` is only worth its cost when something about the bar's
  * geometry actually changes; the plain variants stay on the `vccs` rectangle.
  */
-const usesVariantShape = computed(
-  () => isStripped.value || props.bufferBar === true || props.glow === true,
-);
+function usesVariantShape(variant: BarVariant): boolean {
+  return (
+    variant === "stripped" ||
+    variant === "hatched-outline" ||
+    props.bufferBar === true ||
+    props.glow === true
+  );
+}
 
 /**
  * Index of the row the pointer is over, or `null`. Only tracked when
@@ -127,6 +127,7 @@ const series = computed(() =>
       color: cat?.color,
       hidden: cat?.hidden ?? false,
       yAxisId: cat?.yAxisId ?? PRIMARY_Y_AXIS_ID,
+      variant: props.categories[k]?.variant ?? props.variant,
     };
   }),
 );
@@ -135,7 +136,11 @@ const series = computed(() =>
 const paintedSeries = computed(() =>
   series.value
     .filter((s) => typeof s.color === "string")
-    .map((s) => ({ dataKey: s.dataKey, color: s.color as string })),
+    .map((s) => ({ dataKey: s.dataKey, color: s.color as string, variant: s.variant })),
+);
+
+const hasPatternedSeries = computed(() =>
+  series.value.some((s) => PATTERNED_BAR_VARIANTS.includes(s.variant)),
 );
 
 /**
@@ -150,9 +155,13 @@ const legendColors = computed(() =>
 );
 
 /** Resolve the `fill` for one series: a variant pattern, or its flat colour. */
-function fillFor(dataKey: string, color: string | undefined): string | undefined {
-  if (!isPatterned.value || color === undefined) return color;
-  return `url(#${variantId(props.variant, dataKey, variantScope)})`;
+function fillFor(
+  dataKey: string,
+  color: string | undefined,
+  variant: BarVariant,
+): string | undefined {
+  if (!PATTERNED_BAR_VARIANTS.includes(variant) || color === undefined) return color;
+  return `url(#${variantId(variant, dataKey, variantScope)})`;
 }
 
 /** `url(#…)` of the hollow hatch a projection bar paints from. */
@@ -225,11 +234,14 @@ const chartContainerProps = computed(() => {
  * A stripped bar rounds its top corners only — the flat foot lets the faint
  * body sit on the axis while the cap strip above carries the value.
  */
-function barRadius(index: number): number | [number, number, number, number] {
+function barRadius(
+  index: number,
+  variant: BarVariant,
+): number | [number, number, number, number] {
   const r = props.radius ?? 2;
   const horizontal = props.orientation === "horizontal";
 
-  if (isStripped.value && !props.stacked) {
+  if (variant === "stripped" && !props.stacked) {
     return horizontal ? [0, r, r, 0] : [r, r, 0, 0];
   }
   if (!props.stacked) return r;
@@ -259,9 +271,8 @@ defineSlots<{
       with `h()` so they land in the SVG namespace and `url(#…)` resolves.
     -->
     <BarVariantDefs
-      v-if="isPatterned || glow || bufferBar"
+      v-if="hasPatternedSeries || glow || bufferBar"
       :series="paintedSeries"
-      :variant="variant"
       :scope="variantScope"
       :glow="glow === true"
       :buffer="bufferBar === true"
@@ -276,8 +287,8 @@ defineSlots<{
       :name="s.name"
       :y-axis-id="s.yAxisId"
       :stack-id="stackIdFor(s.yAxisId)"
-      :fill="fillFor(s.dataKey, s.color)"
-      :radius="isCubes ? 0 : barRadius(i)"
+      :fill="fillFor(s.dataKey, s.color, s.variant)"
+      :radius="s.variant === 'cubes' ? 0 : barRadius(i, s.variant)"
       :hide="s.hidden"
       :is-animation-active="duration !== undefined && duration !== 0"
       :transition="{ duration: (duration ?? 400) / 1000, ease: 'easeOut' }"
@@ -288,7 +299,7 @@ defineSlots<{
       -->
       <template #shape="shapeProps">
         <CubeBarShape
-          v-if="isCubes"
+          v-if="s.variant === 'cubes'"
           :x="shapeProps.x"
           :y="shapeProps.y"
           :width="shapeProps.width"
@@ -304,15 +315,16 @@ defineSlots<{
           :include-empty="!stacked || i === 0"
         />
         <VariantBarShape
-          v-else-if="usesVariantShape"
+          v-else-if="usesVariantShape(s.variant)"
           :x="shapeProps.x"
           :y="shapeProps.y"
           :width="shapeProps.width"
           :height="shapeProps.height"
-          :radius="barRadius(i)"
+          :radius="barRadius(i, s.variant)"
           :fill="shapeProps.fill ?? s.color"
           :color="s.color"
-          :capped="isStripped"
+          :capped="s.variant === 'stripped'"
+          :outlined="s.variant === 'hatched-outline'"
           :is-buffer="bufferBar === true && shapeProps.index === lastIndex"
           :buffer-fill="bufferFillFor(s.dataKey)"
           :filter="glowFor(s.dataKey)"
@@ -329,7 +341,7 @@ defineSlots<{
         />
       </template>
       <LabelList
-        v-if="valueLabel && !isCubes"
+        v-if="valueLabel && s.variant !== 'cubes'"
         :data-key="s.dataKey"
         :value-accessor="valueAccessor"
         :position="orientation === 'horizontal' ? 'right' : 'top'"

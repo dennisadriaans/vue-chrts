@@ -39,6 +39,7 @@ export const resolveImports = (config: ModuleOptions, resolverUrl: string) => {
       "StatusTrackerChartProps",
       "StatusTrackerDatum",
       "BulletLegendItemInterface",
+      "BarCategory",
       "AxisConfig",
       "ValueLabel",
       "ReferenceLineConfig",
