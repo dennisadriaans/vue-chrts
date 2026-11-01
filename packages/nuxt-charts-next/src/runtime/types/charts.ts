@@ -1044,3 +1044,69 @@ export interface MetricChartProps<T> extends ChartStyleProps {
   /** Hide the headline value and delta, leaving the title and the plot. */
   hideValue?: boolean;
 }
+
+/**
+ * Heatmap chart props: a grid of cells coloured by value, such as traffic by
+ * weekday and hour.
+ *
+ * Takes long-format rows (`{ day: "Mon", hour: 9, visits: 120 }`) and pivots them
+ * itself. Renders as HTML rather than through `vccs`, so it server-renders and
+ * stays one tab stop: arrow keys move between cells.
+ */
+export interface HeatmapChartProps<T> extends ChartStyleProps {
+  /** Long-format rows; each one is a cell. Rows sharing an x/y pair are summed. */
+  data: T[];
+  /** Row field for the column (x) key. */
+  xAxis: keyof T;
+  /** Row field for the row (y) key. */
+  yAxis: keyof T;
+  /** Row field holding the cell value. */
+  valueKey: NumericKeys<T>;
+  /** Column order. Defaults to the order keys first appear in `data`. */
+  xOrder?: (string | number)[];
+  /** Row order. Defaults to the order keys first appear in `data`. */
+  yOrder?: (string | number)[];
+  /** Height of the cell grid in pixels. Defaults to 24 px per row. */
+  height?: number;
+  /** Number of colour bins. Default 5. */
+  steps?: number;
+  /**
+   * How values map to bins. `quantile` (the default) gives each bin about as
+   * many cells, so one outlier does not wash out the rest; `linear` splits the
+   * value range evenly.
+   */
+  scale?: "linear" | "quantile";
+  /** Colours for the lowest and highest bins. Default: a faint to full `--vc-series-0`. */
+  colorRange?: [string, string];
+  /** Full control over the cell colour, bypassing bins and `colorRange`. */
+  colorScale?: (value: number) => string;
+  /** Gap between cells in pixels. Default 3. */
+  cellGap?: number;
+  /** Cell corner radius in pixels. Default 3. */
+  cellRadius?: number;
+  /** Formats column labels. */
+  xFormatter?: (value: string | number, index: number) => string;
+  /** Formats row labels. */
+  yFormatter?: (value: string | number, index: number) => string;
+  /** Formats values in the tooltip, legend and data table. */
+  valueFormatter?: (value: number) => string;
+  /** Show every nth column label, for dense axes such as 24 hours. Default 1. */
+  xLabelEvery?: number;
+  /** Hide the column labels. */
+  hideXAxis?: boolean;
+  /** Hide the row labels. */
+  hideYAxis?: boolean;
+  /** Hide the colour legend. */
+  hideLegend?: boolean;
+  /** Hide the tooltip. */
+  hideTooltip?: boolean;
+  /** Text at the low end of the legend. Default `Less`. */
+  legendLowLabel?: string;
+  /** Text at the high end of the legend. Default `More`. */
+  legendHighLabel?: string;
+  /**
+   * Per-chart appearance overrides (legend, tooltip). Layers over the global
+   * `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
+}

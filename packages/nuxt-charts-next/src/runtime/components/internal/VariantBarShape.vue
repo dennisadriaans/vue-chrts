@@ -12,6 +12,7 @@
  * - a buffer bar (the last column, marked as a projection) swaps to a hollow
  *   hatch and gains an outline, so it is legible as "not measured yet" rather
  *   than as a short bar.
+ * - `hatched-outline` gives every bar of a series that same outline.
  *
  * `Rectangle` comes from `vccs` so corner radii, negative bars and the active
  * (hovered) state stay consistent with the default bar.
@@ -29,7 +30,7 @@ const props = withDefaults(
     radius?: number | [number, number, number, number];
     /** Paint for the bar body — a flat colour or a `url(#…)` variant pattern. */
     fill?: string;
-    /** Series colour, used for the cap strip and the buffer outline. */
+    /** Series colour, used for the cap strip and the outline. */
     color?: string;
     /** Draws the floating cap strip above the body. */
     capped?: boolean;

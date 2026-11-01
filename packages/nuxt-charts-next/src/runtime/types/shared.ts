@@ -24,6 +24,14 @@ export interface BulletLegendItemInterface {
    * a scale. Defaults to the primary axis, so charts that omit it are unchanged.
    */
   yAxis?: AxisId;
+  /**
+   * SVG dash pattern for this series alone, e.g. `"4 4"`.
+   *
+   * Marks a comparison series such as the previous period or a target while the
+   * others stay solid. Overrides `lineDashArray` and `strokeVariant` for this
+   * series on `LineChart` and `AreaChart`.
+   */
+  dashArray?: string;
 }
 
 /** Identifies one y-axis. Series and axis configs are matched by this value. */

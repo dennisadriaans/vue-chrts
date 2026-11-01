@@ -34,7 +34,7 @@ export default defineComponent({
 
     for (const series of props.series) {
       children.push(...paintsFor(series.variant, series, props.scope));
-      if (props.buffer) children.push(...bufferPaints(series, props.scope));
+      if (props.buffer) children.push(...hollowHatchPaints("buffer", series, props.scope));
       if (props.glow) children.push(glowFilter(series.dataKey, props.scope));
     }
 
@@ -238,11 +238,11 @@ function strippedPaints(series: SeriesItem, scope: string): VNode[] {
 }
 
 /**
- * Hollow diagonal hatch — lines only, no ground — used to mark the final bar as
- * a projection rather than a recorded value.
+ * Hollow diagonal hatch — lines only, no ground. `VariantBarShape` adds the
+ * outline that keeps the bar's edge readable.
  */
-function bufferPaints(series: SeriesItem, scope: string): VNode[] {
-  const textureId = variantId("buffer-texture", series.dataKey, scope);
+function hollowHatchPaints(kind: string, series: SeriesItem, scope: string): VNode[] {
+  const textureId = variantId(`${kind}-texture`, series.dataKey, scope);
   const texture = h(
     "pattern",
     {
@@ -261,7 +261,7 @@ function bufferPaints(series: SeriesItem, scope: string): VNode[] {
     ],
   );
 
-  return maskedFill("buffer", series, scope, texture, textureId);
+  return maskedFill(kind, series, scope, texture, textureId);
 }
 
 /**
