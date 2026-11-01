@@ -33,6 +33,8 @@ export interface SeriesDescriptor {
   hidden: boolean;
   /** Id of the y-axis this series is plotted against. */
   yAxisId: AxisId;
+  /** Dash pattern for this series alone, when set on its category. */
+  dashArray?: string;
 }
 
 /**
@@ -59,5 +61,6 @@ export function categoriesToSeries(
     color: resolveColor(item.color, index),
     hidden: item.hidden ?? false,
     yAxisId: item.yAxis == null ? PRIMARY_Y_AXIS_ID : normalizeAxisId(item.yAxis),
+    dashArray: item.dashArray,
   }));
 }
