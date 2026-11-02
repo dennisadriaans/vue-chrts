@@ -48,19 +48,44 @@ const CONVENTIONAL = /^(\w+)(?:\(([^)]*)\))?(!)?:\s*(.+)$/
 
 // ── conventional commits ────────────────────────────────────────────────────
 
+/**
+ * The text of a `BREAKING CHANGE:` footer: the rest of that paragraph, with
+ * its lines joined. `null` when the body has no such footer.
+ */
+function breakingNote(body = '') {
+  const match = /(?:^|\n)BREAKING[ -]CHANGE:[ \t]*([\s\S]*?)(?:\n[ \t]*\n|$)/.exec(body)
+  if (!match) return null
+  const note = match[1].split('\n').map((line) => line.trim()).filter(Boolean).join(' ')
+  return note || null
+}
+
 export function parseConventional(commit) {
   const match = CONVENTIONAL.exec(commit.subject)
+  const note = breakingNote(commit.body ?? '')
   const breakingFooter = /^BREAKING[ -]CHANGE:/m.test(commit.body ?? '')
   if (!match) {
-    return { type: null, scope: null, breaking: breakingFooter, subject: commit.subject, commit }
+    return { type: null, scope: null, breaking: breakingFooter, note, subject: commit.subject, commit }
   }
   return {
     type: match[1].toLowerCase(),
     scope: match[2] || null,
     breaking: Boolean(match[3]) || breakingFooter,
+    note,
     subject: match[4].trim(),
     commit
   }
+}
+
+/**
+ * The semver bump the commits call for: `major` for a breaking change (`minor`
+ * while the package is still 0.x), `minor` for a feature, otherwise `patch`.
+ */
+export function recommendedBump(commits, currentVersion = '1.0.0') {
+  const entries = commits.map(parseConventional)
+  const preOne = /^0\./.test(currentVersion)
+  if (entries.some((e) => e.breaking)) return preOne ? 'minor' : 'major'
+  if (entries.some((e) => e.type === 'feat')) return 'minor'
+  return 'patch'
 }
 
 function commitLink(commit) {
@@ -75,9 +100,12 @@ function linkIssues(text) {
   )
 }
 
-function renderEntry(entry) {
+function renderEntry(entry, { withNote = false } = {}) {
   const scope = entry.scope ? `**${entry.scope}:** ` : ''
-  return `* ${scope}${linkIssues(entry.subject)} ${commitLink(entry.commit)}`
+  const line = `* ${scope}${linkIssues(entry.subject)} ${commitLink(entry.commit)}`
+  // In the breaking section, say *what* broke: the footer, indented so it
+  // renders as part of the same list item.
+  return withNote && entry.note ? `${line}\n\n  ${entry.note}` : line
 }
 
 /**
@@ -92,14 +120,14 @@ export function commitSections(commits) {
   const breaking = entries.filter((e) => e.breaking)
   if (breaking.length) {
     out.push('### ⚠ BREAKING CHANGES')
-    out.push(breaking.map(renderEntry).join('\n'))
+    out.push(breaking.map((e) => renderEntry(e, { withNote: true })).join('\n'))
   }
 
   for (const { type, label } of COMMIT_TYPES) {
     const group = entries.filter((e) => e.type === type && !e.breaking)
     if (!group.length) continue
     out.push(`### ${label}`)
-    out.push(group.map(renderEntry).join('\n'))
+    out.push(group.map((e) => renderEntry(e)).join('\n'))
   }
   return out.join('\n\n')
 }

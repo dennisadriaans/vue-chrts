@@ -76,6 +76,7 @@ import {
   notesForGithub,
   readChangelog,
   readFragments,
+  recommendedBump,
   releaseHeading,
   renderChangelog,
   skippedCommits,
@@ -293,12 +294,22 @@ async function soft(result, okMessage, { question = 'Continue anyway?', defaultY
   const staged = ahead && !(await isPublished(pkg.name, ahead)) ? ahead : null
   if (staged) info(`package.json is staged at ${color.bold(staged)}, ahead of anything released.`)
 
+  // Put the bump the commits call for first, so it is also what `--yes` picks:
+  // a breaking change must never default to a patch release.
+  const recommended = recommendedBump(change.commits, base ?? manifestVersion ?? '1.0.0')
+  const ranked = [
+    ...RELEASE_KIND_OPTIONS.filter((o) => o.value === recommended).map((o) => ({
+      ...o,
+      hint: `${o.hint} — recommended from the commits`
+    })),
+    ...RELEASE_KIND_OPTIONS.filter((o) => o.value !== recommended)
+  ]
   const kindOptions = staged
     ? [
         { label: `staged — ${staged}`, value: 'staged', hint: 'ship the version in package.json' },
-        ...RELEASE_KIND_OPTIONS
+        ...ranked
       ]
-    : RELEASE_KIND_OPTIONS
+    : ranked
 
   const forcedVersion = flagValue('--version')
   const forcedBump = flagValue('--bump')
