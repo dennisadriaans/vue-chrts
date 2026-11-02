@@ -22,6 +22,25 @@ const revenueCategories: Record<string, BulletLegendItemInterface> = {
 const revenueAxes: Record<string, YAxisConfig> = {
   right: { orientation: "right" },
 };
+
+const sales = [
+  { month: "Jan", revenue: 42000, conversion: 2.1 },
+  { month: "Feb", revenue: 51000, conversion: 2.6 },
+  { month: "Mar", revenue: 47000, conversion: 3.4 },
+  { month: "Apr", revenue: 63000, conversion: 2.9 },
+  { month: "May", revenue: 58000, conversion: 3.8 },
+  { month: "Jun", revenue: 71000, conversion: 4.2 },
+];
+
+const salesCategories: Record<string, BulletLegendItemInterface> = {
+  revenue: { name: "Revenue", color: "#2662d9" },
+  conversion: { name: "Conversion", color: "#e23670", yAxis: "pct", type: "line" },
+};
+
+const salesAxes: Record<string, YAxisConfig> = {
+  0: { label: "Revenue", formatter: (v) => `€${Number(v) / 1000}k` },
+  pct: { orientation: "right", label: "Conversion", domain: [0, 5], numTicks: 6, formatter: (v) => `${v}%` },
+};
 </script>
 
 <template>
@@ -44,6 +63,16 @@ const revenueAxes: Record<string, YAxisConfig> = {
       :categories="revenueCategories"
       :y-axes="revenueAxes"
       :y-axis="['desktop', 'mobile']"
+      :height="320"
+      x-axis="month"
+    />
+
+    <h2>Revenue bars (€) with a conversion line (%) on the right axis (preview)</h2>
+    <BarChart
+      :data="sales"
+      :categories="salesCategories"
+      :y-axes="salesAxes"
+      :y-axis="['revenue', 'conversion']"
       :height="320"
       x-axis="month"
     />

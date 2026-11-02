@@ -24,6 +24,22 @@ export interface BulletLegendItemInterface {
    * a scale. Defaults to the primary axis, so charts that omit it are unchanged.
    */
   yAxis?: AxisId;
+  /**
+   * `BarChart` only: draw this series as a line instead of a bar, e.g. a rate
+   * plotted on a secondary axis over the bars. Default `bar`. Vertical
+   * orientation only; ignored on horizontal charts.
+   *
+   * @experimental Preview — the API may change in a minor release.
+   */
+  type?: "bar" | "line";
+  /**
+   * SVG dash pattern for this series alone, e.g. `"4 4"`.
+   *
+   * Marks a comparison series such as the previous period or a target while the
+   * others stay solid. Overrides `lineDashArray` and `strokeVariant` for this
+   * series on `LineChart` and `AreaChart`.
+   */
+  dashArray?: string;
 }
 
 /** Identifies one y-axis. Series and axis configs are matched by this value. */
@@ -42,7 +58,7 @@ export interface YAxisConfig extends AxisConfig {
   domain?: [number | undefined, number | undefined];
   /** Desired number of ticks. */
   numTicks?: number;
-  /** Formats this axis' ticks. */
+  /** Formats this axis' ticks, and the tooltip values of its series. */
   formatter?: axisFormatter;
   /** Hide the axis while still plotting its series. */
   hide?: boolean;

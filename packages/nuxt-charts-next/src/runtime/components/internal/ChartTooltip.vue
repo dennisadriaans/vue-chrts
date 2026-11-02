@@ -13,6 +13,8 @@ const props = defineProps<
     variant?: TooltipVariant;
     /** Corner radius preset. Falls back to the `--vc-tooltip-radius` token. */
     roundness?: TooltipRoundness;
+    /** Value formatter per series `dataKey`, e.g. from the series' y-axis. */
+    formatters?: Record<string, (value: unknown) => string>;
   }
 >();
 
@@ -22,7 +24,9 @@ const items = computed(() =>
 
 const ui = injectChartUi();
 
-function formatValue(value: unknown): string {
+function formatValue(value: unknown, dataKey: unknown): string {
+  const format = props.formatters?.[String(dataKey)];
+  if (format) return format(value);
   if (typeof value === "number") return formatNumber(value);
   return String(value);
 }
@@ -52,7 +56,7 @@ function formatValue(value: unknown): string {
           :style="{ background: item.color ?? item.fill ?? item.stroke }"
         />
         <span data-slot="tooltipLabel" class="vc-tooltip__name" :class="ui.slot('tooltipLabel')">{{ item.name }}</span>
-        <span data-slot="tooltipValue" class="vc-tooltip__value" :class="ui.slot('tooltipValue')">{{ formatValue(item.value) }}</span>
+        <span data-slot="tooltipValue" class="vc-tooltip__value" :class="ui.slot('tooltipValue')">{{ formatValue(item.value, item.dataKey) }}</span>
       </li>
     </ul>
   </div>

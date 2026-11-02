@@ -1,4 +1,4 @@
-import { nuxtUi, themeColors } from "#nuxt-charts";
+import { chartsConfig } from "../config";
 import type { AxisId, BulletLegendItemInterface } from "../types/shared";
 
 /** Id of the implicit primary y-axis, matching the `vccs` default. */
@@ -34,6 +34,8 @@ export interface SeriesDescriptor {
   hidden: boolean;
   /** Id of the y-axis this series is plotted against. */
   yAxisId: AxisId;
+  /** Dash pattern for this series alone, when set on its category. */
+  dashArray?: string;
 }
 
 /** Size of the default palette: `--vc-series-0` … `--vc-series-5` (= `--ui-chart-1` … `--ui-chart-6`). */
@@ -53,9 +55,9 @@ export function resolveThemeColor(color: string): string;
 export function resolveThemeColor(color: string | undefined): string | undefined;
 export function resolveThemeColor(color: string | undefined): string | undefined {
   if (!color) return color;
-  if (!nuxtUi) return STANDALONE_THEME_COLORS[color] ?? color;
+  if (!chartsConfig.nuxtUi) return STANDALONE_THEME_COLORS[color] ?? color;
   if (color === "neutral") return "var(--ui-bg-inverted)";
-  return themeColors.includes(color) ? `var(--ui-${color})` : color;
+  return chartsConfig.themeColors.includes(color) ? `var(--ui-${color})` : color;
 }
 
 /**
@@ -110,5 +112,6 @@ export function categoriesToSeries(
     color: resolveColor(item.color, index),
     hidden: item.hidden ?? false,
     yAxisId: item.yAxis == null ? PRIMARY_Y_AXIS_ID : normalizeAxisId(item.yAxis),
+    dashArray: item.dashArray,
   }));
 }

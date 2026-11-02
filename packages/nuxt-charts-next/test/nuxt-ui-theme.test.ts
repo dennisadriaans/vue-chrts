@@ -1,13 +1,27 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { defineComponent, h } from "vue";
 import { mount } from "@vue/test-utils";
-import { __setNuxtUi } from "./fixtures/nuxt-charts";
+import { tv as tailwindTv } from "tailwind-variants";
+import { chartsConfig, configureCharts, type ChartsRuntimeConfig } from "../src/runtime/config";
 import { mergeThemes, resolveChartTheme, useChartUi } from "../src/runtime/composables/useChartUi";
 import ChartTooltip from "../src/runtime/components/internal/ChartTooltip.vue";
 import ChartLegend from "../src/runtime/components/internal/ChartLegend.vue";
 import { defaultSeriesColor, resolveThemeColor } from "../src/runtime/utils/categories";
 import { themeToVars } from "../src/runtime/utils/theme";
 import type { ChartComponentThemeName, ChartUi } from "../src/runtime/theme";
+
+const standalone = { ...chartsConfig };
+
+/** Configure charts the way the Nuxt module's plugin does with Nuxt UI installed. */
+function __setNuxtUi(on: boolean, appConfig: Record<string, unknown> = {}) {
+  if (!on) return configureCharts(standalone);
+  configureCharts({
+    nuxtUi: true,
+    tv: tailwindTv as unknown as ChartsRuntimeConfig["tv"],
+    useAppConfig: () => appConfig,
+    themeColors: ["primary", "secondary", "success", "info", "warning", "error"],
+  });
+}
 
 afterEach(() => __setNuxtUi(false));
 

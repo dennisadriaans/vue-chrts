@@ -7,8 +7,6 @@
  * `ui.chart.slots.tooltip` override styles both tooltips at once.
  */
 import { monthly } from "../data";
-// MetricChart is not registered by the module yet, so import it directly.
-import MetricChart from "../../src/runtime/components/MetricChart.vue";
 import { orders } from "../data/orders";
 
 const uchartCategories = [

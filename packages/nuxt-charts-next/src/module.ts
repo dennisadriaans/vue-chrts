@@ -1,5 +1,5 @@
 import {
-  addTemplate,
+  addPluginTemplate,
   addTypeTemplate,
   createResolver,
   defineNuxtModule,
@@ -99,39 +99,37 @@ export default defineNuxtModule<ModuleOptions>({
       resolve("./runtime/assets/components.css"),
     );
 
-    // `#nuxt-charts`: the styling seam the runtime imports. With Nuxt UI it
-    // re-exports Nuxt UI's own `tv` (so tailwind-merge config, replacer
-    // functions and `appConfig.ui.tv` behave exactly as in any `U*`
-    // component) and the app's theme colour names; without it, a stand-in
-    // that applies only caller-supplied classes.
-    const config = addTemplate({
-      filename: "nuxt-charts/config.mjs",
-      write: true,
+    // The styling seam (`runtime/config`). The runtime defaults to standalone
+    // so the components also work outside Nuxt (`nuxt-charts/components`).
+    // This plugin runs before any chart renders and, with Nuxt UI, hands over
+    // Nuxt UI's own `tv` (so tailwind-merge config, replacer functions and
+    // `appConfig.ui.tv` behave exactly as in any `U*` component), plus the
+    // app config and the app's theme colour names.
+    addPluginTemplate({
+      filename: "nuxt-charts/plugin.mjs",
       getContents: () => {
         const ui = (nuxt.options as { ui?: { theme?: { colors?: string[] } } }).ui;
         const colors = nuxtUi ? (ui?.theme?.colors ?? DEFAULT_UI_COLORS) : [];
         return [
-          nuxtUi
-            ? `export { tv } from "#ui/utils/tv";`
-            : `export { tv } from ${JSON.stringify(resolve("./runtime/theme/tv-standalone"))};`,
-          `export { useAppConfig } from "#app";`,
-          `export const nuxtUi = ${nuxtUi};`,
-          `export const themeColors = ${JSON.stringify(colors)};`,
-        ].join("\n");
+          `import { defineNuxtPlugin, useAppConfig } from "#app";`,
+          nuxtUi ? `import { tv } from "#ui/utils/tv";` : "",
+          `import { configureCharts } from ${JSON.stringify(resolve("./runtime/config"))};`,
+          ``,
+          `export default defineNuxtPlugin({`,
+          `  name: "nuxt-charts:config",`,
+          `  enforce: "pre",`,
+          `  setup() {`,
+          `    configureCharts({`,
+          `      useAppConfig,`,
+          nuxtUi ? `      tv,` : "",
+          `      nuxtUi: ${nuxtUi},`,
+          `      themeColors: ${JSON.stringify(colors)},`,
+          `    });`,
+          `  },`,
+          `});`,
+        ].filter((line) => line !== "").join("\n");
       },
     });
-    // The alias resolves without an extension, so TypeScript picks up this
-    // sibling declaration file rather than the untyped `.mjs`.
-    addTemplate({
-      filename: "nuxt-charts/config.d.ts",
-      write: true,
-      getContents: () => `export declare const tv: (config: unknown) => (variants?: Record<string, unknown>) => Record<string, (props?: { class?: unknown }) => string>;
-export declare function useAppConfig(): Record<string, unknown>;
-export declare const nuxtUi: boolean;
-export declare const themeColors: string[];
-`,
-    });
-    nuxt.options.alias["#nuxt-charts"] = config.dst.replace(/\.mjs$/, "");
 
     addTypeTemplate({
       filename: "types/nuxt-charts.d.ts",

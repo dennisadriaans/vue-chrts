@@ -134,10 +134,11 @@ function configureZoom() {
   if (!svg.value) return;
   const element = select(svg.value);
   element.on(".zoom", null);
+  const pan = props.panPadding ?? 0;
   behavior = zoom<SVGSVGElement, unknown>()
     .extent([[0, 0], props.size])
     .scaleExtent([limits.value[0]!, limits.value[1]!])
-    .translateExtent([[0, 0], props.size])
+    .translateExtent([[-pan, -pan], [props.size[0] + pan, props.size[1] + pan]])
     .clickDistance(4)
     .filter(event => !props.disableZoom && (!event.ctrlKey || event.type === "wheel") && !event.button && (event.type !== "wheel" || props.zoomOnScroll === true))
     .on("zoom", (event: D3ZoomEvent<SVGSVGElement, unknown>) => {
@@ -190,7 +191,7 @@ function onKey(event: KeyboardEvent) {
 watch(svg, element => {
   if (element) { configureZoom(); apply(initial()); }
 });
-watch(() => [props.disableZoom, props.zoomOnScroll, props.zoomExtent], configureZoom, { deep: true });
+watch(() => [props.disableZoom, props.zoomOnScroll, props.zoomExtent, props.panPadding], configureZoom, { deep: true });
 watch(() => [props.zoomFactor, props.size], () => { configureZoom(); if (svg.value) apply(initial()); }, { deep: true });
 watch(() => props.marks, () => { hovered.value = undefined; });
 onMounted(() => {
@@ -248,7 +249,7 @@ defineExpose({
             @keydown.space.prevent.stop="emit('click', mark, $event)"
           >
             <slot :name="mark.kind" :values="mark.values" :x="mark.x" :y="mark.y" :path="mark.path" :color="mark.color" :radius="mark.radius" :scale="transform.k">
-              <path v-if="mark.path" :d="mark.path" :fill="mark.kind === 'link' ? 'none' : mark.color" :stroke="mark.stroke" :stroke-width="mark.strokeWidth" :stroke-dasharray="mark.dasharray" vector-effect="non-scaling-stroke" />
+              <path v-if="mark.path" :d="mark.path" :fill="mark.kind === 'link' ? 'none' : mark.color" :stroke="mark.stroke" :stroke-width="mark.strokeWidth" :stroke-dasharray="mark.dasharray" :opacity="mark.opacity" vector-effect="non-scaling-stroke" />
               <polygon v-else-if="mark.polygon" :points="mark.polygon" :fill="mark.color" :stroke="mark.stroke" :stroke-width="mark.strokeWidth" :stroke-opacity="mark.strokeOpacity" />
               <circle v-else :cx="mark.x" :cy="mark.y" :r="mark.kind === 'point' || mark.kind === 'pin' ? (mark.radius ?? 5) / transform.k : mark.radius" :fill="mark.color" :stroke="mark.stroke" :stroke-width="mark.strokeWidth" :stroke-opacity="mark.strokeOpacity" vector-effect="non-scaling-stroke" />
               <text v-if="mark.showLabel && mark.label" :x="mark.x" :y="mark.y" :transform="`translate(${mark.x}, ${mark.y}) scale(${1 / transform.k}) translate(${-mark.x!}, ${-mark.y!})`" :dy="-(mark.radius ?? 5) - 6" text-anchor="middle" class="vc-map__label">{{ mark.label }}</text>

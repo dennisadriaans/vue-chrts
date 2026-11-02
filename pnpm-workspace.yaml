@@ -1,5 +1,6 @@
 packages:
   - 'packages/*'
+  - 'packages/nuxt-charts-next/playground'
 allowBuilds:
   '@parcel/watcher': false
   better-sqlite3: true

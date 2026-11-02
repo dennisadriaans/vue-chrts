@@ -19,7 +19,7 @@ import { markerToDot, normalizeMarkerConfig, toStrokeDasharray } from "../utils/
 import { strokeDasharrayFor, variantId } from "../utils/variants";
 import { strokeGradientId } from "../utils/gradient";
 
-const props = withDefaults(defineProps<LineChartProps<T>>(), { accessibleDataTable: true });
+const props = withDefaults(defineProps<LineChartProps<T>>(), { accessibleDataTable: true, backgroundFade: true });
 useChartUi("lineChart", props);
 
 /** Scopes this chart's `<defs>` ids so several charts on a page never collide. */
@@ -114,7 +114,7 @@ defineSlots<{
       :stack-id="stackId"
       :stroke="strokeFor(s.dataKey, s.color)"
       :stroke-width="lineWidth ?? 2"
-      :stroke-dasharray="dashArray"
+      :stroke-dasharray="s.dashArray ?? dashArray"
       :filter="glowFor(s.dataKey)"
       :dot="showDots || (s.dot as boolean)"
       :hide="s.hidden"

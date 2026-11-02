@@ -39,6 +39,8 @@ export default defineNuxtConfig({
 | `SankeyChart` | New in v3 |
 | `CandlestickChart` | New in v3 |
 | `StatusTrackerChart` | New in v3 |
+| `HeatmapChart` | Value grid from long-format rows; server-renders, one tab stop |
+| `MetricChart` | Analytics card over raw rows: headline, delta, ranges, table, CSV |
 | `DottedMap` | D3 dotted geography, pins, regional filters, and country colors |
 | `TopoJSONMap` | D3 choropleths, points, routes, projections, and heatmaps |
 
@@ -85,6 +87,29 @@ auto-imported for precomputation and exported from `nuxt-charts/maps`.
 See [Dotted Map](https://nuxtcharts.com/docs/maps/dotted-map) and
 [TopoJSON Map](https://nuxtcharts.com/docs/maps/topojson-map) for the full API.
 
+### Heatmap
+
+`HeatmapChart` pivots long-format rows into a grid, so the data stays the shape
+an API returns it in. Rows that share an x/y pair are summed; missing pairs
+render as empty cells, distinct from zero.
+
+```vue
+<HeatmapChart
+  :data="visits"
+  x-axis="hour"
+  y-axis="day"
+  value-key="visits"
+  :x-label-every="3"
+  :x-formatter="(hour) => `${hour}:00`"
+/>
+```
+
+Values fall into `steps` colour bins (default 5) on a `quantile` scale, so one
+busy hour does not wash out the rest; pass `scale="linear"` for even ranges,
+`colorRange` for the end colours or `colorScale` for full control. The grid is
+one tab stop: arrow keys move between cells, `Home`/`End` jump within a row and
+`Enter` emits `cell-click`. It renders plain HTML, so it server-renders.
+
 ### New cross-cutting props (cartesian charts)
 
 - `yAxes` — plot series with different units on independent y-axes.
@@ -124,6 +149,33 @@ Each axis accepts `orientation`, `label`, `domain`, `numTicks`, `formatter`,
 the top-level `yLabel` / `yDomain` / `yAxisConfig` props. Supported on
 `LineChart`, `AreaChart` and `BarChart` (vertical orientation).
 
+An axis `formatter` also formats its series' tooltip values, so each value
+reads in its own units. Gridlines follow the primary axis.
+
+### Bar + line series (preview)
+
+> [!WARNING]
+> Preview: this API may change in a minor release. Feedback welcome.
+
+In a `BarChart`, set `type: "line"` on a category to draw it as a line over the
+bars — e.g. revenue bars on the left, a conversion rate line on the right:
+
+```ts
+const categories = {
+  revenue: { name: "Revenue" },
+  conversion: { name: "Conversion", yAxis: "pct", type: "line" },
+};
+
+const yAxes = {
+  0: { formatter: (v) => `€${v / 1000}k` },
+  pct: { orientation: "right", domain: [0, 5], formatter: (v) => `${v}%` },
+};
+```
+
+- Vertical orientation only; on a horizontal `BarChart` the category stays a bar.
+- Lines are drawn after the bars, unstacked, with `monotone` curves and no dots.
+- Bar-only options (`variant`, `stacked`, `valueLabel`, `radius`) don't apply to lines.
+
 ## Style variants
 
 Every treatment below is opt-in — a chart that sets none of them renders exactly
@@ -133,7 +185,7 @@ as it did before. The playground's `/variants` page shows them side by side.
 
 | Prop | Chart | Values |
 |---|---|---|
-| `variant` | `BarChart` | `solid` (default), `cubes`, `hatched`, `duotone`, `duotone-reverse`, `gradient`, `stripped` |
+| `variant` | `BarChart` | `solid` (default), `cubes`, `hatched`, `hatched-outline`, `duotone`, `duotone-reverse`, `gradient`, `stripped` |
 | `variant` | `AreaChart` | `gradient`, `gradient-reverse`, `solid`, `dotted`, `lines`, `hatched` |
 | `variant` | `RadarChart` | `filled` (default), `lines`, `gradient` (inside to outside), `gradient-reverse` (outside to inside) |
 | `variant` | `RadialBarChart` | `full` (default), `semi` |
@@ -142,9 +194,21 @@ as it did before. The playground's `/variants` page shows them side by side.
 On `AreaChart` the fill treatments layer over the v2 `gradient` fade and yield to
 `dither`, which is a texture of its own.
 
+On `BarChart` a category can set its own `variant`, overriding the chart's for
+that series:
+
+```ts
+const categories = {
+  organic: { name: "Organic", color: "#2662d9", variant: "hatched-outline" },
+  direct: { name: "Direct", color: "#e23670" },
+} satisfies Record<string, BarCategory>;
+```
+
 ### Series detail
 
 - `strokeVariant` — `solid`, `dashed`, `animated-dashed` (line + area).
+- `categories[key].dashArray` — dash one series only, such as the previous
+  period next to a solid current period (line + area).
 - `dotVariant` — `default`, `border`, `colored-border`, `ping` (line, area,
   radar), sized by `dotSize`.
 - `glow` — a soft outer glow (bar, line, area, donut).
@@ -209,10 +273,34 @@ export default defineNuxtConfig({
 })
 ```
 
-## Data safety, accessibility, and limits
+## Outside the Nuxt runtime
 
-This package is Nuxt-only. Vue/Vite applications should use the separate
-`vue-chrts` package.
+This package targets Nuxt apps. Tooling that renders their components without
+Nuxt, such as Storybook or Vitest, can import the charts and styles directly:
+
+```ts
+import { LineChart } from "nuxt-charts/components";
+import "nuxt-charts/theme.css";
+import "nuxt-charts/components.css";
+```
+
+Add `vccs`, `motion-v` and `vccs > eventemitter3` to Vite's
+`optimizeDeps.include`, as the module does. Charts render in standalone styling
+there; a Vue + Vite app using Nuxt UI (`@nuxt/ui/vite`) can opt into the Nuxt
+UI themes the module wires up automatically:
+
+```ts
+import { tv } from "@nuxt/ui/utils/tv";
+import { configureCharts } from "nuxt-charts/components";
+
+configureCharts({ nuxtUi: true, tv, useAppConfig: () => appConfig });
+```
+
+Also add `@source "../node_modules/nuxt-charts/dist/runtime/theme";` to your
+CSS so Tailwind generates the theme classes. Standalone Vue/Vite applications
+should use the separate `vue-chrts` package.
+
+## Data safety, accessibility, and limits
 
 All numeric chart input is validated before it reaches a scale or SVG
 attribute. `null`, missing values, `NaN`, and positive/negative infinity are

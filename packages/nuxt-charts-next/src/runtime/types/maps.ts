@@ -106,6 +106,8 @@ export interface MapBaseProps extends ChartStyleProps {
   zoomExtent?: [number, number];
   /** Wheel zoom is opt-in so a map does not capture normal page scrolling. */
   zoomOnScroll?: boolean;
+  /** Pixels the map can be dragged past its edges, so it can be nudged even when fully zoomed out. Default 0. */
+  panPadding?: number;
   zoomDuration?: number;
   duration?: number;
   showControls?: boolean;
@@ -134,6 +136,9 @@ export interface TopoJSONMapProps<A extends MapArea = MapArea, P extends MapPoin
   areaCursor?: MapAccessor<MapFeature<A>, string>;
   areaStroke?: MapAccessor<MapFeature<A>, string>;
   areaStrokeWidth?: MapAccessor<MapFeature<A>, number>;
+  areaOpacity?: MapAccessor<MapFeature<A>, number>;
+  /** Draw this area above its neighbours so a highlight stroke is not covered. */
+  activeArea?: string | number;
   /** Numeric field/accessor for an automatically scaled choropleth. */
   value?: keyof A | ((area: MapFeature<A>) => number | undefined);
   colorScale?: (value: number) => string;

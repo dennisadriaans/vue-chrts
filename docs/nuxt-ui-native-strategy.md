@@ -55,7 +55,10 @@ Options weighed:
 
 - **Component themes** in `src/runtime/theme/*.ts` (Nuxt UI shape), resolved
   with **Nuxt UI's own `tv`** (`#ui/utils/tv`). That brings tailwind-merge,
-  replacer functions and `appConfig.ui.tv` for free.
+  replacer functions and `appConfig.ui.tv` for free. The module's plugin hands
+  `tv`, `useAppConfig` and theme colour names to the runtime through
+  `configureCharts` (`runtime/config.ts`). The runtime defaults to standalone,
+  so `nuxt-charts/components` keeps working in Storybook, Vitest and plain Vue.
 - **`ui` + `class` props** on every chart, merged per slot. Elements carry
   `data-slot`.
 - **`app.config`**: `nuxtCharts.chart` (all charts) and
@@ -82,9 +85,6 @@ Options weighed:
 - **Grid lines**: vccs `CartesianGrid` does not render in most cartesian demos.
   This is pre-existing and identical on `main`, while `UChart` shows a
   horizontal grid by default. Worth fixing for visual parity.
-- **`MetricChart` is not registered** by the module (it shipped in 3.1.0 but is
-  missing from `src/core/components.ts` and the README). Register it once its
-  API is final.
 - **API aliases**: `UChart` uses `index` / `categories[]` / `legend` /
   `xLabel`; we keep the v2 API (`x-axis` / record `categories` / `hideLegend` /
   `xLabel`). Optional aliases would make swapping a `UChart` for a

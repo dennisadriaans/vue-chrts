@@ -10,11 +10,22 @@
  * cube-grid column ({@link CubeBarShape}), while the patterned variants keep
  * the rectangle and paint it from a generated `<defs>` fill
  * ({@link BarVariantDefs}). All of them support single, grouped and stacked
- * series.
+ * series, and a category's own `variant` overrides the chart's for that series.
+ *
+ * Preview: a category with `type: "line"` is drawn as a `<Line>` instead, so a
+ * rate or trend can sit over the bars — typically on its own axis via `yAxis`.
+ * Vertical orientation only; horizontal charts keep drawing it as a bar.
  */
 import { useChartUi } from "../composables/useChartUi";
 import { computed, ref, useId } from "vue";
-import { Bar, BarChart as VccsBarChart, LabelList, Rectangle } from "vccs";
+import {
+  Bar,
+  BarChart as VccsBarChart,
+  ComposedChart,
+  LabelList,
+  Line,
+  Rectangle,
+} from "vccs";
 import CartesianFrame from "./internal/CartesianFrame.vue";
 import CubeBarShape from "./internal/CubeBarShape.vue";
 import VariantBarShape from "./internal/VariantBarShape.vue";
@@ -32,10 +43,11 @@ import {
   DEFAULT_CUBE_RADIUS,
   DEFAULT_CUBE_SIZE,
 } from "../utils/cubes";
-import { PATTERNED_BAR_VARIANTS, variantId } from "../utils/variants";
+import { PATTERNED_BAR_VARIANTS, variantId, type BarVariant } from "../utils/variants";
 
 const props = withDefaults(defineProps<BarChartProps<T>>(), {
   accessibleDataTable: true,
+  backgroundFade: true,
   variant: "solid",
   cubeGap: DEFAULT_CUBE_GAP,
   cubeRadius: DEFAULT_CUBE_RADIUS,
@@ -47,18 +59,32 @@ useChartUi("barChart", props);
 /** Scopes this chart's `<defs>` ids so several charts on a page never collide. */
 const variantScope = useId();
 
-const isCubes = computed(() => props.variant === "cubes");
-/** Whether the bars paint from a generated pattern rather than a flat colour. */
-const isPatterned = computed(() => PATTERNED_BAR_VARIANTS.includes(props.variant));
-const isStripped = computed(() => props.variant === "stripped");
+/** Whether any series paints from a generated pattern rather than a flat colour. */
+const hasPatterned = computed(() =>
+  series.value.some((s) => PATTERNED_BAR_VARIANTS.includes(s.variant)),
+);
 
 /**
  * A custom `#shape` is only worth its cost when something about the bar's
  * geometry actually changes; the plain variants stay on the `vccs` rectangle.
  */
-const usesVariantShape = computed(
-  () => isStripped.value || props.bufferBar === true || props.glow === true,
-);
+function usesVariantShape(variant: BarVariant): boolean {
+  return variant === "stripped" || props.bufferBar === true || props.glow === true;
+}
+
+/**
+ * Variant one series resolved to. The `#shape` slot reads it through this
+ * lookup because `vccs` captures the slot once, so a series object closed over
+ * by the slot would keep its first variant.
+ */
+function variantOf(dataKey: string): BarVariant {
+  return series.value.find((s) => s.dataKey === dataKey)?.variant ?? props.variant;
+}
+
+/** Series colour for the outline a `hatched-outline` bar draws around its hatch. */
+function outlineFor(dataKey: string, color: string | undefined): string | undefined {
+  return variantOf(dataKey) === "hatched-outline" ? color : undefined;
+}
 
 /**
  * Index of the row the pointer is over, or `null`. Only tracked when
@@ -119,7 +145,7 @@ const categoryByKey = computed(() => {
 });
 
 /** One descriptor per `yAxis` value key, enriched from `categories`. */
-const series = computed(() =>
+const allSeries = computed(() =>
   props.yAxis.map((key) => {
     const k = String(key);
     const cat = categoryByKey.value.get(k);
@@ -129,15 +155,26 @@ const series = computed(() =>
       color: cat?.color,
       hidden: cat?.hidden ?? false,
       yAxisId: cat?.yAxisId ?? PRIMARY_Y_AXIS_ID,
+      isLine: props.categories[k]?.type === "line" && props.orientation !== "horizontal",
+      variant: props.categories[k]?.variant ?? props.variant,
     };
   }),
 );
+
+/** Series drawn as bars; every bar-specific feature works on these only. */
+const series = computed(() => allSeries.value.filter((s) => !s.isLine));
+
+/** Series drawn as lines over the bars. */
+const lineSeries = computed(() => allSeries.value.filter((s) => s.isLine));
+
+/** `vccs` only draws a `<Line>` inside a line or composed chart container. */
+const chartContainer = computed(() => (lineSeries.value.length ? ComposedChart : VccsBarChart));
 
 /** Series narrowed to those with a resolved colour, which the `<defs>` need. */
 const paintedSeries = computed(() =>
   series.value
     .filter((s) => typeof s.color === "string")
-    .map((s) => ({ dataKey: s.dataKey, color: s.color as string })),
+    .map((s) => ({ dataKey: s.dataKey, color: s.color as string, variant: s.variant })),
 );
 
 /**
@@ -147,14 +184,14 @@ const paintedSeries = computed(() =>
  */
 const legendColors = computed(() =>
   Object.fromEntries(
-    series.value.filter((s) => s.color).map((s) => [s.name, s.color as string]),
+    allSeries.value.filter((s) => s.color).map((s) => [s.name, s.color as string]),
   ),
 );
 
 /** Resolve the `fill` for one series: a variant pattern, or its flat colour. */
-function fillFor(dataKey: string, color: string | undefined): string | undefined {
-  if (!isPatterned.value || color === undefined) return color;
-  return `url(#${variantId(props.variant, dataKey, variantScope)})`;
+function fillFor(s: { dataKey: string; color?: string; variant: BarVariant }): string | undefined {
+  if (!PATTERNED_BAR_VARIANTS.includes(s.variant) || s.color === undefined) return s.color;
+  return `url(#${variantId(s.variant, s.dataKey, variantScope)})`;
 }
 
 /** `url(#…)` of the hollow hatch a projection bar paints from. */
@@ -227,11 +264,14 @@ const chartContainerProps = computed(() => {
  * A stripped bar rounds its top corners only — the flat foot lets the faint
  * body sit on the axis while the cap strip above carries the value.
  */
-function barRadius(index: number): number | [number, number, number, number] {
+function barRadius(
+  index: number,
+  variant: BarVariant,
+): number | [number, number, number, number] {
   const r = props.radius ?? 2;
   const horizontal = props.orientation === "horizontal";
 
-  if (isStripped.value && !props.stacked) {
+  if (variant === "stripped" && !props.stacked) {
     return horizontal ? [0, r, r, 0] : [r, r, 0, 0];
   }
   if (!props.stacked) return r;
@@ -248,7 +288,7 @@ defineSlots<{
 
 <template>
   <CartesianFrame
-    :container="VccsBarChart"
+    :container="chartContainer"
     :x-axis-key="xAxisKey"
     :container-props="chartContainerProps"
     :percent-axis="stacked === true && percent === true"
@@ -261,9 +301,8 @@ defineSlots<{
       with `h()` so they land in the SVG namespace and `url(#…)` resolves.
     -->
     <BarVariantDefs
-      v-if="isPatterned || glow || bufferBar"
+      v-if="hasPatterned || glow || bufferBar"
       :series="paintedSeries"
-      :variant="variant"
       :scope="variantScope"
       :glow="glow === true"
       :buffer="bufferBar === true"
@@ -278,8 +317,8 @@ defineSlots<{
       :name="s.name"
       :y-axis-id="s.yAxisId"
       :stack-id="stackIdFor(s.yAxisId)"
-      :fill="fillFor(s.dataKey, s.color)"
-      :radius="isCubes ? 0 : barRadius(i)"
+      :fill="fillFor(s)"
+      :radius="s.variant === 'cubes' ? 0 : barRadius(i, s.variant)"
       :hide="s.hidden"
       :is-animation-active="duration !== undefined && duration !== 0"
       :transition="{ duration: (duration ?? 400) / 1000, ease: 'easeOut' }"
@@ -290,7 +329,7 @@ defineSlots<{
       -->
       <template #shape="shapeProps">
         <CubeBarShape
-          v-if="isCubes"
+          v-if="variantOf(s.dataKey) === 'cubes'"
           :x="shapeProps.x"
           :y="shapeProps.y"
           :width="shapeProps.width"
@@ -306,15 +345,16 @@ defineSlots<{
           :include-empty="!stacked || i === 0"
         />
         <VariantBarShape
-          v-else-if="usesVariantShape"
+          v-else-if="usesVariantShape(variantOf(s.dataKey))"
           :x="shapeProps.x"
           :y="shapeProps.y"
           :width="shapeProps.width"
           :height="shapeProps.height"
-          :radius="barRadius(i)"
+          :radius="barRadius(i, variantOf(s.dataKey))"
           :fill="shapeProps.fill ?? s.color"
           :color="s.color"
-          :capped="isStripped"
+          :capped="variantOf(s.dataKey) === 'stripped'"
+          :outlined="variantOf(s.dataKey) === 'hatched-outline'"
           :is-buffer="bufferBar === true && shapeProps.index === lastIndex"
           :buffer-fill="bufferFillFor(s.dataKey)"
           :filter="glowFor(s.dataKey)"
@@ -325,13 +365,15 @@ defineSlots<{
         <Rectangle
           v-else
           v-bind="shapeProps"
+          :stroke="outlineFor(s.dataKey, s.color)"
+          :stroke-width="outlineFor(s.dataKey, s.color) ? 1 : undefined"
           :opacity="opacityFor(shapeProps.index)"
           @mouseenter="onBarEnter(shapeProps.index)"
           @mouseleave="onBarLeave"
         />
       </template>
       <LabelList
-        v-if="valueLabel && !isCubes"
+        v-if="valueLabel && s.variant !== 'cubes'"
         :data-key="s.dataKey"
         :value-accessor="valueAccessor"
         :position="orientation === 'horizontal' ? 'right' : 'top'"
@@ -340,5 +382,19 @@ defineSlots<{
         :fill="valueLabel.color ?? 'currentColor'"
       />
     </Bar>
+    <Line
+      v-for="s in lineSeries"
+      :key="s.dataKey"
+      :data-key="s.dataKey"
+      :name="s.name"
+      :y-axis-id="s.yAxisId"
+      type="monotone"
+      :stroke="s.color"
+      :stroke-width="2"
+      :dot="false"
+      :hide="s.hidden"
+      :is-animation-active="duration !== undefined && duration !== 0"
+      :transition="{ duration: (duration ?? 400) / 1000, ease: 'easeOut' }"
+    />
   </CartesianFrame>
 </template>

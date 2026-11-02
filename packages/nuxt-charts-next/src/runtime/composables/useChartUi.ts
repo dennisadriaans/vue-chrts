@@ -1,5 +1,5 @@
 import { computed, inject, provide, type CSSProperties, type InjectionKey } from "vue";
-import { tv, useAppConfig } from "#nuxt-charts";
+import { chartsConfig } from "../config";
 import {
   chart as chartTheme,
   componentThemes,
@@ -143,11 +143,11 @@ function chromeStyle(theme: ChartTheme | undefined): ChartUiContext["themeStyle"
  */
 export function useChartUi(name: ChartComponentThemeName, props: ChartUiInput) {
   const parent = inject(CHART_UI_KEY, null);
-  const appConfig = useAppConfig() as Parameters<typeof resolveChartTheme>[1];
+  const appConfig = chartsConfig.useAppConfig() as Parameters<typeof resolveChartTheme>[1];
 
   const slots = computed(
     () =>
-      tv(resolveChartTheme(name, appConfig))({
+      chartsConfig.tv(resolveChartTheme(name, appConfig))({
         tooltipVariant: props.tooltipVariant,
         tooltipRoundness: props.tooltipRoundness,
       }) as unknown as SlotFns,

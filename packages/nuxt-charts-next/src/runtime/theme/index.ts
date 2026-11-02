@@ -23,6 +23,7 @@ export type ChartComponentThemeName =
   | "statusTrackerChart"
   | "metricChart"
   | "dataChart"
+  | "heatmapChart"
   | "dottedMap"
   | "topoJsonMap";
 

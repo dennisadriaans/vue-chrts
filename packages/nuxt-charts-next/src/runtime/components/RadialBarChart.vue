@@ -12,7 +12,9 @@ import {
   Legend,
   RadialBar,
   RadialBarChart as VccsRadialBarChart,
+  Sector,
   Tooltip,
+  type CursorSlotProps,
 } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
 import ChartSkeleton from "./internal/ChartSkeleton.vue";
@@ -68,31 +70,37 @@ const accessibleRows = computed(() => bars.value.map((bar) => ({ label: bar.name
 /** Keep the ring highlight active when only the floating tooltip is hidden. */
 const hiddenTooltipContent = () => null;
 
-const radiusInPixels = (radius: number | string, fallback: number) => {
+const radiusInPixels = (radius: number | string, maxRadius: number) => {
   if (typeof radius === "number") return radius;
   const percentage = Number.parseFloat(radius);
-  return Number.isFinite(percentage) ? (props.height / 2) * percentage / 100 : fallback;
+  return maxRadius * percentage / 100;
 };
 
 /**
- * vccs draws its default radial cursor as a one-pixel line. Size the stroke to
- * the radial category band so hovering reads as a muted background ring.
+ * vccs gives the radial cursor identical radii. Fill the whole category band
+ * instead, using the legend-aware plot area and a subtle shade of the bar.
  */
-const hoverStrokeWidth = computed(() => {
-  const outer = radiusInPixels(props.outerRadius ?? "100%", props.height / 2);
-  const inner = radiusInPixels(props.innerRadius ?? "30%", props.height * 0.15);
-  return Math.max(((outer - inner) / Math.max(bars.value.length, 1)) * 0.9, 1);
-});
+const radialCursorProps = (cursor: CursorSlotProps) => {
+  const maxRadius = Math.min(cursor.width, cursor.height) / 2;
+  const outer = radiusInPixels(props.outerRadius ?? "100%", maxRadius);
+  const inner = radiusInPixels(props.innerRadius ?? "30%", maxRadius);
+  const halfBand = (outer - inner) / Math.max(bars.value.length, 1) / 2;
+  const color = bars.value[Number(cursor.payloadIndex)]?.fill ?? "var(--vc-series-0)";
 
-const cursor = computed(() =>
-  resolveHoverVisible(props.theme)
-    ? {
-        fill: "none",
-        stroke: "var(--vc-hover-fill)",
-        strokeWidth: hoverStrokeWidth.value,
-      }
-    : false,
-);
+  return {
+    cx: cursor.cx,
+    cy: cursor.cy,
+    startAngle: cursor.startAngle,
+    endAngle: cursor.endAngle,
+    innerRadius: Math.max(cursor.innerRadius - halfBand, 0),
+    outerRadius: cursor.outerRadius + halfBand,
+    cornerRadius: props.cornerRadius,
+    fill: props.theme?.hover?.fill ?? `color-mix(in oklab, ${color} 20%, transparent)`,
+    stroke: "none",
+    class: cursor.class,
+    style: cursor.style,
+  };
+};
 
 const legend = computed(() => legendPositionToLegendProps(props.legendPosition));
 const legendWrapperStyle = computed(() =>
@@ -137,9 +145,13 @@ const onCenter = (next: { cx: number; cy: number }) => {
       />
       <Tooltip
         :content="hideTooltip ? hiddenTooltipContent : tooltipContent"
-        :cursor="cursor"
+        :cursor="resolveHoverVisible(theme)"
         :is-animation-active="false"
-      />
+      >
+        <template #cursor="slotProps">
+          <Sector v-bind="radialCursorProps(slotProps)" />
+        </template>
+      </Tooltip>
       <Legend
         v-if="!hideLegend"
         :align="legend.align"
