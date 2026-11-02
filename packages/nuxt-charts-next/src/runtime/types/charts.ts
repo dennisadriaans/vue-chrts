@@ -12,7 +12,7 @@
 import type { CurveType, DonutType, LegendPosition, Orientation } from "../enums";
 import type { DitherVariant } from "../utils/dither";
 import type { StrokeGradientStop } from "../utils/gradient";
-import type { BackgroundVariant } from "../utils/background";
+import type { BackgroundArea, BackgroundVariant } from "../utils/background";
 import type { ChartSpec, SpecAggregate, SpecChartType, SpecCompare, SpecInterval } from "../spec/types";
 import type { MetricFormat, MetricRange } from "../spec/metric";
 import type {
@@ -187,6 +187,23 @@ export interface CartesianChartBaseProps<T> extends ChartStyleProps {
    * chart's edges. Omit for a plain background.
    */
   backgroundPattern?: BackgroundVariant;
+  /**
+   * How `backgroundPattern` fades out.
+   *
+   * `true` leaves a soft wash in the middle of the chart. A number fades only
+   * the outer band of that many pixels, so a dot grid stays crisp behind the
+   * data yet still dissolves at its edges. `false` keeps it crisp edge to edge.
+   * @default true
+   */
+  backgroundFade?: boolean | number;
+  /**
+   * Where `backgroundPattern` is painted.
+   *
+   * `"plot"` stops the texture at the axis lines, so it never runs under tick
+   * labels or the legend.
+   * @default "chart"
+   */
+  backgroundArea?: BackgroundArea;
 }
 
 export interface AreaChartProps<T> extends CartesianChartBaseProps<T> {
@@ -298,7 +315,21 @@ export interface ValueLabel {
   labelFontSize?: number;
 }
 
+/** One bar series in a `categories` record. */
+export interface BarCategory extends BulletLegendItemInterface {
+  /**
+   * Bar variant for this series only, overriding the chart's `variant`.
+   *
+   * Lets one series stand apart by texture: hatch the primary series and keep
+   * the comparison series flat.
+   * @example { organic: { name: "Organic", variant: "hatched-outline" } }
+   */
+  variant?: BarVariant;
+}
+
 export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
+  /** Series config keyed by data property: label, colour, axis and variant. */
+  categories: Record<string, BarCategory>;
   /** The data keys (series) plotted on the value axis. */
   yAxis: NumericKeys<T>[];
   /** The data key used for the category axis. */
@@ -344,9 +375,12 @@ export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
    * series fills its own cube range.
    *
    * The remaining variants keep the rectangle and change how it is painted:
-   * `"hatched"` (diagonal stripes), `"duotone"` / `"duotone-reverse"` (a
+   * `"hatched"` (diagonal stripes), `"hatched-outline"` (a hollow hatch inside
+   * a solid outline), `"duotone"` / `"duotone-reverse"` (a
    * vertical split between a solid and a faded half), `"gradient"` (fading out
    * toward the baseline), and `"stripped"` (a faint body under a solid cap).
+   *
+   * A category's own `variant` overrides this for that series.
    */
   variant?: BarVariant;
   /** Gap between cubes in px when `variant="cubes"`. Default 2. */
@@ -407,7 +441,7 @@ export type BubbleAccessor<T> = NumericKeys<T> | ((datum: T) => number | null | 
 
 export type BubbleChartProps<T> = Omit<
   CartesianChartBaseProps<T>,
-  "backgroundPattern" | "referenceLines" | "syncId" | "yAxes" | "yExplicitTicks"
+  "backgroundPattern" | "backgroundFade" | "backgroundArea" | "referenceLines" | "syncId" | "yAxes" | "yExplicitTicks"
 > & {
   /** Data key or accessor for the bubble's x value. */
   xAccessor: BubbleAccessor<T>;
@@ -1009,4 +1043,70 @@ export interface MetricChartProps<T> extends ChartStyleProps {
   exportFilename?: string;
   /** Hide the headline value and delta, leaving the title and the plot. */
   hideValue?: boolean;
+}
+
+/**
+ * Heatmap chart props: a grid of cells coloured by value, such as traffic by
+ * weekday and hour.
+ *
+ * Takes long-format rows (`{ day: "Mon", hour: 9, visits: 120 }`) and pivots them
+ * itself. Renders as HTML rather than through `vccs`, so it server-renders and
+ * stays one tab stop: arrow keys move between cells.
+ */
+export interface HeatmapChartProps<T> extends ChartStyleProps {
+  /** Long-format rows; each one is a cell. Rows sharing an x/y pair are summed. */
+  data: T[];
+  /** Row field for the column (x) key. */
+  xAxis: keyof T;
+  /** Row field for the row (y) key. */
+  yAxis: keyof T;
+  /** Row field holding the cell value. */
+  valueKey: NumericKeys<T>;
+  /** Column order. Defaults to the order keys first appear in `data`. */
+  xOrder?: (string | number)[];
+  /** Row order. Defaults to the order keys first appear in `data`. */
+  yOrder?: (string | number)[];
+  /** Height of the cell grid in pixels. Defaults to 24 px per row. */
+  height?: number;
+  /** Number of colour bins. Default 5. */
+  steps?: number;
+  /**
+   * How values map to bins. `quantile` (the default) gives each bin about as
+   * many cells, so one outlier does not wash out the rest; `linear` splits the
+   * value range evenly.
+   */
+  scale?: "linear" | "quantile";
+  /** Colours for the lowest and highest bins. Default: a faint to full `--vc-series-0`. */
+  colorRange?: [string, string];
+  /** Full control over the cell colour, bypassing bins and `colorRange`. */
+  colorScale?: (value: number) => string;
+  /** Gap between cells in pixels. Default 3. */
+  cellGap?: number;
+  /** Cell corner radius in pixels. Default 3. */
+  cellRadius?: number;
+  /** Formats column labels. */
+  xFormatter?: (value: string | number, index: number) => string;
+  /** Formats row labels. */
+  yFormatter?: (value: string | number, index: number) => string;
+  /** Formats values in the tooltip, legend and data table. */
+  valueFormatter?: (value: number) => string;
+  /** Show every nth column label, for dense axes such as 24 hours. Default 1. */
+  xLabelEvery?: number;
+  /** Hide the column labels. */
+  hideXAxis?: boolean;
+  /** Hide the row labels. */
+  hideYAxis?: boolean;
+  /** Hide the colour legend. */
+  hideLegend?: boolean;
+  /** Hide the tooltip. */
+  hideTooltip?: boolean;
+  /** Text at the low end of the legend. Default `Less`. */
+  legendLowLabel?: string;
+  /** Text at the high end of the legend. Default `More`. */
+  legendHighLabel?: string;
+  /**
+   * Per-chart appearance overrides (legend, tooltip). Layers over the global
+   * `--vc-*` token defaults; omit to use the shipped theme.
+   */
+  theme?: ChartTheme;
 }

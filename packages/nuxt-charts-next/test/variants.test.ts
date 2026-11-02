@@ -160,6 +160,29 @@ describe("BarChart style variants", () => {
     expect(mobile.querySelector("rect")?.getAttribute("fill")).toBe("#e23670");
   });
 
+  it("lets a category override the chart variant for its own series", async () => {
+    await mountBar({
+      yAxis: ["desktop", "mobile"],
+      categories: {
+        ...categories,
+        desktop: { ...categories.desktop, variant: "hatched-outline" },
+      },
+    });
+
+    const hatchId = variantId("hatched-outline", "desktop", "v-0");
+    expect(document.getElementById(hatchId)?.tagName.toLowerCase()).toBe("pattern");
+    expect(document.getElementById(variantId("hatched-outline", "mobile", "v-0"))).toBeNull();
+
+    const bars = [
+      ...document.querySelectorAll(".v-charts-bar-rectangle path, .v-charts-bar-rectangle rect"),
+    ];
+    const hatched = bars.filter((el) => el.getAttribute("fill") === `url(#${hatchId})`);
+    expect(hatched.length).toBeGreaterThan(0);
+    expect(hatched.every((el) => el.getAttribute("stroke") === "#2662d9")).toBe(true);
+    expect(bars.some((el) => el.getAttribute("fill") === "#e23670")).toBe(true);
+    expect(danglingReferences()).toEqual([]);
+  });
+
   it("splits a duotone bar at its own midpoint, not on a tiling grid", async () => {
     await mountBar({ variant: "duotone" });
 
@@ -427,6 +450,44 @@ describe("chart background patterns", () => {
     // on a hard line rather than dissolving.
     const maskRect = document.getElementById(maskId)!.querySelector("rect")!;
     expect(maskRect.getAttribute("filter")).toMatch(/^url\(#/);
+  });
+
+  it("paints the texture edge to edge when the fade is off", async () => {
+    await mountBar({ backgroundPattern: "dots", backgroundFade: false });
+    const layer = document.querySelector(".vc-chart-background")!;
+    expect(layer.querySelector("rect")!.hasAttribute("mask")).toBe(false);
+    expect(layer.querySelector("mask")).toBeNull();
+    expect(danglingReferences()).toEqual([]);
+  });
+
+  it("anchors the texture to the plot, which `padding` insets", async () => {
+    await mountBar({ backgroundPattern: "dots", padding: { top: 30, right: 0, bottom: 0, left: 0 } });
+    expect(document.querySelector(".vc-chart-background pattern")!.getAttribute("y")).toBe("30");
+  });
+
+  it("stops the texture at the axes with `backgroundArea: \"plot\"`", async () => {
+    await mountBar({
+      backgroundPattern: "dots",
+      backgroundArea: "plot",
+      padding: { top: 30, right: 0, bottom: 0, left: 0 },
+    });
+    const rect = document.querySelector(".vc-chart-background > rect")!;
+    expect(rect.getAttribute("y")).toBe("30");
+  });
+
+  it("fades only an outer band when `backgroundFade` is a number", async () => {
+    await mountBar({
+      backgroundPattern: "dots",
+      backgroundArea: "plot",
+      backgroundFade: 24,
+      padding: { top: 30, right: 0, bottom: 0, left: 0 },
+    });
+    const rect = document.querySelector(".vc-chart-background > rect")!;
+    const maskId = /url\(#([^)]+)\)/.exec(rect.getAttribute("mask")!)![1]!;
+    // Inset by half the band, so the blur ramps from the plot edge inward.
+    const maskRect = document.getElementById(maskId)!.querySelector("rect")!;
+    expect(maskRect.getAttribute("y")).toBe("42");
+    expect(danglingReferences()).toEqual([]);
   });
 
   it("takes its colour from a token, so it follows the theme", async () => {

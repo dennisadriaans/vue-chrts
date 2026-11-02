@@ -19,6 +19,7 @@ export interface MapMark {
   stroke?: string;
   strokeWidth?: number;
   strokeOpacity?: number;
+  opacity?: number;
   dasharray?: string;
   cursor?: string;
   label?: string;

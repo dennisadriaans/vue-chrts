@@ -31,6 +31,7 @@ import { strokeDasharrayFor, variantId } from "../utils/variants";
 const props = withDefaults(defineProps<AreaChartProps<T>>(), {
   gradient: true,
   accessibleDataTable: true,
+  backgroundFade: true,
 });
 
 const gradientScope = useId();
@@ -226,7 +227,7 @@ defineSlots<{
       :fill="fillFor(s.dataKey, s.color)"
       :fill-opacity="useGradientFill || useDither || useFillVariant ? 1 : fillOpacity"
       :stroke-width="lineWidth ?? 2"
-      :stroke-dasharray="dashArray"
+      :stroke-dasharray="s.dashArray ?? dashArray"
       :filter="glowFor(s.dataKey)"
       :dot="showDots || (s.dot as boolean)"
       :hide="s.hidden"

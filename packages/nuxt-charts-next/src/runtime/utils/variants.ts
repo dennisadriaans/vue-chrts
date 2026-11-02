@@ -17,6 +17,8 @@
  * - `solid` — flat series colour (the default rectangle bar).
  * - `cubes` — a stacked grid of rounded squares, see `utils/cubes`.
  * - `hatched` — diagonal stripes cut out of the series colour.
+ * - `hatched-outline` — dense hollow hatch inside a solid series-colour outline,
+ *   so one series can stand apart by texture rather than hue.
  * - `duotone` — vertical split: left half faded, right half solid.
  * - `duotone-reverse` — the same split, mirrored.
  * - `gradient` — series colour fading out toward the baseline.
@@ -26,6 +28,7 @@ export type BarVariant =
   | "solid"
   | "cubes"
   | "hatched"
+  | "hatched-outline"
   | "duotone"
   | "duotone-reverse"
   | "gradient"
@@ -36,6 +39,7 @@ export const BAR_VARIANTS: BarVariant[] = [
   "solid",
   "cubes",
   "hatched",
+  "hatched-outline",
   "duotone",
   "duotone-reverse",
   "gradient",
@@ -45,6 +49,7 @@ export const BAR_VARIANTS: BarVariant[] = [
 /** Bar variants that paint from a generated `<defs>` pattern rather than a flat colour. */
 export const PATTERNED_BAR_VARIANTS: BarVariant[] = [
   "hatched",
+  "hatched-outline",
   "duotone",
   "duotone-reverse",
   "gradient",

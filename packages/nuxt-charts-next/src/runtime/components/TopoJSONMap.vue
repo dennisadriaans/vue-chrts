@@ -8,7 +8,8 @@ import { createMapProjection, mapCountryId, mapFeatures, mapValue, projectMapPoi
 import { sampleData } from "../utils/data";
 import MapCanvas from "./internal/MapCanvas.vue";
 
-const props = defineProps<TopoJSONMapProps<A, P, L>>();
+// Vue casts an omitted boolean prop to false, which would skip fitting the projection.
+const props = withDefaults(defineProps<TopoJSONMapProps<A, P, L>>(), { fitView: true });
 defineSlots<{
   tooltip?: (props: MapTooltipSlot<A, P, L>) => unknown;
   feature?: (props: MapMarkSlot<MapFeature<A>>) => unknown;
@@ -91,10 +92,13 @@ const marks = computed<MapMark[]>(() => {
       color: areaColor(area, index),
       stroke: mapValue(props.areaStroke, area, index, "var(--vc-map-boundary-color)"),
       strokeWidth: mapValue(props.areaStrokeWidth, area, index, 0.6),
+      opacity: mapValue(props.areaOpacity, area, index, 1),
       cursor: mapValue(props.areaCursor, area, index, "pointer"),
       label: String(area.name ?? area.properties.name ?? area.id),
     }] : [];
   });
+  const active = props.activeArea === undefined ? -1 : features.findIndex(mark => String(mark.values.id) === String(props.activeArea));
+  if (active >= 0) features.push(...features.splice(active, 1));
   const pointsById = new Map((props.data?.points ?? []).map(point => [String(point.id), point]));
   const links = sampleData(props.data?.links ?? [], props.maxDataPoints ?? 2000).flatMap((link, index) => {
     const source = typeof link.source === "object" ? link.source : pointsById.get(String(link.source));

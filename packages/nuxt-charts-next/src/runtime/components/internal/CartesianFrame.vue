@@ -373,6 +373,7 @@ const mergedContainerProps = computed(() => ({
   data: chartData.value,
   layout: layout.value,
   syncId: props.syncId,
+  ...(props.padding ? { margin: props.padding } : {}),
   ...props.containerProps,
 }));
 
@@ -504,6 +505,8 @@ const resolvedYAxes = computed(() => {
         v-if="backgroundPattern"
         :variant="backgroundPattern"
         :scope="backgroundScope"
+        :fade="backgroundFade"
+        :area="backgroundArea"
       />
       <CartesianGrid
         v-if="showXGrid || showYGrid"
