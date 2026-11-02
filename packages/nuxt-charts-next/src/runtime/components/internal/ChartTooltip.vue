@@ -3,6 +3,7 @@ import { formatNumber } from "../../utils/format";
 import { computed } from "vue";
 import type { TooltipContentProps } from "vccs";
 import type { TooltipRoundness, TooltipVariant } from "../../utils/variants";
+import { injectChartUi } from "../../composables/useChartUi";
 
 defineOptions({ name: "ChartTooltip", inheritAttrs: false });
 
@@ -21,6 +22,8 @@ const items = computed(() =>
   (props.payload ?? []).filter((p) => p.value !== null && p.value !== undefined),
 );
 
+const ui = injectChartUi();
+
 function formatValue(value: unknown, dataKey: unknown): string {
   const format = props.formatters?.[String(dataKey)];
   if (format) return format(value);
@@ -32,23 +35,28 @@ function formatValue(value: unknown, dataKey: unknown): string {
 <template>
   <div
     v-if="active && items.length"
+    data-slot="tooltip"
     class="vc-tooltip"
     :class="[
       variant === 'frosted-glass' && 'vc-tooltip--frosted-glass',
       roundness && `vc-tooltip--${roundness}`,
+      ui.slot('tooltip'),
     ]"
+    :style="ui.themeStyle.tooltip"
   >
-    <p v-if="label !== undefined && label !== ''" class="vc-tooltip__label">
+    <p v-if="label !== undefined && label !== ''" data-slot="tooltipTitle" class="vc-tooltip__label" :class="ui.slot('tooltipTitle')">
       {{ label }}
     </p>
-    <ul class="vc-tooltip__list">
-      <li v-for="(item, index) in items" :key="index" class="vc-tooltip__item">
+    <ul data-slot="tooltipList" class="vc-tooltip__list" :class="ui.slot('tooltipList')">
+      <li v-for="(item, index) in items" :key="index" data-slot="tooltipRow" class="vc-tooltip__item" :class="ui.slot('tooltipRow')">
         <span
+          data-slot="tooltipIndicator"
           class="vc-tooltip__dot"
+          :class="ui.slot('tooltipIndicator')"
           :style="{ background: item.color ?? item.fill ?? item.stroke }"
         />
-        <span class="vc-tooltip__name">{{ item.name }}</span>
-        <span class="vc-tooltip__value">{{ formatValue(item.value, item.dataKey) }}</span>
+        <span data-slot="tooltipLabel" class="vc-tooltip__name" :class="ui.slot('tooltipLabel')">{{ item.name }}</span>
+        <span data-slot="tooltipValue" class="vc-tooltip__value" :class="ui.slot('tooltipValue')">{{ formatValue(item.value, item.dataKey) }}</span>
       </li>
     </ul>
   </div>

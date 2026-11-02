@@ -16,6 +16,7 @@
  * rate or trend can sit over the bars — typically on its own axis via `yAxis`.
  * Vertical orientation only; horizontal charts keep drawing it as a bar.
  */
+import { useChartUi } from "../composables/useChartUi";
 import { computed, ref, useId } from "vue";
 import {
   Bar,
@@ -53,6 +54,7 @@ const props = withDefaults(defineProps<BarChartProps<T>>(), {
   cubeSize: DEFAULT_CUBE_SIZE,
   cubeEmptyColor: DEFAULT_CUBE_EMPTY_COLOR,
 });
+useChartUi("barChart", props);
 
 /** Scopes this chart's `<defs>` ids so several charts on a page never collide. */
 const variantScope = useId();

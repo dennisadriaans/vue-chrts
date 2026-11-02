@@ -16,6 +16,7 @@ const charts = [
   { to: "/variants", label: "Style variants — every treatment side by side" },
   { to: "/cards", label: "Cards — full-bleed hourly traffic dashboard" },
   { to: "/dots", label: "Dot-only charts — monochrome circle-built gallery" },
+  { to: "/nuxt-ui", label: "Nuxt UI parity — side by side with UChart, ui prop, app.config" },
   { to: "/data-chart", label: "Data-aware charts — spec-driven aggregation over raw rows" },
 ];
 </script>

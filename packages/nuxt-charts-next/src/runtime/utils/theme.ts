@@ -1,5 +1,6 @@
 import type { CSSProperties } from "vue";
 import type { ChartTheme } from "../types/shared";
+import { PALETTE_SIZE, resolveThemeColor } from "./categories";
 
 /**
  * Flatten a {@link ChartTheme} into the `--vc-*` CSS custom properties the chart
@@ -12,17 +13,32 @@ import type { ChartTheme } from "../types/shared";
  * *not* a token — it toggles the vccs `<Tooltip cursor>` prop and is surfaced
  * separately via {@link resolveHoverVisible}.
  */
-export function themeToVars(theme: ChartTheme | undefined): CSSProperties {
+export function themeToVars(theme: ChartTheme | undefined, colors?: string[]): CSSProperties {
   const vars: Record<string, string> = {};
-  if (!theme) return vars as CSSProperties;
-
   const set = (name: string, value: string | number | undefined) => {
     if (value !== undefined) vars[name] = String(value);
   };
 
-  theme.colors?.slice(0, 8).forEach((color, index) => {
-    set(`--vc-series-${index}`, color);
-  });
+  // A per-chart palette, as in Nuxt UI's `UChart` `colors` prop: theme colour
+  // names resolve to `--ui-*`. A palette shorter than the default one repeats,
+  // mixed toward the surface, so the remaining slots never fall back to an
+  // unrelated default colour.
+  const palette = (colors?.length ? colors : theme?.colors)?.map((c) => resolveThemeColor(c));
+  if (palette?.length) {
+    const slots = Math.max(palette.length, PALETTE_SIZE);
+    for (let index = 0; index < slots; index++) {
+      const color = palette[index % palette.length]!;
+      const round = Math.floor(index / palette.length);
+      set(
+        `--vc-series-${index}`,
+        round
+          ? `color-mix(in oklab, ${color} ${Math.round(100 * 0.65 ** round)}%, var(--vc-surface-bg))`
+          : color,
+      );
+    }
+  }
+
+  if (!theme) return vars as CSSProperties;
 
   set("--vc-grid-color", theme.grid?.color);
   set("--vc-grid-dash", theme.grid?.dash);

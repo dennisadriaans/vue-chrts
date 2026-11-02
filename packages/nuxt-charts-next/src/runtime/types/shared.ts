@@ -157,8 +157,9 @@ export interface ChartPadding {
  */
 export interface ChartTheme {
   /**
-   * Per-chart series palette. Entries override `--vc-series-0` through
-   * `--vc-series-7`; omitted entries continue to inherit host design tokens.
+   * Per-chart series palette. Prefer the chart's `colors` prop, which takes
+   * precedence over this. Theme colour names (`primary`, `success`, …) resolve
+   * to Nuxt UI tokens.
    */
   colors?: string[];
   /** Grid + axis (domain) lines. */

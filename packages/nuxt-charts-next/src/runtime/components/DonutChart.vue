@@ -8,6 +8,7 @@
  * children (Pie does not use extractCellProps unlike Bar).
  * `DonutType.Half` renders a semicircle gauge.
  */
+import { useChartUi } from "../composables/useChartUi";
 import { computed, shallowRef, useId } from "vue";
 import { Legend, Pie, PieChart, Tooltip } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
@@ -21,16 +22,17 @@ import { tooltipContentFor } from "./internal/tooltipContent";
 import { variantId } from "../utils/variants";
 import type { DonutChartProps } from "../types/charts";
 import { DonutType } from "../enums";
-import { categoriesToSeries } from "../utils/categories";
+import { categoriesToSeries, defaultSeriesColor } from "../utils/categories";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
 import { toCssProperties } from "../utils/style";
 import { themeToVars } from "../utils/theme";
 import { DEFAULT_MAX_DATA_POINTS, normalizeNamedValues, sampleData, warnDataLimit } from "../utils/data";
 
 const props = withDefaults(defineProps<DonutChartProps<T>>(), { accessibleDataTable: true });
+const ui = useChartUi("donutChart", props);
 
 /** Per-chart `--vc-*` overrides for the legend / tooltip tokens. */
-const themeVars = computed(() => themeToVars(props.theme));
+const themeVars = computed(() => themeToVars(props.theme, props.colors));
 
 /** Scopes this chart's `<defs>` ids so several charts on a page never collide. */
 const variantScope = useId();
@@ -51,7 +53,7 @@ const segments = computed(() => {
   warnDataLimit("DonutChart", normalized.length, limit);
   const values = sampleData(normalized, limit);
   return values.map(({ row, value, sourceIndex, name }) => {
-    const color = cats[sourceIndex]?.color ?? `var(--vc-series-${sourceIndex % 8})`;
+    const color = cats[sourceIndex]?.color ?? defaultSeriesColor(sourceIndex);
     return {
       ...(row && typeof row === "object" ? row : {}),
       name,
@@ -170,7 +172,7 @@ const legendWrapperStyle = computed(() =>
 </script>
 
 <template>
-  <div class="donut-chart vue-chrts" role="group" :aria-label="ariaLabel ?? 'Donut chart'" :style="{ position: 'relative', width: '100%', height: `${height ?? (radius ? radius * 2 : 200)}px`, ...themeVars }">
+  <div class="donut-chart vue-chrts" :class="ui.rootClass" role="group" :aria-label="ariaLabel ?? 'Donut chart'" :style="{ position: 'relative', width: '100%', height: `${height ?? (radius ? radius * 2 : 200)}px`, ...themeVars }">
     <ChartAccessibility :label="ariaLabel ?? 'Donut chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
     <ChartSkeleton
       v-if="loading"

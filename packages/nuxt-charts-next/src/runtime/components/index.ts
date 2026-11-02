@@ -22,3 +22,7 @@ export { default as RadialBarChart } from "./RadialBarChart.vue";
 export { default as SankeyChart } from "./SankeyChart.vue";
 export { default as StatusTrackerChart } from "./StatusTrackerChart.vue";
 export { default as TopoJSONMap } from "./TopoJSONMap.vue";
+
+// Styling seam: hand over Nuxt UI's `tv` / app config outside Nuxt (see `config.ts`).
+export { configureCharts } from "../config";
+export type { ChartsRuntimeConfig } from "../config";

@@ -7,6 +7,7 @@
  * (`<Area>` / `<Bar>` / `<Line>` / `<Scatter>`) to the default slot. This keeps
  * every chart adapter small and the axis/legend/tooltip wiring in one place.
  */
+import { injectChartUi } from "../../composables/useChartUi";
 import { computed, h, useId, type Component } from "vue";
 import type { TooltipContentProps } from "vccs";
 import {
@@ -79,6 +80,8 @@ const props = defineProps<
     valueStacked?: boolean;
   }
 >();
+
+const ui = injectChartUi();
 
 const numericKeys = computed(() => Object.keys(props.categories) as (keyof T)[]);
 const normalizedData = computed(() => normalizeNumericRows(props.data, numericKeys.value));
@@ -329,7 +332,7 @@ function widthForAxis(axis: ResolvedYAxis): number {
 
 /** Per-chart theme + per-axis tick colour/size overrides as inline `--vc-*` vars on the root. */
 const rootStyle = computed(() => ({
-  ...themeToVars(props.theme),
+  ...themeToVars(props.theme, props.colors),
   ...axisTickVars("x", xAxis.value.tick),
   ...axisTickVars("y", yAxis.value.tick),
 }));
@@ -486,7 +489,7 @@ const resolvedYAxes = computed(() => {
 </script>
 
 <template>
-  <div class="vue-chrts" :class="frameClass" :style="rootStyle" role="group" :aria-label="ariaLabel ?? 'Chart'">
+  <div class="vue-chrts" :class="[frameClass, ui.rootClass]" :style="rootStyle" role="group" :aria-label="ariaLabel ?? 'Chart'">
   <ChartAccessibility :label="ariaLabel ?? 'Chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
   <ChartSkeleton
     v-if="loading"

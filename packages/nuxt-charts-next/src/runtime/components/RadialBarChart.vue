@@ -6,6 +6,7 @@
  * `categories`. Each value becomes one concentric bar in the `vccs`
  * `<RadialBarChart>`; colours come from `categories`.
  */
+import { useChartUi } from "../composables/useChartUi";
 import { computed, ref } from "vue";
 import {
   Legend,
@@ -23,15 +24,16 @@ import ChartAccessibility from "./internal/ChartAccessibility.vue";
 import { tooltipContentFor } from "./internal/tooltipContent";
 import PolarCenterSync from "./internal/PolarCenterSync";
 import type { RadialBarChartProps } from "../types/charts";
-import { categoriesToSeries } from "../utils/categories";
+import { categoriesToSeries, defaultSeriesColor } from "../utils/categories";
 import { legendPositionToLegendProps, resolveLegendWrapperStyle } from "../utils/legend";
 import { toCssProperties } from "../utils/style";
 import { resolveHoverVisible, themeToVars } from "../utils/theme";
 import { DEFAULT_MAX_DATA_POINTS, normalizeNamedValues, sampleData, warnDataLimit } from "../utils/data";
 
 const props = withDefaults(defineProps<RadialBarChartProps<T>>(), { accessibleDataTable: true });
+const ui = useChartUi("radialBarChart", props);
 
-const themeVars = computed(() => themeToVars(props.theme));
+const themeVars = computed(() => themeToVars(props.theme, props.colors));
 
 /** Zip the value array against the categories record (positional, matching Donut). */
 const bars = computed(() => {
@@ -43,7 +45,7 @@ const bars = computed(() => {
     ...(row && typeof row === "object" ? row : {}),
     name,
     value,
-    fill: cats[sourceIndex]?.color ?? `var(--vc-series-${sourceIndex % 8})`,
+    fill: cats[sourceIndex]?.color ?? defaultSeriesColor(sourceIndex),
   }));
 });
 
@@ -114,7 +116,7 @@ const onCenter = (next: { cx: number; cy: number }) => {
 </script>
 
 <template>
-  <div class="vue-chrts" role="group" :aria-label="ariaLabel ?? 'Radial bar chart'" :style="themeVars">
+  <div class="vue-chrts" :class="ui.rootClass" role="group" :aria-label="ariaLabel ?? 'Radial bar chart'" :style="themeVars">
     <ChartAccessibility :label="ariaLabel ?? 'Radial bar chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
     <ChartSkeleton
       v-if="loading"

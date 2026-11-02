@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="T extends StatusTrackerDatum">
+import { useChartUi } from "../composables/useChartUi";
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import type {
   StatusTrackerChartProps,
@@ -23,6 +24,7 @@ const props = withDefaults(defineProps<StatusTrackerChartProps<T>>(), {
   hideTooltip: false,
   rounded: true,
 });
+const ui = useChartUi("statusTrackerChart", props);
 
 const containerRef = ref<HTMLDivElement | null>(null);
 const containerWidth = ref(0);
@@ -124,13 +126,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section class="vc-status-tracker vue-chrts" :aria-label="ariaLabel">
+  <section class="vc-status-tracker vue-chrts" :class="ui.rootClass" :aria-label="ariaLabel">
     <ChartAccessibility :label="ariaLabel" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
-    <header v-if="!hideHeader && (title || summary !== undefined)" class="vc-status-tracker__header">
-      <h3 v-if="title" class="vc-status-tracker__title">
+    <header v-if="!hideHeader && (title || summary !== undefined)" data-slot="header" class="vc-status-tracker__header" :class="ui.slot('header')">
+      <h3 v-if="title" data-slot="title" class="vc-status-tracker__title" :class="ui.slot('title')">
         {{ title }}
       </h3>
-      <p v-if="summary !== undefined" class="vc-status-tracker__summary">
+      <p v-if="summary !== undefined" data-slot="summary" class="vc-status-tracker__summary" :class="ui.slot('summary')">
         {{ summary }}
       </p>
     </header>
@@ -140,19 +142,24 @@ onUnmounted(() => {
     <div
       v-else
       ref="containerRef"
+      data-slot="track"
       class="vc-status-tracker__track"
+      :class="ui.slot('track')"
       role="list"
       :style="trackerStyle"
     >
       <span
         v-for="(bar, index) in visibleBars"
         :key="bar.key"
+        data-slot="bar"
+        :data-empty="bar.isEmpty || undefined"
+        :data-rounded="rounded ? (visibleBars.length === 1 ? 'both' : index === 0 ? 'start' : index === visibleBars.length - 1 ? 'end' : undefined) : undefined"
         class="vc-status-tracker__bar"
-        :class="{
+        :class="[{
           'vc-status-tracker__bar--rounded-start': rounded && index === 0,
           'vc-status-tracker__bar--rounded-end': rounded && index === visibleBars.length - 1,
           'vc-status-tracker__bar--empty': bar.isEmpty,
-        }"
+        }, ui.slot('bar')]"
         :style="{ ...barStyle, backgroundColor: bar.color }"
         :title="hideTooltip ? undefined : bar.title"
         :aria-label="bar.title"
@@ -161,15 +168,15 @@ onUnmounted(() => {
       />
     </div>
 
-    <div v-if="!loading && !error && data.length && (startLabel || endLabel)" class="vc-status-tracker__labels">
+    <div v-if="!loading && !error && data.length && (startLabel || endLabel)" data-slot="labels" class="vc-status-tracker__labels" :class="ui.slot('labels')">
       <span>{{ startLabel }}</span>
       <span>{{ endLabel }}</span>
     </div>
 
-    <ul v-if="!loading && !error && data.length && !hideLegend && legendItems.length" class="vc-status-tracker__legend">
-      <li v-for="item in legendItems" :key="item.dataKey" class="vc-status-tracker__legend-item">
-        <span class="vc-status-tracker__legend-dot" :style="{ backgroundColor: item.color }" />
-        <span>{{ item.name }}</span>
+    <ul v-if="!loading && !error && data.length && !hideLegend && legendItems.length" data-slot="statusLegend" class="vc-status-tracker__legend" :class="ui.slot('statusLegend')">
+      <li v-for="item in legendItems" :key="item.dataKey" data-slot="statusLegendItem" class="vc-status-tracker__legend-item" :class="ui.slot('statusLegendItem')">
+        <span data-slot="statusLegendIndicator" class="vc-status-tracker__legend-dot" :class="ui.slot('statusLegendIndicator')" :style="{ backgroundColor: item.color }" />
+        <span data-slot="legendLabel" :class="ui.slot('legendLabel')" :style="ui.themeStyle.legendLabel">{{ item.name }}</span>
       </li>
     </ul>
   </section>

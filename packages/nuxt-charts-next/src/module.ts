@@ -1,4 +1,11 @@
-import { createResolver, defineNuxtModule } from "@nuxt/kit";
+import {
+  addPluginTemplate,
+  addTypeTemplate,
+  createResolver,
+  defineNuxtModule,
+  hasNuxtModule,
+  useLogger,
+} from "@nuxt/kit";
 import { resolveComponents, resolveImports } from "./core";
 
 export interface ModuleOptions {
@@ -36,6 +43,9 @@ export interface ModuleOptions {
  * transitive dep — listing `eventemitter3` on its own would fail to resolve
  * under pnpm strict isolation (it isn't in the consumer's root).
  */
+/** Nuxt UI's default theme colours, used if its resolved option is unavailable. */
+const DEFAULT_UI_COLORS = ["primary", "secondary", "success", "info", "warning", "error"];
+
 const VCCS_DEPS = ["vccs", "motion-v", "vccs > eventemitter3"];
 
 export default defineNuxtModule<ModuleOptions>({
@@ -75,13 +85,91 @@ export default defineNuxtModule<ModuleOptions>({
       }
     });
 
-    // Design tokens (SVG internals) + chart chrome CSS. Only `vc-*` / `--vc-*`
-    // selectors — no Tailwind utilities, so the host app's classes are untouched.
     const { resolve } = createResolver(import.meta.url);
-    nuxt.options.css.push(
+    const logger = useLogger("nuxt-charts");
+    const nuxtUi = hasNuxtModule("@nuxt/ui");
+
+    // Engine tokens (`--vc-*`, SVG internals) + baseline chrome. Everything is
+    // in `@layer vue-chrts`, and it is *prepended* so that layer is declared
+    // before Tailwind's `theme, base, components, utilities`: a later-declared
+    // layer wins, so the host's utilities (the `ui` / `class` props, Nuxt UI
+    // themes) always override the baseline without specificity fights.
+    nuxt.options.css.unshift(
       resolve("./runtime/assets/theme.css"),
       resolve("./runtime/assets/components.css"),
     );
+
+    // The styling seam (`runtime/config`). The runtime defaults to standalone
+    // so the components also work outside Nuxt (`nuxt-charts/components`).
+    // This plugin runs before any chart renders and, with Nuxt UI, hands over
+    // Nuxt UI's own `tv` (so tailwind-merge config, replacer functions and
+    // `appConfig.ui.tv` behave exactly as in any `U*` component), plus the
+    // app config and the app's theme colour names.
+    addPluginTemplate({
+      filename: "nuxt-charts/plugin.mjs",
+      getContents: () => {
+        const ui = (nuxt.options as { ui?: { theme?: { colors?: string[] } } }).ui;
+        const colors = nuxtUi ? (ui?.theme?.colors ?? DEFAULT_UI_COLORS) : [];
+        return [
+          `import { defineNuxtPlugin, useAppConfig } from "#app";`,
+          nuxtUi ? `import { tv } from "#ui/utils/tv";` : "",
+          `import { configureCharts } from ${JSON.stringify(resolve("./runtime/config"))};`,
+          ``,
+          `export default defineNuxtPlugin({`,
+          `  name: "nuxt-charts:config",`,
+          `  enforce: "pre",`,
+          `  setup() {`,
+          `    configureCharts({`,
+          `      useAppConfig,`,
+          nuxtUi ? `      tv,` : "",
+          `      nuxtUi: ${nuxtUi},`,
+          `      themeColors: ${JSON.stringify(colors)},`,
+          `    });`,
+          `  },`,
+          `});`,
+        ].filter((line) => line !== "").join("\n");
+      },
+    });
+
+    addTypeTemplate({
+      filename: "types/nuxt-charts.d.ts",
+      getContents: () => `import type { NuxtChartsAppConfig } from ${JSON.stringify(resolve("./runtime/theme"))};
+
+declare module "@nuxt/schema" {
+  interface AppConfigInput {
+    /**
+     * nuxt-charts component themes, in the Nuxt UI shape
+     * (\`{ slots, variants, defaultVariants, compoundVariants }\`).
+     * \`chart\` applies to every chart; per-component keys (\`areaChart\`,
+     * \`donutChart\`, …) layer on top. \`ui.chart.slots\` (Nuxt UI's
+     * \`UChart\`) is inherited first, so one config styles both.
+     */
+    nuxtCharts?: NuxtChartsAppConfig;
+  }
+}
+
+export {};
+`,
+    }, { nuxt: true, node: true });
+
+    if (nuxtUi) {
+      // Tailwind only generates classes it has seen. Nuxt UI builds its
+      // stylesheet from a template (`ui.css`) listing its \`@source\`s; add
+      // our theme directory to it so the default slot classes exist without
+      // any setup in the host's CSS.
+      const themeDir = resolve("./runtime/theme");
+      nuxt.hook("modules:done", () => {
+        const template = nuxt.options.build.templates.find((t) => t.filename === "ui.css");
+        if (!template?.getContents) {
+          logger.warn(
+            `Could not register nuxt-charts with Nuxt UI's stylesheet. Add \`@source "${themeDir}";\` to your main CSS.`,
+          );
+          return;
+        }
+        const original = template.getContents;
+        template.getContents = async (data) => `@source "${themeDir}";\n${await original(data)}`;
+      });
+    }
 
     resolveImports(options, import.meta.url);
     resolveComponents(options, import.meta.url);

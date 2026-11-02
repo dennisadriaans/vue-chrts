@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { injectChartUi } from "../../composables/useChartUi";
 import { computed, onBeforeUnmount, onMounted, shallowRef, useId, watch } from "vue";
 import { select } from "d3-selection";
 import { zoom, zoomIdentity } from "d3-zoom";
@@ -28,6 +29,7 @@ const props = defineProps<MapBaseProps & {
   heatmapBlur?: number;
   heatmapThreshold?: number;
 }>();
+const ui = injectChartUi();
 const emit = defineEmits<{
   resize: [size: [number, number]];
   click: [mark: MapMark, event: MouseEvent | KeyboardEvent];
@@ -57,7 +59,7 @@ const legends = computed(() => categoriesToSeries(props.categories ?? {})
   .map(item => ({ value: item.name, color: item.color, inactive: props.categories?.[item.dataKey]?.inactive })));
 const legendAlign = computed(() => props.legendPosition?.includes("left") ? "flex-start" : props.legendPosition?.includes("right") ? "flex-end" : "center");
 const rootStyle = computed(() => ({
-  ...themeToVars(props.theme),
+  ...themeToVars(props.theme, props.colors),
   width: typeof props.width === "number" ? `${props.width}px` : props.width ?? "100%",
   flexDirection: props.legendPosition?.startsWith("top") ? "column-reverse" as const : "column" as const,
 }));
@@ -214,7 +216,8 @@ defineExpose({
 <template>
   <div
     class="vue-chrts vc-map"
-    v-bind="{ id: $attrs.id as string | undefined, class: $attrs.class }"
+    v-bind="{ id: $attrs.id as string | undefined }"
+    :class="[ui.rootClass, $attrs.class]"
     :style="[rootStyle, $attrs.style as StyleValue]"
   >
     <div ref="viewport" class="vc-map__viewport" :style="{ height: typeof height === 'string' ? height : `${height ?? 400}px`, background: backgroundColor }">

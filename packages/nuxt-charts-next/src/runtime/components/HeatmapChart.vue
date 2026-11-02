@@ -7,6 +7,7 @@
  * that keeps the whole chart to one tab stop.
  */
 import { computed, ref } from "vue";
+import { useChartUi } from "../composables/useChartUi";
 import type { HeatmapChartProps } from "../types/charts";
 import ChartAccessibility from "./internal/ChartAccessibility.vue";
 import ChartEmptyState from "./internal/ChartEmptyState.vue";
@@ -29,6 +30,7 @@ const props = withDefaults(defineProps<HeatmapChartProps<T>>(), {
   legendLowLabel: "Less",
   legendHighLabel: "More",
 });
+const ui = useChartUi("heatmapChart", props);
 
 defineSlots<{
   tooltip?: (props: { cell: HeatmapCell<T>; label: string; value: string }) => unknown;
@@ -182,14 +184,14 @@ const accessibleRows = computed(() =>
 );
 
 const rootStyle = computed(() => ({
-  ...themeToVars(props.theme),
+  ...themeToVars(props.theme, props.colors),
   "--vc-heatmap-gap": `${Math.max(0, props.cellGap)}px`,
   "--vc-heatmap-radius": `${Math.max(0, props.cellRadius)}px`,
 }));
 </script>
 
 <template>
-  <section class="vc-heatmap vue-chrts" :aria-label="ariaLabel" :style="rootStyle">
+  <section class="vc-heatmap vue-chrts" :class="ui.rootClass" :aria-label="ariaLabel" :style="rootStyle">
     <ChartAccessibility
       :label="ariaLabel"
       :description="ariaDescription"
@@ -257,17 +259,19 @@ const rootStyle = computed(() => ({
 
           <div
             v-if="!hideTooltip && activeCell"
+            data-slot="tooltip"
             class="vc-tooltip vc-heatmap__tooltip"
             :class="[
               tooltipVariant === 'frosted-glass' ? 'vc-tooltip--frosted-glass' : undefined,
               tooltipRoundness ? `vc-tooltip--${tooltipRoundness}` : undefined,
+              ui.slot('tooltip'),
             ]"
             aria-hidden="true"
-            :style="tooltipStyle"
+            :style="[ui.themeStyle.tooltip, tooltipStyle]"
           >
             <slot name="tooltip" :cell="activeCell" :label="cellLabel(activeCell)" :value="cellText(activeCell)">
-              <div class="vc-heatmap__tooltip-label">{{ cellLabel(activeCell) }}</div>
-              <div class="vc-heatmap__tooltip-value">{{ cellText(activeCell) }}</div>
+              <div data-slot="tooltipLabel" class="vc-heatmap__tooltip-label" :class="ui.slot('tooltipLabel')">{{ cellLabel(activeCell) }}</div>
+              <div data-slot="tooltipValue" class="vc-heatmap__tooltip-value" :class="ui.slot('tooltipTitle')">{{ cellText(activeCell) }}</div>
             </slot>
           </div>
 

@@ -8,6 +8,7 @@
  * stays even at the 10px sizes these render at.
  */
 import type { LegendIndicatorVariant } from "../../utils/variants";
+import { injectChartUi } from "../../composables/useChartUi";
 
 interface LegendItem {
   value: string;
@@ -32,6 +33,8 @@ const props = withDefaults(
   { payload: undefined, variant: "rounded-square", colors: undefined },
 );
 
+const ui = injectChartUi();
+
 /** An SVG paint reference cannot paint a CSS background; fall back to the map. */
 function swatchColor(item: LegendItem): string | undefined {
   const override = props.colors?.[item.value];
@@ -41,19 +44,22 @@ function swatchColor(item: LegendItem): string | undefined {
 </script>
 
 <template>
-  <ul class="vc-legend">
+  <ul data-slot="legend" class="vc-legend" :class="ui.slot('legend')">
     <li
       v-for="item in payload"
       :key="item.value"
+      data-slot="legendItem"
+      :data-inactive="item.inactive || undefined"
       class="vc-legend__item"
-      :class="{ 'vc-legend__item--inactive': item.inactive }"
+      :class="[{ 'vc-legend__item--inactive': item.inactive }, ui.slot('legendItem')]"
     >
       <span
+        data-slot="legendIndicator"
         class="vc-legend__dot"
-        :class="`vc-legend__dot--${variant}`"
+        :class="[`vc-legend__dot--${variant}`, ui.slot('legendIndicator')]"
         :style="{ background: swatchColor(item) }"
       />
-      <span class="vc-legend__label">{{ item.value }}</span>
+      <span data-slot="legendLabel" class="vc-legend__label" :class="ui.slot('legendLabel')" :style="ui.themeStyle.legendLabel">{{ item.value }}</span>
     </li>
   </ul>
 </template>

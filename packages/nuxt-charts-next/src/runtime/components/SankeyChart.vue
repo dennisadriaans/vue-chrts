@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="N extends SankeyInputNode, L extends SankeyInputLink">
+import { useChartUi } from "../composables/useChartUi";
 import { computed, h, ref } from "vue";
 import { Sankey, Tooltip, type TooltipContentProps } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
@@ -21,6 +22,7 @@ const props = withDefaults(defineProps<SankeyChartProps<N, L>>(), {
   iterations: 32,
   duration: 800,
 });
+const ui = useChartUi("sankeyChart", props);
 
 defineSlots<{
   node(props: {
@@ -41,7 +43,7 @@ defineSlots<{
   }): unknown;
 }>();
 
-const themeVars = computed(() => themeToVars(props.theme));
+const themeVars = computed(() => themeToVars(props.theme, props.colors));
 const activeColor = ref<string>();
 
 const tooltipContent = (tooltipProps: TooltipContentProps) =>
@@ -122,7 +124,7 @@ const accessibleRows = computed(() => chartData.value.links.map((link) => ({
 
 <template>
   <div
-    class="vc-sankey vue-chrts"
+    class="vc-sankey vue-chrts" :class="ui.rootClass"
     role="group"
     :aria-label="ariaLabel ?? 'Sankey chart'"
     :style="{ position: 'relative', width: '100%', height: `${height}px`, ...themeVars }"

@@ -94,6 +94,10 @@ const common = computed(() => ({
   legendVariant: props.legendVariant,
   tooltipVariant: props.tooltipVariant,
   tooltipRoundness: props.tooltipRoundness,
+  // DataChart has no element of its own: its `ui` / `class` style the chart it renders.
+  ui: props.ui,
+  class: props.class,
+  colors: props.colors,
 }));
 
 /**

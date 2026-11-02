@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useChartUi } from "../composables/useChartUi";
 import { computed, shallowRef } from "vue";
 import { geoGraticule10, geoPath } from "d3-geo";
 import type { FeatureCollection } from "geojson";
@@ -10,6 +11,7 @@ import { sampleData } from "../utils/data";
 import MapCanvas from "./internal/MapCanvas.vue";
 
 const props = defineProps<DottedMapProps>();
+useChartUi("dottedMap", props);
 defineSlots<{
   tooltip?: (props: DottedMapTooltipSlot) => unknown;
   pin?: (props: MapMarkSlot<MapPin> & { points: MapDot[] }) => unknown;
