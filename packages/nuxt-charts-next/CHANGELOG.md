@@ -1,5 +1,39 @@
 # Changelog
 
+## Unreleased
+
+Nuxt UI-native styling: charts now theme, merge classes and pick colours exactly like Nuxt UI's own `UChart`, and sit next to it seamlessly.
+
+### ⚠ Breaking changes
+
+- The default series palette is Nuxt UI's chart palette, `--ui-chart-1` … `--ui-chart-6` (the one `UChart` uses), instead of Nuxt UI's semantic colours (`primary`, `secondary`, `success`, `info`, `warning`, `error`). Series past the sixth repeat the palette, lighter each round.
+- `--chart-color-0` … `--chart-color-7` are no longer read. Override `--ui-chart-N` (with Nuxt UI) or `--vc-series-N` (without), or pass `colors` per chart.
+- `--vc-series-6` and `--vc-series-7` are removed.
+- Chart CSS is injected before your stylesheet, so Tailwind utilities now override it. Unlayered CSS wins as before.
+
+### Features
+
+- **Nuxt UI theming** ([#164](https://github.com/dennisadriaans/vue-chrts/pull/164)): every chart has a Nuxt UI component theme with a `ui` prop and `class`, merged with tailwind-merge by Nuxt UI's own `tv`. Rendered elements carry `data-slot`, and the slot names and defaults match `UChart` / `UTooltip`. Theme-wide overrides go in `app.config.ts` under `nuxtCharts.chart` (all charts) or `nuxtCharts.<component>`, and your `ui.chart` slots are inherited, so one override styles both. Zero config: the module registers its theme classes with Nuxt UI's Tailwind setup.
+- **`colors` prop** on every chart, as on `UChart`. It accepts Nuxt UI colour names (`primary`, `success`, `neutral`, …) or any CSS colour, and so does a category's `color`.
+- **HeatmapChart** ([#163](https://github.com/dennisadriaans/vue-chrts/pull/163)): pivots long-format rows into a binned colour grid. It server-renders and offers arrow-key navigation and a `cell-click` event.
+- **BarChart** ([#160](https://github.com/dennisadriaans/vue-chrts/pull/160), [#162](https://github.com/dennisadriaans/vue-chrts/pull/162)):
+  - Tooltips format each value with its series' axis `formatter`.
+  - A category with `type: "line"` draws as a line over the bars (preview API).
+  - A category's own `variant` overrides the chart's.
+  - New `hatched-outline` variant.
+- **Line and area charts:** `categories[key].dashArray` dashes a single series, for example a previous period beside the current one.
+- **Background pattern:** anchored to the plot area (`backgroundArea`), with an edge fade (`backgroundFade`).
+- **Maps:** `activeArea`, `areaOpacity` and `panPadding`.
+- **MetricChart:**
+  - Now registered as a component.
+  - New Nuxt UI-styled card chrome.
+  - Fix: the range picker renders again.
+- **`nuxt-charts/components`** exports the charts (and `theme.css` / `components.css`) for hosts without the Nuxt module, such as Storybook and Vitest. `configureCharts` opts those hosts into Nuxt UI styling.
+
+### Bug Fixes
+
+- Polar charts size themselves around their legend.
+
 ## [3.1.0](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.0.0...nuxt-charts@3.1.0) (2026-10-02)
 
 - Add DottedMap and TopoJSONMap with built-in geography, zoom, pins, routes, and heatmaps.

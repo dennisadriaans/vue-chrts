@@ -29,6 +29,7 @@ import {
   compareUrl,
   extractSection,
   parseConventional,
+  recommendedBump,
   releaseHeading,
   renderChangelog,
   skippedCommits,
@@ -141,6 +142,28 @@ test('conventional commits are parsed and grouped', () => {
 
   const skipped = skippedCommits(COMMITS).map((e) => e.commit.short)
   assert.deepEqual(skipped, ['ccccccc', 'fffffff'])
+})
+
+test('a BREAKING CHANGE footer is rendered under its entry', () => {
+  const commit = {
+    sha: '1'.repeat(40),
+    short: '1111111',
+    subject: 'feat(nuxt): new theming (#164)',
+    body: '- bullet one\n\nBREAKING CHANGE: --old-var is no longer read;\nuse --new-var instead.\n\nCo-Authored-By: someone'
+  }
+  assert.equal(parseConventional(commit).note, '--old-var is no longer read; use --new-var instead.')
+  const sections = commitSections([commit])
+  assert.match(sections, /new theming .*\n\n {2}--old-var is no longer read; use --new-var instead\./)
+  assert.doesNotMatch(sections, /Co-Authored-By/)
+  // `feat!:` without a footer has no note.
+  assert.equal(parseConventional(COMMITS[3]).note, null)
+})
+
+test('the recommended bump follows the commits', () => {
+  assert.equal(recommendedBump(COMMITS, '3.1.0'), 'major')
+  assert.equal(recommendedBump(COMMITS, '0.4.0'), 'minor')
+  assert.equal(recommendedBump(COMMITS.slice(0, 3), '3.1.0'), 'minor')
+  assert.equal(recommendedBump([COMMITS[1], COMMITS[2]], '3.1.0'), 'patch')
 })
 
 test('splitChangelog isolates the Unreleased body', () => {
