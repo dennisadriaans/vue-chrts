@@ -28,6 +28,8 @@ const props = defineProps<MapBaseProps & {
   heatmap?: boolean;
   heatmapBlur?: number;
   heatmapThreshold?: number;
+  /** Pointer drags emit `rotate` deltas instead of panning. */
+  rotateOnDrag?: boolean;
 }>();
 const ui = injectChartUi();
 const emit = defineEmits<{
@@ -36,6 +38,9 @@ const emit = defineEmits<{
   mouseenter: [mark: MapMark, event: MouseEvent | FocusEvent];
   mouseleave: [mark: MapMark, event: MouseEvent | FocusEvent];
   zoom: [transform: MapZoom];
+  rotate: [delta: [number, number]];
+  "rotate-start": [];
+  "rotate-end": [];
 }>();
 const viewport = shallowRef<HTMLDivElement>();
 const svg = shallowRef<SVGSVGElement>();
@@ -47,6 +52,7 @@ const descriptionId = `vc-map-description-${useId().replace(/:/g, "")}`;
 let behavior: ZoomBehavior<SVGSVGElement, unknown> | undefined;
 let observer: ResizeObserver | undefined;
 let animation = 0;
+let rotating: { x: number; y: number; pointer: number; moved: boolean } | undefined;
 const limits = computed(() => props.zoomExtent ?? [1, 8]);
 function initial() {
   const [width, height] = props.size;
@@ -121,6 +127,13 @@ function zoomTo(value: number) {
   const local = transform.value.invert(center);
   moveTo(zoomIdentity.translate(center[0] - local[0] * k, center[1] - local[1] * k).scale(k));
 }
+function panBy(dx: number, dy: number) {
+  if (!behavior) return;
+  const [width, height] = props.size;
+  const pan = props.panPadding ?? 0;
+  const next = behavior.constrain()(transform.value.translate(dx / transform.value.k, dy / transform.value.k), [[0, 0], [width, height]], [[-pan, -pan], [width + pan, height + pan]]);
+  moveTo(next);
+}
 function resetView() { if (svg.value) moveTo(initial()); }
 function fitBounds(bounds: [[number, number], [number, number]]) {
   const [[x0, y0], [x1, y1]] = bounds;
@@ -140,7 +153,7 @@ function configureZoom() {
     .scaleExtent([limits.value[0]!, limits.value[1]!])
     .translateExtent([[-pan, -pan], [props.size[0] + pan, props.size[1] + pan]])
     .clickDistance(4)
-    .filter(event => !props.disableZoom && (!event.ctrlKey || event.type === "wheel") && !event.button && (event.type !== "wheel" || props.zoomOnScroll === true))
+    .filter(event => !props.disableZoom && (!event.ctrlKey || event.type === "wheel") && !event.button && (event.type !== "wheel" || props.zoomOnScroll === true || (props.zoomOnScroll === "modifier" && (event.ctrlKey || event.metaKey))) && (!props.rotateOnDrag || event.type === "wheel"))
     .on("zoom", (event: D3ZoomEvent<SVGSVGElement, unknown>) => {
       if (event.sourceEvent) { cancelAnimationFrame(animation); hovered.value = undefined; }
       transform.value = event.transform;
@@ -176,6 +189,29 @@ function leave(mark: MapMark, event: MouseEvent | FocusEvent) {
   hovered.value = undefined;
   emit("mouseleave", mark, event);
 }
+// Capture only once the pointer moves, so a plain click still reaches the mark under it.
+function startRotate(event: PointerEvent) {
+  if (!props.rotateOnDrag || event.button !== 0) return;
+  rotating = { x: event.clientX, y: event.clientY, pointer: event.pointerId, moved: false };
+}
+function moveRotate(event: PointerEvent) {
+  if (!rotating || event.pointerId !== rotating.pointer) return;
+  const delta: [number, number] = [event.clientX - rotating.x, event.clientY - rotating.y];
+  if (!rotating.moved) {
+    if (Math.hypot(...delta) < 4) return;
+    svg.value?.setPointerCapture(event.pointerId);
+    emit("rotate-start");
+  }
+  rotating = { ...rotating, x: event.clientX, y: event.clientY, moved: true };
+  hovered.value = undefined;
+  emit("rotate", delta);
+}
+function endRotate(event: PointerEvent) {
+  if (!rotating || event.pointerId !== rotating.pointer) return;
+  const moved = rotating.moved;
+  rotating = undefined;
+  if (moved) emit("rotate-end");
+}
 function onKey(event: KeyboardEvent) {
   if (event.target !== svg.value || props.disableZoom) return;
   if (event.key === "+" || event.key === "=") zoomTo(transform.value.k * 1.5);
@@ -209,7 +245,7 @@ onBeforeUnmount(() => {
 defineExpose({
   zoomIn: () => zoomTo(transform.value.k * 1.5),
   zoomOut: () => zoomTo(transform.value.k / 1.5),
-  zoomTo, resetView, fitBounds,
+  zoomTo, resetView, fitBounds, panBy,
 });
 </script>
 
@@ -225,11 +261,13 @@ defineExpose({
       <ChartEmptyState v-else-if="stateError || !marks.length" :height="size[1]" :message="stateError ?? emptyLabel ?? 'No geographic data'" />
       <svg
         v-else ref="svg" :viewBox="`0 0 ${size[0]} ${size[1]}`"
-        class="vc-map__svg" :class="{ 'vc-map__svg--zoomable': !disableZoom }"
+        class="vc-map__svg" :class="{ 'vc-map__svg--zoomable': !disableZoom || rotateOnDrag }"
         role="group" :aria-label="label"
         :aria-describedby="ariaDescription ? descriptionId : undefined" tabindex="0"
         @keydown="onKey" @mousemove="hovered && positionTooltip($event)"
         @mouseleave="hovered = undefined"
+        @pointerdown="startRotate" @pointermove="moveRotate"
+        @pointerup="endRotate" @pointercancel="endRotate"
       >
         <desc v-if="ariaDescription" :id="descriptionId">{{ ariaDescription }}</desc>
         <defs><filter :id="blurId" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur :stdDeviation="heatmapBlur ?? 12" /></filter></defs>

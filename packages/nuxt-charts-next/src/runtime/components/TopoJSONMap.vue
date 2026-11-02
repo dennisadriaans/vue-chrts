@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="A extends MapArea = MapArea, P extends MapPoint = MapPoint, L extends MapLink<P> = MapLink<P>">
 import { useChartUi } from "../composables/useChartUi";
-import { computed, nextTick, shallowRef, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, shallowRef, watch } from "vue";
 import { geoGraticule10, geoPath } from "d3-geo";
 import type { FeatureCollection } from "geojson";
 import type { MapArea, MapPoint, MapLink, MapFeature, TopoJSONMapProps, MapZoom, MapMarkSlot, MapOverlaySlot, MapTooltipSlot } from "../types/maps";
@@ -9,8 +9,9 @@ import { createMapProjection, mapCountryId, mapFeatures, mapValue, projectMapPoi
 import { sampleData } from "../utils/data";
 import MapCanvas from "./internal/MapCanvas.vue";
 
-// Vue casts an omitted boolean prop to false, which would skip fitting the projection.
-const props = withDefaults(defineProps<TopoJSONMapProps<A, P, L>>(), { fitView: true });
+// Vue casts an omitted boolean prop to false, which would skip fitting the projection
+// and hide the orthographic default of `rotateOnDrag`.
+const props = withDefaults(defineProps<TopoJSONMapProps<A, P, L>>(), { fitView: true, rotateOnDrag: undefined });
 useChartUi("topoJsonMap", props);
 defineSlots<{
   tooltip?: (props: MapTooltipSlot<A, P, L>) => unknown;
@@ -27,6 +28,7 @@ const emit = defineEmits<{
   mouseenter: [values: MapFeature<A> | P | L, event: MouseEvent | FocusEvent];
   mouseleave: [values: MapFeature<A> | P | L, event: MouseEvent | FocusEvent];
   zoom: [transform: MapZoom];
+  rotate: [rotation: [number, number, number]];
 }>();
 const canvas = shallowRef<InstanceType<typeof MapCanvas>>();
 const size = shallowRef<[number, number]>([960, typeof props.height === "number" ? props.height : 400]);
@@ -40,11 +42,24 @@ const geometry = computed(() => {
     };
   }
 });
+const globe = computed(() => props.projection === "orthographic");
+const rotateOnDrag = computed(() => props.rotateOnDrag ?? globe.value);
+const rotation = shallowRef<[number, number, number] | undefined>(toRotation(props.rotate));
+function toRotation(value: TopoJSONMapProps["rotate"]): [number, number, number] | undefined {
+  return value ? [value[0], value[1], value[2] ?? 0] : undefined;
+}
+watch(() => props.rotate, value => { rotation.value = toRotation(value); });
+function turn(dLongitude: number, dLatitude: number) {
+  const [longitude, latitude, gamma] = rotation.value ?? [0, 0, 0];
+  rotation.value = [(longitude + dLongitude) % 360, Math.max(-70, Math.min(70, latitude + dLatitude)), gamma];
+  emit("rotate", rotation.value);
+}
 const view = computed(() => {
   const collection = geometry.value.collection;
+  // A globe fits the sphere, not the land, so turning it never changes its size.
+  const fitTarget = globe.value || !collection.features.length ? { type: "Sphere" as const } : collection;
   const projection = createMapProjection(
-    props.projection, collection.features.length ? collection : { type: "Sphere" },
-    size.value[0], size.value[1], props,
+    props.projection, fitTarget, size.value[0], size.value[1], props, undefined, rotation.value,
   );
   return { projection, path: geoPath(projection) };
 });
@@ -169,7 +184,42 @@ watch([() => props.mapFitToPoints, projectedPoints, size], async () => {
   await nextTick();
   if (props.mapFitToPoints) fitToPoints();
 }, { immediate: true });
+function onDragRotate([dx, dy]: [number, number]) {
+  const degreesPerPixel = 75 / view.value.projection.scale();
+  turn(dx * degreesPerPixel, -dy * degreesPerPixel);
+}
+let spinFrame = 0;
+let hovering = false;
+let dragging = false;
+let lastFrame = 0;
+function spin(now: number) {
+  const speed = props.autoRotate ?? 0;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (speed && lastFrame && !hovering && !dragging && !reduced) turn(speed * Math.min(100, now - lastFrame) / 1000, 0);
+  lastFrame = now;
+  spinFrame = speed ? requestAnimationFrame(spin) : 0;
+}
+function startSpin() {
+  if (spinFrame || !props.autoRotate) return;
+  lastFrame = 0;
+  spinFrame = requestAnimationFrame(spin);
+}
+watch(() => props.autoRotate, startSpin);
+onMounted(startSpin);
+onBeforeUnmount(() => cancelAnimationFrame(spinFrame));
+function setDragging(value: boolean) {
+  dragging = value;
+}
+function onEnter(mark: MapMark, event: MouseEvent | FocusEvent) {
+  hovering = true;
+  emit("mouseenter", mark.values as MapFeature<A> | P | L, event);
+}
+function onLeave(mark: MapMark, event: MouseEvent | FocusEvent) {
+  hovering = false;
+  emit("mouseleave", mark.values as MapFeature<A> | P | L, event);
+}
 defineExpose({
+  panBy: (dx: number, dy: number) => canvas.value?.panBy(dx, dy),
   zoomIn: () => canvas.value?.zoomIn(),
   zoomOut: () => canvas.value?.zoomOut(),
   zoomTo: (k: number) => canvas.value?.zoomTo(k),
@@ -195,9 +245,13 @@ defineExpose({
     :heatmap-threshold="heatmapModeZoomLevelThreshold"
     @resize="size = $event"
     @click="click"
-    @mouseenter="(mark, event) => emit('mouseenter', mark.values as MapFeature<A> | P | L, event)"
-    @mouseleave="(mark, event) => emit('mouseleave', mark.values as MapFeature<A> | P | L, event)"
+    :rotate-on-drag="rotateOnDrag"
+    @mouseenter="onEnter"
+    @mouseleave="onLeave"
     @zoom="emit('zoom', $event)"
+    @rotate="onDragRotate"
+    @rotate-start="setDragging(true)"
+    @rotate-end="setDragging(false)"
   >
     <template v-if="$slots.tooltip" #tooltip="scope"><slot name="tooltip" v-bind="scope as MapTooltipSlot<A, P, L>" /></template>
     <template v-if="$slots.feature" #feature="scope"><slot name="feature" v-bind="scope" :values="scope.values as MapFeature<A>" :projection="view.projection" /></template>

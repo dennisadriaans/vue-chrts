@@ -86,10 +86,11 @@ export function inRegion(coordinates: [number, number], region?: MapRegion): boo
   return longitude && lat >= region.lat.min && lat <= region.lat.max;
 }
 
-export function createMapProjection(option: MapProjection | undefined, geometry: GeoPermissibleObjects, width: number, height: number, props: Pick<MapBaseProps, "fitView" | "fitViewPadding" | "padding">, region?: MapRegion): GeoProjection {
+export function createMapProjection(option: MapProjection | undefined, geometry: GeoPermissibleObjects, width: number, height: number, props: Pick<MapBaseProps, "fitView" | "fitViewPadding" | "padding">, region?: MapRegion, rotate?: [number, number] | [number, number, number]): GeoProjection {
   const names = { mercator: geoMercator, equalEarth: geoEqualEarth, naturalEarth: geoNaturalEarth1, equirectangular: geoEquirectangular, orthographic: geoOrthographic, albersUsa: geoAlbersUsa };
   const projection = typeof option === "string" ? names[option]() : typeof option === "function" ? ("stream" in option ? option : option()) : geoNaturalEarth1();
-  if (region && region.lng.min > region.lng.max && (option === undefined || typeof option === "string")) projection.rotate([-(region.lng.min + region.lng.max + 360) / 2, 0]);
+  if (rotate && option !== "albersUsa") projection.rotate(rotate);
+  else if (region && region.lng.min > region.lng.max && (option === undefined || typeof option === "string")) projection.rotate([-(region.lng.min + region.lng.max + 360) / 2, 0]);
   if (props.fitView !== false) {
     const padding = props.padding;
     const base = typeof padding === "number" ? padding : props.fitViewPadding ?? 12;

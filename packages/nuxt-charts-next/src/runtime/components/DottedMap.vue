@@ -10,7 +10,8 @@ import { filterMapCountries, generateMapDots, getPin } from "../utils/dottedMap"
 import { sampleData } from "../utils/data";
 import MapCanvas from "./internal/MapCanvas.vue";
 
-const props = defineProps<DottedMapProps>();
+// Vue casts an omitted boolean prop to false, which would skip fitting the projection.
+const props = withDefaults(defineProps<DottedMapProps>(), { fitView: true });
 useChartUi("dottedMap", props);
 defineSlots<{
   tooltip?: (props: DottedMapTooltipSlot) => unknown;
