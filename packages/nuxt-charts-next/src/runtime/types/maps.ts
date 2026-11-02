@@ -104,8 +104,12 @@ export interface MapBaseProps extends ChartStyleProps {
   disableZoom?: boolean;
   zoomFactor?: number;
   zoomExtent?: [number, number];
-  /** Wheel zoom is opt-in so a map does not capture normal page scrolling. */
-  zoomOnScroll?: boolean;
+  /**
+   * Wheel zoom is opt-in so a map does not capture normal page scrolling.
+   *
+   * `"modifier"` zooms only while ⌘ or Ctrl is held, so plain scrolling still moves the page.
+   */
+  zoomOnScroll?: boolean | "modifier";
   /** Pixels the map can be dragged past its edges, so it can be nudged even when fully zoomed out. Default 0. */
   panPadding?: number;
   zoomDuration?: number;
@@ -161,6 +165,17 @@ export interface TopoJSONMapProps<A extends MapArea = MapArea, P extends MapPoin
   linkCurvature?: number;
   mapFitToPoints?: boolean;
   zoomOnClick?: boolean;
+  /**
+   * Turn the globe to `[longitude, latitude]` degrees, negated as in `d3.geoRotation`.
+   *
+   * An orthographic map always fits the whole sphere, so turning it never rescales the globe.
+   * @example [-10, -22]
+   */
+  rotate?: [number, number] | [number, number, number];
+  /** Drag to turn the globe instead of panning it. Defaults to true for `orthographic`. */
+  rotateOnDrag?: boolean;
+  /** Spin the globe at this many degrees per second. Pauses on hover, drag and reduced motion. */
+  autoRotate?: number;
   heatmapMode?: boolean;
   heatmapModeBlurStdDeviation?: number;
   heatmapModeZoomLevelThreshold?: number;
