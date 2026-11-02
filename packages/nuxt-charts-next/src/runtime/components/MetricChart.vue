@@ -274,7 +274,7 @@ function exportCsv() {
   // Guarded because the component is client-only but may still be imported in
   // a non-DOM context (a test, a server-side render of a parent).
   if (typeof document === "undefined") return;
-  const blob = new Blob([`﻿${csv}`], { type: "text/csv;charset=utf-8" });
+  const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
