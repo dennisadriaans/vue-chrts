@@ -15,10 +15,11 @@ export function tooltipContentFor(
   variant: TooltipVariant | undefined,
   roundness: TooltipRoundness | undefined,
   titleFormatter?: (data: unknown) => string | number,
+  colors?: Record<string, string>,
 ) {
   return (tooltipProps: TooltipContentProps) => {
     const row = tooltipProps.payload?.[0]?.payload;
     const label = titleFormatter && row != null ? titleFormatter(row) : tooltipProps.label;
-    return h(ChartTooltip, { ...tooltipProps, label, variant, roundness });
+    return h(ChartTooltip, { ...tooltipProps, label, variant, roundness, colors });
   };
 }

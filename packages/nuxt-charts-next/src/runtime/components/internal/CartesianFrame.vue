@@ -461,6 +461,7 @@ const tooltipContent = computed(() => {
       variant: props.tooltipVariant,
       roundness: props.tooltipRoundness,
       formatters: tooltipFormattersFor(Math.max(rowIndex, 0)),
+      colors: props.legendColors,
     });
   };
 });
