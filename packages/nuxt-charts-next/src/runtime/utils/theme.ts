@@ -23,8 +23,12 @@ export function themeToVars(theme: ChartTheme | undefined, colors?: string[]): C
   // names resolve to `--ui-*`. A palette shorter than the default one repeats,
   // mixed toward the surface, so the remaining slots never fall back to an
   // unrelated default colour.
-  const palette = (colors?.length ? colors : theme?.colors)?.map((c) => resolveThemeColor(c));
-  if (palette?.length) {
+  const palette = colors?.map((c) => resolveThemeColor(c));
+  if (!palette?.length) {
+    // Deprecated `theme.colors`: entries override their own slot only, and
+    // omitted slots keep the default palette.
+    theme?.colors?.forEach((color, index) => set(`--vc-series-${index}`, resolveThemeColor(color)));
+  } else {
     const slots = Math.max(palette.length, PALETTE_SIZE);
     for (let index = 0; index < slots; index++) {
       const color = palette[index % palette.length]!;

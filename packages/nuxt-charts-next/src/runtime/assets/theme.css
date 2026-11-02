@@ -42,14 +42,17 @@
        Nuxt UI's chart palette (4.12+), so series match `UChart`. Recolour
        every chart at once by overriding `--ui-chart-N`; one chart with the
        `colors` prop. Series past the sixth repeat the palette, mixed toward
-       the surface (as `UChart` does). Fallbacks are Nuxt UI's own values. */
+       the surface (as `UChart` does). Fallbacks are Nuxt UI's own values.
+       Deprecated: `--chart-color-0` … `--chart-color-7` still win when set. */
     --vc-font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
-    --vc-series-0: var(--ui-chart-1, var(--ui-primary, oklch(0.63 0.18 155)));
-    --vc-series-1: var(--ui-chart-2, oklch(62.3% 0.214 259.815));
-    --vc-series-2: var(--ui-chart-3, oklch(60.6% 0.25 292.717));
-    --vc-series-3: var(--ui-chart-4, oklch(76.9% 0.188 70.08));
-    --vc-series-4: var(--ui-chart-5, oklch(64.5% 0.246 16.439));
-    --vc-series-5: var(--ui-chart-6, oklch(71.5% 0.143 215.221));
+    --vc-series-0: var(--chart-color-0, var(--ui-chart-1, var(--ui-primary, oklch(0.63 0.18 155))));
+    --vc-series-1: var(--chart-color-1, var(--ui-chart-2, oklch(62.3% 0.214 259.815)));
+    --vc-series-2: var(--chart-color-2, var(--ui-chart-3, oklch(60.6% 0.25 292.717)));
+    --vc-series-3: var(--chart-color-3, var(--ui-chart-4, oklch(76.9% 0.188 70.08)));
+    --vc-series-4: var(--chart-color-4, var(--ui-chart-5, oklch(64.5% 0.246 16.439)));
+    --vc-series-5: var(--chart-color-5, var(--ui-chart-6, oklch(71.5% 0.143 215.221)));
+    --vc-series-6: var(--chart-color-6, color-mix(in oklab, var(--vc-series-0) 65%, var(--vc-surface-bg)));
+    --vc-series-7: var(--chart-color-7, color-mix(in oklab, var(--vc-series-1) 65%, var(--vc-surface-bg)));
     font-family: var(--vc-font-family);
 
     /* ---- grid + domain (axis) lines ---- */
@@ -169,11 +172,11 @@
 
   :is(.dark, [data-theme="dark"]) .vue-chrts,
   .vue-chrts:is(.dark, [data-theme="dark"], .dark *, [data-theme="dark"] *) {
-    --vc-series-1: var(--ui-chart-2, oklch(70.7% 0.165 254.624));
-    --vc-series-2: var(--ui-chart-3, oklch(70.2% 0.183 293.541));
-    --vc-series-3: var(--ui-chart-4, oklch(82.8% 0.189 84.429));
-    --vc-series-4: var(--ui-chart-5, oklch(71.2% 0.194 13.428));
-    --vc-series-5: var(--ui-chart-6, oklch(78.9% 0.154 211.53));
+    --vc-series-1: var(--chart-color-1, var(--ui-chart-2, oklch(70.7% 0.165 254.624)));
+    --vc-series-2: var(--chart-color-2, var(--ui-chart-3, oklch(70.2% 0.183 293.541)));
+    --vc-series-3: var(--chart-color-3, var(--ui-chart-4, oklch(82.8% 0.189 84.429)));
+    --vc-series-4: var(--chart-color-4, var(--ui-chart-5, oklch(71.2% 0.194 13.428)));
+    --vc-series-5: var(--chart-color-5, var(--ui-chart-6, oklch(78.9% 0.154 211.53)));
     --vc-grid-color: var(--ui-border, var(--border, oklch(0.269 0 0)));
     --vc-axis-line-color: var(--ui-border, var(--border, oklch(0.269 0 0)));
     --vc-surface-bg: var(--ui-bg, var(--background, oklch(0.145 0 0)));

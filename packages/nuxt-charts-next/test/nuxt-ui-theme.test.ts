@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { defineComponent, h } from "vue";
 import { mount } from "@vue/test-utils";
@@ -192,8 +194,27 @@ describe("Nuxt UI palette", () => {
     expect(vars["--vc-series-6"]).toBeUndefined();
   });
 
+  it("keeps the deprecated theme.colors per-slot, without repeating", () => {
+    const vars = themeToVars({ colors: ["red", "blue"] }) as Record<string, string>;
+    expect(vars).toEqual({ "--vc-series-0": "red", "--vc-series-1": "blue" });
+  });
+
   it("prefers the colors prop over theme.colors", () => {
     const vars = themeToVars({ colors: ["red"] }, ["blue"]) as Record<string, string>;
     expect(vars["--vc-series-0"]).toBe("blue");
+  });
+});
+
+describe("legacy palette tokens", () => {
+  const css = readFileSync(resolve(__dirname, "../src/runtime/assets/theme.css"), "utf8");
+
+  it("lets --chart-color-N override the palette, light and dark", () => {
+    for (let n = 0; n < 8; n++) expect(css).toContain(`--vc-series-${n}: var(--chart-color-${n}, `);
+    for (let n = 1; n < 6; n++) expect(css.match(new RegExp(`--vc-series-${n}: var\\(--chart-color-${n}, `, "g"))).toHaveLength(2);
+  });
+
+  it("defines --vc-series-6 and -7 as the palette's first repeat", () => {
+    expect(css).toContain("--vc-series-6: var(--chart-color-6, color-mix(in oklab, var(--vc-series-0) 65%, var(--vc-surface-bg)));");
+    expect(css).toContain("--vc-series-7: var(--chart-color-7, color-mix(in oklab, var(--vc-series-1) 65%, var(--vc-surface-bg)));");
   });
 });

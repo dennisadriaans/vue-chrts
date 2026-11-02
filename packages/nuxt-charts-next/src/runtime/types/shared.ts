@@ -157,9 +157,11 @@ export interface ChartPadding {
  */
 export interface ChartTheme {
   /**
-   * Per-chart series palette. Prefer the chart's `colors` prop, which takes
-   * precedence over this. Theme colour names (`primary`, `success`, …) resolve
-   * to Nuxt UI tokens.
+   * Per-chart series palette: entry N overrides `--vc-series-N`, and omitted
+   * entries keep the default palette. Theme colour names (`primary`,
+   * `success`, …) resolve to Nuxt UI tokens.
+   *
+   * @deprecated Use the chart's `colors` prop, which takes precedence over this.
    */
   colors?: string[];
   /** Grid + axis (domain) lines. */

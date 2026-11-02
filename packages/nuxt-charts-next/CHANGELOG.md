@@ -4,11 +4,13 @@
 
 Nuxt UI-native styling: charts now theme, merge classes and pick colours exactly like Nuxt UI's own `UChart`, and sit next to it seamlessly.
 
-### ⚠ Breaking changes
+### Upgrading
 
-- The default series palette is Nuxt UI's chart palette, `--ui-chart-1` … `--ui-chart-6` (the one `UChart` uses), instead of Nuxt UI's semantic colours (`primary`, `secondary`, `success`, `info`, `warning`, `error`). Series past the sixth repeat the palette, lighter each round.
-- `--chart-color-0` … `--chart-color-7` are no longer read. Override `--ui-chart-N` (with Nuxt UI) or `--vc-series-N` (without), or pass `colors` per chart.
-- `--vc-series-6` and `--vc-series-7` are removed.
+Nothing breaks: existing colour overrides keep working, and the new tokens are the recommended path.
+
+- The default series palette is Nuxt UI's chart palette, `--ui-chart-1` … `--ui-chart-6` (the one `UChart` uses), instead of Nuxt UI's semantic colours (`primary`, `secondary`, `success`, `info`, `warning`, `error`). Series past the sixth repeat the palette, lighter each round. To keep the old colours, set `--chart-color-0` … `--chart-color-5` to those tokens (see the README).
+- `--chart-color-0` … `--chart-color-7` are deprecated but still win when set. Prefer `--ui-chart-N` (with Nuxt UI) or `--vc-series-N` (without), or pass `colors` per chart.
+- `theme.colors` is deprecated in favour of the `colors` prop, and still overrides only the slots it lists.
 - Chart CSS is injected before your stylesheet, so Tailwind utilities now override it. Unlayered CSS wins as before.
 
 ### Features
@@ -24,6 +26,7 @@ Nuxt UI-native styling: charts now theme, merge classes and pick colours exactly
 - **Line and area charts:** `categories[key].dashArray` dashes a single series, for example a previous period beside the current one.
 - **Background pattern:** anchored to the plot area (`backgroundArea`), with an edge fade (`backgroundFade`).
 - **Maps:** `activeArea`, `areaOpacity` and `panPadding`.
+- **Globe** ([#166](https://github.com/dennisadriaans/vue-chrts/pull/166)): an orthographic TopoJSONMap turns with `rotate`, drags to rotate (`rotateOnDrag`), spins with `autoRotate` and emits `rotate`. The globe fits the sphere, so turning it never rescales. Maps also expose `panBy`, and `zoomOnScroll: "modifier"` zooms only while ⌘ or Ctrl is held.
 - **MetricChart:**
   - Now registered as a component.
   - New Nuxt UI-styled card chrome.
