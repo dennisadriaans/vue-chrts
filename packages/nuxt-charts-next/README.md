@@ -401,13 +401,30 @@ apply any classes you pass. Customize with `--vc-*` variables (`--vc-series-0`
 
 ### Upgrading from 3.1
 
+Nothing breaks; existing colour overrides keep working.
+
 - The default palette is now `--ui-chart-1…6` (was `--ui-primary`,
   `--ui-secondary`, `--ui-success`, `--ui-info`, `--ui-warning`, `--ui-error`),
-  matching `UChart`.
-- `--chart-color-0` … `--chart-color-7` are no longer read. Override
-  `--ui-chart-N` (Nuxt UI) or `--vc-series-N` instead.
-- `--vc-series-6` / `--vc-series-7` are gone; series past the sixth repeat the
-  palette.
+  matching `UChart`. To keep the old colours, set the legacy tokens:
+
+  ```css
+  :root {
+    --chart-color-0: var(--ui-primary);
+    --chart-color-1: var(--ui-secondary);
+    --chart-color-2: var(--ui-success);
+    --chart-color-3: var(--ui-info);
+    --chart-color-4: var(--ui-warning);
+    --chart-color-5: var(--ui-error);
+  }
+  ```
+
+- `--chart-color-0` … `--chart-color-7` are deprecated but still win when set.
+  Prefer `--ui-chart-N` (Nuxt UI) or `--vc-series-N`.
+- `--vc-series-6` / `--vc-series-7` still exist and default to the palette's
+  first repeat.
+- `theme.colors` is deprecated in favour of the `colors` prop. It still
+  overrides only the slots it lists; `colors` repeats a short palette like
+  `UChart`.
 - Chart CSS is now injected *before* your stylesheet so Tailwind utilities
   override it; plain unlayered CSS still wins as before.
 
