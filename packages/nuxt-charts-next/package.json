@@ -1,6 +1,6 @@
 {
   "name": "nuxt-charts",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Beautiful chart and D3 map components for Nuxt — Area, Bar, Line, Donut, Bubble, Radar, Radial Bar, Funnel, Sankey, Candlestick, Status Tracker, Heatmap, Dotted Map, TopoJSON Map",
   "license": "MIT",
   "author": "Dennis Adriaansen <adriaansendennis@gmail.com>",

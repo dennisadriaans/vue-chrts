@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [3.2.0](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.1.0...nuxt-charts@3.2.0) (2026-11-02)
+
 Nuxt UI-native styling: charts now theme, merge classes and pick colours exactly like Nuxt UI's own `UChart`, and sit next to it seamlessly.
 
 ### Upgrading
