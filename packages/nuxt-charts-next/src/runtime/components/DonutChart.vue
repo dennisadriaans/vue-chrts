@@ -82,7 +82,7 @@ const legendColors = computed(() =>
 );
 
 const tooltipContent = computed(() =>
-  tooltipContentFor(props.tooltipVariant, props.tooltipRoundness, props.tooltipTitleFormatter as ((data: unknown) => string | number) | undefined),
+  tooltipContentFor(props.tooltipVariant, props.tooltipRoundness, props.tooltipTitleFormatter as ((data: unknown) => string | number) | undefined, legendColors.value),
 );
 const accessibleRows = computed(() => segments.value.map((segment) => ({ label: segment.name, values: [{ label: "Value", value: segment.value }] })));
 
