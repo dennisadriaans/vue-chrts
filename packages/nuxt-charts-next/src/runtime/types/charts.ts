@@ -563,12 +563,9 @@ export interface DonutChartProps<T = unknown> extends ChartStyleProps {
   glow?: boolean;
   /** Chart height in pixels. */
   height?: number;
-  /**
-   * Outer radius in pixels. When omitted or `0`, the ring auto-fits the
-   * container (recommended). Pass a number to pin an explicit outer radius.
-   */
+  /** Rounded corner radius for each segment in pixels (v2 API). Alias of `cornerRadius`. */
   radius?: number;
-  /** Ring thickness in pixels (outer radius minus inner radius). Default 40. */
+  /** Ring thickness in pixels (outer radius minus inner radius). Default 40. `0` renders a filled pie. */
   arcWidth?: number;
   /** Angular padding between segments, in degrees. */
   padAngle?: number;

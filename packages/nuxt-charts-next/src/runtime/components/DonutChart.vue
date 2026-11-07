@@ -104,30 +104,27 @@ const onCenter = (next: PolarPlotArea) => {
   plotArea.value = next;
 };
 
-/** Auto-fit inside the plot, keeping `arcWidth` in pixels as the legend wraps. */
+/**
+ * Auto-fit inside the plot, keeping `arcWidth` in pixels as the legend wraps.
+ * `arcWidth: 0` renders a filled pie (v2 parity).
+ */
 const radii = computed(() => {
   const arcWidth = props.arcWidth ?? DEFAULT_ARC_WIDTH;
-
-  if (props.radius && props.radius > 0) {
-    return {
-      outerRadius: props.radius,
-      innerRadius: Math.max(props.radius - arcWidth, 0),
-    };
-  }
+  const inner = (outer: number) => (arcWidth > 0 ? Math.max(outer - arcWidth, 0) : 0);
 
   if (plotArea.value) {
     const { width, height, maxRadius } = plotArea.value;
     const bound = props.type === DonutType.Half ? Math.min(width / 2, height) : maxRadius;
     const outerRadius = bound * AUTO_OUTER_FRACTION;
-    return {
-      outerRadius,
-      innerRadius: Math.max(outerRadius - arcWidth, 0),
-    };
+    return { outerRadius, innerRadius: inner(outerRadius) };
   }
 
   // The plot reports its size when ChartContainer mounts.
-  return { outerRadius: "90%", innerRadius: "60%" };
+  return { outerRadius: "90%", innerRadius: arcWidth > 0 ? "60%" : 0 };
 });
+
+/** v2 parity: `radius` rounds the segment corners; `cornerRadius` wins when set. */
+const segmentCornerRadius = computed(() => props.cornerRadius ?? props.radius ?? 0);
 
 const outerRadius = computed(() => radii.value.outerRadius);
 const innerRadius = computed(() => radii.value.innerRadius);
@@ -172,7 +169,7 @@ const legendWrapperStyle = computed(() =>
 </script>
 
 <template>
-  <div class="donut-chart vue-chrts" :class="ui.rootClass" role="group" :aria-label="ariaLabel ?? 'Donut chart'" :style="{ position: 'relative', width: '100%', height: `${height ?? (radius ? radius * 2 : 200)}px`, ...themeVars }">
+  <div class="donut-chart vue-chrts" :class="ui.rootClass" role="group" :aria-label="ariaLabel ?? 'Donut chart'" :style="{ position: 'relative', width: '100%', height: `${height ?? 200}px`, ...themeVars }">
     <ChartAccessibility :label="ariaLabel ?? 'Donut chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
     <ChartSkeleton
       v-if="loading"
@@ -205,7 +202,7 @@ const legendWrapperStyle = computed(() =>
           :start-angle="angles.startAngle"
           :end-angle="angles.endAngle"
           :padding-angle="padAngle ?? 0"
-          :corner-radius="cornerRadius ?? 0"
+          :corner-radius="segmentCornerRadius"
           :stroke="stroke ?? 'none'"
           :is-animation-active="duration !== undefined && duration !== 0"
           :transition="{ duration: (duration ?? 1200) / 1000, ease: 'easeOut' }"
