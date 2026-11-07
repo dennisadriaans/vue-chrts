@@ -95,9 +95,17 @@ describe("DonutChart radius", () => {
     expect(sectorPaths().length).toBe(3);
   });
 
-  it("still honours an explicit pixel radius", async () => {
-    await mountDonut({ radius: 120, arcWidth: 40, type: DonutType.Full });
+  it("treats radius as segment corner rounding (v2 parity)", async () => {
+    await mountDonut({ radius: 80, arcWidth: 20, type: DonutType.Full });
     expect(sectorPaths().length).toBe(3);
+    expect(sectorPaths()[0]?.getAttribute("d")).toContain("A10,10");
+  });
+
+  it("renders a filled pie when arcWidth is 0", async () => {
+    await mountDonut({ radius: 80, arcWidth: 0, type: DonutType.Full });
+    expect(sectorPaths().length).toBe(3);
+    // A filled sector closes through the centre instead of an inner arc.
+    for (const path of sectorPaths()) expect(path.getAttribute("d")).toContain("L 150,150");
   });
 
   it("renders the half-donut gauge with radius 0", async () => {
