@@ -158,6 +158,31 @@ describe("y-axis width sizing", () => {
       data: LARGE, categories: CATEGORIES_LARGE, xAxisKey: "month", orientation: "horizontal",
     })).toBe(AXIS_SLOT.categoryYWidth);
   });
+
+  it("uses a custom categoryAxisWidth on a horizontal category axis", () => {
+    expect(widthOf({
+      data: LARGE, categories: CATEGORIES_LARGE, xAxisKey: "month",
+      orientation: "horizontal", categoryAxisWidth: 160,
+    })).toBe(160);
+  });
+
+  it("forwards categoryAxisWidth auto so vccs can measure labels", () => {
+    const wrapper = mount(CartesianFrame, {
+      props: {
+        container, height: 300,
+        data: LARGE, categories: CATEGORIES_LARGE, xAxisKey: "month",
+        orientation: "horizontal", categoryAxisWidth: "auto",
+      } as never,
+    });
+    expect(wrapper.find('[data-stub="YAxis"]').attributes("data-p-width")).toBe("auto");
+  });
+
+  it("does not apply categoryAxisWidth to a vertical value axis", () => {
+    expect(widthOf({
+      data: SMALL, categories: { a: { name: "A" }, b: { name: "B" } },
+      xAxisKey: "month", categoryAxisWidth: 160,
+    })).toBe(AXIS_SLOT.numericYWidth);
+  });
   it("sizes each y-axis from only its own series", () => {
     const widths = allWidths({
       data: [

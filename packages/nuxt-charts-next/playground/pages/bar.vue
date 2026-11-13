@@ -11,6 +11,17 @@ const yAxisDesktop: (keyof MonthRow)[] = ["desktop"];
 // --- Bar Chart - Horizontal ---
 // same data, same categories, orientation="horizontal"
 
+// --- Bar Chart - Long category labels ---
+const longCategories = [
+  { name: "Personal identification numbers", users: 42 },
+  { name: "Google Gemini for Workspace", users: 31 },
+  { name: "Customer relationship management", users: 28 },
+  { name: "Internal developer documentation", users: 19 },
+];
+const categoriesLong: Record<string, BulletLegendItemInterface> = {
+  users: { name: "Users", color: "#2662d9" },
+};
+
 // --- Bar Chart - Multiple ---
 const categoriesMultiple: Record<string, BulletLegendItemInterface> = {
   desktop: { name: "Desktop", color: "#2662d9" },
@@ -111,6 +122,31 @@ const xFormatter = (v: unknown) =>
       :height="320"
       :radius="4"
       orientation="horizontal"
+      :hide-legend="true"
+    />
+
+    <h2>Bar Chart - Long category labels (default 72px slot)</h2>
+    <BarChart
+      :data="longCategories"
+      :categories="categoriesLong"
+      :y-axis="['users']"
+      x-axis="name"
+      :height="280"
+      :radius="4"
+      orientation="horizontal"
+      :hide-legend="true"
+    />
+
+    <h2>Bar Chart - Long category labels (categoryAxisWidth auto)</h2>
+    <BarChart
+      :data="longCategories"
+      :categories="categoriesLong"
+      :y-axis="['users']"
+      x-axis="name"
+      :height="280"
+      :radius="4"
+      orientation="horizontal"
+      category-axis-width="auto"
       :hide-legend="true"
     />
 
