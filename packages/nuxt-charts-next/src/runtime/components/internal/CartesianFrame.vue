@@ -78,6 +78,12 @@ const props = defineProps<
      * total rather than the largest single series. Only affects axis sizing.
      */
     valueStacked?: boolean;
+    /**
+     * Width of the category y-axis on a horizontal chart, in pixels, or
+     * `"auto"` to size the slot from its tick labels. Unset keeps the default
+     * category slot. Only applied when the y-axis is the category axis.
+     */
+    categoryAxisWidth?: number | "auto";
   }
 >();
 
@@ -305,6 +311,7 @@ const valueAxisSampleLabels = computed(() => {
 
 const xAxisHeight = computed(() => resolveXAxisHeight({ hasTitle: !!xAxisTitle.value }));
 const yAxisWidth = computed(() =>
+  props.categoryAxisWidth ??
   resolveYAxisWidth({
     hasTitle: !!yAxisTitle.value,
     isCategoryAxis: isCategoryYAxis.value,

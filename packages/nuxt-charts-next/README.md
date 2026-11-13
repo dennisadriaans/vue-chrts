@@ -176,6 +176,27 @@ const yAxes = {
 - Lines are drawn after the bars, unstacked, with `monotone` curves and no dots.
 - Bar-only options (`variant`, `stacked`, `valueLabel`, `radius`) don't apply to lines.
 
+### Horizontal category axis width
+
+On a horizontal `BarChart` the category y-axis defaults to a 72px slot, so long
+labels wrap and can overlap. Set `categoryAxisWidth` to a pixel width, or to
+`"auto"` to size the axis from its labels (as v2 did):
+
+```vue
+<BarChart
+  :data="tools"
+  :categories="{ users: { name: 'Users' } }"
+  :y-axis="['users']"
+  x-axis="name"
+  orientation="horizontal"
+  category-axis-width="auto"
+  :height="320"
+/>
+```
+
+Unset keeps the default slot, so existing charts are unchanged. The prop has no
+effect on a vertical `BarChart`.
+
 ## Style variants
 
 Every treatment below is opt-in — a chart that sets none of them renders exactly
