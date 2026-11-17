@@ -52,7 +52,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "vue-tsc -b && vite build && node scripts/fix-declaration-extensions.mjs",
     "prepack": "pnpm run build",
     "typecheck": "vue-tsc --noEmit",
     "preview": "vite preview",
