@@ -117,8 +117,7 @@ const reliabilityCategories = {
     <DonutChart
       :data="browserData"
       :categories="browserCategories"
-      :radius="120"
-      :arc-width="120"
+      :arc-width="0"
       :height="280"
     />
 
@@ -126,7 +125,6 @@ const reliabilityCategories = {
     <DonutChart
       :data="browserData"
       :categories="browserCategories"
-      :radius="120"
       :arc-width="40"
       :height="280"
     />
@@ -136,7 +134,6 @@ const reliabilityCategories = {
       <DonutChart
         :data="browserData"
         :categories="browserCategories"
-        :radius="120"
         :arc-width="40"
         :height="280"
         :hide-legend="true"
