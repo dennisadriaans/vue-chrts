@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## [3.3.0](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.2.0...nuxt-charts@3.3.0) (2026-11-17)
+
+### Features
+
+* **nuxt-next:** allow customizing horizontal BarChart category axis width ([#172](https://github.com/dennisadriaans/vue-chrts/issues/172)) ([7f46d5c](https://github.com/dennisadriaans/vue-chrts/commit/7f46d5ceb55c995ffcf2a14149a5e02ddcd5d2b5))
+
+### Bug Fixes
+
+* **nuxt-next:** donut radius rounds segments and arcWidth 0 fills ([#170](https://github.com/dennisadriaans/vue-chrts/issues/170)) ([3baae1a](https://github.com/dennisadriaans/vue-chrts/commit/3baae1ad0e6f0d6d5c0e1a36c47c992862628578))
+* **nuxt-next:** flat tooltip dots for pattern series ([#168](https://github.com/dennisadriaans/vue-chrts/issues/168)) ([5e75d52](https://github.com/dennisadriaans/vue-chrts/commit/5e75d52b92d679f56a15f378abe45e61fbe73ee4))
+
 ## [3.2.0](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.1.0...nuxt-charts@3.2.0) (2026-11-02)
 
 Nuxt UI-native styling: charts now theme, merge classes and pick colours exactly like Nuxt UI's own `UChart`, and sit next to it seamlessly.
