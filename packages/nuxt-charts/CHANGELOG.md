@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.2.4](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts-legacy@2.2.3...nuxt-charts-legacy@2.2.4) (2026-11-17)
+
+### Bug Fixes
+
+* **nuxt-legacy:** drop aliases that only apply under Bun ([#176](https://github.com/dennisadriaans/vue-chrts/issues/176)) ([a60076c](https://github.com/dennisadriaans/vue-chrts/commit/a60076cbdf9808b56a7445c784b12d5097112303))
+
 ## [2.2.3](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts-legacy@2.2.2...nuxt-charts-legacy@2.2.3) (2026-09-11)
 
 ### Dependencies
