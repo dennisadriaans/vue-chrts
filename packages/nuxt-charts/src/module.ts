@@ -94,19 +94,13 @@ export default defineNuxtModule<ModuleOptions>({
       );
     });
 
-    // Resolve @unovis package directories through vue-chrts.
-    // In pnpm strict mode, @unovis/ts and @unovis/vue are only accessible
-    // through vue-chrts's own node_modules, not from the consumer's root.
+    // Resolve @unovis/ts through vue-chrts. In pnpm strict mode it is only
+    // accessible through vue-chrts's own node_modules, not from the consumer's
+    // root. `vue-chrts` and `@unovis/vue` are not aliased: a directory alias
+    // bypasses their exports map and breaks subpaths like `vue-chrts/enums`.
     const unovisTsDir = resolvePackageDir("@unovis/ts", "vue-chrts");
-    const unovisVueDir = resolvePackageDir("@unovis/vue", "vue-chrts");
-
-    // Register aliases so Vite (and Nuxt) can resolve @unovis packages
-    // regardless of the package manager's hoisting strategy.
     if (unovisTsDir) {
       nuxt.options.alias["@unovis/ts"] = unovisTsDir;
-    }
-    if (unovisVueDir) {
-      nuxt.options.alias["@unovis/vue"] = unovisVueDir;
     }
 
     // Use the vite:extendConfig hook to inject optimizeDeps directly into
@@ -129,7 +123,6 @@ export default defineNuxtModule<ModuleOptions>({
       const entries = [
         "vue-chrts",
         ...(unovisTsDir ? ["@unovis/ts"] : []),
-        ...(unovisVueDir ? ["@unovis/vue"] : []),
       ];
 
       for (const entry of entries) {
@@ -145,12 +138,5 @@ export default defineNuxtModule<ModuleOptions>({
     // Initialize auto-imports and components
     resolveImports(options, import.meta.url);
     resolveComponents(options, runtimePath);
-
-    // Ensure the website (and other consumers) can resolve vue-chrts even under
-    // pnpm isolation when this module is loaded alongside nuxt-charts-next.
-    const vueChrtsDir = resolvePackageDir("vue-chrts");
-    if (vueChrtsDir) {
-      nuxt.options.alias["vue-chrts"] = vueChrtsDir;
-    }
   },
 });
