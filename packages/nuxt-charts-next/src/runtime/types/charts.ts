@@ -361,6 +361,13 @@ export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
   percent?: boolean;
   /** Bar orientation (vertical = column, horizontal = bar). */
   orientation?: Orientation;
+  /**
+   * Width of the category axis on a horizontal chart, in pixels, or `"auto"`
+   * to let vccs size the slot from its tick labels so long categories stay on
+   * one line. Unset keeps the default 72px slot. Has no effect on a vertical
+   * chart, whose value axis is sized from its own tick labels.
+   */
+  categoryAxisWidth?: number | "auto";
   /** Rounded corner radius for bars in pixels. Default 2. */
   radius?: number;
   /**
