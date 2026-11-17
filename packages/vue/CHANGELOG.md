@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.2.4](https://github.com/dennisadriaans/vue-chrts/compare/vue-chrts@2.2.3...vue-chrts@2.2.4) (2026-11-17)
+
+### Bug Fixes
+
+* **vue:** add extensions to declaration imports ([#175](https://github.com/dennisadriaans/vue-chrts/issues/175)) ([09cb69a](https://github.com/dennisadriaans/vue-chrts/commit/09cb69a6a750001a08554e7a1827927bde3132d7))
+
 ## [2.2.3](https://github.com/dennisadriaans/vue-chrts/compare/vue-chrts@2.2.2...vue-chrts@2.2.3) (2026-09-11)
 
 ### Dependencies
