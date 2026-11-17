@@ -4,14 +4,25 @@
 
 ## [3.3.0](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.2.0...nuxt-charts@3.3.0) (2026-11-17)
 
+Restores the v2 DonutChart `radius` and `arcWidth: 0` behaviour, and lets long category labels fit on horizontal bar charts.
+
+### Upgrading
+
+- **DonutChart `radius` rounds segment corners again**, as in v2 ([#169](https://github.com/dennisadriaans/vue-chrts/issues/169)). In 3.0–3.2 it set the outer radius in pixels, which silently dropped the rounding for anyone upgrading from v2. The ring now always auto-fits its container: size it with `height` and `arcWidth`. Without `height` the chart is 200px tall (it was `radius * 2`). `cornerRadius` still works and wins over `radius`.
+- **`arcWidth: 0` renders a filled pie** again, as in v2. In 3.0–3.2 it rendered nothing.
+
 ### Features
 
-* **nuxt-next:** allow customizing horizontal BarChart category axis width ([#172](https://github.com/dennisadriaans/vue-chrts/issues/172)) ([7f46d5c](https://github.com/dennisadriaans/vue-chrts/commit/7f46d5ceb55c995ffcf2a14149a5e02ddcd5d2b5))
+- **BarChart `categoryAxisWidth`** ([#172](https://github.com/dennisadriaans/vue-chrts/pull/172), [#171](https://github.com/dennisadriaans/vue-chrts/issues/171)): on a horizontal bar chart, set the category axis to a pixel width, or to `"auto"` to size it from its labels so long names stay on one line, as in v2. Unset keeps the 72px default. It has no effect on vertical charts.
+
+  ```vue
+  <BarChart orientation="horizontal" category-axis-width="auto" ... />
+  ```
 
 ### Bug Fixes
 
-* **nuxt-next:** donut radius rounds segments and arcWidth 0 fills ([#170](https://github.com/dennisadriaans/vue-chrts/issues/170)) ([3baae1a](https://github.com/dennisadriaans/vue-chrts/commit/3baae1ad0e6f0d6d5c0e1a36c47c992862628578))
-* **nuxt-next:** flat tooltip dots for pattern series ([#168](https://github.com/dennisadriaans/vue-chrts/issues/168)) ([5e75d52](https://github.com/dennisadriaans/vue-chrts/commit/5e75d52b92d679f56a15f378abe45e61fbe73ee4))
+- **DonutChart:** `radius` and `arcWidth: 0` work as in v2 ([#170](https://github.com/dennisadriaans/vue-chrts/pull/170)).
+- **Tooltips:** the indicator dot for pattern and gradient series shows the series colour instead of an empty swatch ([#168](https://github.com/dennisadriaans/vue-chrts/pull/168)).
 
 ## [3.2.0](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.1.0...nuxt-charts@3.2.0) (2026-11-02)
 

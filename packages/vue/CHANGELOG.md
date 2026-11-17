@@ -4,9 +4,13 @@ All notable changes to this project will be documented in this file. See [commit
 
 ## [2.2.4](https://github.com/dennisadriaans/vue-chrts/compare/vue-chrts@2.2.3...vue-chrts@2.2.4) (2026-11-17)
 
+TypeScript types now resolve under `moduleResolution: "node16"` and `"nodenext"`, not only `"bundler"`.
+
 ### Bug Fixes
 
-* **vue:** add extensions to declaration imports ([#175](https://github.com/dennisadriaans/vue-chrts/issues/175)) ([09cb69a](https://github.com/dennisadriaans/vue-chrts/commit/09cb69a6a750001a08554e7a1827927bde3132d7))
+- **Types:** the published `.d.ts` files use explicit `.js` extensions on relative imports. In ESM projects using `node16`/`nodenext`, components, enums and types such as `LineChart`, `LegendPosition` and `CurveType` were reported as missing exports ([#174](https://github.com/dennisadriaans/vue-chrts/issues/174), [#175](https://github.com/dennisadriaans/vue-chrts/pull/175)).
+
+With `skipLibCheck: false`, `@unovis/ts`'s own declarations still report errors under `nodenext`, which is an upstream issue. Keep `skipLibCheck` enabled.
 
 ## [2.2.3](https://github.com/dennisadriaans/vue-chrts/compare/vue-chrts@2.2.2...vue-chrts@2.2.3) (2026-09-11)
 

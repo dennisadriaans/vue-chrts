@@ -4,9 +4,21 @@ All notable changes to this project will be documented in this file. See [commit
 
 ## [2.2.4](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts-legacy@2.2.3...nuxt-charts-legacy@2.2.4) (2026-11-17)
 
+Fix for the legacy v2 module (Unovis), published to npm as **`nuxt-charts@2.2.4`** under the `legacy` dist-tag. `latest` stays on v3.
+
+```sh
+npm i nuxt-charts@legacy
+```
+
+Projects on `^2.x` get it on their next update.
+
 ### Bug Fixes
 
-* **nuxt-legacy:** drop aliases that only apply under Bun ([#176](https://github.com/dennisadriaans/vue-chrts/issues/176)) ([a60076c](https://github.com/dennisadriaans/vue-chrts/commit/a60076cbdf9808b56a7445c784b12d5097112303))
+- **Bun:** `bun --bun nuxt build` no longer fails to resolve `vue-chrts/enums`. The module registered `vue-chrts` and `@unovis/vue` aliases that only took effect under Bun and bypassed those packages' exports maps. Bun and Node now build with the same config ([#173](https://github.com/dennisadriaans/vue-chrts/issues/173), [#176](https://github.com/dennisadriaans/vue-chrts/pull/176)).
+
+### Dependencies
+
+- `vue-chrts` 2.2.4: types resolve under `moduleResolution: "node16"`/`"nodenext"` ([#174](https://github.com/dennisadriaans/vue-chrts/issues/174)).
 
 ## [2.2.3](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts-legacy@2.2.2...nuxt-charts-legacy@2.2.3) (2026-09-11)
 
