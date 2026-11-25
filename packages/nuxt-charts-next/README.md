@@ -152,10 +152,7 @@ the top-level `yLabel` / `yDomain` / `yAxisConfig` props. Supported on
 An axis `formatter` also formats its series' tooltip values, so each value
 reads in its own units. Gridlines follow the primary axis.
 
-### Bar + line series (preview)
-
-> [!WARNING]
-> Preview: this API may change in a minor release. Feedback welcome.
+### Bar + line series
 
 In a `BarChart`, set `type: "line"` on a category to draw it as a line over the
 bars — e.g. revenue bars on the left, a conversion rate line on the right:
@@ -173,7 +170,10 @@ const yAxes = {
 ```
 
 - Vertical orientation only; on a horizontal `BarChart` the category stays a bar.
-- Lines are drawn after the bars, unstacked, with `monotone` curves and no dots.
+- Lines are drawn after the bars, unstacked and without dots.
+- `curveType` (default monotone) and `lineWidth` (default 2) style every line.
+- `dashArray` on a category dashes that line alone, e.g. a previous period:
+  `{ name: "Previous", yAxis: "pct", type: "line", dashArray: "4 4" }`.
 - Bar-only options (`variant`, `stacked`, `valueLabel`, `radius`) don't apply to lines.
 
 ### Horizontal category axis width
@@ -277,7 +277,8 @@ several charts on one page never collide.
 
 ### Deferred / removed
 
-- **`DualChart`** — planned for v3.1 (maps onto the `vccs` `ComposedChart`).
+- **`DualChart`** — replaced by `BarChart` with `type: "line"` categories; see
+  [Bar + line series](#bar--line-series).
 - **`GanttChart`, `DagreGraph`** — removed in v3. They were Unovis-specific.
 
 ## Module options

@@ -28,8 +28,6 @@ export interface BulletLegendItemInterface {
    * `BarChart` only: draw this series as a line instead of a bar, e.g. a rate
    * plotted on a secondary axis over the bars. Default `bar`. Vertical
    * orientation only; ignored on horizontal charts.
-   *
-   * @experimental Preview — the API may change in a minor release.
    */
   type?: "bar" | "line";
   /**
@@ -37,7 +35,8 @@ export interface BulletLegendItemInterface {
    *
    * Marks a comparison series such as the previous period or a target while the
    * others stay solid. Overrides `lineDashArray` and `strokeVariant` for this
-   * series on `LineChart` and `AreaChart`.
+   * series on `LineChart` and `AreaChart`. On `BarChart` it applies to
+   * `type: "line"` series.
    */
   dashArray?: string;
 }
