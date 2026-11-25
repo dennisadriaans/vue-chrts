@@ -12,8 +12,8 @@
  * ({@link BarVariantDefs}). All of them support single, grouped and stacked
  * series, and a category's own `variant` overrides the chart's for that series.
  *
- * Preview: a category with `type: "line"` is drawn as a `<Line>` instead, so a
- * rate or trend can sit over the bars — typically on its own axis via `yAxis`.
+ * A category with `type: "line"` is drawn as a `<Line>` instead, so a rate or
+ * trend can sit over the bars — typically on its own axis via `yAxis`.
  * Vertical orientation only; horizontal charts keep drawing it as a bar.
  */
 import { useChartUi } from "../composables/useChartUi";
@@ -43,6 +43,7 @@ import {
   DEFAULT_CUBE_RADIUS,
   DEFAULT_CUBE_SIZE,
 } from "../utils/cubes";
+import { curveTypeToVccs } from "../utils/curve";
 import { PATTERNED_BAR_VARIANTS, variantId, type BarVariant } from "../utils/variants";
 
 const props = withDefaults(defineProps<BarChartProps<T>>(), {
@@ -155,6 +156,7 @@ const allSeries = computed(() =>
       color: cat?.color,
       hidden: cat?.hidden ?? false,
       yAxisId: cat?.yAxisId ?? PRIMARY_Y_AXIS_ID,
+      dashArray: cat?.dashArray,
       isLine: props.categories[k]?.type === "line" && props.orientation !== "horizontal",
       variant: props.categories[k]?.variant ?? props.variant,
     };
@@ -166,6 +168,8 @@ const series = computed(() => allSeries.value.filter((s) => !s.isLine));
 
 /** Series drawn as lines over the bars. */
 const lineSeries = computed(() => allSeries.value.filter((s) => s.isLine));
+
+const curve = computed(() => curveTypeToVccs(props.curveType));
 
 /** `vccs` only draws a `<Line>` inside a line or composed chart container. */
 const chartContainer = computed(() => (lineSeries.value.length ? ComposedChart : VccsBarChart));
@@ -388,9 +392,10 @@ defineSlots<{
       :data-key="s.dataKey"
       :name="s.name"
       :y-axis-id="s.yAxisId"
-      type="monotone"
+      :type="curve"
       :stroke="s.color"
-      :stroke-width="2"
+      :stroke-width="lineWidth ?? 2"
+      :stroke-dasharray="s.dashArray"
       :dot="false"
       :hide="s.hidden"
       :is-animation-active="duration !== undefined && duration !== 0"

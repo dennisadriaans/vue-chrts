@@ -368,6 +368,13 @@ export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
    * chart, whose value axis is sized from its own tick labels.
    */
   categoryAxisWidth?: number | "auto";
+  /**
+   * Curve interpolation for `type: "line"` series. Default monotone.
+   * Has no effect on bars.
+   */
+  curveType?: CurveType;
+  /** Width of `type: "line"` series in pixels. Default 2. Has no effect on bars. */
+  lineWidth?: number;
   /** Rounded corner radius for bars in pixels. Default 2. */
   radius?: number;
   /**
