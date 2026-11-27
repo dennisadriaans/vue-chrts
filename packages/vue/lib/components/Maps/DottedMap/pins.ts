@@ -2,7 +2,7 @@ import type { MapPin } from './types'
 
 // Default pin styling
 export const DEFAULT_PIN_OPTIONS = {
-  color: 'var(--ui-text)',
+  color: 'var(--ui-text, currentColor)',
   radius: 0.15
 }
 
