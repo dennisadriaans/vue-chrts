@@ -99,14 +99,45 @@ function resolveColor(color: BulletLegendItemInterface["color"], index: number):
 }
 
 /**
- * Convert a `categories` record into an ordered list of {@link SeriesDescriptor}s.
+ * One series in the array form of `categories`, as in Nuxt UI's `UChart`:
+ * a data key, or an object naming the key with an optional label and colour.
+ */
+export interface ChartCategory<T = Record<string, unknown>> {
+  key: Extract<keyof T, string>;
+  label?: string;
+  color?: string;
+}
+
+/**
+ * The `categories` prop: a record keyed by data property, or `UChart`'s array
+ * form (`["desktop", { key: "mobile", label: "Mobile" }]`).
+ */
+export type ChartCategories<T = Record<string, unknown>, C extends BulletLegendItemInterface = BulletLegendItemInterface> =
+  | Record<string, C>
+  | Array<Extract<keyof T, string> | ChartCategory<T>>;
+
+/** Bring either form of `categories` to the record the charts work with. */
+export function normalizeCategories<C extends BulletLegendItemInterface>(
+  categories: Record<string, C> | Array<string | ChartCategory<never>>,
+): Record<string, C> {
+  if (!Array.isArray(categories)) return categories;
+  const record: Record<string, BulletLegendItemInterface> = {};
+  for (const category of categories) {
+    if (typeof category === "string") record[category] = { name: category };
+    else record[category.key] = { name: category.label ?? category.key, color: category.color };
+  }
+  return record as Record<string, C>;
+}
+
+/**
+ * Convert `categories` into an ordered list of {@link SeriesDescriptor}s.
  * Hidden categories are kept (so the legend can still show them) — callers that
  * want only visible series can filter on `hidden`.
  */
 export function categoriesToSeries(
-  categories: Record<string, BulletLegendItemInterface>,
+  categories: Record<string, BulletLegendItemInterface> | Array<string | ChartCategory<never>>,
 ): SeriesDescriptor[] {
-  return Object.entries(categories).map(([dataKey, item], index) => ({
+  return Object.entries(normalizeCategories(categories)).map(([dataKey, item], index) => ({
     dataKey,
     name: String(item.name ?? dataKey),
     color: resolveColor(item.color, index),

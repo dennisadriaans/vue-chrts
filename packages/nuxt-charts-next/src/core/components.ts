@@ -26,16 +26,17 @@ const COMPONENTS = {
 
 export type ComponentName = keyof typeof COMPONENTS;
 
-/** Components that render without measuring the DOM, so they are safe to server-render. */
-const SSR_COMPONENTS = new Set<ComponentName>(["DottedMap", "TopoJSONMap", "HeatmapChart"]);
+/**
+ * Components whose output depends on the viewer's locale, time zone or the
+ * current time, so the server cannot render markup the browser will agree with.
+ */
+const CLIENT_ONLY_COMPONENTS = new Set<ComponentName>(["DataChart", "MetricChart"]);
 
 /**
  * Register the adapter components with Nuxt.
  *
- * vccs charts register with `mode: "client"` because they measure the DOM
- * (`ResponsiveContainer`) and is not SSR-renderable; client-only avoids a
- * hydration mismatch and matches the v2 module's behaviour. Geographic charts
- * render SVG on the server and attach resize/zoom behaviour after mounting.
+ * Charts render their SVG on the server at `initialWidth` and re-measure after
+ * hydration.
  */
 export const resolveComponents = (config: ModuleOptions, resolverUrl: string) => {
   const { prefix, include, global } = config;
@@ -49,7 +50,7 @@ export const resolveComponents = (config: ModuleOptions, resolverUrl: string) =>
     addComponent({
       name: `${prefix}${name}`,
       filePath: resolve(`./runtime/components/${COMPONENTS[name]}.vue`),
-      mode: SSR_COMPONENTS.has(name) ? "all" : "client",
+      mode: CLIENT_ONLY_COMPONENTS.has(name) ? "client" : "all",
       global,
     });
   }

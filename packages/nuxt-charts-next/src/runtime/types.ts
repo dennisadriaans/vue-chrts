@@ -25,6 +25,7 @@ export type {
   TooltipVariant,
 } from "./utils/variants";
 export type { BackgroundVariant } from "./utils/background";
+export type { ChartCategories, ChartCategory } from "./utils/categories";
 export type { DitherVariant } from "./utils/dither";
 // Nuxt UI-native theming: the `ui` prop and `appConfig.nuxtCharts` shapes.
 export type {

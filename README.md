@@ -1,118 +1,82 @@
-# Vue-chrts
-This is a monorepo for [vue-chrts](https://github.com/dennisadriaans/vue-chrts/tree/main/packages/vue), the legacy Nuxt module, and the next `nuxt-charts` module.
+# vue-chrts
 
-A Vue 3 charts package inspired by [Tremor](https://tremor.so/), built on top of [Unovis](https://unovis.dev). Vue-Chrts provides beautiful, responsive charts for your Vue applications with minimal setup.
+Chart and map components for Vue and Nuxt.
 
-![alt text](https://raw.githubusercontent.com/dennisadriaans/vue-chrts/refs/heads/main/nuxt-charts.jpg)
+![nuxt-charts](https://raw.githubusercontent.com/dennisadriaans/vue-chrts/refs/heads/main/nuxt-charts.jpg)
 
-[Check the docs and examples](https://nuxtcharts.com/docs)
+[Docs and examples](https://nuxtcharts.com/docs)
 
-## Features
+## Packages
 
-- 📊 Multiple chart types: Line, Bar, Area, Stacked Area, Donut
-- 🎨 Customizable
-- 📱 Responsive design
-- 💡 Simple, intuitive API
-- 🚀 Built with Vue 3 and TypeScript
+| Package | npm | Engine | Status |
+|---|---|---|---|
+| [`packages/nuxt-charts-next`](packages/nuxt-charts-next) | `nuxt-charts` (3.x) | [vccs](https://vue-charts.com) + D3 | Current. Nuxt module, and plain Vue through `nuxt-charts/components` |
+| [`packages/vue`](packages/vue) | `vue-chrts` (2.x) | [Unovis](https://unovis.dev) | Maintenance |
+| [`packages/nuxt-charts`](packages/nuxt-charts) | `nuxt-charts@legacy` (2.x) | Unovis, through `vue-chrts` | Maintenance |
 
+New projects should use `nuxt-charts` 3.x, with or without Nuxt.
 
-[Check the docs and examples](https://nuxtcharts.com/docs)
+## nuxt-charts 3
 
-## Installation Nuxt
+- 16 components: Area, Bar, Line, Donut, Bubble, Radar, Radial Bar, Funnel, Sankey, Candlestick, Status Tracker, Heatmap, Metric, Data, Dotted Map, TopoJSON Map
+- Server-rendered SVG, resized to the container after hydration
+- One peer dependency: `vue`. Nuxt, Nuxt UI and Tailwind are optional
+- Themed with `--vc-*` CSS tokens; matches Nuxt UI and shadcn-vue tokens when present
+
+### Nuxt
 
 ```bash
-# npm
-npm install nuxt-charts
-
-# yarn
-yarn add nuxt-charts
-
-# pnpm
 pnpm add nuxt-charts
+```
 
-# Add module to your nuxt.config.ts
+```ts
 export default defineNuxtConfig({
-  modules: ["nuxt-charts"]
+  modules: ["nuxt-charts"],
 });
 ```
 
-## Installation Vue.js
+### Vue + Vite
 
-```bash
-# npm
-npm install vue-chrts
-
-# yarn
-yarn add vue-chrts
-
-# pnpm
-pnpm add vue-chrts
-
-# import component
-import { LineChart } from 'vue-chrts';
-
+```ts
+import { LineChart } from "nuxt-charts/components";
+import "nuxt-charts/theme.css";
+import "nuxt-charts/components.css";
 ```
 
-[Check the docs and examples](https://nuxtcharts.com/docs)
-
-## Usage Example
+### Example
 
 ```vue
-<script setup>
-import { LineChart } from 'vue-chrts';
-
+<script setup lang="ts">
 const data = [
-  { month: 'Jan', sales: 100, profit: 50 },
-  { month: 'Feb', sales: 120, profit: 55 },
-  { month: 'Mar', sales: 180, profit: 80 },
-  { month: 'Apr', sales: 110, profit: 40 },
-  { month: 'May', sales: 90, profit: 30 },
+  { month: "Jan", sales: 100, profit: 50 },
+  { month: "Feb", sales: 120, profit: 55 },
+  { month: "Mar", sales: 180, profit: 80 },
 ];
 
 const categories = {
-  sales: {
-    name: 'Sales',
-    color: '#3b82f6'
-  },
-  profit: {
-    name: 'Profit', 
-    color: '#10b981'
-  }
+  sales: { name: "Sales", color: "#3b82f6" },
+  profit: { name: "Profit", color: "#10b981" },
 };
-
-const xFormatter = (i) => data[i].month;
 </script>
 
 <template>
-  <LineChart
-    :data="data"
-    :categories="categories"
-    :height="300"
-    :xFormatter="xFormatter"
-    xLabel="Month"
-    yLabel="Amount"
-  />
+  <LineChart :data="data" :categories="categories" x-axis="month" :height="300" />
 </template>
 ```
-[Check the docs and examples](https://nuxtcharts.com/docs)
 
-## Available Charts
+See the [package README](packages/nuxt-charts-next/README.md) for every chart, server rendering and theming.
 
-- `LineChart`
-- `BarChart`
-- `AreaChart`
-- `AreaStackedChart`
-- `DonutChart`
+## Development
 
-## Vue charts
-Make better dashboards with with [Vue charts](https://nuxtcharts.com/vue-charts) This library simplifies the process of integrating beautiful Vue charts into any modern web application or dashboard. 
-
-## Credits
-
-This library is inspired by [Tremor](https://tremor.so/) and built on top of [Unovis](https://unovis.dev).
+```bash
+pnpm install
+pnpm --filter nuxt-charts dev    # playground
+pnpm --filter nuxt-charts test
+```
 
 ## Angular
-Looking for the Angular charts variant? Check the [Angular Charts](https://angularcharts.com/) website or the [GitHub](https://github.com/dennisadriaans/angular-chrts) repo here.
+
+Looking for the Angular variant? See [Angular Charts](https://angularcharts.com/) or its [GitHub repo](https://github.com/dennisadriaans/angular-chrts).
 
 ## License
 

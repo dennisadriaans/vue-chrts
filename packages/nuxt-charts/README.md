@@ -16,15 +16,18 @@ Nuxt module for [vue-chrts](https://github.com/dennisadriaans/vue-chrts/tree/mai
 
 ## Installation
 
+This is the 2.x line, built on Unovis. New projects should use
+[`nuxt-charts` 3](https://github.com/dennisadriaans/vue-chrts/tree/main/packages/nuxt-charts-next).
+
 ```bash
 # npm
-npm install nuxt-charts
+npm install nuxt-charts@legacy
 
 # yarn
-yarn add nuxt-charts
+yarn add nuxt-charts@legacy
 
 # pnpm
-pnpm add nuxt-charts
+pnpm add nuxt-charts@legacy
 ```
 
 ## Usage

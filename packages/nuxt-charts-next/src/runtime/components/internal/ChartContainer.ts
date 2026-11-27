@@ -3,13 +3,18 @@ import {
   computed,
   defineComponent,
   Fragment,
+  getCurrentInstance,
   h,
   onBeforeUnmount,
   onMounted,
+  onServerPrefetch,
+  provide,
   ref,
   type PropType,
   type VNode,
 } from "vue";
+import { injectChartUi } from "../../composables/useChartUi";
+import ChartSsrBridge, { SSR_LAYOUT_PASS_KEY, type SsrLayoutPass } from "./ChartSsrBridge";
 
 type Size = number | string;
 
@@ -27,6 +32,31 @@ function flatten(vnodes: VNode[]): VNode[] {
     else result.push(vnode);
   }
   return result;
+}
+
+const PRERENDER_STYLE = "width:100%;height:100%";
+
+/** Mount the layout bridge as the first child of a `vccs` chart. Server only. */
+function withSsrBridge(chart: VNode): VNode {
+  const chartSlots = chart.children;
+  if (!chartSlots || typeof chartSlots !== "object" || Array.isArray(chartSlots)) return chart;
+  const original = (chartSlots as Record<string, unknown>).default as ((...args: unknown[]) => VNode[]) | undefined;
+  chart.children = {
+    ...chartSlots,
+    default: (...args: unknown[]) => [h(ChartSsrBridge, { key: "ssr-bridge" }), ...(original?.(...args) ?? [])],
+  } as VNode["children"];
+  return chart;
+}
+
+/** Wait for anything the server renderer deferred (async setup, prefetch). */
+async function settle(items: unknown[]): Promise<void> {
+  for (const item of items) {
+    if (Array.isArray(item)) await settle(item);
+    else if (item && typeof (item as PromiseLike<unknown>).then === "function") {
+      const resolved = await item;
+      if (Array.isArray(resolved)) await settle(resolved);
+    }
+  }
 }
 
 /**
@@ -54,7 +84,19 @@ export default defineComponent({
   },
   setup(props, { slots }) {
     const containerRef = ref<HTMLElement>();
-    const sizes = ref({ width: -1, height: -1 });
+    const instance = getCurrentInstance();
+    const isServer = typeof window === "undefined";
+    const initial = injectChartUi().initialSize();
+    const measured = ref(false);
+    // The server has nothing to measure, so it draws at the assumed size.
+    const sizes = ref(
+      isServer
+        ? {
+            width: isPercent(props.width) ? initial.width : Number(props.width),
+            height: isPercent(props.height) ? initial.height : Number(props.height),
+          }
+        : { width: -1, height: -1 },
+    );
 
     const calculatedWidth = computed(() =>
       isPercent(props.width) ? sizes.value.width : Number(props.width),
@@ -72,8 +114,6 @@ export default defineComponent({
       return calculatedWidth.value;
     });
 
-    const isReady = computed(() => sizes.value.width >= 0 && sizes.value.height >= 0);
-
     const containerStyle = computed(() => ({
       width: toCssSize(props.width),
       height: toCssSize(props.height),
@@ -84,6 +124,7 @@ export default defineComponent({
 
     function setSize(width: number, height: number) {
       const next = { width: Math.round(width), height: Math.round(height) };
+      measured.value = true;
       if (next.width === sizes.value.width && next.height === sizes.value.height) return;
       sizes.value = next;
       props.onResize?.(next.width, next.height);
@@ -109,23 +150,36 @@ export default defineComponent({
     });
 
     function renderChildren() {
-      if (!isReady.value) return [];
       const raw = slots.default?.();
       if (!raw) return [];
-      return flatten(raw).map((child, index) =>
-        cloneVNode(child, {
+      return flatten(raw).map((child, index) => {
+        const sized = cloneVNode(child, {
           width: finalWidth.value,
           height: calculatedHeight.value,
           key: child.key || `chart-container-child-${index}`,
           style: {
-            maxWidth: `${sizes.value.width}px`,
-            maxHeight: `${sizes.value.height}px`,
+            ...(measured.value
+              ? { maxWidth: `${sizes.value.width}px`, maxHeight: `${sizes.value.height}px` }
+              : {}),
             width: "100%",
             height: "100%",
             ...(child.props?.style as object),
           },
-        }),
-      );
+        });
+        return isServer ? withSsrBridge(sized) : sized;
+      });
+    }
+
+    if (isServer) {
+      const pass: SsrLayoutPass = { mode: "record", actions: [] };
+      provide(SSR_LAYOUT_PASS_KEY, pass);
+      onServerPrefetch(async () => {
+        const { ssrRenderVNode } = await import("vue/server-renderer");
+        const output: unknown[] = [];
+        ssrRenderVNode((item) => output.push(item), h(Fragment, null, renderChildren()), instance!);
+        await settle(output);
+        pass.mode = "replay";
+      });
     }
 
     return () =>
@@ -137,7 +191,16 @@ export default defineComponent({
           class: "vcharts-responsive-container",
           style: containerStyle.value,
         },
-        renderChildren(),
+        measured.value
+          ? renderChildren()
+          : [
+              // The server fills this with the drawn chart. An `innerHTML` vnode
+              // is left alone by hydration, so that markup stays on screen until
+              // the container is measured and the live chart replaces it.
+              isServer
+                ? h("div", { key: "prerender", style: PRERENDER_STYLE }, renderChildren())
+                : h("div", { key: "prerender", style: PRERENDER_STYLE, innerHTML: "" }),
+            ],
       );
   },
 });

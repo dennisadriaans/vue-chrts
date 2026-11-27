@@ -17,6 +17,7 @@
  * Vertical orientation only; horizontal charts keep drawing it as a bar.
  */
 import { useChartUi } from "../composables/useChartUi";
+import { isAnimated } from "../utils/animation";
 import { computed, ref, useId } from "vue";
 import {
   Bar,
@@ -30,10 +31,11 @@ import CartesianFrame from "./internal/CartesianFrame.vue";
 import CubeBarShape from "./internal/CubeBarShape.vue";
 import VariantBarShape from "./internal/VariantBarShape.vue";
 import BarVariantDefs from "./internal/BarVariantDefs";
-import type { BarChartProps } from "../types/charts";
+import type { BarCategory, BarChartProps } from "../types/charts";
 import type { AxisId } from "../types/shared";
 import {
   categoriesToSeries,
+  normalizeCategories,
   PRIMARY_Y_AXIS_ID,
   type SeriesDescriptor,
 } from "../utils/categories";
@@ -137,6 +139,8 @@ const valueAccessor = computed(() => {
   };
 });
 
+const categories = computed(() => normalizeCategories<BarCategory>(props.categories));
+
 /** Index categories by key so a `yAxis` entry can look up its colour / label. */
 const categoryByKey = computed(() => {
   const map = new Map<string, SeriesDescriptor>();
@@ -146,7 +150,7 @@ const categoryByKey = computed(() => {
 
 /** One descriptor per `yAxis` value key, enriched from `categories`. */
 const allSeries = computed(() =>
-  props.yAxis.map((key) => {
+  (props.yAxis ?? Object.keys(categories.value)).map((key) => {
     const k = String(key);
     const cat = categoryByKey.value.get(k);
     return {
@@ -155,8 +159,8 @@ const allSeries = computed(() =>
       color: cat?.color,
       hidden: cat?.hidden ?? false,
       yAxisId: cat?.yAxisId ?? PRIMARY_Y_AXIS_ID,
-      isLine: props.categories[k]?.type === "line" && props.orientation !== "horizontal",
-      variant: props.categories[k]?.variant ?? props.variant,
+      isLine: categories.value[k]?.type === "line" && props.orientation !== "horizontal",
+      variant: categories.value[k]?.variant ?? props.variant,
     };
   }),
 );
@@ -243,7 +247,10 @@ function onBarLeave() {
  * stack id; single-axis charts keep a single `stack-0` group as before.
  */
 const stackIdFor = (yAxisId: AxisId) => (props.stacked ? `stack-${yAxisId}` : undefined);
-const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
+const xAxisKey = computed(() => {
+  const key = props.xAxis ?? props.index;
+  return key !== undefined ? String(key) : undefined;
+});
 
 /** Forward spacing and stack-offset props onto the `vccs` chart container. */
 const chartContainerProps = computed(() => {
@@ -320,7 +327,7 @@ defineSlots<{
       :fill="fillFor(s)"
       :radius="s.variant === 'cubes' ? 0 : barRadius(i, s.variant)"
       :hide="s.hidden"
-      :is-animation-active="duration !== undefined && duration !== 0"
+      :is-animation-active="isAnimated(duration)"
       :transition="{ duration: (duration ?? 400) / 1000, ease: 'easeOut' }"
     >
       <!--
@@ -393,7 +400,7 @@ defineSlots<{
       :stroke-width="2"
       :dot="false"
       :hide="s.hidden"
-      :is-animation-active="duration !== undefined && duration !== 0"
+      :is-animation-active="isAnimated(duration)"
       :transition="{ duration: (duration ?? 400) / 1000, ease: 'easeOut' }"
     />
   </CartesianFrame>

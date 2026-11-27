@@ -1,10 +1,9 @@
 /**
- * Chart components for hosts without the Nuxt module, such as Storybook, Vitest
- * or a plain Vue + Vite app.
+ * Chart components for a plain Vue + Vite app, Storybook or Vitest: no Nuxt
+ * needed.
  *
  * Import the styles alongside: `nuxt-charts/theme.css` and `nuxt-charts/components.css`.
- * Under Nuxt prefer the module, which registers these globally and keeps the
- * DOM-measuring charts client-only.
+ * Under Nuxt prefer the module, which registers these globally.
  */
 export { default as AreaChart } from "./AreaChart.vue";
 export { default as BarChart } from "./BarChart.vue";

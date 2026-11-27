@@ -11,6 +11,7 @@
  */
 import type { ChartClassValue, ChartUi } from "../theme";
 import type { CurveType, DonutType, LegendPosition, Orientation } from "../enums";
+import type { ChartCategories } from "../utils/categories";
 import type { DitherVariant } from "../utils/dither";
 import type { StrokeGradientStop } from "../utils/gradient";
 import type { BackgroundArea, BackgroundVariant } from "../utils/background";
@@ -94,6 +95,13 @@ export interface ChartStyleProps {
   loading?: boolean;
   /** Text in the loading pill. Set to `""` to show the silhouette alone. */
   loadingLabel?: string;
+  /**
+   * Width in pixels the chart is drawn at on the server and until its
+   * container is measured in the browser. Set it close to the real rendered
+   * width to avoid a visible resize on hydration.
+   * @default 640
+   */
+  initialWidth?: number;
 }
 
 /**
@@ -114,9 +122,12 @@ export interface CartesianChartBaseProps<T> extends ChartStyleProps {
   padding?: ChartPadding;
   /**
    * Maps each category key to its legend representation (label, colour).
-   * The keys are the data properties plotted as series.
+   * The keys are the data properties plotted as series. Also accepts the array
+   * form of Nuxt UI's `UChart`: `["desktop", { key: "mobile", label: "Mobile" }]`.
    */
-  categories: Record<string, BulletLegendItemInterface>;
+  categories: ChartCategories<T>;
+  /** The data key for the x-axis, as in Nuxt UI's `UChart`. Same as `xAxis`. */
+  index?: keyof T;
   /** Formats x-axis ticks. */
   xFormatter?: axisFormatter;
   /** Formats y-axis ticks. */
@@ -347,9 +358,9 @@ export interface BarCategory extends BulletLegendItemInterface {
 
 export interface BarChartProps<T> extends CartesianChartBaseProps<T> {
   /** Series config keyed by data property: label, colour, axis and variant. */
-  categories: Record<string, BarCategory>;
-  /** The data keys (series) plotted on the value axis. */
-  yAxis: NumericKeys<T>[];
+  categories: ChartCategories<T, BarCategory>;
+  /** The data keys (series) plotted on the value axis. Defaults to the `categories` keys. */
+  yAxis?: NumericKeys<T>[];
   /** The data key used for the category axis. */
   xAxis?: keyof T;
   /** Stack the bars instead of grouping them. */
@@ -557,8 +568,13 @@ export interface DonutChartProps<T = unknown> extends ChartStyleProps {
   nameKey?: keyof T;
   /** Record field containing the numeric segment value. Required for record data. */
   valueKey?: keyof T;
-  /** Maps each segment to its legend representation (label, colour). */
-  categories: Record<string, BulletLegendItemInterface>;
+  /**
+   * Maps each segment to its legend representation (label, colour). In the
+   * array form of Nuxt UI's `UChart`, the first entry names the value field.
+   */
+  categories: ChartCategories<T>;
+  /** Record field containing the segment label, as in Nuxt UI's `UChart`. Same as `nameKey`. */
+  index?: keyof T;
   /** Full ring or half-circle gauge. */
   type?: DonutType;
   /**

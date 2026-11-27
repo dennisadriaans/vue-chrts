@@ -105,7 +105,13 @@ export interface ChartUiContext {
    * loading / empty state standing in for it): `root` slot + `ui.root` + `class`.
    */
   readonly rootClass: string;
+  /** Size assumed on the server and until the container is measured. */
+  initialSize: () => { width: number; height: number };
 }
+
+/** Width a chart is drawn at on the server, matching Nuxt UI's `UChart`. */
+export const DEFAULT_INITIAL_WIDTH = 640;
+const DEFAULT_INITIAL_HEIGHT = 300;
 
 export const CHART_UI_KEY: InjectionKey<ChartUiContext> = Symbol("nuxt-charts:ui");
 
@@ -115,6 +121,8 @@ export interface ChartUiInput {
   theme?: ChartTheme;
   tooltipVariant?: TooltipVariant;
   tooltipRoundness?: TooltipRoundness;
+  initialWidth?: number;
+  height?: number | string;
 }
 
 function chromeStyle(theme: ChartTheme | undefined): ChartUiContext["themeStyle"] {
@@ -188,6 +196,12 @@ export function useChartUi(name: ChartComponentThemeName, props: ChartUiInput) {
     get rootClass() {
       return rootClass.value;
     },
+    initialSize: () => ({
+      width: props.initialWidth ?? parent?.initialSize().width ?? DEFAULT_INITIAL_WIDTH,
+      height: typeof props.height === "number"
+        ? props.height
+        : (parent?.initialSize().height ?? DEFAULT_INITIAL_HEIGHT),
+    }),
   };
 
   const rootClass = computed(() => context.slot("root", props.class));
@@ -201,6 +215,7 @@ const NOOP_CONTEXT: ChartUiContext = {
   themeStyle: { tooltip: {}, legendLabel: {} },
   uiProp: () => undefined,
   rootClass: "",
+  initialSize: () => ({ width: DEFAULT_INITIAL_WIDTH, height: DEFAULT_INITIAL_HEIGHT }),
 };
 
 /** The nearest chart's styling, for internal chrome components. */

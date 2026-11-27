@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+Charts render on the server, and the package stands on its own in plain Vue.
+
+### Upgrading
+
+- Charts are no longer client-only under the Nuxt module. Remove `<ClientOnly>` wrappers you added for them; keep one around a chart you want out of the HTML. `DataChart` and `MetricChart` stay client-only.
+- `BarChart` `yAxis` is optional and defaults to the `categories` keys.
+
+### Features
+
+- **Server rendering:** every chart ships its SVG (axes, series, legend) in the server HTML and hydrates without a mismatch. `initialWidth` sets the width the server draws at (default 640).
+- **`UChart`-compatible props:** `index` and the array form of `categories` on `AreaChart`, `LineChart`, `BarChart` and `DonutChart`.
+- **Standalone styling:** `MetricChart` is fully styled by `components.css` without Nuxt UI or Tailwind.
+
 ## [3.3.0](https://github.com/dennisadriaans/vue-chrts/compare/nuxt-charts@3.2.0...nuxt-charts@3.3.0) (2026-11-17)
 
 Restores the v2 DonutChart `radius` and `arcWidth: 0` behaviour, and lets long category labels fit on horizontal bar charts.

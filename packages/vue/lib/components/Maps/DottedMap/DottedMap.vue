@@ -137,7 +137,7 @@ const handlePointClick = (event: MouseEvent, point: MapPin) => {
       const newPin: MapPin = {
         lat: point.lat,
         lng: point.lng,
-        svgOptions: { color: "var(--ui-text)", radius: 0.15 },
+        svgOptions: { color: "var(--ui-text, currentColor)", radius: 0.15 },
         data: { city: "Custom Pin", region: "Other" },
       };
       internalPins.value.push(newPin);
@@ -185,7 +185,7 @@ defineExpose({
         width="100%"
         height="100%"
         :map-height="variant.mapHeight || 60"
-        :color="variant.color || 'var(--ui-text-dimmed)'"
+        :color="variant.color || 'var(--ui-text-dimmed, currentColor)'"
         :dot-size="variant.dotSize || 0.36"
         :grid="variant.grid"
         :shape="variant.shape"

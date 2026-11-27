@@ -8,6 +8,7 @@
  * `categories`).
  */
 import { useChartUi } from "../composables/useChartUi";
+import { isAnimated } from "../utils/animation";
 import { computed, h } from "vue";
 import {
   CartesianGrid, Legend, Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis,
@@ -17,6 +18,7 @@ import ChartContainer from "./internal/ChartContainer";
 import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartTooltip from "./internal/ChartTooltip.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import ChartSsrLegend from "./internal/ChartSsrLegend";
 import ChartEmptyState from "./internal/ChartEmptyState.vue";
 import ChartAccessibility from "./internal/ChartAccessibility.vue";
 import type { BubbleChartProps } from "../types/charts";
@@ -280,7 +282,7 @@ const tooltipContent = computed(() => {
         :data="g.data"
         :fill="g.color"
         :fill-opacity="opacity ?? 0.7"
-        :is-animation-active="duration !== undefined && duration !== 0"
+        :is-animation-active="isAnimated(duration)"
         :transition="{ duration: (duration ?? 400) / 1000, ease: 'easeOut' }"
       />
 
@@ -296,6 +298,7 @@ const tooltipContent = computed(() => {
           <ChartLegend v-bind="slotProps" :variant="legendVariant" />
         </template>
       </Legend>
+      <ChartSsrLegend v-if="!hideLegend" :position="legendPosition" :variant="legendVariant" />
     </ScatterChart>
   </ChartContainer>
   </div>

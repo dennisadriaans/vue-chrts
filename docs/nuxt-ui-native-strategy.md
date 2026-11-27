@@ -80,15 +80,56 @@ Options weighed:
   caller classes, the `vc-*` stylesheet styles the chrome, and theme colour
   names fall back to the standalone palette.
 
+## Server rendering
+
+`UChart` prerenders its SVG on the server at `initialWidth`. We now do the
+same, on vccs.
+
+- **Why it was client-only.** `ChartContainer` rendered nothing until it had
+  measured the DOM, and vccs lays a chart out from a store its children fill
+  in as they set up. A single server pass draws an axis before the series
+  that give it a domain exist.
+- **Two passes.** On the server `ChartContainer` renders the chart twice.
+  `ChartSsrBridge` records every registration in the first pass and replays
+  them into the store of the second, so the HTML is the settled layout.
+- **Legend.** vccs teleports the legend into an element it measures.
+  `ChartSsrLegend` reserves one row and draws the entries inside the SVG.
+- **Hydration.** The server markup sits in a wrapper the client renders as
+  `innerHTML`, which hydration leaves alone. Once measured, the live chart
+  replaces it. No mismatch, no client pre-pass.
+- **Not server-rendered.** `DataChart` and `MetricChart` format with the
+  viewer's locale and time zone.
+
+The bridge depends on vccs internals: the `vue-redux-context` injection key,
+`legend/setLegendSize`, and `*/remove*` action names. `test/ssr.test.ts` and
+`test/hydration.test.ts` fail if a vccs upgrade breaks them.
+
+## Position next to `UChart`
+
+Matching `UChart` on line, area, bar and donut is table stakes, not the
+product. What Nuxt UI does not ship is:
+
+- The other twelve components: radar, radial bar, funnel, sankey, candlestick,
+  bubble, status tracker, heatmap, maps, `MetricChart`, `DataChart`.
+- Use without Nuxt UI, Tailwind or Nuxt: `nuxt-charts/components` plus two
+  stylesheets, tested in plain Vue.
+- A drop-in path from `UChart`: `index`, array `categories`, `colors`, `ui`
+  and `initialWidth` are accepted as-is.
+
+Nuxt UI is one theme the charts can wear, not a requirement.
+
 ## Known gaps / follow-ups
 
 - **Grid lines**: vccs `CartesianGrid` does not render in most cartesian demos.
   This is pre-existing and identical on `main`, while `UChart` shows a
   horizontal grid by default. Worth fixing for visual parity.
-- **API aliases**: `UChart` uses `index` / `categories[]` / `legend` /
-  `xLabel`; we keep the v2 API (`x-axis` / record `categories` / `hideLegend` /
-  `xLabel`). Optional aliases would make swapping a `UChart` for a
-  nuxt-charts chart a rename-free change.
+- **API aliases**: `index` and array `categories` are accepted. `legend`,
+  `grid`, `curve` and `points` still use the v2 names (`hideLegend`,
+  `yGridLine`, `curveType`, `markerConfig`).
+- **One engine for plain Vue**: `vue-chrts` 2.x is still Unovis. Publishing
+  the v3 runtime as `vue-chrts@3` needs a 2.x maintenance branch first,
+  because `nuxt-charts-legacy` depends on the workspace `vue-chrts`.
+- **Charts removed in v3**: Gantt and Dagre have no v3 equivalent yet.
 - **Future engine option**: if TanStack Charts grows marks for our catalogue,
   the theme layer built here is engine-agnostic. Only the `--vc-*` →
   `--ts-chart-*` bridge would change.

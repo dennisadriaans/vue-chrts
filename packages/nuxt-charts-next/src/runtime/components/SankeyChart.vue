@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="N extends SankeyInputNode, L extends SankeyInputLink">
 import { useChartUi } from "../composables/useChartUi";
+import { isAnimated } from "../utils/animation";
 import { computed, h, ref } from "vue";
 import { Sankey, Tooltip, type TooltipContentProps } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
@@ -146,7 +147,7 @@ const accessibleRows = computed(() => chartData.value.links.map((link) => ({
         :node-padding="nodePadding"
         :iterations="iterations"
         :margin="padding ?? { top: 8, right: 72, bottom: 8, left: 72 }"
-        :is-animation-active="duration > 0"
+        :is-animation-active="isAnimated(duration)"
         :transition="{ duration: duration / 1000, ease: 'easeOut' }"
         :on-mouse-enter="handleMouseEnter"
         :on-mouse-leave="handleMouseLeave"

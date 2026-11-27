@@ -10,3 +10,5 @@ allowBuilds:
   unrs-resolver: false
   vue-demi: false
   workerd: false
+overrides:
+  vue: ^3.5.42
