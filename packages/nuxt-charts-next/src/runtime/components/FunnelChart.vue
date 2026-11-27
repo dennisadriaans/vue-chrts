@@ -12,6 +12,7 @@
  *   tooltip.
  */
 import { useChartUi } from "../composables/useChartUi";
+import { isAnimated } from "../utils/animation";
 import { computed, ref, useTemplateRef } from "vue";
 import {
   Funnel,
@@ -21,6 +22,7 @@ import {
 import ChartContainer from "./internal/ChartContainer";
 import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import ChartSsrLegend from "./internal/ChartSsrLegend";
 import ChartEmptyState from "./internal/ChartEmptyState.vue";
 import ChartAccessibility from "./internal/ChartAccessibility.vue";
 import FunnelClassicShape from "./internal/FunnelClassicShape.vue";
@@ -175,7 +177,7 @@ function clearTooltip() {
           name-key="name"
           last-shape-type="rectangle"
           stroke="none"
-          :is-animation-active="duration !== undefined && duration !== 0"
+          :is-animation-active="isAnimated(duration)"
           :transition="{ duration: (duration ?? 800) / 1000, ease: 'easeOut' }"
         >
           <template #shape="shapeProps">
@@ -232,7 +234,7 @@ function clearTooltip() {
         name-key="name"
         :last-shape-type="lastShapeType ?? 'triangle'"
         stroke="none"
-        :is-animation-active="duration !== undefined && duration !== 0"
+        :is-animation-active="isAnimated(duration)"
         :transition="{ duration: (duration ?? 800) / 1000, ease: 'easeOut' }"
       >
         <template #shape="shapeProps">
@@ -268,6 +270,7 @@ function clearTooltip() {
           <ChartLegend v-bind="slotProps" :variant="legendVariant" />
         </template>
       </Legend>
+      <ChartSsrLegend v-if="!hideLegend" :position="legendPosition" :variant="legendVariant" />
     </VccsFunnelChart>
   </ChartContainer>
     <FunnelTooltip

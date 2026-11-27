@@ -7,6 +7,7 @@
  * `<Radar>` polygon per series defined in `categories`.
  */
 import { useChartUi } from "../composables/useChartUi";
+import { isAnimated } from "../utils/animation";
 import { computed, ref, useId } from "vue";
 import {
   Legend,
@@ -20,6 +21,7 @@ import {
 import ChartContainer from "./internal/ChartContainer";
 import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import ChartSsrLegend from "./internal/ChartSsrLegend";
 import ChartEmptyState from "./internal/ChartEmptyState.vue";
 import ChartAccessibility from "./internal/ChartAccessibility.vue";
 import ChartDot from "./internal/ChartDot";
@@ -175,7 +177,7 @@ const resolvedOuterRadius = computed(() => {
         :fill="polygonFill(s.dataKey, s.color)"
         :fill-opacity="polygonFillOpacity"
         :dot="showDots"
-        :is-animation-active="duration !== undefined && duration !== 0"
+        :is-animation-active="isAnimated(duration)"
         :transition="{ duration: (duration ?? 800) / 1000, ease: 'easeOut' }"
       >
         <template v-if="showDots" #dot="dotProps">
@@ -201,6 +203,7 @@ const resolvedOuterRadius = computed(() => {
           <ChartLegend v-bind="slotProps" :variant="legendVariant" />
         </template>
       </Legend>
+      <ChartSsrLegend v-if="!hideLegend" :position="legendPosition" :variant="legendVariant" />
     </VccsRadarChart>
   </ChartContainer>
   </div>

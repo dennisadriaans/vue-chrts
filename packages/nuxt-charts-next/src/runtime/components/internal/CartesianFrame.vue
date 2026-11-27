@@ -37,12 +37,13 @@ import {
   type VccsAxisInterval,
   type VccsAxisTick,
 } from "../../utils/axis";
-import { categoriesToSeries, normalizeAxisId } from "../../utils/categories";
+import { categoriesToSeries, normalizeAxisId, normalizeCategories } from "../../utils/categories";
 import type { AxisId } from "../../types/shared";
 import { toAxisDomain, toCssProperties } from "../../utils/style";
 import { axisTickVars, resolveHoverRadius, resolveHoverVisible, themeToVars } from "../../utils/theme";
 import ChartTooltip from "./ChartTooltip.vue";
 import ChartLegend from "./ChartLegend.vue";
+import ChartSsrLegend from "./ChartSsrLegend";
 import ChartBackground from "./ChartBackground";
 import ChartSkeleton from "./ChartSkeleton.vue";
 import ChartEmptyState from "./ChartEmptyState.vue";
@@ -89,7 +90,7 @@ const props = defineProps<
 
 const ui = injectChartUi();
 
-const numericKeys = computed(() => Object.keys(props.categories) as (keyof T)[]);
+const numericKeys = computed(() => Object.keys(normalizeCategories(props.categories)) as (keyof T)[]);
 const normalizedData = computed(() => normalizeNumericRows(props.data, numericKeys.value));
 const dataLimit = computed(() => props.maxDataPoints ?? DEFAULT_MAX_DATA_POINTS);
 const chartData = computed(() => {
@@ -621,6 +622,7 @@ const resolvedYAxes = computed(() => {
           <ChartLegend v-bind="slotProps" :variant="legendVariant" :colors="legendColors" />
         </template>
       </Legend>
+      <ChartSsrLegend v-if="!hideLegend" :position="legendPosition" :variant="legendVariant" :colors="legendColors" />
     </component>
   </ChartContainer>
   </div>

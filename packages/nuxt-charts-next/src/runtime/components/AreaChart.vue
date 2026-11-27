@@ -11,6 +11,7 @@
  * exactly as it did before any of this existed.
  */
 import { useChartUi } from "../composables/useChartUi";
+import { isAnimated } from "../utils/animation";
 import { computed, useId } from "vue";
 import { Area, AreaChart as VccsAreaChart } from "vccs";
 import CartesianFrame from "./internal/CartesianFrame.vue";
@@ -161,7 +162,10 @@ const frameClass = computed(() =>
 /** Truthy `dot` is what makes `vccs` call the `#dot` slot at all. */
 const showDots = computed(() => props.dotVariant !== undefined);
 
-const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
+const xAxisKey = computed(() => {
+  const key = props.xAxis ?? props.index;
+  return key !== undefined ? String(key) : undefined;
+});
 
 defineSlots<{
   tooltip?: (props: { values: T | undefined }) => unknown;
@@ -233,7 +237,7 @@ defineSlots<{
       :filter="glowFor(s.dataKey)"
       :dot="showDots || (s.dot as boolean)"
       :hide="s.hidden"
-      :is-animation-active="duration !== undefined && duration !== 0"
+      :is-animation-active="isAnimated(duration)"
       :transition="{ duration: (duration ?? 800) / 1000, ease: 'easeOut' }"
     >
       <template v-if="showDots" #dot="dotProps">

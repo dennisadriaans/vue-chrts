@@ -7,6 +7,7 @@
  * `<RadialBarChart>`; colours come from `categories`.
  */
 import { useChartUi } from "../composables/useChartUi";
+import { isAnimated } from "../utils/animation";
 import { computed, ref } from "vue";
 import {
   Legend,
@@ -19,6 +20,7 @@ import {
 import ChartContainer from "./internal/ChartContainer";
 import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import ChartSsrLegend from "./internal/ChartSsrLegend";
 import ChartEmptyState from "./internal/ChartEmptyState.vue";
 import ChartAccessibility from "./internal/ChartAccessibility.vue";
 import { tooltipContentFor } from "./internal/tooltipContent";
@@ -140,7 +142,7 @@ const onCenter = (next: { cx: number; cy: number }) => {
         data-key="value"
         :background="background ?? true"
         :corner-radius="cornerRadius"
-        :is-animation-active="duration !== undefined && duration !== 0"
+        :is-animation-active="isAnimated(duration)"
         :transition="{ duration: (duration ?? 400) / 1000, ease: 'easeOut' }"
       />
       <Tooltip
@@ -163,6 +165,7 @@ const onCenter = (next: { cx: number; cy: number }) => {
           <ChartLegend v-bind="slotProps" :variant="legendVariant" />
         </template>
       </Legend>
+      <ChartSsrLegend v-if="!hideLegend" :position="legendPosition" :variant="legendVariant" />
     </VccsRadialBarChart>
   </ChartContainer>
   </div>

@@ -79,7 +79,7 @@ const accessibleRows = computed(() => candles.value.map((candle) => ({
 // ─── Layout ───────────────────────────────────────────────────────────────────
 
 const containerRef = useTemplateRef<HTMLDivElement>("containerRef");
-const W = ref(0);
+const W = ref(ui.initialSize().width);
 const H = computed(() => props.height);
 
 const PAD = computed(() => ({
@@ -244,6 +244,8 @@ function onKeydown(event: KeyboardEvent) {
 let ro: ResizeObserver | undefined;
 onMounted(() => {
   if (!containerRef.value) return;
+  const { width } = containerRef.value.getBoundingClientRect();
+  if (width > 0) W.value = width;
   ro = new ResizeObserver((entries) => {
     const cr = entries[0]?.contentRect;
     if (cr) W.value = Math.max(0, cr.width);
@@ -267,7 +269,7 @@ onBeforeUnmount(() => ro?.disconnect());
     <ChartAccessibility :label="ariaLabel ?? 'Candlestick chart'" :description="ariaDescription" :rows="accessibleRows" :show-table="accessibleDataTable !== false" />
     <ChartSkeleton v-if="loading" :height="height" shape="bars" :label="loadingLabel ?? 'Loading'" />
     <ChartEmptyState v-else-if="error || candles.length === 0" :height="height" :message="error || emptyLabel" />
-    <svg v-else :width="W" :height="H" class="vc-candlestick-chart__svg" aria-hidden="true">
+    <svg v-else :width="W" :height="H" :viewBox="`0 0 ${W} ${H}`" class="vc-candlestick-chart__svg" aria-hidden="true">
       <!-- Grid -->
       <template v-if="yGridLine">
         <line

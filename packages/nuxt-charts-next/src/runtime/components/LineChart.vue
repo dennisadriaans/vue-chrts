@@ -6,6 +6,7 @@
  * `vccs` `<LineChart>` + one `<Line>` per category.
  */
 import { useChartUi } from "../composables/useChartUi";
+import { isAnimated } from "../utils/animation";
 import { computed, useId } from "vue";
 import { Line, LineChart as VccsLineChart } from "vccs";
 import CartesianFrame from "./internal/CartesianFrame.vue";
@@ -74,7 +75,10 @@ function strokeFor(dataKey: string, color: string): string {
     : color;
 }
 
-const xAxisKey = computed(() => (props.xAxis !== undefined ? String(props.xAxis) : undefined));
+const xAxisKey = computed(() => {
+  const key = props.xAxis ?? props.index;
+  return key !== undefined ? String(key) : undefined;
+});
 
 defineSlots<{
   tooltip?: (props: { values: T | undefined }) => unknown;
@@ -118,7 +122,7 @@ defineSlots<{
       :filter="glowFor(s.dataKey)"
       :dot="showDots || (s.dot as boolean)"
       :hide="s.hidden"
-      :is-animation-active="duration !== undefined && duration !== 0"
+      :is-animation-active="isAnimated(duration)"
       :transition="{ duration: (duration ?? 800) / 1000, ease: 'easeOut' }"
     >
       <template v-if="showDots" #dot="dotProps">

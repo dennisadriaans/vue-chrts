@@ -9,11 +9,13 @@
  * `DonutType.Half` renders a semicircle gauge.
  */
 import { useChartUi } from "../composables/useChartUi";
+import { isAnimated } from "../utils/animation";
 import { computed, shallowRef, useId } from "vue";
 import { Legend, Pie, PieChart, Tooltip } from "vccs";
 import ChartContainer from "./internal/ChartContainer";
 import ChartSkeleton from "./internal/ChartSkeleton.vue";
 import ChartLegend from "./internal/ChartLegend.vue";
+import ChartSsrLegend from "./internal/ChartSsrLegend";
 import ChartEmptyState from "./internal/ChartEmptyState.vue";
 import ChartAccessibility from "./internal/ChartAccessibility.vue";
 import PolarCenterSync, { type PolarPlotArea } from "./internal/PolarCenterSync";
@@ -47,8 +49,16 @@ const useGradient = computed(() => props.variant === "gradient");
  * always unique and safe to build a `url(#…)` from.
  */
 const segments = computed(() => {
-  const cats = categoriesToSeries(props.categories);
-  const normalized = normalizeNamedValues(props.data, cats.map((cat) => String(cat.name)), props.nameKey, props.valueKey);
+  // `UChart` form: the first category names the value field, `index` the label field.
+  const [first] = Array.isArray(props.categories) ? props.categories : [];
+  const valueField = first === undefined ? undefined : typeof first === "string" ? first : first.key;
+  const cats = valueField === undefined ? categoriesToSeries(props.categories) : [];
+  const normalized = normalizeNamedValues(
+    props.data,
+    cats.map((cat) => String(cat.name)),
+    props.nameKey ?? props.index,
+    props.valueKey ?? (valueField as keyof T | undefined),
+  );
   const limit = props.maxDataPoints ?? DEFAULT_MAX_DATA_POINTS;
   warnDataLimit("DonutChart", normalized.length, limit);
   const values = sampleData(normalized, limit);
@@ -204,7 +214,7 @@ const legendWrapperStyle = computed(() =>
           :padding-angle="padAngle ?? 0"
           :corner-radius="segmentCornerRadius"
           :stroke="stroke ?? 'none'"
-          :is-animation-active="duration !== undefined && duration !== 0"
+          :is-animation-active="isAnimated(duration)"
           :transition="{ duration: (duration ?? 1200) / 1000, ease: 'easeOut' }"
         />
         <Tooltip v-if="!hideTooltip" :content="tooltipContent" :is-animation-active="false" />
@@ -219,6 +229,7 @@ const legendWrapperStyle = computed(() =>
             <ChartLegend v-bind="slotProps" :variant="legendVariant" :colors="legendColors" />
           </template>
         </Legend>
+        <ChartSsrLegend v-if="!hideLegend" :position="legendPosition" :variant="legendVariant" :colors="legendColors" />
       </PieChart>
     </ChartContainer>
 
