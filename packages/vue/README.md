@@ -4,6 +4,10 @@ A Vue 3 charts package inspired by [Tremor](https://tremor.so/), built on top of
 
 ![alt text](https://nuxtcharts.com/og-image.png)
 
+> This is the 2.x line, built on Unovis and in maintenance. For new Vue or Nuxt
+> projects use [`nuxt-charts` 3](https://github.com/dennisadriaans/vue-chrts/tree/main/packages/nuxt-charts-next):
+> server-rendered, no Unovis, and usable without Nuxt through `nuxt-charts/components`.
+
 [Check the docs and examples](https://nuxtcharts.com/docs)
 
 ## Features

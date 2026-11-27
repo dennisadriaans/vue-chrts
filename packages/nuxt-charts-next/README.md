@@ -1,6 +1,10 @@
 # nuxt-charts
 
-Beautiful chart and map components for Nuxt — Area, Bar, Line, Donut, Bubble, Radar, Radial Bar, Funnel, Sankey, Candlestick, Status Tracker, Dotted Map, and TopoJSON Map.
+Chart and map components for Nuxt and Vue — Area, Bar, Line, Donut, Bubble, Radar, Radial Bar, Funnel, Sankey, Candlestick, Status Tracker, Heatmap, Dotted Map, and TopoJSON Map.
+
+- **Server-rendered.** Charts ship as SVG in the HTML, then resize to their container in the browser.
+- **Standalone.** One peer dependency, `vue`. Works in Nuxt, or in any Vue + Vite app without Nuxt, Nuxt UI or Tailwind.
+- **Themeable.** `--vc-*` CSS tokens, a typed `theme` prop, and per-slot classes.
 
 Powered by [vccs](https://vue-charts.com) (Vue port of Recharts). Drop-in config-prop API from nuxt-charts v2.
 
@@ -14,8 +18,7 @@ without it, the same components use a built-in stylesheet.
 ## Install
 
 ```bash
-# v3
-pnpm add nuxt-charts@next
+pnpm add nuxt-charts
 ```
 
 ```ts
@@ -43,6 +46,25 @@ export default defineNuxtConfig({
 | `MetricChart` | Analytics card over raw rows: headline, delta, ranges, table, CSV |
 | `DottedMap` | D3 dotted geography, pins, regional filters, and country colors |
 | `TopoJSONMap` | D3 choropleths, points, routes, projections, and heatmaps |
+
+## Server rendering
+
+Every chart except `DataChart` and `MetricChart` renders on the server. The
+HTML carries the finished SVG: axes, series and legend. In the browser the
+chart measures its container and redraws at the real width.
+
+The server cannot measure, so it draws at `initialWidth` (default `640`) and
+the SVG scales to its container until the chart hydrates. Set it close to the
+rendered width to avoid a visible resize:
+
+```vue
+<LineChart :data="data" :categories="categories" :height="300" :initial-width="960" />
+```
+
+- Animations do not run on the server; the HTML shows the finished series.
+- The server legend is one row. A legend that wraps takes its real height after hydration.
+- `DataChart` and `MetricChart` format with the viewer's locale and time zone, so the module keeps them client-only.
+- For a chart with thousands of points, wrap it in `<ClientOnly>` to keep the HTML small.
 
 ### Maps
 
@@ -277,7 +299,7 @@ several charts on one page never collide.
 
 ### Deferred / removed
 
-- **`DualChart`** — planned for v3.1 (maps onto the `vccs` `ComposedChart`).
+- **`DualChart`** — use `BarChart` with `type: "line"` categories and `yAxes` (see "Bar + line series").
 - **`GanttChart`, `DagreGraph`** — removed in v3. They were Unovis-specific.
 
 ## Module options
@@ -294,10 +316,9 @@ export default defineNuxtConfig({
 })
 ```
 
-## Outside the Nuxt runtime
+## Vue + Vite, without Nuxt
 
-This package targets Nuxt apps. Tooling that renders their components without
-Nuxt, such as Storybook or Vitest, can import the charts and styles directly:
+The components do not depend on Nuxt. Import them and the two stylesheets:
 
 ```ts
 import { LineChart } from "nuxt-charts/components";
@@ -305,10 +326,20 @@ import "nuxt-charts/theme.css";
 import "nuxt-charts/components.css";
 ```
 
-Add `vccs`, `motion-v` and `vccs > eventemitter3` to Vite's
-`optimizeDeps.include`, as the module does. Charts render in standalone styling
-there; a Vue + Vite app using Nuxt UI (`@nuxt/ui/vite`) can opt into the Nuxt
-UI themes the module wires up automatically:
+```ts
+// vite.config.ts
+export default defineConfig({
+  optimizeDeps: { include: ["vccs", "motion-v", "vccs > eventemitter3"] },
+});
+```
+
+The stylesheets style every chart on their own, in light and dark mode, and
+read shadcn-vue tokens (`--border`, `--popover`, `--muted-foreground`) when
+present. Override any `--vc-*` token to restyle. Server rendering works the
+same way with `vue/server-renderer` or any SSR framework.
+
+A Vue + Vite app using Nuxt UI (`@nuxt/ui/vite`) can opt into the Nuxt UI
+themes the module wires up automatically:
 
 ```ts
 import { tv } from "@nuxt/ui/utils/tv";
@@ -318,8 +349,21 @@ configureCharts({ nuxtUi: true, tv, useAppConfig: () => appConfig });
 ```
 
 Also add `@source "../node_modules/nuxt-charts/dist/runtime/theme";` to your
-CSS so Tailwind generates the theme classes. Standalone Vue/Vite applications
-should use the separate `vue-chrts` package.
+CSS so Tailwind generates the theme classes.
+
+## Coming from Nuxt UI's `UChart`
+
+`AreaChart`, `LineChart`, `BarChart` and `DonutChart` accept `UChart`'s data
+props, so a chart moves over by changing the tag:
+
+```vue
+<!-- <UChart type="bar" :data="data" index="month" :categories="categories" /> -->
+<BarChart :data="data" index="month" :categories="categories" :height="300" />
+```
+
+- `index` is the x-axis key (the slice label on a donut). Same as `xAxis` / `nameKey`.
+- `categories` takes an array of keys or `{ key, label?, color? }` objects, as well as the record form.
+- `colors`, `ui`, `class` and `initialWidth` behave as on `UChart`.
 
 ## Data safety, accessibility, and limits
 
@@ -468,6 +512,30 @@ Nothing breaks; existing colour overrides keep working.
 ## Migrating from v2
 
 See the [Upgrade to v3](https://nuxtcharts.com/docs/getting-started/upgrade-to-v3) guide. Maps now use D3 and include world geometry. Gantt, dual, and dagre charts remain deferred or removed.
+
+v3 does not read Unovis `--vis-*` variables. Their `--vc-*` equivalents:
+
+| v2 (`--vis-*`) | v3 |
+|---|---|
+| `--vis-color0` … `--vis-color5` | `--vc-series-0` … `--vc-series-5`, or the `colors` prop |
+| `--vis-tooltip-background-color` | `--vc-tooltip-bg` |
+| `--vis-tooltip-text-color`, `--vis-tooltip-title-color` | `--vc-tooltip-fg` |
+| `--vis-tooltip-label-color` | `--vc-tooltip-muted` |
+| `--vis-tooltip-border-color` | `--vc-tooltip-border` |
+| `--vis-tooltip-border-radius` | `--vc-tooltip-radius` |
+| `--vis-tooltip-padding`, `--vis-tooltip-content-padding` | `--vc-tooltip-padding` |
+| `--vis-tooltip-box-shadow` | `--vc-tooltip-shadow` |
+| `--vis-axis-tick-label-color` | `--vc-tick-color` |
+| `--vis-axis-tick-label-font-size` | `--vc-tick-size` |
+| `--vis-axis-label-color` | `--vc-axis-label-color` |
+| `--vis-axis-tick-color`, `--vis-axis-domain-color` | `--vc-axis-line-color` |
+| `--vis-axis-grid-color` | `--vc-grid-color` |
+| `--vis-legend-label-color` | `--vc-legend-color` |
+| `--vis-legend-label-font-size` | `--vc-legend-size` |
+| `--vis-legend-spacing` | `--vc-legend-gap` |
+| `--vis-font-family` | `--vc-font-family` |
+
+Anything finer goes through the `ui` prop or a `vc-*` class.
 
 ## License
 
